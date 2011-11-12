@@ -1,0 +1,341 @@
+package com.athena.asm.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+
+import android.util.Log;
+
+import com.athena.asm.data.Attachment;
+import com.athena.asm.data.Post;
+
+public class SmthCrawler {
+	public static String smthEncoding = "GBK";
+	public static String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.4) Gecko/20091016 Firefox/3.5.4";
+
+	private int threadNum;
+	private ExecutorService execService;
+
+	private boolean destroy;
+
+	private static class Holder {
+		static SmthCrawler instance = new SmthCrawler();
+	}
+
+	private DefaultHttpClient httpClient;
+
+	public static SmthCrawler getIntance() {
+		return Holder.instance;
+	}
+
+	private SmthCrawler() {
+		init();
+	}
+
+	public void init() {
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		HttpParams params = new BasicHttpParams();
+		ConnManagerParams.setMaxTotalConnections(params, 10);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(params,
+				schemeRegistry);
+		httpClient = new DefaultHttpClient(cm, params);
+		// 重试
+		// httpClient.setHttpRequestRetryHandler(new
+		// DefaultHttpRequestRetryHandler(3, false));
+		// 超时设置
+		// httpClient.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
+		// 10000);
+		// httpClient.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT,
+		// 10000);
+		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,
+				false);
+
+		threadNum = 10;
+		execService = Executors.newFixedThreadPool(threadNum);
+		destroy = false;
+	}
+
+	public boolean login(String userid, String passwd) {
+		String url = "http://www.newsmth.net/bbslogin.php";
+		HttpPost httpPost = new HttpPost(url);
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		formparams.add(new BasicNameValuePair("id", userid));
+		formparams.add(new BasicNameValuePair("passwd", passwd));
+		UrlEncodedFormEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(formparams, "GBK");
+		} catch (UnsupportedEncodingException e1) {
+			return false;
+		}
+		httpPost.setEntity(entity);
+		httpPost.setHeader("User-Agent", userAgent);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity e = response.getEntity();
+			String content = EntityUtils.toString(e, smthEncoding);
+			if (content.contains("你登录的窗口过多")) {
+				formparams.add(new BasicNameValuePair("kick_multi", "1"));
+				UrlEncodedFormEntity entity2;
+				entity2 = new UrlEncodedFormEntity(formparams, "GBK");
+				httpPost = new HttpPost(
+						"http://www.newsmth.net/bbslogin.php?mainurl=");
+				httpPost.setHeader("User-Agent", userAgent);
+				httpPost.setEntity(entity2);
+				httpClient.execute(httpPost);
+			} else if (content.contains("您的用户名并不存在，或者您的密码错误")) {
+				return false;
+			} else if (content.contains("用户密码错误")) {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean sendPost(String postUrl, String postTitle, String postContent) {
+		HttpPost httpPost = new HttpPost(postUrl);
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		formparams.add(new BasicNameValuePair("title", postTitle));
+		formparams.add(new BasicNameValuePair("text", postContent));
+		formparams.add(new BasicNameValuePair("signature", "0"));
+		UrlEncodedFormEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(formparams, "GBK");
+		} catch (UnsupportedEncodingException e1) {
+			return false;
+		}
+		httpPost.setEntity(entity);
+		httpPost.setHeader("User-Agent", userAgent);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity e = response.getEntity();
+			String content = EntityUtils.toString(e, smthEncoding);
+			if (!content.contains("发文成功")) {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public String getUrlContent(String url) {
+		HttpGet httpget = new HttpGet(url);
+		httpget.setHeader("User-Agent", userAgent);
+		httpget.addHeader("Accept-Encoding", "gzip, deflate");
+		String content;
+		try {
+			HttpResponse response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			Header[] headers = response.getHeaders("Content-Encoding");
+			boolean isgzip = false;
+			if (headers != null && headers.length != 0) {
+				for (Header header : headers) {
+					String s = header.getValue();
+					if (s.contains("gzip")) {
+						isgzip = true;
+					}
+				}
+			}
+			if (isgzip) {
+				InputStream is = entity.getContent();
+				BufferedReader br = new java.io.BufferedReader(
+						new InputStreamReader(new GZIPInputStream(is),
+								smthEncoding));
+				String line;
+				StringBuilder sb = new StringBuilder();
+				while ((line = br.readLine()) != null) {
+					sb.append(line);
+					sb.append("\n");
+				}
+				br.close();
+				content = sb.toString();
+			} else {
+				content = EntityUtils.toString(entity, smthEncoding);
+			}
+		} catch (IOException e) {
+			Log.d("com.athena.asm", "get url failed,", e);
+			content = null;
+		}
+		return content;
+	}
+
+	public void getPostList(List<Post> postList) {
+		if (postList == null)
+			return;
+		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
+				Pattern.DOTALL);
+		Pattern infoPattern = Pattern
+				.compile("conWriter\\(\\d+, '[^']+', \\d+, \\d+, (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
+		List<Future<?>> futureList = new ArrayList<Future<?>>(postList.size());
+		for (Post post : postList) {
+			Future<?> future = execService.submit(new PostContentCrawler(post,
+					contentPattern, infoPattern));
+			futureList.add(future);
+		}
+		for (Future<?> future : futureList) {
+			try {
+				future.get();
+			} catch (InterruptedException e) {
+				Log.e("com.athena.asm", "excute error", e);
+			} catch (ExecutionException e) {
+				Log.e("com.athena.asm", "excute error", e);
+			}
+		}
+	}
+
+	public void excuteMethod() {
+
+	}
+
+	public void destroy() {
+		httpClient.getConnectionManager().shutdown();
+		execService.shutdown();
+		destroy = true;
+	}
+
+	public boolean isDestroy() {
+		return destroy;
+	}
+
+	class PostContentCrawler implements Runnable {
+
+		private Post post;
+		private Pattern contentPattern;
+		private Pattern infoPattern;
+
+		public PostContentCrawler(Post post, Pattern contentPattern,
+				Pattern infoPattern) {
+			this.post = post;
+			this.contentPattern = contentPattern;
+			this.infoPattern = infoPattern;
+		}
+
+		@Override
+		public void run() {
+			String url = "http://www.newsmth.net/bbscon.php?bid="
+					+ post.getBoardID() + "&id=" + post.getSubjectID();
+			HttpGet httpget = new HttpGet(url);
+			httpget.setHeader("User-Agent", SmthCrawler.userAgent);
+			httpget.addHeader("Accept-Encoding", "gzip, deflate");
+			String content;
+			try {
+				HttpResponse response = httpClient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+				Header[] headers = response.getHeaders("Content-Encoding");
+				boolean isgzip = false;
+				if (headers != null && headers.length != 0) {
+					for (Header header : headers) {
+						String s = header.getValue();
+						if (s.contains("gzip")) {
+							isgzip = true;
+						}
+					}
+				}
+				if (isgzip) {
+					InputStream is = entity.getContent();
+					BufferedReader br = new java.io.BufferedReader(
+							new InputStreamReader(new GZIPInputStream(is),
+									SmthCrawler.smthEncoding));
+					String line;
+					StringBuilder sb = new StringBuilder();
+					while ((line = br.readLine()) != null) {
+						sb.append(line);
+						sb.append("\n");
+					}
+					br.close();
+					content = sb.toString();
+				} else {
+					content = EntityUtils.toString(entity,
+							SmthCrawler.smthEncoding);
+				}
+			} catch (IOException e) {
+				Log.d("com.athena.asm", "get url failed,", e);
+				return;
+			}
+			Matcher contentMatcher = contentPattern.matcher(content);
+			if (contentMatcher.find()) {
+				String contentString = contentMatcher.group(1);
+				Object[] objects = StringUtility
+						.parsePostContent(contentString);
+				post.setContent((String) objects[0]);
+				post.setDate((java.util.Date) objects[1]);
+			}
+
+			Matcher infoMatcher = infoPattern.matcher(content);
+			if (infoMatcher.find()) {
+				post.setTitle(infoMatcher.group(4));
+			}
+
+			String bid = null, id = null, ftype = null, num = null, cacheable = null;
+			Matcher attachPartOneMatcher = Pattern.compile(
+					"attWriter\\((\\d+),(\\d+),(\\d+),(\\d+),(\\d+)").matcher(
+					content);
+			if (attachPartOneMatcher.find()) {
+				bid = attachPartOneMatcher.group(1);
+				id = attachPartOneMatcher.group(2);
+				ftype = attachPartOneMatcher.group(3);
+				num = attachPartOneMatcher.group(4);
+				cacheable = attachPartOneMatcher.group(5);
+			}
+
+			ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
+			Matcher attachPartTwoMatcher = Pattern.compile(
+					"attach\\('([^']+)', (\\d+), (\\d+)\\)").matcher(content);
+			while (attachPartTwoMatcher.find()) {
+				Attachment innerAtt = new Attachment();
+				innerAtt.setBid(bid);
+				innerAtt.setId(id);
+				innerAtt.setFtype(ftype);
+				innerAtt.setNum(num);
+				innerAtt.setCacheable(cacheable);
+				String name = attachPartTwoMatcher.group(1);
+				String len = attachPartTwoMatcher.group(2);
+				String pos = attachPartTwoMatcher.group(3);
+				innerAtt.setName(name);
+				innerAtt.setLen(len);
+				innerAtt.setPos(pos);
+				attachFiles.add(innerAtt);
+			}
+			post.setAttachFiles(attachFiles);
+		}
+
+	}
+}

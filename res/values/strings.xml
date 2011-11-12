@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">aSM</string>
+    <!-- 登录页 -->
+    <string name="login_label_username">用户名</string>
+    <string name="login_label_password">密码</string>
+    <string name="login_label_signin">登录</string>
+    <string name="login_label_guest">匿名</string>
+    <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
+    <!-- tab栏 -->
+    <string name="cmenu_guidance">首页</string>
+    <string name="cmenu_favorite">收藏</string>
+    <string name="cmenu_mail">邮箱</string>
+    <string name="cmenu_category">分区</string>
+    <string name="cmenu_profile">资料</string>
+     <!-- 分区 -->
+     <string name="board_autocomplete_tip">请输入分区名</string>
+     <!-- 导航 -->
+	<string name="pre_page">&lt;&lt;</string>
+	<string name="next_page">&gt;&gt;</string>
+	<string name="go_page">GO</string>
+	 <!-- 资料页 -->
+	<string name="profile_send_mail">发信</string>
+	<string name="profile_alive_number">生命力</string>
+	<string name="profile_login_count">上站</string>
+	<string name="profile_post_count">发表</string>
+	<string name="profile_online_status">在线</string>
+	 <!-- 标题栏文字 -->
+	<string name="title_guidance">首页导读</string>
+	<string name="title_favorite">我的收藏夹</string>
+	<string name="title_mail">我的信箱</string>
+	<string name="title_category">分类讨论区</string>
+	<string name="title_profile">个人资料</string>
+	 <!-- post相关 -->
+	<string name="post_alert_title">请选择操作</string>
+	<string name="post_reply_post">回复文章</string>
+	<string name="post_reply_mail">回信给作者</string>
+	<string name="post_query_author">查看作者信息</string>
+	<string name="write_label_post">发表</string>
+	 <!-- 关于 -->
+	<string name="about_title">关于</string>
+	<string name="about_content">aSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，查询网友个人信息等功能。\n操作提示：
+\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴。\n3. 帖子附件显示于每个帖子的结尾处。\n4. 在版面的主题列表页面中按MENU键可以发表新贴。(回贴发帖均需要登录后才能使用)\n5. 因为水木版面设置的特殊性，分类讨论区第一次加载时间较长，之后会在本地保存直接加载。
+\n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
+	<!-- 设置 -->
+	<string name="setting_remember_user">记住密码</string>
+	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>
+	<string name="setting_default_tab">默认加载标签页</string>
+	<string name="setting_default_tab_details">选择默认要加载标签页</string>
+	<string name="setting_default_board_type">默认版面模式</string>
+	<string name="setting_default_board_type_details">选择默认的版面模式</string>
+	<!-- 下拉刷新 -->
+	<string name="pull_to_refresh_pull_label">下拉刷新...</string>
+	<string name="pull_to_refresh_release_label">松开刷新...</string>
+	<string name="pull_to_refresh_refreshing_label">读取中...</string>
+	<string name="pull_to_refresh_tap_label">点击刷新...</string>
+</resources>

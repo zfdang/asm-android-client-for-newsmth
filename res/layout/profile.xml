@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="@color/body_background">
+
+	<ScrollView android:background="#FFEFF0F4"
+		android:scrollbars="horizontal" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+		<LinearLayout android:orientation="vertical"
+			android:background="#FFEFF0F4" android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="47dp" android:background="@drawable/bg_header"
+				android:gravity="center_vertical" android:layout_alignParentTop="true">
+
+				<!-- 搜索按钮 -->
+				<ImageButton android:id="@+id/btn_search"
+					android:background="@null" android:src="@drawable/top_search_selector"
+					android:layout_width="wrap_content" android:layout_height="fill_parent"
+					android:layout_alignParentRight="true" android:paddingRight="10dip"
+					android:paddingLeft="10dip" />
+
+				<!-- 搜索框 -->
+				<EditText android:id="@+id/search_edit" android:hint="查询网友"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_centerVertical="true" android:layout_toLeftOf="@id/btn_search"
+					android:layout_marginLeft="12dip" android:background="@drawable/textfield_search_empty" />
+			</RelativeLayout>
+
+			<!-- 名称部分 -->
+			<RelativeLayout android:orientation="vertical"
+				android:background="#FFEFF0F4" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginBottom="10dip"
+				android:layout_marginLeft="20dip" android:layout_marginRight="20dip"
+				android:layout_marginTop="10dip">
+				<!-- 用户ID -->
+				<TextView android:id="@+id/profile_userid"
+					android:layout_width="wrap_content" android:layout_height="24.0dip"
+					style="@style/LinkText.Bold.Huge"></TextView>
+				<!-- 用户昵称 -->
+				<TextView android:id="@+id/profile_user_nickname"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_below="@id/profile_userid" style="@style/normalText" />
+
+				<LinearLayout android:orientation="vertical"
+					android:layout_alignParentRight="true" android:layout_width="wrap_content"
+					android:layout_height="wrap_content">
+					<!-- 发送站内信 -->
+					<Button android:id="@+id/btn_send_mail"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:layout_marginRight="10.0dip" android:visibility="gone"
+						android:text="@string/profile_send_mail" style="@style/Button" />
+				</LinearLayout>
+			</RelativeLayout>
+
+			<!-- 自我描述部分 -->
+			<RelativeLayout android:id="@+id/relative_user_info"
+				android:background="@drawable/panel_bg" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_margin="10.0dip"
+				android:paddingTop="10dip" android:paddingRight="20dip"
+				android:paddingLeft="20dip" android:paddingBottom="10dip">
+				<TextView android:id="@+id/profile_user_desc"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					style="@style/normalText"></TextView>
+			</RelativeLayout>
+			<!-- 按钮面板部分 -->
+			<RelativeLayout android:background="@drawable/panel_bg"
+				android:layout_width="fill_parent" android:layout_height="130.0dip"
+				android:layout_margin="10.0dip">
+				<!-- 垂直分隔条 -->
+				<View android:id="@+id/view_one" android:background="@drawable/vertical_separation_line_repeat"
+					android:layout_width="1.0dip" android:layout_height="fill_parent"
+					android:layout_centerHorizontal="true">
+				</View>
+
+				<!-- 水平分隔条 -->
+				<View android:id="@+id/view_two" android:background="@drawable/horizontal_separation_line_repeat"
+					android:layout_width="fill_parent" android:layout_height="1.0dip"
+					android:layout_centerVertical="true">
+				</View>
+
+				<!-- 生命力 按钮 -->
+				<RelativeLayout android:id="@+id/alivenessLayout"
+					android:background="@drawable/bg_panel_above_left"
+					android:clickable="true" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_toLeftOf="@+id/view_one"
+					android:layout_above="@+id/view_two"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentTop="true">
+
+					<!--生命力数字 -->
+					<TextView android:gravity="center" android:id="@+id/profile_aliveness"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:layout_marginTop="10.0dip" android:text="0"
+						android:layout_centerHorizontal="true" style="@style/normalText">
+					</TextView>
+
+					<!-- 生命力 -->
+					<TextView android:gravity="center" android:id="@+id/profile_aliveness_title"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:text="@string/profile_alive_number" android:layout_below="@+id/profile_aliveness"
+						android:layout_centerHorizontal="true" style="@style/normalText.span">
+					</TextView>
+				</RelativeLayout>
+
+				<!-- 上站 按钮 -->
+				<LinearLayout android:orientation="vertical"
+					android:id="@+id/loginTimeLayout" android:background="@drawable/bg_panel_above_right"
+					android:clickable="true" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_toRightOf="@id/view_one"
+					android:layout_above="@id/view_two" android:layout_alignParentTop="true"
+					android:layout_alignParentRight="true">
+					<!-- 上站次数 -->
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_login_times" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:layout_marginTop="10.0dip"
+						android:text="0" style="@style/normalText">
+					</TextView>
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_login_times_title" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/profile_login_count"
+						style="@style/normalText.span">
+					</TextView>
+				</LinearLayout>
+
+				<!-- 发表 -->
+				<LinearLayout android:orientation="vertical"
+					android:id="@+id/postNumberLayout" android:background="@drawable/bg_panel_below_left"
+					android:clickable="true" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_toLeftOf="@id/view_one"
+					android:layout_below="@id/view_two" android:layout_alignParentLeft="true"
+					android:layout_alignParentBottom="true" android:paddingRight="10dp">
+					<!-- 发文数 -->
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_post_number" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:layout_marginTop="10.0dip"
+						android:text="0" style="@style/normalText">
+					</TextView>
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_post_number_title" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:text="@string/profile_post_count"
+						style="@style/normalText.span">
+					</TextView>
+				</LinearLayout>
+
+				<!-- 在线状态 -->
+				<LinearLayout android:orientation="vertical"
+					android:id="@+id/onlineStatusLayout" android:background="@drawable/bg_panel_below_right"
+					android:clickable="true" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_toRightOf="@+id/view_one"
+					android:layout_below="@+id/view_two"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentBottom="true">
+					<!-- 在线状态 -->
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_online_status" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:layout_marginTop="10.0dip"
+						android:text="0" style="@style/normalText">
+					</TextView>
+					<TextView android:gravity="center" android:layout_gravity="center_horizontal"
+						android:id="@+id/profile_online_status_title"
+						android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:text="@string/profile_online_status" style="@style/normalText.span">
+					</TextView>
+				</LinearLayout>
+
+			</RelativeLayout>
+
+		</LinearLayout>
+
+
+	</ScrollView>
+
+</LinearLayout>

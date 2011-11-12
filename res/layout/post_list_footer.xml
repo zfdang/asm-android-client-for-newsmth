@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 底部栏 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="50dp"
+	android:padding="0dp" android:background="@drawable/maintab_toolbar_bg"
+	android:orientation="horizontal" android:gravity="center">
+	<Button android:id="@+id/btn_pre_page" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="@string/pre_page"
+		android:layout_gravity="center" android:layout_marginTop="3dip" />
+	<EditText android:id="@+id/edittext_page_no"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:inputType="number" android:layout_marginTop="3dip" />
+	<TextView android:id="@+id/textview_page_total_no"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:layout_marginTop="1dip" />
+	<Button android:id="@+id/btn_go_page" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="@string/go_page"
+		android:layout_gravity="center" android:layout_marginTop="3dip" />
+	<Button android:id="@+id/btn_next_page" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="@string/next_page"
+		android:layout_gravity="center" android:layout_marginTop="3dip" />
+
+</LinearLayout>

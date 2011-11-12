@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layout_root" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:background="#e7e7e7">
+
+	<!-- Header -->
+	<include layout="@layout/header" />
+
+	<!-- 工具栏 -->
+	<LinearLayout android:orientation="horizontal"
+		android:gravity="center_vertical" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:background="@drawable/send_message_block"
+		android:paddingRight="5dp" android:paddingLeft="5dp">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingLeft="5dp"
+			android:text="标 题" android:textColor="@color/status_text" />
+
+		<EditText android:id="@+id/post_title" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+			android:layout_marginTop="1dp" android:singleLine="true" />
+		<!-- 发送按钮 -->
+		<Button android:id="@+id/btn_send_post" android:layout_width="wrap_content"
+			android:layout_height="fill_parent" android:layout_alignParentRight="true"
+			android:layout_marginRight="10dp" style="@style/simple_button"
+			android:text="@string/write_label_post" />
+	</LinearLayout>
+
+	<!-- main text input -->
+	<EditText android:id="@+id/post_content" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_weight="1"
+		android:textSize="15dp" android:imeOptions="actionSend|flagNoEnterAction"
+		android:gravity="top" />
+
+</LinearLayout>

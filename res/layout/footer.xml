@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 底部栏 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="fill_parent"
+	android:layout_height="50dp" android:padding="0dp"
+	android:background="@drawable/maintab_toolbar_bg">
+
+	<TextView android:id="@+id/footer_btn_guidance"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1" style="@style/footer_button"
+		android:drawableTop="@drawable/tab_guidance_normal" android:text="@string/cmenu_guidance" />
+	<TextView android:id="@+id/footer_btn_favorite"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1" style="@style/footer_button"
+		android:drawableTop="@drawable/tab_favorite_normal" android:text="@string/cmenu_favorite" />
+	<TextView android:id="@+id/footer_btn_mail"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1" style="@style/footer_button"
+		android:visibility="gone" android:drawableTop="@drawable/tab_mail_normal"
+		android:text="@string/cmenu_mail" />
+	<TextView android:id="@+id/footer_btn_category"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1" style="@style/footer_button"
+		android:drawableTop="@drawable/tab_category_normal" android:text="@string/cmenu_category" />
+	<TextView android:id="@+id/footer_btn_profile"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1" style="@style/footer_button"
+		android:drawableTop="@drawable/tab_profile_normal" android:text="@string/cmenu_profile" />
+
+
+</LinearLayout>
