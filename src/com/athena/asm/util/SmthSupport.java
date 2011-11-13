@@ -3,6 +3,7 @@ package com.athena.asm.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,12 +137,14 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public void getCategory(String id, List<Board> boardList) {
+	public void getCategory(String id, List<Board> boardList, boolean isTypeTwo) {
 		String url;
 		if (id.equals("TOP")) {
 			url = "http://www.newsmth.net/bbsfav.php?x";
-		} else {
+		} else if (!isTypeTwo) {
 			url = "http://www.newsmth.net/bbsfav.php?select=" + id + "&x";
+		} else {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + id;
 		}
 
 		String content = crawler.getUrlContent(url);
@@ -176,29 +179,45 @@ public class SmthSupport {
 		}*/
 
 		for (int i = 0; i < list.size(); i++) {
-			getCategory(list.get(i), boardList.get(i).getChildBoards());
+			getCategory(list.get(i), boardList.get(i).getChildBoards(), false);
 		}
 
-		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
+		patternStr = "o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
+		List<Board> dirList = new ArrayList<Board>();
 		while (matcher.find()) {
-			String boardID = matcher.group(1);
-			String category = matcher.group(2);
-			String engName = matcher.group(3);
-			String chsName = matcher.group(4);
-			String moderator = matcher.group(5);
+			String isDirString = matcher.group(1);
+			String boardID = matcher.group(2);
+			String category = matcher.group(3);
+			String engName = matcher.group(4);
+			String chsName = matcher.group(5);
+			String moderator = matcher.group(6);
 			if (moderator.length() > 25) {
 				moderator = moderator.substring(0, 21) + "...";
 			}
 			Board board = new Board();
-			board.setDirectory(false);
 			board.setBoardID(boardID);
 			board.setCategoryName(category);
 			board.setEngName(engName);
 			board.setChsName(chsName);
 			board.setModerator(moderator);
+			
+			if (isDirString.equals("true")) {
+				board.setDirectory(true);
+				board.setDirectoryName(category + "  " + chsName);
+				dirList.add(board);
+			}
+			else {
+				board.setDirectory(false);
+			}
+			
 			boardList.add(board);
+		}
+		
+		for (Iterator<Board> iterator = dirList.iterator(); iterator.hasNext();) {
+			Board board = (Board) iterator.next();
+			getCategory(board.getEngName(), board.getChildBoards(), true);
 		}
 
 	}

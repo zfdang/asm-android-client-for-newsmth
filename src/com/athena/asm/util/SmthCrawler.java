@@ -84,7 +84,7 @@ public class SmthCrawler {
 		// httpClient.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT,
 		// 10000);
 		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,
-				false);
+				true);
 
 		threadNum = 10;
 		execService = Executors.newFixedThreadPool(threadNum);

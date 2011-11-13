@@ -41,7 +41,11 @@ public class CategoryListAdapter extends BaseAdapter {
 			boardNameTextView.setText(strings[0].trim());
 			TextView boardDesTextView = (TextView) layout
 					.findViewById(R.id.BoardDescription);
-			boardDesTextView.setText(strings[1].trim());
+			String desString = "";
+			for (int i = 1; i < strings.length; i++) {
+				desString += strings[i].trim() + " ";
+			}
+			boardDesTextView.setText(desString);
 			layout.setTag(board);
 			layout.setOnClickListener(new OnClickListener() {
 

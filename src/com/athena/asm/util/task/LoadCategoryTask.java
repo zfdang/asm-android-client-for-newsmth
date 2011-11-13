@@ -48,7 +48,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		}
 		if (homeActivity.categoryList == null) {
 			homeActivity.categoryList = new ArrayList<Board>();
-			homeActivity.smthSupport.getCategory("TOP",	homeActivity.categoryList);
+			homeActivity.smthSupport.getCategory("TOP",	homeActivity.categoryList, false);
 		}
 		pdialog.cancel();
 		return null;
