@@ -76,7 +76,7 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		} else {
 			boardType = 1;
 		}
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 		loadSubjectTask.execute();
 		// reloadPostList();
 	}
@@ -117,7 +117,7 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		}
 		currentBoard.setCurrentPageNo(currentPageNo);
 		pageNoEditText.setText(currentPageNo + "");
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 		loadSubjectTask.execute();
 	}
 
@@ -143,8 +143,9 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		switch (item.getItemId()) {
 		case SWITCH_BOARD_TYPE:
 			boardType = (boardType + 1) % 2;// switch type and excute refresh
+			isFirstIn = true;
 		case REFRESH_SUBJECTLIST:
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType);
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 			loadSubjectTask.execute();
 			break;
 		case CREATE_ID:

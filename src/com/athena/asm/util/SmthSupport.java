@@ -162,6 +162,18 @@ public class SmthSupport {
 			board.setCategoryName("目录");
 			boardList.add(board);
 		}
+		
+		/*patternStr = "o\\.o\\(true,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
+		pattern = Pattern.compile(patternStr);
+		matcher = pattern.matcher(content);
+		while (matcher.find()) {
+			//list.add(matcher.group(1));
+			Board board = new Board();
+			board.setDirectory(true);
+			board.setDirectoryName(matcher.group(2));
+			board.setCategoryName("目录");
+			//boardList.add(board);
+		}*/
 
 		for (int i = 0; i < list.size(); i++) {
 			getCategory(list.get(i), boardList.get(i).getChildBoards());
@@ -196,9 +208,12 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public List<Subject> getSubjectList(Board board, int boardType) {
+	public List<Subject> getSubjectList(Board board, int boardType, boolean isReloadPageNo) {
 		String boardname = board.getEngName();
 		int pageno = board.getCurrentPageNo();
+		if (isReloadPageNo) {
+			pageno = 0;
+		}
 		String result = getMainSubjectList(boardname, pageno, boardType);
 		if (result == null) {
 			return Collections.emptyList();
@@ -209,7 +224,7 @@ public class SmthSupport {
 		if (m.find()) {
 			board.setBoardID(m.group(1));
 			board.setCurrentPageNo(Integer.parseInt(m.group(2)));
-			if (board.getCurrentPageNo() > board.getTotalPageNo()) {
+			if (board.getCurrentPageNo() > board.getTotalPageNo() || isReloadPageNo) {
 				board.setTotalPageNo(board.getCurrentPageNo());
 			}
 		}

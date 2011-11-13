@@ -9,10 +9,12 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	private SubjectListActivity subjectListActivity;
 	private ProgressDialog pdialog;
 	private int boardType;
+	private boolean isReloadPageNo;
 	
-	public LoadSubjectTask(SubjectListActivity activity, int boardType) {
+	public LoadSubjectTask(SubjectListActivity activity, int boardType, boolean isReloadPageNo) {
 		this.subjectListActivity = activity;
 		this.boardType = boardType;
+		this.isReloadPageNo = isReloadPageNo;
 	}
 	
 	@Override
@@ -24,7 +26,7 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
-		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, boardType);
+		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, boardType, isReloadPageNo);
 		pdialog.cancel();
 		return null;
 	}
