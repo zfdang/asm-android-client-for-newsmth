@@ -48,7 +48,7 @@ public class SubjectListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
+		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDate().toLocaleString());
 		
 		layout.setTag(subject);
