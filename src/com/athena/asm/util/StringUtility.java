@@ -13,6 +13,8 @@ public class StringUtility {
 
 	public static final String LOGINED = "logined";
 	public static final String LOGINED_ID = "loginedID";
+	
+	public static final String LOGOUT = "logout";
 
 	public static final String URL = "url";
 
@@ -139,7 +141,12 @@ public class StringUtility {
 				seperator++;
 			} else {
 				if (seperator > 0) {
-					line = "<font color=#33CC66>" + line + "</font>";
+					if (line.length() > 0) {
+						line = "<font color=#33CC66>" + line + "</font>";
+					}
+					else {
+						continue;
+					}
 				}
 			}
 
