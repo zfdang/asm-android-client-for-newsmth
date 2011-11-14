@@ -116,10 +116,11 @@ public final class R {
         public static final int LinearLayout01=0x7f0a0012;
         public static final int ModeratorID=0x7f0a0005;
         public static final int PostContent=0x7f0a002a;
-        public static final int PostDate=0x7f0a0028;
-        public static final int PostTitle=0x7f0a0027;
+        public static final int PostDate=0x7f0a0027;
+        public static final int PostTitle=0x7f0a0028;
         public static final int SectionName=0x7f0a0011;
         public static final int SeperatorView=0x7f0a0029;
+        public static final int SubjectPostDate=0x7f0a0049;
         public static final int SubjectTitle=0x7f0a0010;
         public static final int alivenessLayout=0x7f0a0038;
         public static final int board_relative_layout=0x7f0a0000;
@@ -249,14 +250,16 @@ public final class R {
         public static final int profile_send_mail=0x7f07000f;
         /**  下拉刷新 
          */
-        public static final int pull_to_refresh_pull_label=0x7f070026;
-        public static final int pull_to_refresh_refreshing_label=0x7f070028;
-        public static final int pull_to_refresh_release_label=0x7f070027;
-        public static final int pull_to_refresh_tap_label=0x7f070029;
-        public static final int setting_default_board_type=0x7f070024;
-        public static final int setting_default_board_type_details=0x7f070025;
-        public static final int setting_default_tab=0x7f070022;
-        public static final int setting_default_tab_details=0x7f070023;
+        public static final int pull_to_refresh_pull_label=0x7f070028;
+        public static final int pull_to_refresh_refreshing_label=0x7f07002a;
+        public static final int pull_to_refresh_release_label=0x7f070029;
+        public static final int pull_to_refresh_tap_label=0x7f07002b;
+        public static final int setting_auto_login=0x7f070022;
+        public static final int setting_auto_login_details=0x7f070023;
+        public static final int setting_default_board_type=0x7f070026;
+        public static final int setting_default_board_type_details=0x7f070027;
+        public static final int setting_default_tab=0x7f070024;
+        public static final int setting_default_tab_details=0x7f070025;
         /**  设置 
          */
         public static final int setting_remember_user=0x7f070020;
