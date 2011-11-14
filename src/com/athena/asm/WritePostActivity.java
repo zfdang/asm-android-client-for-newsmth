@@ -71,9 +71,6 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		Matcher m = p.matcher(contentString);
 		if (m.find()) {
 			postTitle = m.group(1);
-			if (postTitle.length() > 1) {
-				postTitle = "Re: " + postTitle;
-			}
 			titleEditText.setText(postTitle);
 		}
 
@@ -81,6 +78,7 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		m = p.matcher(contentString);
 		if (m.find()) {
 			postContent = m.group(1);
+			postContent = postContent.replace("】", "】<br/>");
 			contentEditText.setText(Html.fromHtml("<br /><br /><br />"
 					+ postContent));
 		}
