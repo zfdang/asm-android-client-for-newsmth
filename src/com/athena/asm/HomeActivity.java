@@ -380,6 +380,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 				Intent intent = new Intent();
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.putExtra(StringUtility.LOGOUT, true);
 				intent.setClassName("com.athena.asm",
 						"com.athena.asm.LoginActivity");
 				startActivity(intent);

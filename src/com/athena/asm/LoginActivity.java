@@ -40,11 +40,20 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		smthSupport = SmthSupport.getInstance();
 
+		boolean isLogout = getIntent().getBooleanExtra(StringUtility.LOGOUT, false);
+		boolean isAutoLogin = false;
+		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
 		if (!settings.contains(Preferences.REMEMBER_USER)) {
 			editor.putBoolean(Preferences.REMEMBER_USER, true);
+		}
+		if (!settings.contains(Preferences.AUTO_LOGIN)) {
+			editor.putBoolean(Preferences.AUTO_LOGIN, false);
+		}
+		else {
+			isAutoLogin = settings.getBoolean(Preferences.AUTO_LOGIN, false);;
 		}
 		if (!settings.contains(Preferences.DEFAULT_TAB)) {
 			editor.putString(Preferences.DEFAULT_TAB, "001");
@@ -69,6 +78,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		Button gbutton = (Button) findViewById(R.id.guest_button);
 		gbutton.setOnClickListener(this);
+		
+		if (isAutoLogin & !isLogout) {
+			onClick(button);
+		}
+		
 	}
 
 	public void showSuccessToast() {
