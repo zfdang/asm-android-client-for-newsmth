@@ -7,7 +7,7 @@
 	<TextView android:id="@+id/AuthorID" android:text="TextView01"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textColor="@color/blue_text" />
-	<TextView android:id="@+id/PostDate" android:text="TextView04"
+	<TextView android:id="@+id/SubjectPostDate" android:text="TextView04"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textColor="@color/grey_text" android:gravity="right" />
 	<TextView android:id="@+id/SubjectTitle" android:text="TextView02"
