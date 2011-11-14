@@ -283,7 +283,7 @@ public class SmthSupport {
 		//String result = getPostContent(subject.getBoardID(), subject.getSubjectID());
 		List<Post> postList = new ArrayList<Post>();
 		Post post = new Post();
-		post.setAuthor("");
+		post.setAuthor(subject.getAuthor());
 		post.setSubjectID(subject.getSubjectID());
 		post.setBoardID(subject.getBoardID());
 		post.setBoard(subject.getBoardEngName());
@@ -379,8 +379,10 @@ public class SmthSupport {
 			Pattern hip = Pattern
 					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
 			Matcher him = hip.matcher(hc);
+			Pattern hIdPattern = Pattern.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
+			Matcher hIdMatcher = hIdPattern.matcher(hc);
 			List<Subject> list = new ArrayList<Subject>();
-			while (him.find()) {
+			while (him.find() && hIdMatcher.find()) {
 				Subject subject = new Subject();
 				if (boardNameMatcher.find()) {
 					subject.setBoardChsName(boardNameMatcher.group(1));
@@ -388,6 +390,7 @@ public class SmthSupport {
 				subject.setBoardEngName(him.group(1));
 				subject.setSubjectID(him.group(2));
 				subject.setTitle(him.group(3));
+				subject.setAuthor(hIdMatcher.group(1));
 				list.add(subject);
 			}
 			subjectList.add(list);
