@@ -128,7 +128,12 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "同主题切换");
+		if (boardType == 1) {
+			menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换为同主题");
+		}
+		else {
+			menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换为普通模式");
+		}
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新");
 		if (smthSupport.getLoginStatus()) {
 			menu.add(0, CREATE_ID, Menu.NONE, "发新贴");
@@ -161,6 +166,18 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (boardType == 1) {
+			menu.getItem(0).setTitle("切换为同主题");
+		}
+		else {
+			menu.getItem(0).setTitle("切换为普通模式");
+		}
+		
 		return true;
 	}
 }
