@@ -16,9 +16,9 @@
      <!-- 分区 -->
      <string name="board_autocomplete_tip">请输入分区名</string>
      <!-- 导航 -->
-	<string name="pre_page"> &lt;&lt; </string>
-	<string name="next_page"> &gt;&gt; </string>
-	<string name="go_page"> GO </string>
+	<string name="pre_page">  &lt;&lt;  </string>
+	<string name="next_page">  &gt;&gt;  </string>
+	<string name="go_page">  GO  </string>
 	 <!-- 资料页 -->
 	<string name="profile_send_mail">发信</string>
 	<string name="profile_alive_number">生命力</string>
@@ -35,6 +35,7 @@
 	<string name="post_alert_title">请选择操作</string>
 	<string name="post_reply_post">回复文章</string>
 	<string name="post_reply_mail">回信给作者</string>
+	<string name="post_copy_author">复制作者ID</string>
 	<string name="post_query_author">查看作者信息</string>
 	<string name="write_label_post">发表</string>
 	 <!-- 关于 -->

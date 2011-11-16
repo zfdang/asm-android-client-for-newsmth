@@ -208,10 +208,10 @@ public final class R {
         public static final int subject_list_item=0x7f030014;
     }
     public static final class string {
-        public static final int about_content=0x7f07001f;
+        public static final int about_content=0x7f070020;
         /**  关于 
          */
-        public static final int about_title=0x7f07001e;
+        public static final int about_title=0x7f07001f;
         public static final int app_name=0x7f070000;
         /**  分区 
          */
@@ -235,7 +235,8 @@ public final class R {
         /**  post相关 
          */
         public static final int post_alert_title=0x7f070019;
-        public static final int post_query_author=0x7f07001c;
+        public static final int post_copy_author=0x7f07001c;
+        public static final int post_query_author=0x7f07001d;
         public static final int post_reply_mail=0x7f07001b;
         public static final int post_reply_post=0x7f07001a;
         /**  导航 
@@ -250,20 +251,20 @@ public final class R {
         public static final int profile_send_mail=0x7f07000f;
         /**  下拉刷新 
          */
-        public static final int pull_to_refresh_pull_label=0x7f070028;
-        public static final int pull_to_refresh_refreshing_label=0x7f07002a;
-        public static final int pull_to_refresh_release_label=0x7f070029;
-        public static final int pull_to_refresh_tap_label=0x7f07002b;
-        public static final int setting_auto_login=0x7f070022;
-        public static final int setting_auto_login_details=0x7f070023;
-        public static final int setting_default_board_type=0x7f070026;
-        public static final int setting_default_board_type_details=0x7f070027;
-        public static final int setting_default_tab=0x7f070024;
-        public static final int setting_default_tab_details=0x7f070025;
+        public static final int pull_to_refresh_pull_label=0x7f070029;
+        public static final int pull_to_refresh_refreshing_label=0x7f07002b;
+        public static final int pull_to_refresh_release_label=0x7f07002a;
+        public static final int pull_to_refresh_tap_label=0x7f07002c;
+        public static final int setting_auto_login=0x7f070023;
+        public static final int setting_auto_login_details=0x7f070024;
+        public static final int setting_default_board_type=0x7f070027;
+        public static final int setting_default_board_type_details=0x7f070028;
+        public static final int setting_default_tab=0x7f070025;
+        public static final int setting_default_tab_details=0x7f070026;
         /**  设置 
          */
-        public static final int setting_remember_user=0x7f070020;
-        public static final int setting_remember_user_details=0x7f070021;
+        public static final int setting_remember_user=0x7f070021;
+        public static final int setting_remember_user_details=0x7f070022;
         public static final int title_category=0x7f070017;
         public static final int title_favorite=0x7f070015;
         /**  标题栏文字 
@@ -271,7 +272,7 @@ public final class R {
         public static final int title_guidance=0x7f070014;
         public static final int title_mail=0x7f070016;
         public static final int title_profile=0x7f070018;
-        public static final int write_label_post=0x7f07001d;
+        public static final int write_label_post=0x7f07001e;
     }
     public static final class style {
         public static final int Button=0x7f080014;

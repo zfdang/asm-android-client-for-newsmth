@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -13,7 +15,9 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
@@ -56,16 +60,23 @@ public class PostListAdapter extends BaseAdapter {
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 		dateTextView.setText(post.getDate().toLocaleString());
 		layout.setTag(post);
-
-		layout.setOnLongClickListener(new OnLongClickListener() {
+		
+		OnLongClickListener listener = new OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View v) {
 				if (activity.smthSupport.getLoginStatus()) {
+					RelativeLayout relativeLayout = null;
+					if (v.getId() == R.id.PostContent) {
+						relativeLayout = (RelativeLayout) v.getParent();
+					}
+					else {
+						relativeLayout = (RelativeLayout) v;
+					}
+					final String authorID = (String) ((TextView)relativeLayout.findViewById(R.id.AuthorID)).getText();
 					final Post post = (Post) v.getTag();
-					final String[] items = { activity
-							.getString(R.string.post_reply_post) };// ,
-																	// activity.getString(R.string.post_query_author)};
+					final String[] items = { activity.getString(R.string.post_reply_post),
+							activity.getString(R.string.post_copy_author)};// ,
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							activity);
 					builder.setTitle(R.string.post_alert_title);
@@ -86,6 +97,11 @@ public class PostListAdapter extends BaseAdapter {
 														+ post.getSubjectID());
 										activity.startActivity(intent);
 										break;
+									case 1:
+										ClipboardManager clip = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
+										clip.setText(authorID);
+										Toast.makeText(activity.getApplicationContext(), "ID ： " + authorID + "已复制到剪贴板",
+												Toast.LENGTH_SHORT).show();
 									default:
 										break;
 									}
@@ -97,7 +113,10 @@ public class PostListAdapter extends BaseAdapter {
 				}
 				return false;
 			}
-		});
+		};
+
+		contentTextView.setOnLongClickListener(listener);
+		layout.setOnLongClickListener(listener);
 
 		return layout;
 	}
