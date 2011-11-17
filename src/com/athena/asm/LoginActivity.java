@@ -1,16 +1,13 @@
 package com.athena.asm;
 
-import com.athena.asm.data.Preferences;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,27 +40,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		boolean isLogout = getIntent().getBooleanExtra(StringUtility.LOGOUT, false);
 		boolean isAutoLogin = false;
 		
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = settings.edit();
-		if (!settings.contains(Preferences.REMEMBER_USER)) {
-			editor.putBoolean(Preferences.REMEMBER_USER, true);
-		}
-		if (!settings.contains(Preferences.AUTO_LOGIN)) {
-			editor.putBoolean(Preferences.AUTO_LOGIN, false);
-		}
-		else {
-			isAutoLogin = settings.getBoolean(Preferences.AUTO_LOGIN, false);;
-		}
-		if (!settings.contains(Preferences.DEFAULT_TAB)) {
-			editor.putString(Preferences.DEFAULT_TAB, "001");
-		}
-		if (!settings.contains(Preferences.DEFAULT_BOARD_TYPE)) {
-			editor.putString(Preferences.DEFAULT_BOARD_TYPE, "001");
-		}
-		editor.commit();
-		String userName = settings.getString(Preferences.USERNAME_KEY, "");
-		String password = settings.getString(Preferences.PASSWORD_KEY, "");
+		aSMApplication application = (aSMApplication) getApplication();
+		application.initPreferences();
+		String userName = application.getAutoUserName();
+		String password = application.getAutoPassword();
+		isAutoLogin = application.isAutoLogin();
 
 		userNameEditText = (EditText) findViewById(R.id.username_edit);
 		userNameEditText.setText(userName);
@@ -110,28 +91,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		smthSupport.restore();
 
 		if (view.getId() == R.id.signin_button) {
-
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(this);
-			String userid = settings.getString(Preferences.USERNAME_KEY, "");
-			String passwd = settings.getString(Preferences.PASSWORD_KEY, "");
-
 			final String newUserName = userNameEditText.getText().toString();
 			final String newPassword = passwordEditText.getText().toString();
-
-			SharedPreferences.Editor editor = settings.edit();
-			boolean flag = false;
-			if (!newUserName.equals(userid)) {
-				editor.putString(Preferences.USERNAME_KEY, newUserName);
-				flag = true;
-			}
-			if (!newPassword.equals(passwd)) {
-				editor.putString(Preferences.PASSWORD_KEY, newPassword);
-				flag = true;
-			}
-			if (flag) {
-				editor.commit();
-			}
 
 			// login
 			final ProgressDialog pdialog = new ProgressDialog(this);
@@ -150,6 +111,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 						showFailedToast();
 					} else {
 						// showSuccessToast();
+						aSMApplication application = (aSMApplication) getApplication();
+						application.updateAutoUserNameAndPassword(newUserName, newPassword);
+						
 						Intent intent = new Intent();
 						intent.setClassName("com.athena.asm",
 								"com.athena.asm.HomeActivity");
@@ -172,15 +136,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(this);
-			Boolean rememberUser = settings.getBoolean(
-					Preferences.REMEMBER_USER, true);
+			aSMApplication application = (aSMApplication) getApplication();
+			Boolean rememberUser = application.isRememberUser();
 			if (!rememberUser) {
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putString(Preferences.USERNAME_KEY, "");
-				editor.putString(Preferences.PASSWORD_KEY, "");
-				editor.commit();
+				application.updateAutoUserNameAndPassword("", "");
 			}
 
 			finish();

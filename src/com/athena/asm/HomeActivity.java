@@ -10,9 +10,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,7 +37,6 @@ import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.Adapter.GuidanceListAdapter;
 import com.athena.asm.data.Board;
-import com.athena.asm.data.Preferences;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
@@ -107,9 +105,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 		initTabListeners();
 		initTasks();
 
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String defaultTab = settings.getString(Preferences.DEFAULT_TAB, "001");
+		aSMApplication application = (aSMApplication)getApplication();
+		String defaultTab = application.getDefaultTab();
 		if (defaultTab.equals("001")) {
 			reloadGuidanceList();
 		} else if (defaultTab.equals("002")) {

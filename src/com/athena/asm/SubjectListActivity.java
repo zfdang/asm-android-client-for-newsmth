@@ -4,9 +4,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 
 import com.athena.asm.Adapter.SubjectListAdapter;
 import com.athena.asm.data.Board;
-import com.athena.asm.data.Preferences;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
@@ -68,9 +66,8 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		Button nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
 
-		SharedPreferences settings = PreferenceManager
-		.getDefaultSharedPreferences(this);
-		String defaultBoardType = settings.getString(Preferences.DEFAULT_BOARD_TYPE, "001");
+		aSMApplication application = (aSMApplication)getApplication();
+		String defaultBoardType = application.getDefaultBoardType();
 		if (defaultBoardType.equals("001")) {
 			boardType = 0;
 		} else {
