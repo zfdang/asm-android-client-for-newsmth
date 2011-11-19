@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.athena.asm.R;
 import com.athena.asm.SubjectListActivity;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
 
@@ -38,6 +40,8 @@ public class SubjectListAdapter extends BaseAdapter {
 			layout = inflater.inflate(R.layout.subject_list_item, null);
 		}
 		
+		aSMApplication application = (aSMApplication)activity.getApplication();
+		
 		Subject subject = subjectList.get(subjectList.size() - position - 1);
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
@@ -48,6 +52,7 @@ public class SubjectListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getSubjectFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDate().toLocaleString());
 		

@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<CheckBoxPreference android:key="remember_user"
-		android:summary="@string/setting_remember_user_details" android:title="@string/setting_remember_user"></CheckBoxPreference>
-	<CheckBoxPreference android:key="auto_login"
-		android:summary="@string/setting_auto_login_details" 
-		android:title="@string/setting_auto_login"
-		android:dependency="remember_user"></CheckBoxPreference>
-	<ListPreference android:key="default_tab"
-		android:dialogTitle="选择" android:summary="@string/setting_default_tab_details"
-		android:title="@string/setting_default_tab" android:entryValues="@array/tab_value"
-		android:entries="@array/tab_name"></ListPreference>
-	<ListPreference android:key="default_board_type"
-		android:dialogTitle="选择" android:summary="@string/setting_default_board_type_details"
-		android:title="@string/setting_default_board_type" android:entryValues="@array/board_type_value"
-		android:entries="@array/board_type_name"></ListPreference>
+	<PreferenceCategory android:title="登陆相关">  
+		<CheckBoxPreference android:key="remember_user"
+			android:summary="@string/setting_remember_user_details" android:title="@string/setting_remember_user"></CheckBoxPreference>
+		<CheckBoxPreference android:key="auto_login"
+			android:summary="@string/setting_auto_login_details" 
+			android:title="@string/setting_auto_login"
+			android:dependency="remember_user"></CheckBoxPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="默认风格">  
+		<ListPreference android:key="default_tab"
+			android:dialogTitle="选择" android:summary="@string/setting_default_tab_details"
+			android:title="@string/setting_default_tab" android:entryValues="@array/tab_value"
+			android:entries="@array/tab_name"></ListPreference>
+		<ListPreference android:key="default_board_type"
+			android:dialogTitle="选择" android:summary="@string/setting_default_board_type_details"
+			android:title="@string/setting_default_board_type" android:entryValues="@array/board_type_value"
+			android:entries="@array/board_type_name"></ListPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="界面调整">
+		<EditTextPreference  android:key="guidance_font_size" 
+			android:title="@string/setting_guidance_font_size"
+			android:dialogTitle="请输入数字" android:defaultValue="19"  />
+		<EditTextPreference  android:key="subject_font_size" 
+			android:title="@string/setting_subject_font_size"
+			android:dialogTitle="请输入数字" android:defaultValue="15"  />
+		<EditTextPreference  android:key="post_font_size" 
+			android:title="@string/setting_post_font_size"
+			android:dialogTitle="请输入数字" android:defaultValue="15"  />
+	</PreferenceCategory>
 </PreferenceScreen>

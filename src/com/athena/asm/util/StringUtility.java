@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.athena.asm.data.Profile;
 
@@ -178,5 +180,26 @@ public class StringUtility {
 
 		String result = sb.toString().trim();
 		return new Object[] { result, date };
+	}
+	
+	public static int parseInt(String text) {
+		if (text.trim().length() > 0) {
+			return Integer.parseInt(text.trim());
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public static int filterUnNumber(String str) {
+		String regExpression = "[^0-9]";
+		Pattern pattern = Pattern.compile(regExpression);
+		Matcher matcher = pattern.matcher(str);
+		String temp = matcher.replaceAll("").trim();
+		if (temp.length() > 0) {
+			return parseInt(temp);
+		} else {
+			return 0;
+		}
 	}
 }

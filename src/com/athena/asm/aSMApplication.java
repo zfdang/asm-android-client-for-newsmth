@@ -1,6 +1,7 @@
 package com.athena.asm;
 
 import com.athena.asm.data.Preferences;
+import com.athena.asm.util.StringUtility;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -16,6 +17,10 @@ public class aSMApplication extends Application {
 	private String currentUserID = "";
 	private String defaultTab = "001";
 	private String defaultBoardType = "001";
+	
+	private int guidanceFontSize = 25;
+	private int subjectFontSize = 15;
+	private int postFontSize = 15;
 	
 	public void initPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -47,6 +52,40 @@ public class aSMApplication extends Application {
 		else {
 			defaultBoardType = settings.getString(Preferences.DEFAULT_BOARD_TYPE, "001");
 		}
+		
+		if (!settings.contains(Preferences.GUIDANCE_FONT_SIZE)) {
+			editor.putString(Preferences.GUIDANCE_FONT_SIZE, "19");
+		}
+		else {
+			String size = settings.getString(Preferences.GUIDANCE_FONT_SIZE, "25");
+			guidanceFontSize = StringUtility.filterUnNumber(size);
+			if (guidanceFontSize == 0) {
+				guidanceFontSize = 25;
+			}
+		}
+		
+		if (!settings.contains(Preferences.SUBJECT_FONT_SIZE)) {
+			editor.putString(Preferences.SUBJECT_FONT_SIZE, "15");
+		}
+		else {
+			String size = settings.getString(Preferences.SUBJECT_FONT_SIZE, "15");
+			subjectFontSize = StringUtility.filterUnNumber(size);
+			if (subjectFontSize == 0) {
+				subjectFontSize = 15;
+			}
+		}
+		
+		if (!settings.contains(Preferences.POST_FONT_SIZE)) {
+			editor.putString(Preferences.POST_FONT_SIZE, "15");
+		}
+		else {
+			String size = settings.getString(Preferences.POST_FONT_SIZE, "15");
+			postFontSize = StringUtility.filterUnNumber(size);
+			if (postFontSize == 0) {
+				postFontSize = 15;
+			}
+		}
+		
 		editor.commit();
 		
 		setAutoUserName(settings.getString(Preferences.USERNAME_KEY, ""));
@@ -106,5 +145,29 @@ public class aSMApplication extends Application {
 
 	public String getAutoPassword() {
 		return autoPassword;
+	}
+
+	public void setGuidanceFontSize(int guidanceFontSize) {
+		this.guidanceFontSize = guidanceFontSize;
+	}
+
+	public int getGuidanceFontSize() {
+		return guidanceFontSize;
+	}
+
+	public void setSubjectFontSize(int subjectFontSize) {
+		this.subjectFontSize = subjectFontSize;
+	}
+
+	public int getSubjectFontSize() {
+		return subjectFontSize;
+	}
+
+	public void setPostFontSize(int postFontSize) {
+		this.postFontSize = postFontSize;
+	}
+
+	public int getPostFontSize() {
+		return postFontSize;
 	}
 }

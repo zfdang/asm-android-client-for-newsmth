@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textColor="@color/grey_text" android:gravity="right" />
 	<TextView android:id="@+id/SubjectTitle" android:text="TextView02"
-		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textSize="15dp"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:layout_below="@+id/AuthorID" android:paddingTop="1dp"
 		android:textColor="@color/status_text" />

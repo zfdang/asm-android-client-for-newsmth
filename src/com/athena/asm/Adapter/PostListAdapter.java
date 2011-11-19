@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.util.StringUtility;
@@ -43,6 +45,7 @@ public class PostListAdapter extends BaseAdapter {
 		Post post = postList.get(position);
 
 		layout = inflater.inflate(R.layout.post_list_item, null);
+		aSMApplication application = (aSMApplication)activity.getApplication();
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		authorTextView.setText(post.getAuthor());
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
@@ -57,6 +60,7 @@ public class PostListAdapter extends BaseAdapter {
 					+ "'>" + attachments.get(i).getName() + "</a><br/>";
 		}
 		contentTextView.setText(Html.fromHtml(contentString));
+		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 		dateTextView.setText(post.getDate().toLocaleString());
 		layout.setTag(post);
