@@ -21,8 +21,9 @@ public class aSMApplication extends Application {
 	private String defaultBoardType = "001";
 	
 	private int guidanceFontSize = 25;
-	private int subjectFontSize = 15;
-	private int postFontSize = 15;
+	private int guidanceSecondFontSize = 20;
+	private int subjectFontSize = 18;
+	private int postFontSize = 17;
 	
 	private ArrayList<String> blackList = new ArrayList<String>();
 	
@@ -58,7 +59,7 @@ public class aSMApplication extends Application {
 		}
 		
 		if (!settings.contains(Preferences.GUIDANCE_FONT_SIZE)) {
-			editor.putString(Preferences.GUIDANCE_FONT_SIZE, "19");
+			editor.putString(Preferences.GUIDANCE_FONT_SIZE, "25");
 		}
 		else {
 			String size = settings.getString(Preferences.GUIDANCE_FONT_SIZE, "25");
@@ -68,25 +69,36 @@ public class aSMApplication extends Application {
 			}
 		}
 		
-		if (!settings.contains(Preferences.SUBJECT_FONT_SIZE)) {
-			editor.putString(Preferences.SUBJECT_FONT_SIZE, "15");
+		if (!settings.contains(Preferences.GUIDANCE_SECOND_FONT_SIZE)) {
+			editor.putString(Preferences.GUIDANCE_SECOND_FONT_SIZE, "20");
 		}
 		else {
-			String size = settings.getString(Preferences.SUBJECT_FONT_SIZE, "15");
+			String size = settings.getString(Preferences.GUIDANCE_SECOND_FONT_SIZE, "20");
+			guidanceSecondFontSize = StringUtility.filterUnNumber(size);
+			if (guidanceSecondFontSize == 0) {
+				guidanceSecondFontSize = 20;
+			}
+		}
+		
+		if (!settings.contains(Preferences.SUBJECT_FONT_SIZE)) {
+			editor.putString(Preferences.SUBJECT_FONT_SIZE, "18");
+		}
+		else {
+			String size = settings.getString(Preferences.SUBJECT_FONT_SIZE, "18");
 			subjectFontSize = StringUtility.filterUnNumber(size);
 			if (subjectFontSize == 0) {
-				subjectFontSize = 15;
+				subjectFontSize = 18;
 			}
 		}
 		
 		if (!settings.contains(Preferences.POST_FONT_SIZE)) {
-			editor.putString(Preferences.POST_FONT_SIZE, "15");
+			editor.putString(Preferences.POST_FONT_SIZE, "17");
 		}
 		else {
-			String size = settings.getString(Preferences.POST_FONT_SIZE, "15");
+			String size = settings.getString(Preferences.POST_FONT_SIZE, "17");
 			postFontSize = StringUtility.filterUnNumber(size);
 			if (postFontSize == 0) {
-				postFontSize = 15;
+				postFontSize = 17;
 			}
 		}
 		
@@ -173,6 +185,14 @@ public class aSMApplication extends Application {
 
 	public int getGuidanceFontSize() {
 		return guidanceFontSize;
+	}
+	
+	public void setGuidanceSecondFontSize(int guidanceFontSize) {
+		this.guidanceSecondFontSize = guidanceFontSize;
+	}
+
+	public int getGuidanceSecondFontSize() {
+		return guidanceSecondFontSize;
 	}
 
 	public void setSubjectFontSize(int subjectFontSize) {

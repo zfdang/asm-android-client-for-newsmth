@@ -57,7 +57,7 @@ public class GuidanceListAdapter extends BaseAdapter {
 			TextView titleTextView = (TextView) layout
 					.findViewById(R.id.SubjectTitle);
 			titleTextView.setText(subject.getTitle());
-			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getGuidanceFontSize());
+			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getGuidanceSecondFontSize());
 			layout.setTag(subject);
 
 			layout.setOnClickListener(new OnClickListener() {

@@ -21,13 +21,16 @@
 	<PreferenceCategory android:title="界面调整">
 		<EditTextPreference  android:key="guidance_font_size" 
 			android:title="@string/setting_guidance_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="19"  />
+			android:dialogTitle="请输入数字" android:defaultValue="25"  />
+		<EditTextPreference  android:key="guidance_second_font_size" 
+			android:title="@string/setting_guidance_second_font_size"
+			android:dialogTitle="请输入数字" android:defaultValue="20"  />
 		<EditTextPreference  android:key="subject_font_size" 
 			android:title="@string/setting_subject_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="15"  />
+			android:dialogTitle="请输入数字" android:defaultValue="18"  />
 		<EditTextPreference  android:key="post_font_size" 
 			android:title="@string/setting_post_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="15"  />
+			android:dialogTitle="请输入数字" android:defaultValue="17"  />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="其他">
 		<EditTextPreference  android:key="black_list" 

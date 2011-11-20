@@ -31,6 +31,7 @@
 	<string name="title_mail">我的信箱</string>
 	<string name="title_category">分类讨论区</string>
 	<string name="title_profile">个人资料</string>
+	<string name="title_search_post">版内文章搜索</string>
 	 <!-- post相关 -->
 	<string name="post_alert_title">请选择操作</string>
 	<string name="post_reply_post">回复文章</string>
@@ -53,6 +54,7 @@
 	<string name="setting_default_board_type">默认版面模式</string>
 	<string name="setting_default_board_type_details">选择默认的版面模式</string>
 	<string name="setting_guidance_font_size">首页导读字体大小</string>
+	<string name="setting_guidance_second_font_size">首页导读二级字体大小</string>
 	<string name="setting_subject_font_size">版面帖子标题字体大小</string>
 	<string name="setting_post_font_size">帖子内容读字体大小</string>
 	<string name="setting_black_list">黑名单</string>
