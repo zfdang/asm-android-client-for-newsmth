@@ -1,10 +1,13 @@
 package com.athena.asm.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -220,6 +223,41 @@ public class SmthSupport {
 			getCategory(board.getEngName(), board.getChildBoards(), true);
 		}
 
+	}
+	
+	public List<Subject> getSearchSubjectList(String boardName, String boardID, String queryString) {
+		String url = "http://www.newsmth.net/bbsbfind.php?q=1&" + queryString;
+		String result = crawler.getUrlContent(url);
+		String patternStr = "ta\\.r\\('[^']+','([^']+)','<a href=\"bbsqry.php\\?userid=(\\w+)\">\\w+</a>','([^']+)','<a href=\"bbscon.php\\?bid=\\d+&id=(\\d+)\">([^<>]+)</a>'\\);";
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(result);
+		List<Subject> subjectList = new ArrayList<Subject>();
+		while (matcher.find()) {
+			String type = matcher.group(1).trim();
+			String author = matcher.group(2);			
+			String dateStr = matcher.group(3).replace("&nbsp;", " ");
+			SimpleDateFormat formatter = new SimpleDateFormat("MMM dd", Locale.US);  
+			Date date;
+			try {
+				date = formatter.parse(dateStr);
+			} catch (ParseException e) {
+				date = new Date();
+			}
+			String subjectid = matcher.group(4);
+			String title = matcher.group(5);
+			
+			Subject subject = new Subject();
+			subject.setAuthor(author);
+			subject.setBoardID(boardID);
+			subject.setBoardEngName(boardName);
+			subject.setSubjectID(subjectid);
+			subject.setTitle(title);
+			subject.setType(type);
+			subject.setDate(date);
+			subjectList.add(subject);
+		}
+
+		return subjectList;
 	}
 
 	/**

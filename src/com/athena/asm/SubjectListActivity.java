@@ -120,7 +120,9 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 
 	public static final int SWITCH_BOARD_TYPE = Menu.FIRST;
 	public static final int REFRESH_SUBJECTLIST = Menu.FIRST + 1;
-	public static final int CREATE_ID = Menu.FIRST + 2;
+	public static final int SEARCH_POST = Menu.FIRST + 2;
+	public static final int CREATE_ID = Menu.FIRST + 3;
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -132,9 +134,11 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 			menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换为普通模式");
 		}
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新");
+		menu.add(0, SEARCH_POST, Menu.NONE, "搜索");
 		if (smthSupport.getLoginStatus()) {
 			menu.add(0, CREATE_ID, Menu.NONE, "发新贴");
 		}
+		
 
 		return true;
 	}
@@ -149,6 +153,14 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		case REFRESH_SUBJECTLIST:
 			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 			loadSubjectTask.execute();
+			break;
+		case SEARCH_POST:
+			Intent postIntent = new Intent();
+			postIntent.setClassName("com.athena.asm",
+					"com.athena.asm.SearchPostActivity");
+			postIntent.putExtra(StringUtility.BOARD, currentBoard.getEngName());
+			postIntent.putExtra(StringUtility.BID, currentBoard.getBoardID());
+			startActivity(postIntent);
 			break;
 		case CREATE_ID:
 			Intent intent = new Intent();

@@ -28,6 +28,7 @@ public class StringUtility {
 	public static final String SUBJECT = "subject";
 	public static final String POST = "post";
 	public static final String BOARD_TYPE = "boardType";
+	public static final String SUBJECT_LIST = "subjectList";
 
 	/**
 	 * 从链接中提取相关参数
