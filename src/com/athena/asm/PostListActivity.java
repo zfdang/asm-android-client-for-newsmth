@@ -86,6 +86,9 @@ public class PostListActivity extends Activity implements OnClickListener {
 			if (currentPageNo < 1) {
 				currentPageNo = 1;
 			}
+			if (boardType == 1) {
+				currentPageNo = 0;
+			}
 		} else if (view.getId() == R.id.btn_go_page) {
 			int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
 			if (pageSet > currentSubject.getTotalPageNo()) {
