@@ -58,12 +58,14 @@ public class WritePostActivity extends Activity implements OnClickListener {
 
 	private void parseToHandleUrl() {
 		postUrl = "http://www.newsmth.net/bbssnd.php";
+		boolean isReply = false;
 		Map<String, String> paramsMap = StringUtility.getUrlParams(toHandleUrl);
 		if (paramsMap.containsKey("board")) {
 			postUrl += "?board=" + paramsMap.get("board");
 		}
 		if (paramsMap.containsKey("reid")) {
 			postUrl += "&reid=" + paramsMap.get("reid");
+			isReply = true;
 		}
 
 		String contentString = smthSupport.getUrlContent(toHandleUrl);
@@ -71,6 +73,9 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		Matcher m = p.matcher(contentString);
 		if (m.find()) {
 			postTitle = m.group(1);
+			if (!postTitle.contains("Re:") && isReply) {
+				postTitle = "Re:" + postTitle;
+			}
 			titleEditText.setText(postTitle);
 		}
 
