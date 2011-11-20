@@ -29,4 +29,9 @@
 			android:title="@string/setting_post_font_size"
 			android:dialogTitle="请输入数字" android:defaultValue="15"  />
 	</PreferenceCategory>
+	<PreferenceCategory android:title="其他">
+		<EditTextPreference  android:key="black_list" 
+			android:title="@string/setting_black_list" android:summary="@string/setting_black_list_details"
+			android:dialogTitle="请输入ID" android:defaultValue=""  />
+	</PreferenceCategory>
 </PreferenceScreen>

@@ -1,5 +1,7 @@
 package com.athena.asm;
 
+import java.util.ArrayList;
+
 import com.athena.asm.data.Preferences;
 import com.athena.asm.util.StringUtility;
 
@@ -21,6 +23,8 @@ public class aSMApplication extends Application {
 	private int guidanceFontSize = 25;
 	private int subjectFontSize = 15;
 	private int postFontSize = 15;
+	
+	private ArrayList<String> blackList = new ArrayList<String>();
 	
 	public void initPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,6 +87,22 @@ public class aSMApplication extends Application {
 			postFontSize = StringUtility.filterUnNumber(size);
 			if (postFontSize == 0) {
 				postFontSize = 15;
+			}
+		}
+		
+		if (!settings.contains(Preferences.BLACK_LIST)) {
+			editor.putString(Preferences.BLACK_LIST, "");
+		}
+		else {
+			blackList.clear();
+			String blackListString = settings.getString(Preferences.BLACK_LIST, "");
+			blackListString = blackListString.replaceAll("　", " ");
+			String[] ids = blackListString.split(" ");
+			for (int i = 0; i < ids.length; i++) {
+				String idString = ids[i].trim();
+				if (idString.length() > 0) {
+					blackList.add(ids[i]);
+				}
 			}
 		}
 		
@@ -169,5 +189,9 @@ public class aSMApplication extends Application {
 
 	public int getPostFontSize() {
 		return postFontSize;
+	}
+	
+	public ArrayList<String> getBlackList() {
+		return blackList;
 	}
 }

@@ -227,7 +227,7 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public List<Subject> getSubjectList(Board board, int boardType, boolean isReloadPageNo) {
+	public List<Subject> getSubjectList(Board board, int boardType, boolean isReloadPageNo, ArrayList<String> blackList) {		
 		String boardname = board.getEngName();
 		int pageno = board.getCurrentPageNo();
 		if (isReloadPageNo) {
@@ -255,6 +255,9 @@ public class SmthSupport {
 		while (matcher.find()) {
 			String subjectid = matcher.group(1);
 			String author = matcher.group(2);
+			if (blackList.contains(author)) {
+				continue;
+			}
 			String type = matcher.group(3).trim();
 			String dateStr = matcher.group(4);
 			Date date = StringUtility.toDate(dateStr);
@@ -301,7 +304,7 @@ public class SmthSupport {
 	 * @param pageno
 	 * @return
 	 */
-	public List<Post> getPostList(Subject subject) {
+	public List<Post> getPostList(Subject subject, ArrayList<String> blackList) {
 		String result = getPostListContent(subject.getBoardEngName(),
 				subject.getSubjectID(), subject.getCurrentPageNo());
 		if (result == null) {
@@ -330,6 +333,9 @@ public class SmthSupport {
 		while (matcher.find()) {
 			String subjectid = matcher.group(1);
 			String author = matcher.group(2);
+			if (blackList.contains(author)) {
+				continue;
+			}
 
 			if (flag) {
 				flag = false;

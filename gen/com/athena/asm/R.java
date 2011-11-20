@@ -251,12 +251,14 @@ public final class R {
         public static final int profile_send_mail=0x7f07000f;
         /**  下拉刷新 
          */
-        public static final int pull_to_refresh_pull_label=0x7f07002c;
-        public static final int pull_to_refresh_refreshing_label=0x7f07002e;
-        public static final int pull_to_refresh_release_label=0x7f07002d;
-        public static final int pull_to_refresh_tap_label=0x7f07002f;
+        public static final int pull_to_refresh_pull_label=0x7f07002e;
+        public static final int pull_to_refresh_refreshing_label=0x7f070030;
+        public static final int pull_to_refresh_release_label=0x7f07002f;
+        public static final int pull_to_refresh_tap_label=0x7f070031;
         public static final int setting_auto_login=0x7f070023;
         public static final int setting_auto_login_details=0x7f070024;
+        public static final int setting_black_list=0x7f07002c;
+        public static final int setting_black_list_details=0x7f07002d;
         public static final int setting_default_board_type=0x7f070027;
         public static final int setting_default_board_type_details=0x7f070028;
         public static final int setting_default_tab=0x7f070025;

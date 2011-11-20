@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.athena.asm.SubjectListActivity;
+import com.athena.asm.aSMApplication;
 
 public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	private SubjectListActivity subjectListActivity;
@@ -26,7 +27,9 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
-		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, boardType, isReloadPageNo);
+		aSMApplication application = (aSMApplication)subjectListActivity.getApplication();
+		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, 
+				boardType, isReloadPageNo, application.getBlackList());
 		pdialog.cancel();
 		return null;
 	}
