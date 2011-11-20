@@ -52,15 +52,20 @@ public class PostListAdapter extends BaseAdapter {
 		titleTextView.setText(post.getTitle());
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
-		contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		String contentString = post.getContent();
+		//contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		contentTextView.setText(Html.fromHtml(post.getContent()));
+		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
+		
+		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
+		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
+		String contentString = "";
 		for (int i = 0; i < attachments.size(); i++) {
 			contentString += "<a href='" + attachments.get(i).getAttachUrl()
-					+ "'>" + attachments.get(i).getName() + "</a><br/>";
+					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
 		}
-		contentTextView.setText(Html.fromHtml(contentString));
-		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
+		attachTextView.setText(Html.fromHtml(contentString));
+		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 		dateTextView.setText(post.getDate().toLocaleString());
 		layout.setTag(post);
@@ -78,7 +83,7 @@ public class PostListAdapter extends BaseAdapter {
 						relativeLayout = (RelativeLayout) v;
 					}
 					final String authorID = (String) ((TextView)relativeLayout.findViewById(R.id.AuthorID)).getText();
-					final Post post = (Post) v.getTag();
+					final Post post = (Post) relativeLayout.getTag();
 					final String[] items = { activity.getString(R.string.post_reply_post),
 							activity.getString(R.string.post_copy_author)};// ,
 					AlertDialog.Builder builder = new AlertDialog.Builder(
