@@ -155,6 +155,24 @@ public class SmthCrawler {
 		}
 		return true;
 	}
+	
+	/*public String getRedirectUrl(String url) {
+		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,false);
+		HttpGet httpget = new HttpGet(url);
+		httpget.setHeader("User-Agent", userAgent);
+		httpget.addHeader("Accept-Encoding", "gzip, deflate");
+		String newUrl;
+		try {
+			HttpResponse response = httpClient.execute(httpget);
+			Header locationHeader = response.getLastHeader("Location");
+			newUrl = locationHeader.getValue();
+		} catch (IOException e) {
+			Log.d("com.athena.asm", "get url failed,", e);
+			newUrl = null;
+		}
+		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,true);
+		return newUrl;
+	}*/
 
 	public String getUrlContent(String url) {
 		HttpGet httpget = new HttpGet(url);
@@ -202,8 +220,7 @@ public class SmthCrawler {
 			return;
 		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
 				Pattern.DOTALL);
-		Pattern infoPattern = Pattern
-				.compile("conWriter\\(\\d+, '[^']+', \\d+, \\d+, (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
+		Pattern infoPattern = Pattern.compile("conWriter\\(\\d+, '[^']+', \\d+, (\\d+), (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
 		List<Future<?>> futureList = new ArrayList<Future<?>>(postList.size());
 		for (Post post : postList) {
 			Future<?> future = execService.submit(new PostContentCrawler(post,
@@ -301,6 +318,8 @@ public class SmthCrawler {
 
 			Matcher infoMatcher = infoPattern.matcher(content);
 			if (infoMatcher.find()) {
+				post.setSubjectID(infoMatcher.group(1));
+				post.setTopicSubjectID(infoMatcher.group(2));
 				post.setTitle(infoMatcher.group(4));
 			}
 

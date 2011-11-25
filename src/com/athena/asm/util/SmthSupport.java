@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 
 import android.util.Log;
 
+import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Board;
+import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
@@ -79,6 +81,86 @@ public class SmthSupport {
 	public String getUrlContent(String urlString) {
 		return crawler.getUrlContent(urlString);
 	}
+	
+	/**
+	 * 获得首页导读.
+	 * 
+	 * @return
+	 */
+	public Object[] getGuidance() {
+		String content = crawler
+				.getUrlContent("http://www.newsmth.net/mainpage.html");
+		Pattern hp = Pattern.compile(
+				"<table [^<>]+class=\"HotTable\"[^<>]+>(.*?)</table>",
+				Pattern.DOTALL);
+		if (content == null) {
+			return new Object[] { Collections.emptyList(),
+					Collections.emptyList() };
+		}
+		Matcher hm = hp.matcher(content);
+		List<String> sectionList = new ArrayList<String>();
+		List<List<Subject>> subjectList = new ArrayList<List<Subject>>();
+		if (hm.find()) {
+			sectionList.add("水木十大");
+			String hc = hm.group(1);
+			Pattern boardNamePattern = Pattern
+					.compile("<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
+			Matcher boardNameMatcher = boardNamePattern.matcher(hc);
+
+			Pattern hip = Pattern
+					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
+			Matcher him = hip.matcher(hc);
+			Pattern hIdPattern = Pattern.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
+			Matcher hIdMatcher = hIdPattern.matcher(hc);
+			List<Subject> list = new ArrayList<Subject>();
+			while (him.find() && hIdMatcher.find()) {
+				Subject subject = new Subject();
+				if (boardNameMatcher.find()) {
+					subject.setBoardChsName(boardNameMatcher.group(1));
+				}
+				subject.setBoardEngName(him.group(1));
+				subject.setSubjectID(him.group(2));
+				subject.setTitle(him.group(3));
+				subject.setAuthor(hIdMatcher.group(1));
+				list.add(subject);
+			}
+			subjectList.add(list);
+		}
+
+		Pattern sp = Pattern
+				.compile(
+						"<span class=\"SectionName\"><a[^<>]+>([^<>]+)</a></span>(.*?)class=\"SecLine\"></td>",
+						Pattern.DOTALL);
+		Matcher sm = sp.matcher(content);
+		while (sm.find()) {
+			String sectionName = sm.group(1);
+			sectionList.add(sectionName);
+			String sc = sm.group(2);
+			System.out.println(sectionName);
+
+			Pattern boardNamePattern = Pattern
+					.compile("\"SectionItem\">.<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
+			Matcher boardNameMatcher = boardNamePattern.matcher(sc);
+
+			Pattern sip = Pattern
+					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
+			Matcher sim = sip.matcher(sc);
+			List<Subject> list = new ArrayList<Subject>();
+			while (sim.find()) {
+				Subject subject = new Subject();
+				if (boardNameMatcher.find()) {
+					subject.setBoardChsName(boardNameMatcher.group(1));
+				}
+				subject.setBoardEngName(sim.group(1));
+				subject.setSubjectID(sim.group(2));
+				subject.setTitle(sim.group(3));
+				list.add(subject);
+			}
+			subjectList.add(list);
+		}
+
+		return new Object[] { sectionList, subjectList };
+	}
 
 	/**
 	 * 获取版面收藏列表.
@@ -133,6 +215,32 @@ public class SmthSupport {
 			boardList.add(board);
 		}
 
+	}
+	
+	/**
+	 * 获取邮箱信息
+	 * @return
+	 */
+	public MailBox getMailBoxInfo() {
+		MailBox mailBox = new MailBox();
+		String content = crawler.getUrlContent("http://www.newsmth.net/bbsmail.php");
+		Pattern inboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DIR&title=%CA%D5%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		Matcher inboxMatcher = inboxPattern.matcher(content);
+		while (inboxMatcher.find()) {
+			mailBox.setInboxNumber(Integer.parseInt(inboxMatcher.group(1)));
+		}
+		Pattern outboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.SENT&title=%B7%A2%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		Matcher outboxMatcher = outboxPattern.matcher(content);
+		while (outboxMatcher.find()) {
+			mailBox.setOutboxNumber(Integer.parseInt(outboxMatcher.group(1)));
+		}
+		Pattern trashboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DELETED&title=%C0%AC%BB%F8%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		Matcher trashboxMatcher = trashboxPattern.matcher(content);
+		while (trashboxMatcher.find()) {
+			mailBox.setTrashboxNumber(Integer.parseInt(trashboxMatcher.group(1)));
+		}	
+		
+		return mailBox;
 	}
 
 	/**
@@ -331,6 +439,94 @@ public class SmthSupport {
 		postList.add(post);
 		crawler.getPostList(postList);
 		
+		subject.setTopicSubjectID(post.getTopicSubjectID());
+		
+		return postList;
+	}
+	
+	public List<Post> getTopicPostList(Subject subject, int action) {
+		List<Post> postList = new ArrayList<Post>();
+		String url = "http://www.newsmth.net/bbscon.php?bid="+subject.getBoardID()+"&id=";
+		if (action == 1) {
+			url += subject.getTopicSubjectID();
+		}
+		else {
+			url += subject.getSubjectID();
+			if (action == 2) {
+				url += "&p=tp";
+			}
+			else {
+				url += "&p=tn";
+			}
+		}
+		String content = crawler.getUrlContent(url);
+		Post post = new Post();
+		
+		post.setBoardID(subject.getBoardID());
+		post.setBoard(subject.getBoardEngName());
+		
+		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
+				Pattern.DOTALL);
+		Pattern infoPattern = Pattern
+				.compile("conWriter\\(\\d+, '[^']+', \\d+, (\\d+), (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
+		Matcher contentMatcher = contentPattern.matcher(content);
+		if (contentMatcher.find()) {
+			String contentString = contentMatcher.group(1);
+			Object[] objects = StringUtility
+					.parsePostContent(contentString);
+			post.setContent((String) objects[0]);
+			post.setDate((java.util.Date) objects[1]);
+			int index1 = contentString.indexOf("发信人:");
+			int index2 = contentString.indexOf("(");
+			String authorString = contentString.substring(index1 + 4, index2 - 1).trim();
+			post.setAuthor(authorString);
+		}
+
+		Matcher infoMatcher = infoPattern.matcher(content);
+		if (infoMatcher.find()) {
+			post.setSubjectID(infoMatcher.group(1));
+			post.setTopicSubjectID(infoMatcher.group(2));
+			post.setTitle(infoMatcher.group(5));
+		}
+
+		String bid = null, id = null, ftype = null, num = null, cacheable = null;
+		Matcher attachPartOneMatcher = Pattern.compile(
+				"attWriter\\((\\d+),(\\d+),(\\d+),(\\d+),(\\d+)").matcher(
+				content);
+		if (attachPartOneMatcher.find()) {
+			bid = attachPartOneMatcher.group(1);
+			id = attachPartOneMatcher.group(2);
+			ftype = attachPartOneMatcher.group(3);
+			num = attachPartOneMatcher.group(4);
+			cacheable = attachPartOneMatcher.group(5);
+		}
+
+		ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
+		Matcher attachPartTwoMatcher = Pattern.compile(
+				"attach\\('([^']+)', (\\d+), (\\d+)\\)").matcher(content);
+		while (attachPartTwoMatcher.find()) {
+			Attachment innerAtt = new Attachment();
+			innerAtt.setBid(bid);
+			innerAtt.setId(id);
+			innerAtt.setFtype(ftype);
+			innerAtt.setNum(num);
+			innerAtt.setCacheable(cacheable);
+			String name = attachPartTwoMatcher.group(1);
+			String len = attachPartTwoMatcher.group(2);
+			String pos = attachPartTwoMatcher.group(3);
+			innerAtt.setName(name);
+			innerAtt.setLen(len);
+			innerAtt.setPos(pos);
+			attachFiles.add(innerAtt);
+		}
+		post.setAttachFiles(attachFiles);
+		postList.add(post);
+		
+		subject.setSubjectID(post.getSubjectID());
+		subject.setTopicSubjectID(post.getTopicSubjectID());
+		subject.setAuthor(post.getAuthor());
+		subject.setDate(post.getDate());
+		
 		return postList;
 	}
 
@@ -395,85 +591,7 @@ public class SmthSupport {
 		return postList;
 	}
 
-	/**
-	 * 获得首页导读.
-	 * 
-	 * @return
-	 */
-	public Object[] getGuidance() {
-		String content = crawler
-				.getUrlContent("http://www.newsmth.net/mainpage.html");
-		Pattern hp = Pattern.compile(
-				"<table [^<>]+class=\"HotTable\"[^<>]+>(.*?)</table>",
-				Pattern.DOTALL);
-		if (content == null) {
-			return new Object[] { Collections.emptyList(),
-					Collections.emptyList() };
-		}
-		Matcher hm = hp.matcher(content);
-		List<String> sectionList = new ArrayList<String>();
-		List<List<Subject>> subjectList = new ArrayList<List<Subject>>();
-		if (hm.find()) {
-			sectionList.add("水木十大");
-			String hc = hm.group(1);
-			Pattern boardNamePattern = Pattern
-					.compile("<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
-			Matcher boardNameMatcher = boardNamePattern.matcher(hc);
-
-			Pattern hip = Pattern
-					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
-			Matcher him = hip.matcher(hc);
-			Pattern hIdPattern = Pattern.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
-			Matcher hIdMatcher = hIdPattern.matcher(hc);
-			List<Subject> list = new ArrayList<Subject>();
-			while (him.find() && hIdMatcher.find()) {
-				Subject subject = new Subject();
-				if (boardNameMatcher.find()) {
-					subject.setBoardChsName(boardNameMatcher.group(1));
-				}
-				subject.setBoardEngName(him.group(1));
-				subject.setSubjectID(him.group(2));
-				subject.setTitle(him.group(3));
-				subject.setAuthor(hIdMatcher.group(1));
-				list.add(subject);
-			}
-			subjectList.add(list);
-		}
-
-		Pattern sp = Pattern
-				.compile(
-						"<span class=\"SectionName\"><a[^<>]+>([^<>]+)</a></span>(.*?)class=\"SecLine\"></td>",
-						Pattern.DOTALL);
-		Matcher sm = sp.matcher(content);
-		while (sm.find()) {
-			String sectionName = sm.group(1);
-			sectionList.add(sectionName);
-			String sc = sm.group(2);
-			System.out.println(sectionName);
-
-			Pattern boardNamePattern = Pattern
-					.compile("\"SectionItem\">.<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
-			Matcher boardNameMatcher = boardNamePattern.matcher(sc);
-
-			Pattern sip = Pattern
-					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
-			Matcher sim = sip.matcher(sc);
-			List<Subject> list = new ArrayList<Subject>();
-			while (sim.find()) {
-				Subject subject = new Subject();
-				if (boardNameMatcher.find()) {
-					subject.setBoardChsName(boardNameMatcher.group(1));
-				}
-				subject.setBoardEngName(sim.group(1));
-				subject.setSubjectID(sim.group(2));
-				subject.setTitle(sim.group(3));
-				list.add(subject);
-			}
-			subjectList.add(list);
-		}
-
-		return new Object[] { sectionList, subjectList };
-	}
+	
 
 	/**
 	 * 获得个人信息

@@ -10,10 +10,12 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private PostListActivity postListActivity;
 	private ProgressDialog pdialog;
 	private int boardType;
+	private int action;
 
-	public LoadPostTask(PostListActivity activity, int boardType) {
+	public LoadPostTask(PostListActivity activity, int boardType, int action) {
 		this.postListActivity = activity;
 		this.boardType = boardType;
+		this.action = action;
 	}
 
 	@Override
@@ -30,7 +32,12 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 			postListActivity.postList = postListActivity.smthSupport.getPostList(postListActivity.currentSubject, application.getBlackList());
 		}
 		else {
-			postListActivity.postList = postListActivity.smthSupport.getSinglePostList(postListActivity.currentSubject);
+			if (action == 0) {
+				postListActivity.postList = postListActivity.smthSupport.getSinglePostList(postListActivity.currentSubject);
+			}
+			else {
+				postListActivity.postList = postListActivity.smthSupport.getTopicPostList(postListActivity.currentSubject, action);
+			}
 		}
 		
 		pdialog.cancel();

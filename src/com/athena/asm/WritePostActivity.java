@@ -74,7 +74,7 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		if (m.find()) {
 			postTitle = m.group(1);
 			if (!postTitle.contains("Re:") && isReply) {
-				postTitle = "Re:" + postTitle;
+				postTitle = "Re: " + postTitle;
 			}
 			titleEditText.setText(postTitle);
 		}

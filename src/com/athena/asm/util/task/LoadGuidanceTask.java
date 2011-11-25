@@ -30,7 +30,6 @@ public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 		Object[] guidance = homeActivity.smthSupport.getGuidance();
 		homeActivity.guidanceSectionNames = (List<String>) guidance[0];
 		homeActivity.guidanceSectionDetails = (List<List<Subject>>) guidance[1];
-		;
 		pdialog.cancel();
 		return null;
 	}

@@ -32,11 +32,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.Adapter.GuidanceListAdapter;
+import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Board;
+import com.athena.asm.data.Mail;
+import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
@@ -44,6 +48,7 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadCategoryTask;
 import com.athena.asm.util.task.LoadFavoriteTask;
 import com.athena.asm.util.task.LoadGuidanceTask;
+import com.athena.asm.util.task.LoadMailTask;
 //import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoadProfileTask;
 
@@ -52,6 +57,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 	public List<String> guidanceSectionNames = null;
 	public List<List<Subject>> guidanceSectionDetails = null;
 	public List<Board> favList = null;
+	public MailBox mailBox = null;
+	public List<Mail> mailList = null;
 	public List<Board> categoryList = null;
 	public List<String> boardFullStrings = null;
 	public HashMap<String, Board> boardHashMap = null;
@@ -72,7 +79,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	private LoadGuidanceTask loadGuidanceTask;
 	private LoadFavoriteTask loadFavoriteTask;
-	//private LoadMailTask loadMailTask;
+	private LoadMailTask loadMailTask;
 	private LoadCategoryTask loadCategoryTask;
 	private LoadProfileTask loadProfileTask;
 
@@ -113,7 +120,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 			reloadFavorite(favList, 20);
 		} else if (defaultTab.equals("003")) {
 			reloadCategory(categoryList, 30);
-		}else {
+		} else if (defaultTab.equals("004")) {
+			reloadMail();
+		} else {
 			reloadProfile(currentProfile, 50);
 		}
 
@@ -166,7 +175,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 	private void initTasks() {
 		loadGuidanceTask = new LoadGuidanceTask(this);
 		loadFavoriteTask = new LoadFavoriteTask(this);
-		//loadMailTask = new LoadMailTask(this);
+		loadMailTask = new LoadMailTask(this);
 		loadCategoryTask = new LoadCategoryTask(this);
 		loadProfileTask = new LoadProfileTask(this, loginUserID, 50);
 	}
@@ -253,9 +262,25 @@ public class HomeActivity extends Activity implements OnClickListener {
 			switchToView(listView, step);
 		}
 	}
+	
+	public void loadMail() {
+		View layout = inflater.inflate(R.layout.mail, null);
+		ListView listView = (ListView) layout
+				.findViewById(R.id.mail_list);
+		listView.setAdapter(new MailListAdapter(this, mailBox));
+
+		titleTextView.setText(R.string.title_mail);
+		switchToView(listView, 40);
+	}
 
 	public void reloadMail() {
-
+		if (isLogined) {
+			loadMailTask.execute();
+		}
+		else {
+			Toast.makeText(getApplicationContext(), "请登陆后再使用.",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public void reloadCategory(List<Board> boardList, int step) {

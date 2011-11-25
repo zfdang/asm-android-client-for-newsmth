@@ -6,6 +6,9 @@
 	android:orientation="horizontal" android:gravity="center">
 	<!-- 防止默认焦点为edittext -->
 	<LinearLayout android:focusable="true" android:focusableInTouchMode="true" android:layout_width="0px" android:layout_height="0px"/> 
+	<Button android:id="@+id/btn_first_page" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="@string/first_page"
+		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_pre_page" android:layout_height="wrap_content"
 		android:layout_width="wrap_content" android:text="@string/pre_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
@@ -21,6 +24,9 @@
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_next_page" android:layout_height="wrap_content"
 		android:layout_width="wrap_content" android:text="@string/next_page"
+		android:layout_gravity="center" android:layout_marginTop="3dip" />
+	<Button android:id="@+id/btn_last_page" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="@string/last_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 
 </LinearLayout>

@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.athena.asm.Adapter.SearchPostResultListAdapter;
-import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
@@ -25,6 +24,7 @@ public class SearchPostResultListActivity extends Activity {
 
 	public int boardType = 1;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

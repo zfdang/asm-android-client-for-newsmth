@@ -23,11 +23,13 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
+		homeActivity.mailBox = homeActivity.smthSupport.getMailBoxInfo();
 		pdialog.cancel();
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
+		homeActivity.loadMail();
 	}
 }

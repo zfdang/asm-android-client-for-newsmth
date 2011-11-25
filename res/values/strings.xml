@@ -13,12 +13,24 @@
     <string name="cmenu_mail">邮箱</string>
     <string name="cmenu_category">分区</string>
     <string name="cmenu_profile">资料</string>
-     <!-- 分区 -->
-     <string name="board_autocomplete_tip">请输入分区名</string>
-     <!-- 导航 -->
-	<string name="pre_page">  &lt;&lt;  </string>
-	<string name="next_page">  &gt;&gt;  </string>
+    <!-- 邮箱 -->
+    <string name="mail_inbox">收件箱</string>
+    <string name="mail_outbox">发件箱</string>
+    <string name="mail_trash">垃圾箱</string>
+    <string name="mail_write_mail">发送新邮件</string>
+    <string name="mail_clear_trash">清空垃圾箱</string>
+    <!-- 分区 -->
+    <string name="board_autocomplete_tip">请输入分区名</string>
+    <!-- 同主题下导航 -->
+    <string name="first_page">  &lt;&lt;   </string>
+    <string name="last_page">  &gt;&gt;   </string>
+	<string name="pre_page">  &lt;  </string>
+	<string name="next_page">  &gt;  </string>
 	<string name="go_page">  GO  </string>
+	<!-- 普通模式下导航 -->
+	<string name="topic_first_page">同主题第一篇</string>
+	<string name="topic_pre_page">同主题上篇</string>
+	<string name="topic_next_page">同主题下篇</string>
 	 <!-- 资料页 -->
 	<string name="profile_send_mail">发信</string>
 	<string name="profile_alive_number">生命力</string>

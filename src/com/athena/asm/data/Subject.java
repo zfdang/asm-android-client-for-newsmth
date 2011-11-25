@@ -7,6 +7,7 @@ public class Subject implements Serializable {
 	private static final long serialVersionUID = 7351647738651826553L;
 	public static final String TYPE_BOTTOM = "d"; // 置底所包含的标记字符
 	private String subjectID;
+	private String topicSubjectID;
 	private String title;
 	private String author;
 	private String boardID;
@@ -24,6 +25,14 @@ public class Subject implements Serializable {
 
 	public void setSubjectID(String subjectID) {
 		this.subjectID = subjectID;
+	}
+
+	public void setTopicSubjectID(String topicSubjectID) {
+		this.topicSubjectID = topicSubjectID;
+	}
+
+	public String getTopicSubjectID() {
+		return topicSubjectID;
 	}
 
 	public String getTitle() {

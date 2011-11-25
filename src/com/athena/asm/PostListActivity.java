@@ -30,9 +30,14 @@ public class PostListActivity extends Activity implements OnClickListener {
 	public List<Post> postList;
 
 	private int currentPageNo = 1;
-	private int boardType = 0;
+	private int boardType = 0; // 1是普通，0是同主题
 	EditText pageNoEditText;
 	TextView totalPageNoTextView;
+	Button firstButton;
+	Button lastButton;
+	Button preButton;
+	Button goButton;
+	Button nextButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +59,20 @@ public class PostListActivity extends Activity implements OnClickListener {
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setText(currentPageNo + "");
 
-		Button preButton = (Button) findViewById(R.id.btn_pre_page);
+		firstButton = (Button) findViewById(R.id.btn_first_page);
+		firstButton.setOnClickListener(this);
+		lastButton = (Button) findViewById(R.id.btn_last_page);
+		lastButton.setOnClickListener(this);
+		preButton = (Button) findViewById(R.id.btn_pre_page);
 		preButton.setOnClickListener(this);
-		Button goButton = (Button) findViewById(R.id.btn_go_page);
+		goButton = (Button) findViewById(R.id.btn_go_page);
 		goButton.setOnClickListener(this);
-		Button nextButton = (Button) findViewById(R.id.btn_next_page);
+		nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
 		
 		boardType = getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0);
 
-		LoadPostTask loadPostTask = new LoadPostTask(this, boardType);
+		LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0);
 		loadPostTask.execute();
 		// reloadPostList();
 	}
@@ -77,38 +86,75 @@ public class PostListActivity extends Activity implements OnClickListener {
 		currentPageNo = currentSubject.getCurrentPageNo();
 		pageNoEditText.setText(currentPageNo + "");
 		listView.requestFocus();
+		
+		if (boardType == 0) {
+			firstButton.setText(R.string.first_page);
+			lastButton.setText(R.string.last_page);
+			preButton.setText(R.string.pre_page);
+			goButton.setVisibility(View.VISIBLE);
+			nextButton.setText(R.string.next_page);
+			pageNoEditText.setVisibility(View.VISIBLE);
+			totalPageNoTextView.setVisibility(View.VISIBLE);
+		}
+		else {
+			firstButton.setText(R.string.topic_first_page);
+			lastButton.setVisibility(View.GONE);
+			preButton.setText(R.string.topic_pre_page);
+			goButton.setVisibility(View.GONE);
+			nextButton.setText(R.string.topic_next_page);
+			pageNoEditText.setVisibility(View.GONE);
+			totalPageNoTextView.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
 	public void onClick(View view) {
-		if (view.getId() == R.id.btn_pre_page) {
-			currentPageNo--;
-			if (currentPageNo < 1) {
+		if (boardType == 0) { // 同主题导航
+			if (view.getId() == R.id.btn_first_page) {
 				currentPageNo = 1;
-			}
-			if (boardType == 1) {
-				currentPageNo = 0;
-			}
-		} else if (view.getId() == R.id.btn_go_page) {
-			int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
-			if (pageSet > currentSubject.getTotalPageNo()) {
-				return;
-			}
-			currentPageNo = pageSet;
-		} else if (view.getId() == R.id.btn_next_page) {
-			currentPageNo++;
-			if (currentPageNo > currentSubject.getTotalPageNo()) {
+			} else if (view.getId() == R.id.btn_last_page) {
 				currentPageNo = currentSubject.getTotalPageNo();
-				return;
+			} else if (view.getId() == R.id.btn_pre_page) {
+				currentPageNo--;
+				if (currentPageNo < 1) {
+					currentPageNo = 1;
+				}
+				if (boardType == 1) {
+					currentPageNo = 0;
+				}
+			} else if (view.getId() == R.id.btn_go_page) {
+				int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
+				if (pageSet > currentSubject.getTotalPageNo()) {
+					return;
+				}
+				currentPageNo = pageSet;
+			} else if (view.getId() == R.id.btn_next_page) {
+				currentPageNo++;
+				if (currentPageNo > currentSubject.getTotalPageNo()) {
+					currentPageNo = currentSubject.getTotalPageNo();
+					return;
+				}
 			}
+			currentSubject.setCurrentPageNo(currentPageNo);
+			pageNoEditText.setText(currentPageNo + "");
+			if (view.getParent() != null) {
+				((View) view.getParent()).requestFocus();
+			}
+			
+			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0);
+			loadPostTask.execute();
 		}
-		currentSubject.setCurrentPageNo(currentPageNo);
-		pageNoEditText.setText(currentPageNo + "");
-		if (view.getParent() != null) {
-			((View) view.getParent()).requestFocus();
+		else {
+			int action = 0;
+			if (view.getId() == R.id.btn_first_page) {
+				action = 1;
+			} else if (view.getId() == R.id.btn_pre_page) {
+				action = 2;
+			} else if (view.getId() == R.id.btn_next_page) {
+				action = 3;
+			}
+			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, action);
+			loadPostTask.execute();
 		}
-		
-		LoadPostTask loadPostTask = new LoadPostTask(this, boardType);
-		loadPostTask.execute();
 	}
 }

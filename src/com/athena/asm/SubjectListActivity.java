@@ -59,6 +59,10 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setText(currentPageNo + "");
 
+		Button firstButton = (Button) findViewById(R.id.btn_first_page);
+		firstButton.setOnClickListener(this);
+		Button lastButton = (Button) findViewById(R.id.btn_last_page);
+		lastButton.setOnClickListener(this);
 		Button preButton = (Button) findViewById(R.id.btn_pre_page);
 		preButton.setOnClickListener(this);
 		Button goButton = (Button) findViewById(R.id.btn_go_page);
@@ -95,7 +99,11 @@ public class SubjectListActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		if (view.getId() == R.id.btn_pre_page) {
+		if (view.getId() == R.id.btn_first_page) {
+			currentPageNo = 1;
+		} else if (view.getId() == R.id.btn_last_page) {
+			currentPageNo = currentBoard.getTotalPageNo();
+		} else if (view.getId() == R.id.btn_pre_page) {
 			currentPageNo--;
 			if (currentPageNo < 1) {
 				currentPageNo = 1;

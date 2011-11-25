@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Post {
 	private String subjectID;
+	private String topicSubjectID;
 	private String title;
 	private String author;
 	private String board;
@@ -24,6 +25,14 @@ public class Post {
 
 	public void setSubjectID(String subjectid) {
 		this.subjectID = subjectid;
+	}
+
+	public void setTopicSubjectID(String topicSubjectID) {
+		this.topicSubjectID = topicSubjectID;
+	}
+
+	public String getTopicSubjectID() {
+		return topicSubjectID;
 	}
 
 	public String getTitle() {
