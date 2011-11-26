@@ -320,7 +320,7 @@ public class SmthCrawler {
 			if (infoMatcher.find()) {
 				post.setSubjectID(infoMatcher.group(1));
 				post.setTopicSubjectID(infoMatcher.group(2));
-				post.setTitle(infoMatcher.group(4));
+				post.setTitle(infoMatcher.group(5));
 			}
 
 			String bid = null, id = null, ftype = null, num = null, cacheable = null;
