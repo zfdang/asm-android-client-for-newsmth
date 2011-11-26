@@ -33,13 +33,8 @@ public class FavoriteListAdapter extends BaseAdapter {
 		Board board = boards.get(position);
 
 		if (board.isDirectory()) {
-			// if (convertView == null) {
 			layout = activity.inflater.inflate(
 					R.layout.favorite_list_section_header, null);
-			// }
-			// else {
-			// layout = convertView;
-			// }
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText(board.getDirectoryName());
@@ -49,17 +44,12 @@ public class FavoriteListAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					activity.reloadFavorite(
-							((Board) v.getTag()).getChildBoards(), step++);
+							((Board) v.getTag()).getChildBoards(), ++step);
 				}
 			});
 		} else {
-			// if (convertView == null) {
 			layout = activity.inflater.inflate(R.layout.favorite_list_item,
 					null);
-			// }
-			// else {
-			// layout = convertView;
-			// }
 			TextView categoryNameTextView = (TextView) layout
 					.findViewById(R.id.CategoryName);
 			categoryNameTextView.setText(board.getCategoryName());
