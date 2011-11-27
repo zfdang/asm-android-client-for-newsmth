@@ -29,6 +29,9 @@ public class StringUtility {
 	public static final String POST = "post";
 	public static final String BOARD_TYPE = "boardType";
 	public static final String SUBJECT_LIST = "subjectList";
+	public static final String MAIL_BOX_TYPE = "boxType";
+	public static final String MAIL = "mail";
+	public static final String WRITE_TYPE = "write_type";
 
 	/**
 	 * 从链接中提取相关参数
@@ -40,7 +43,9 @@ public class StringUtility {
 			String paramaters[] = url.split("&");
 			for (String param : paramaters) {
 				String values[] = param.split("=");
-				paramMap.put(values[0], values[1]);
+				if (values.length > 1) {
+					paramMap.put(values[0], values[1]);
+				}
 			}
 		}
 		return paramMap;
@@ -116,7 +121,7 @@ public class StringUtility {
 		int linequote = 0;
 		int seperator = 0;
 		for (String line : lines) {
-			if (line.startsWith("发信人:")) {
+			if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
 				/*
 				 * line = "<font color=#6699FF>" +
 				 * MyUtils.subStringBetween(line, "发信人: ", ", 信区:") + "</font>";

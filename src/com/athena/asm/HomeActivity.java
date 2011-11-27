@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.Adapter.GuidanceListAdapter;
-import com.athena.asm.Adapter.MailListAdapter;
+import com.athena.asm.Adapter.MailAdapter;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.MailBox;
@@ -149,17 +149,17 @@ public class HomeActivity extends Activity implements OnClickListener {
 			}
 		});
 
+		btnCategory.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				reloadCategory(categoryList, 30);
+			}
+		});
+
 		btnMail.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				reloadMail();
-			}
-		});
-
-		btnCategory.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				reloadCategory(categoryList, 40);
 			}
 		});
 
@@ -262,26 +262,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 			switchToView(listView, step);
 		}
 	}
-	
-	public void loadMail() {
-		View layout = inflater.inflate(R.layout.mail, null);
-		ListView listView = (ListView) layout
-				.findViewById(R.id.mail_list);
-		listView.setAdapter(new MailListAdapter(this, mailBox));
-
-		titleTextView.setText(R.string.title_mail);
-		switchToView(listView, 40);
-	}
-
-	public void reloadMail() {
-		if (isLogined) {
-			loadMailTask.execute();
-		}
-		else {
-			Toast.makeText(getApplicationContext(), "请登陆后再使用.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
 
 	public void reloadCategory(List<Board> boardList, int step) {
 		if (categoryList == null) {
@@ -304,6 +284,27 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 			titleTextView.setText(R.string.title_category);
 			switchToView(layout, step);
+		}
+	}
+	
+	public void loadMail() {
+		View layout = inflater.inflate(R.layout.mail, null);
+		ListView listView = (ListView) layout
+				.findViewById(R.id.mail_list);
+		listView.setAdapter(new MailAdapter(this, mailBox));
+
+		titleTextView.setText(R.string.title_mail);
+		switchToView(listView, 40);
+	}
+
+	public void reloadMail() {
+		if (isLogined) {
+			loadMailTask = new LoadMailTask(this);
+			loadMailTask.execute();
+		}
+		else {
+			Toast.makeText(getApplicationContext(), "请登陆后再使用.",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 

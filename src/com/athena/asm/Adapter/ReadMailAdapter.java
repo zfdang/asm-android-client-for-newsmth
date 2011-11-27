@@ -1,7 +1,7 @@
 package com.athena.asm.Adapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,55 +20,42 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
+import com.athena.asm.ReadMailActivity;
 import com.athena.asm.aSMApplication;
-import com.athena.asm.data.Attachment;
-import com.athena.asm.data.Post;
+import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
 
-public class PostListAdapter extends BaseAdapter {
-
-	private PostListActivity activity;
+public class ReadMailAdapter extends BaseAdapter {
+	private ReadMailActivity activity;
 	private LayoutInflater inflater;
-	private List<Post> postList;
 
-	public PostListAdapter(PostListActivity activity, LayoutInflater inflater,
-			List<Post> postList) {
+	public ReadMailAdapter(ReadMailActivity activity, LayoutInflater inflater) {
 		this.activity = activity;
 		this.inflater = inflater;
-		this.postList = postList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
-		Post post = postList.get(position);
+		Mail mail = activity.currentMail;
 
 		layout = inflater.inflate(R.layout.post_list_item, null);
 		aSMApplication application = (aSMApplication)activity.getApplication();
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
-		authorTextView.setText(post.getAuthor());
+		authorTextView.setText(mail.getSenderID());
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
-		titleTextView.setText(post.getTitle());
+		titleTextView.setText(mail.getTitle());
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
-		//contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		contentTextView.setText(Html.fromHtml(post.getContent()));
+		contentTextView.setText(Html.fromHtml(mail.getContent()));
 		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
 		
 		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		ArrayList<Attachment> attachments = post.getAttachFiles();
-		String contentString = "";
-		for (int i = 0; i < attachments.size(); i++) {
-			contentString += "<a href='" + attachments.get(i).getAttachUrl()
-					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
-		}
-		attachTextView.setText(Html.fromHtml(contentString));
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
-		dateTextView.setText(post.getDate().toLocaleString());
-		layout.setTag(post);
+		dateTextView.setText(mail.getDate().toLocaleString());
+		layout.setTag(mail);
 		
 		OnLongClickListener listener = new OnLongClickListener() {
 
@@ -83,10 +70,9 @@ public class PostListAdapter extends BaseAdapter {
 						relativeLayout = (RelativeLayout) v;
 					}
 					final String authorID = (String) ((TextView)relativeLayout.findViewById(R.id.AuthorID)).getText();
-					final Post post = (Post) relativeLayout.getTag();
-					final String[] items = { activity.getString(R.string.post_reply_post),
-							activity.getString(R.string.post_reply_mail),
-							activity.getString(R.string.post_copy_author)};
+					final Mail mail = (Mail) relativeLayout.getTag();
+					final String[] items = { activity.getString(R.string.mail_reply),
+							activity.getString(R.string.post_copy_author)};// ,
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							activity);
 					builder.setTitle(R.string.post_alert_title);
@@ -94,35 +80,27 @@ public class PostListAdapter extends BaseAdapter {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int item) {
-									Intent intent;
 									switch (item) {
 									case 0:
-										intent = new Intent();
+										Intent intent = new Intent();
 										intent.setClassName("com.athena.asm",
 												"com.athena.asm.WritePostActivity");
-										intent.putExtra(
-												StringUtility.URL,
-												"http://www.newsmth.net/bbspst.php?board="
-														+ post.getBoard()
-														+ "&reid="
-														+ post.getSubjectID());
-										intent.putExtra(StringUtility.WRITE_TYPE, 0);
-										activity.startActivity(intent);
-										break;
-									case 1:
-										intent = new Intent();
-										intent.setClassName("com.athena.asm",
-												"com.athena.asm.WritePostActivity");
-										intent.putExtra(
-												StringUtility.URL,
-												"http://www.newsmth.net/bbspstmail.php?board="
-														+ post.getBoard()
-														+ "&id="
-														+ post.getSubjectID());
+										try {
+											intent.putExtra(
+													StringUtility.URL,
+													"http://www.newsmth.net/bbspstmail.php?dir="
+															+ mail.getBoxDirString()
+															+ "&userid=" + mail.getSenderID()
+															+ "&num=" + mail.getNumber()
+															+ "&file=" + mail.getValueString()
+															+ "&title=" + URLEncoder.encode(mail.getTitle(), "GBK"));
+										} catch (UnsupportedEncodingException e) {
+											e.printStackTrace();
+										}
 										intent.putExtra(StringUtility.WRITE_TYPE, 1);
 										activity.startActivity(intent);
 										break;
-									case 2:
+									case 1:
 										ClipboardManager clip = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
 										clip.setText(authorID);
 										Toast.makeText(activity.getApplicationContext(), "ID ： " + authorID + "已复制到剪贴板",
@@ -148,12 +126,12 @@ public class PostListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return postList.size();
+		return 1;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return postList.get(position);
+		return position;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Board;
+import com.athena.asm.data.Mail;
 import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Profile;
@@ -72,6 +73,10 @@ public class SmthSupport {
 	public void destory() {
 		logout();
 		crawler.destroy();
+	}
+	
+	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, String file, String mailContent) {
+		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file, mailContent);
 	}
 
 	public boolean sendPost(String postUrl, String postTitle, String postContent) {
@@ -242,7 +247,166 @@ public class SmthSupport {
 		
 		return mailBox;
 	}
+	
+	/**
+	 * 取得邮件标题列表
+	 * @param boxType
+	 * @param startNumber
+	 * @return
+	 */
+	public List<Mail> getMailList(int boxType, int startNumber) {
+		String urlString = "http://www.newsmth.net/bbsmailbox.php?";
+		String boxString = "";
+		String boxDirString = "";
+		String startString = "";
+		if (startNumber != -1) {
+			startString += "&start=" + startNumber;
+		}
+		switch (boxType) {
+		case 0:
+			urlString += "path=.DIR" + startString + "&title=%CA%D5%BC%FE%CF%E4";
+			boxString = "%CA%D5%BC%FE%CF%E4";
+			boxDirString = ".DIR";
+			break;
+		case 1:
+			urlString += "path=.SENT" + startString + "&title=%B7%A2%BC%FE%CF%E4";
+			boxString = "%B7%A2%BC%FE%CF%E4";
+			boxDirString = ".SENT";
+			break;
+		case 2:
+			urlString += "path=.DELETED" + startString + "&title=%C0%AC%BB%F8%CF%E4";
+			boxString = "%C0%AC%BB%F8%CF%E4";
+			boxDirString = ".DELETED";
+			break;
+		default:
+			break;
+		}
+		
+		List<Mail> mailList = new ArrayList<Mail>();
+		String result = crawler.getUrlContent(urlString);
+		int counter = 0;
+		String matchString = "";
+		
+		String numberAndDatePatternString = "<td class=\"mt3\">([^<>]+)</td>";
+		Pattern numberAndDatePattern = Pattern.compile(numberAndDatePatternString);
+		Matcher numberAndDateMatcher = numberAndDatePattern.matcher(result);
+		while (numberAndDateMatcher.find()) {
+			matchString = numberAndDateMatcher.group(1);
+			int number = Integer.parseInt(matchString) - 1;
+			numberAndDateMatcher.find();
+			matchString = numberAndDateMatcher.group(1);
+			
+			Mail mail = new Mail();
+			mail.setBoxString(boxString);
+			mail.setBoxType(boxType);
+			mail.setBoxDirString(boxDirString);
+			mail.setNumber(number);
+			mail.setDateString(matchString.replaceAll("&nbsp;", " ").trim());
+			mailList.add(mail);
+		}
+		
+		String isUnreadPatternString = "<img src='images/(\\w+).gif'[^<>]+>";
+		Pattern isUnreadPattern = Pattern.compile(isUnreadPatternString);
+		Matcher isUnreadMatcher = isUnreadPattern.matcher(result);
+		while (isUnreadMatcher.find()) {
+			matchString = isUnreadMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			if (matchString.contains("omail")) {
+				mail.setUnread(false);
+			}
+			else {
+				mail.setUnread(true);
+			}
+			counter++;
+		}
+		
+		counter = 0;
+		String valuePatternString = "<input type=\"checkbox\"[^<>]+value=\"([^<>]+)\">";
+		Pattern valuePattern = Pattern.compile(valuePatternString);
+		Matcher valueMatcher = valuePattern.matcher(result);
+		while (valueMatcher.find()) {
+			matchString = valueMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			mail.setValueString(matchString);
+			counter++;
+		}
+		
+		counter = 0;
+		String statusPatternString = "<td class=\"mt4\"><nobr>([^<>]+)</nobr></td>";
+		Pattern statusPattern = Pattern.compile(statusPatternString);
+		Matcher statusMatcher = statusPattern.matcher(result);
+		while (statusMatcher.find()) {
+			matchString = statusMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			mail.setStatus(matchString.replaceAll("&nbsp;", "").trim());
+			counter++;
+		}
+		
+		counter = 0;
+		String senderPatternString = "<td class=\"mt3\"><a href=\"bbsqry.php\\?userid=([^<>]+)\">[^<>]+</a></td>";
+		Pattern senderPattern = Pattern.compile(senderPatternString);
+		Matcher senderMatcher = senderPattern.matcher(result);
+		while (senderMatcher.find()) {
+			matchString = senderMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			mail.setSenderID(matchString);
+			counter++;
+		}
+		
+		counter = 0;
+		String titlePatternString = "<td class=\"mt5\">&nbsp;<a[^<>]+>([^<>]+)</a></td>";
+		Pattern titlePattern = Pattern.compile(titlePatternString);
+		Matcher titleMatcher = titlePattern.matcher(result);
+		while (titleMatcher.find()) {
+			matchString = titleMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			mail.setTitle(matchString.trim());
+			counter++;
+		}
+		
+		counter = 0;
+		String sizePatternString = "<td class=\"mt3\" style=[^<>]+>(\\d+)</td>";
+		Pattern sizePattern = Pattern.compile(sizePatternString);
+		Matcher sizeMatcher = sizePattern.matcher(result);
+		while (sizeMatcher.find()) {
+			matchString = sizeMatcher.group(1);
+			Mail mail = mailList.get(counter);
+			mail.setSizeString(matchString);
+			counter++;
+		}
+		
+		return mailList;
+	}
 
+	public void getMailContent(Mail mail) {
+		String boxTypeString = "";
+		switch (mail.getBoxType()) {
+		case 0:
+			boxTypeString = ".DIR";
+			break;
+		case 1:
+			boxTypeString = ".SENT";
+			break;
+		case 2:
+			boxTypeString = ".DELETED";
+			break;
+		default:
+			break;
+		}
+		String url = "http://www.newsmth.net/bbsmailcon.php?dir=" + boxTypeString + "&num=" + mail.getNumber() + "&title=" + mail.getBoxString();
+		String result = crawler.getUrlContent(url);
+		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
+				Pattern.DOTALL);
+		Matcher contentMatcher = contentPattern.matcher(result);
+		if (contentMatcher.find()) {
+			String contentString = contentMatcher.group(1);
+			Object[] objects = StringUtility
+					.parsePostContent(contentString);
+			mail.setContent((String) objects[0]);
+			mail.setDate((java.util.Date) objects[1]);
+		}
+	}
+	
 	/**
 	 * 获取分类讨论区列表
 	 * 

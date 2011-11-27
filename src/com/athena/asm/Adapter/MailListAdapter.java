@@ -1,68 +1,98 @@
 package com.athena.asm.Adapter;
 
+import java.util.List;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.TextPaint;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
+import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
-import com.athena.asm.data.MailBox;
+import com.athena.asm.aSMApplication;
+import com.athena.asm.data.Mail;
+import com.athena.asm.util.StringUtility;
 
 public class MailListAdapter extends BaseAdapter {
 
-	private HomeActivity activity;
-	private MailBox mailBox;
+	private MailListActivity activity;
+	private LayoutInflater inflater;
+	private List<Mail> mailList;
 
-	public MailListAdapter(HomeActivity activity, MailBox mailBox) {
+	public MailListAdapter(MailListActivity activity, LayoutInflater inflater, List<Mail> mailList) {
 		this.activity = activity;
-		this.mailBox = mailBox;
+		this.inflater = inflater;
+		this.mailList = mailList;
 	}
 
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
-		layout = activity.inflater.inflate(R.layout.mail_list_section_header,
-				null);
-		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
-		TextView numberTextView = (TextView) layout
-				.findViewById(R.id.mailNumber);
-		switch (position) {
-		case 0:
-			boxNameTextView.setText(R.string.mail_inbox);
-			numberTextView.setText(mailBox.getInboxNumber()+"封 ");
-			break;
-		case 1:
-			boxNameTextView.setText(R.string.mail_outbox);
-			numberTextView.setText(mailBox.getOutboxNumber()+"封 ");
-			break;
-		case 2:
-			boxNameTextView.setText(R.string.mail_trash);
-			numberTextView.setText(mailBox.getTrashboxNumber()+"封 ");
-			break;
-		case 3:
-			boxNameTextView.setText(R.string.mail_write_mail);
-			numberTextView.setText("");
-			break;
-		case 4:
-			boxNameTextView.setText(R.string.mail_clear_trash);
-			numberTextView.setText("");
-			break;
-		default:
-			break;
+		if (convertView != null) {
+			layout = convertView;
 		}
+		else {
+			layout = inflater.inflate(R.layout.mail_list_item, null);
+		}
+		
+		aSMApplication application = (aSMApplication)activity.getApplication();
+		
+		Mail mail = mailList.get(mailList.size() - position - 1);
+		
+		TextView authorTextView = (TextView) layout.findViewById(R.id.SenderID);
+		if (mail.getStatus().length() > 0) {
+			authorTextView.setText("【"+ mail.getStatus() + "】" + mail.getSenderID());
+		}
+		else {
+			authorTextView.setText(mail.getSenderID());
+		}
+		TextView titleTextView = (TextView) layout.findViewById(R.id.MailTitle);
+		String titleString = mail.getTitle();
+		if (mail.isUnread()) {
+			TextPaint tp = titleTextView.getPaint();
+			tp.setFakeBoldText(true);
+		}
+		else {
+			TextPaint tp = titleTextView.getPaint();
+			tp.setFakeBoldText(false);
+		}
+		titleTextView.setText(Html.fromHtml(titleString));
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getSubjectFontSize());
+		
+		TextView dateTextView = (TextView) layout.findViewById(R.id.MailSendDate);
+		dateTextView.setText(mail.getDateString());
+		
+		layout.setTag(mail);
+		layout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(StringUtility.MAIL, (Mail)v.getTag());
+				intent.putExtras(bundle);
+				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
+				activity.startActivity(intent);
+			}
+		});
 
 		return layout;
 	}
 
 	@Override
 	public int getCount() {
-		return 5;
+		return mailList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return mailList.get(position);
 	}
 
 	@Override

@@ -17,7 +17,6 @@
 		android:inputType="number" android:layout_marginTop="3dip" />
 	<TextView android:id="@+id/textview_page_total_no"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:layout_marginTop="1dip" />
 	<Button android:id="@+id/btn_go_page" android:layout_height="wrap_content"
 		android:layout_width="wrap_content" android:text="@string/go_page"

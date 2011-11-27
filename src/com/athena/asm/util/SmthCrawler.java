@@ -156,6 +156,39 @@ public class SmthCrawler {
 		return true;
 	}
 	
+	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, String file, String mailContent) {
+		HttpPost httpPost = new HttpPost(mailUrl);
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		formparams.add(new BasicNameValuePair("title", mailTitle));
+		formparams.add(new BasicNameValuePair("userid", userid));
+		formparams.add(new BasicNameValuePair("num", num));
+		formparams.add(new BasicNameValuePair("dir", dir));
+		formparams.add(new BasicNameValuePair("file", file));
+		formparams.add(new BasicNameValuePair("signature", "0"));
+		formparams.add(new BasicNameValuePair("backup", "1"));
+		formparams.add(new BasicNameValuePair("text", mailContent));
+		
+		UrlEncodedFormEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(formparams, "GBK");
+		} catch (UnsupportedEncodingException e1) {
+			return false;
+		}
+		httpPost.setEntity(entity);
+		httpPost.setHeader("User-Agent", userAgent);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity e = response.getEntity();
+			String content = EntityUtils.toString(e, smthEncoding);
+			if (!content.contains("发送成功")) {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	/*public String getRedirectUrl(String url) {
 		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,false);
 		HttpGet httpget = new HttpGet(url);
