@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.athena.asm"
-      android:versionCode="3"
-      android:versionName="1.1">
+      android:versionCode="4"
+      android:versionName="1.2">
     <uses-sdk android:minSdkVersion="7" />
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
@@ -22,5 +22,7 @@
         <activity android:name="com.athena.asm.SettingActivity"></activity>
         <activity android:name="com.athena.asm.SearchPostActivity"></activity>
         <activity android:name="com.athena.asm.SearchPostResultListActivity"></activity>
+        <activity android:name="com.athena.asm.MailListActivity"></activity>
+        <activity android:name="com.athena.asm.ReadMailActivity"></activity>
     </application>
 </manifest>
