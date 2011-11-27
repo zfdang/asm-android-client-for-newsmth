@@ -81,6 +81,6 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		homeActivity.boardFullStrings = new ArrayList<String>();
 		homeActivity.boardHashMap = new HashMap<String, Board>();
 		readBoadInfo(homeActivity.categoryList);
-		homeActivity.reloadCategory(homeActivity.categoryList, 40);
+		homeActivity.reloadCategory(homeActivity.categoryList, 30);
 	}
 }

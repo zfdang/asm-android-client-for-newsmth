@@ -10,23 +10,24 @@
     <!-- tab栏 -->
     <string name="cmenu_guidance">首页</string>
     <string name="cmenu_favorite">收藏</string>
-    <string name="cmenu_mail">邮箱</string>
+    <string name="cmenu_mail">信箱</string>
     <string name="cmenu_category">分区</string>
     <string name="cmenu_profile">资料</string>
-    <!-- 邮箱 -->
+    <!-- 信箱 -->
     <string name="mail_inbox">收件箱</string>
     <string name="mail_outbox">发件箱</string>
     <string name="mail_trash">垃圾箱</string>
-    <string name="mail_write_mail">发送新邮件</string>
+    <string name="mail_write_mail">发送新信件</string>
     <string name="mail_clear_trash">清空垃圾箱</string>
+    <string name="mail_reply">回复信件</string>
     <!-- 分区 -->
     <string name="board_autocomplete_tip">请输入分区名</string>
     <!-- 同主题下导航 -->
-    <string name="first_page">  &lt;&lt;   </string>
-    <string name="last_page">  &gt;&gt;   </string>
-	<string name="pre_page">  &lt;  </string>
-	<string name="next_page">  &gt;  </string>
-	<string name="go_page">  GO  </string>
+    <string name="first_page">&lt;&lt;</string>
+    <string name="last_page">&gt;&gt;</string>
+	<string name="pre_page">\u0020&lt;\u0020\u0020</string>
+	<string name="next_page">\u0020\u0020&gt;\u0020</string>
+	<string name="go_page">GO</string>
 	<!-- 普通模式下导航 -->
 	<string name="topic_first_page">同主题第一篇</string>
 	<string name="topic_pre_page">同主题上篇</string>
@@ -54,7 +55,7 @@
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
 	<string name="about_content">aSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，查询网友个人信息等功能。\n操作提示：
-\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴。\n3. 帖子附件显示于每个帖子的结尾处。\n4. 在版面的主题列表页面中按MENU键可以发表新贴。(回贴发帖均需要登录后才能使用)\n5. 因为水木版面设置的特殊性，分类讨论区第一次加载时间较长，之后会在本地保存直接加载。
+\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴或者回信给作者。\n3. 帖子附件显示于每个帖子的结尾处。\n4. 在版面的主题列表页面中按MENU键可以发表新贴及搜索版面。(回贴发帖均需要登录后才能使用)\n5. 因为水木版面设置的特殊性，分类讨论区第一次加载时间较长，之后会在本地保存直接加载。
 \n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>

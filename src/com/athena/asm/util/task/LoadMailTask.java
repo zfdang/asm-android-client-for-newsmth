@@ -17,7 +17,7 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 		pdialog = new ProgressDialog(homeActivity);
-		pdialog.setMessage("加载中...");
+		pdialog.setMessage("加载邮箱信息中...");
 		pdialog.show();
 	}
 

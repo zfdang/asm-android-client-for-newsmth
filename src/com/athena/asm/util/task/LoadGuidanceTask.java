@@ -20,7 +20,7 @@ public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPreExecute() {
 		pdialog = new ProgressDialog(homeActivity);
-		pdialog.setMessage("加载中...");
+		pdialog.setMessage("加载首页导读中...");
 		pdialog.show();
 	}
 
