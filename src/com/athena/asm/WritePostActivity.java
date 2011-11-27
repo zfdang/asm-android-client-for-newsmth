@@ -105,7 +105,7 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		m = p.matcher(contentString);
 		if (m.find()) {
 			postContent = m.group(1);
-			postContent = postContent.replace("】", "】<br/>");
+			postContent = postContent.replace("\n", "\n<br/>");
 			contentEditText.setText(Html.fromHtml("<br />"
 					+ postContent));
 		}
