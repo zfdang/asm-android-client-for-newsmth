@@ -141,6 +141,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			if (!rememberUser) {
 				application.updateAutoUserNameAndPassword("", "");
 			}
+			application.syncPreferences();
 
 			finish();
 			android.os.Process.killProcess(android.os.Process.myPid());

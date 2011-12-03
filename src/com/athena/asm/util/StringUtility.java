@@ -32,6 +32,7 @@ public class StringUtility {
 	public static final String MAIL_BOX_TYPE = "boxType";
 	public static final String MAIL = "mail";
 	public static final String WRITE_TYPE = "write_type";
+	public static final String REFRESH_BOARD = "refreshBoard";
 
 	/**
 	 * 从链接中提取相关参数

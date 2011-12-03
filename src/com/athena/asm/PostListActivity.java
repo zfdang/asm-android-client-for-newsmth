@@ -3,7 +3,9 @@ package com.athena.asm;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +31,7 @@ public class PostListActivity extends Activity implements OnClickListener {
 	public Subject currentSubject;
 	public List<Post> postList;
 
+	private boolean isToRefreshBoard = false;
 	private int currentPageNo = 1;
 	private int boardType = 0; // 1是普通，0是同主题
 	EditText pageNoEditText;
@@ -98,7 +101,7 @@ public class PostListActivity extends Activity implements OnClickListener {
 		}
 		else {
 			firstButton.setText(R.string.topic_first_page);
-			lastButton.setVisibility(View.GONE);
+			lastButton.setText(R.string.topic_all_page);
 			preButton.setText(R.string.topic_pre_page);
 			goButton.setVisibility(View.GONE);
 			nextButton.setText(R.string.topic_next_page);
@@ -106,21 +109,55 @@ public class PostListActivity extends Activity implements OnClickListener {
 			totalPageNoTextView.setVisibility(View.GONE);
 		}
 	}
+	
+	protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
+		switch (resultCode) {
+		case RESULT_OK:
+			Bundle b = data.getExtras();
+			isToRefreshBoard = b.getBoolean(StringUtility.REFRESH_BOARD);
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent i = new Intent();
+	    	
+	    	Bundle b = new Bundle();
+	    	b.putBoolean(StringUtility.REFRESH_BOARD, isToRefreshBoard);
+	    	i.putExtras(b);
+	    	
+	    	this.setResult(RESULT_OK, i);
+	    	this.finish();
+	    	
+	    	return true;
+		} else {
+			return super.onKeyDown(keyCode, event);
+		}
+	}
 
 	@Override
 	public void onClick(View view) {
 		if (boardType == 0) { // 同主题导航
 			if (view.getId() == R.id.btn_first_page) {
+				if (currentPageNo == 1) {
+					return;
+				}
 				currentPageNo = 1;
 			} else if (view.getId() == R.id.btn_last_page) {
+				if (currentPageNo == currentSubject.getTotalPageNo()) {
+					return;
+				}
 				currentPageNo = currentSubject.getTotalPageNo();
 			} else if (view.getId() == R.id.btn_pre_page) {
 				currentPageNo--;
 				if (currentPageNo < 1) {
 					currentPageNo = 1;
-				}
-				if (boardType == 1) {
-					currentPageNo = 0;
+					return;
 				}
 			} else if (view.getId() == R.id.btn_go_page) {
 				int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
@@ -152,6 +189,9 @@ public class PostListActivity extends Activity implements OnClickListener {
 				action = 2;
 			} else if (view.getId() == R.id.btn_next_page) {
 				action = 3;
+			} else if (view.getId() == R.id.btn_last_page){
+				boardType = 0;
+				currentSubject.setSubjectID(currentSubject.getTopicSubjectID());
 			}
 			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, action);
 			loadPostTask.execute();

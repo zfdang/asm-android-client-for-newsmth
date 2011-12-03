@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -184,6 +185,15 @@ public class WritePostActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 			}
 		});
+		if (writeType == 0) {
+			Intent i = new Intent();
+	    	
+	    	Bundle b = new Bundle();
+	    	b.putBoolean(StringUtility.REFRESH_BOARD, true);
+	    	i.putExtras(b);
+	    	
+	    	this.setResult(RESULT_OK, i);
+		}
 		this.finish();
 	}
 

@@ -77,11 +77,12 @@ public class HomeActivity extends Activity implements OnClickListener {
 	private TextView btnCategory;
 	private TextView btnProfile;
 
-	private LoadGuidanceTask loadGuidanceTask;
-	private LoadFavoriteTask loadFavoriteTask;
-	private LoadMailTask loadMailTask;
-	private LoadCategoryTask loadCategoryTask;
-	private LoadProfileTask loadProfileTask;
+	/*
+	 * private LoadGuidanceTask loadGuidanceTask; private LoadFavoriteTask
+	 * loadFavoriteTask; private LoadMailTask loadMailTask; private
+	 * LoadCategoryTask loadCategoryTask; private LoadProfileTask
+	 * loadProfileTask;
+	 */
 
 	private ArrayList<View> cacheViewStack = new ArrayList<View>();
 	private double currentTabIndex = 0;
@@ -96,10 +97,10 @@ public class HomeActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.home);
 
 		this.isLogined = (Boolean) this.getIntent().getExtras()
-				.get(StringUtility.LOGINED);
+		.get(StringUtility.LOGINED);
 		if (isLogined) {
 			loginUserID = (String) this.getIntent().getExtras()
-					.get(StringUtility.LOGINED_ID);
+			.get(StringUtility.LOGINED_ID);
 		}
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -110,9 +111,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 		titleTextView = (TextView) findViewById(R.id.title);
 
 		initTabListeners();
-		initTasks();
+		// initTasks();
 
-		aSMApplication application = (aSMApplication)getApplication();
+		aSMApplication application = (aSMApplication) getApplication();
 		String defaultTab = application.getDefaultTab();
 		if (defaultTab.equals("001")) {
 			reloadGuidanceList();
@@ -172,13 +173,12 @@ public class HomeActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private void initTasks() {
-		loadGuidanceTask = new LoadGuidanceTask(this);
-		loadFavoriteTask = new LoadFavoriteTask(this);
-		loadMailTask = new LoadMailTask(this);
-		loadCategoryTask = new LoadCategoryTask(this);
-		loadProfileTask = new LoadProfileTask(this, loginUserID, 50);
-	}
+	/*
+	 * private void initTasks() { loadGuidanceTask = new LoadGuidanceTask(this);
+	 * loadFavoriteTask = new LoadFavoriteTask(this); loadMailTask = new
+	 * LoadMailTask(this); loadCategoryTask = new LoadCategoryTask(this);
+	 * loadProfileTask = new LoadProfileTask(this, loginUserID, 50); }
+	 */
 
 	private void switchToView(View targetView, double targetIndex) {
 		if (currentTabIndex == targetIndex) {
@@ -220,20 +220,22 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public void reloadGuidanceList() {
 		if (guidanceSectionNames == null || guidanceSectionDetails == null) {
+			LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(this);
 			loadGuidanceTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.guidance, null);
 			ListView listView = (ListView) layout
-					.findViewById(R.id.guidance_list);
+			.findViewById(R.id.guidance_list);
 			listView.setAdapter(new GuidanceListAdapter(this, 0, 0,
 					guidanceSectionNames, guidanceSectionDetails));
 			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						final int position, long id) {
 					LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 					View layout = inflater.inflate(R.layout.guidance, null);
 					ListView listView = (ListView) layout
-							.findViewById(R.id.guidance_list);
+					.findViewById(R.id.guidance_list);
 					listView.setAdapter(new GuidanceListAdapter(
 							HomeActivity.this, 1, position,
 							guidanceSectionNames, guidanceSectionDetails));
@@ -251,11 +253,12 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public void reloadFavorite(List<Board> boardList, int step) {
 		if (favList == null) {
+			LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(this);
 			loadFavoriteTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.favorite, null);
 			ListView listView = (ListView) layout
-					.findViewById(R.id.favorite_list);
+			.findViewById(R.id.favorite_list);
 			listView.setAdapter(new FavoriteListAdapter(this, boardList, step));
 
 			titleTextView.setText(R.string.title_favorite);
@@ -265,32 +268,37 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public void reloadCategory(List<Board> boardList, int step) {
 		if (categoryList == null) {
+			LoadCategoryTask loadCategoryTask = new LoadCategoryTask(this);
 			loadCategoryTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.category, null);
-			ListView listView = (ListView) layout.findViewById(R.id.category_list);
+			ListView listView = (ListView) layout
+			.findViewById(R.id.category_list);
 			listView.setAdapter(new CategoryListAdapter(this, boardList, step));
-			
-			RelativeLayout relativeLayout = (RelativeLayout) layout.findViewById(R.id.board_relative_layout);
-			
-			Button goButton = (Button) relativeLayout.findViewById(R.id.btn_go_board);
+
+			RelativeLayout relativeLayout = (RelativeLayout) layout
+			.findViewById(R.id.board_relative_layout);
+
+			Button goButton = (Button) relativeLayout
+			.findViewById(R.id.btn_go_board);
 			goButton.setOnClickListener(this);
-			
-			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout.findViewById(R.id.search_board);
+
+			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout
+			.findViewById(R.id.search_board);
 			textView.setCompletionHint("请输入版面英文名");
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,  
-		                android.R.layout.simple_dropdown_item_1line, boardFullStrings); 
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_dropdown_item_1line,
+					boardFullStrings);
 			textView.setAdapter(adapter);
 
 			titleTextView.setText(R.string.title_category);
 			switchToView(layout, step);
 		}
 	}
-	
+
 	public void loadMail() {
 		View layout = inflater.inflate(R.layout.mail, null);
-		ListView listView = (ListView) layout
-				.findViewById(R.id.mail_list);
+		ListView listView = (ListView) layout.findViewById(R.id.mail_list);
 		listView.setAdapter(new MailAdapter(this, mailBox));
 
 		titleTextView.setText(R.string.title_mail);
@@ -299,10 +307,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public void reloadMail() {
 		if (isLogined) {
-			loadMailTask = new LoadMailTask(this);
+			LoadMailTask loadMailTask = new LoadMailTask(this);
 			loadMailTask.execute();
-		}
-		else {
+		} else {
 			Toast.makeText(getApplicationContext(), "请登陆后再使用.",
 					Toast.LENGTH_SHORT).show();
 		}
@@ -310,25 +317,27 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public void reloadProfile(Profile profile, final int step) {
 		if (profile == null) {
+			LoadProfileTask loadProfileTask = new LoadProfileTask(this,
+					loginUserID, 50);
 			loadProfileTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.profile, null);
 
 			ImageButton searchButton = (ImageButton) layout
-					.findViewById(R.id.btn_search);
+			.findViewById(R.id.btn_search);
 			searchButton.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					RelativeLayout relativeLayout = (RelativeLayout) v
-							.getParent();
+					.getParent();
 					EditText searchEditText = (EditText) relativeLayout
-							.findViewById(R.id.search_edit);
+					.findViewById(R.id.search_edit);
 					((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-							.hideSoftInputFromWindow(
-									searchEditText.getWindowToken(), 0);
+					.hideSoftInputFromWindow(
+							searchEditText.getWindowToken(), 0);
 					String idString = searchEditText.getText().toString()
-							.trim();
+					.trim();
 					if (idString.length() > 0) {
 						LoadProfileTask profileTask = new LoadProfileTask(
 								HomeActivity.this, idString, step);
@@ -339,28 +348,28 @@ public class HomeActivity extends Activity implements OnClickListener {
 			});
 
 			TextView userIDTextView = (TextView) layout
-					.findViewById(R.id.profile_userid);
+			.findViewById(R.id.profile_userid);
 			userIDTextView.setText(profile.getUserID());
 
 			TextView userNicknameTextView = (TextView) layout
-					.findViewById(R.id.profile_user_nickname);
+			.findViewById(R.id.profile_user_nickname);
 			userNicknameTextView.setText(profile.getNickName());
 
 			TextView descTextView = (TextView) layout
-					.findViewById(R.id.profile_user_desc);
+			.findViewById(R.id.profile_user_desc);
 			descTextView.setText(Html.fromHtml(profile.getDescription()));
 
 			TextView aliveTextView = (TextView) layout
-					.findViewById(R.id.profile_aliveness);
+			.findViewById(R.id.profile_aliveness);
 			aliveTextView.setText(profile.getAliveness() + "");
 			TextView loginedTimeTextView = (TextView) layout
-					.findViewById(R.id.profile_login_times);
+			.findViewById(R.id.profile_login_times);
 			loginedTimeTextView.setText(profile.getLoginTime() + "");
 			TextView postNoTextView = (TextView) layout
-					.findViewById(R.id.profile_post_number);
+			.findViewById(R.id.profile_post_number);
 			postNoTextView.setText(profile.getPostNumber() + "");
 			TextView onlineTextView = (TextView) layout
-					.findViewById(R.id.profile_online_status);
+			.findViewById(R.id.profile_online_status);
 			switch (profile.getOnlineStatus()) {
 			case 0:
 				onlineTextView.setText("离线");
@@ -397,6 +406,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		pdialog.show();
 		clearData();
 		Thread th = new Thread() {
+			@Override
 			public void run() {
 				smthSupport.destory();
 				pdialog.cancel();
@@ -405,7 +415,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.putExtra(StringUtility.LOGOUT, true);
 				intent.setClassName("com.athena.asm",
-						"com.athena.asm.LoginActivity");
+				"com.athena.asm.LoginActivity");
 				startActivity(intent);
 			}
 		};
@@ -417,7 +427,19 @@ public class HomeActivity extends Activity implements OnClickListener {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (cacheViewStack.size() == 0) {
 				if (isLogined) {
-					logout();
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("确认注销？");
+					builder.setPositiveButton("确定",
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							logout();
+						}
+					});
+					builder.setNegativeButton("取消", null);
+					builder.create().show();
+					// logout();
 				} else {
 					return super.onKeyDown(keyCode, event);
 				}
@@ -433,13 +455,15 @@ public class HomeActivity extends Activity implements OnClickListener {
 	}
 
 	public static final int SETTING = Menu.FIRST;
-	public static final int ABOUT = Menu.FIRST + 1;
-	public static final int EXIT = Menu.FIRST + 2;
+	public static final int REFRESH = Menu.FIRST + 1;
+	public static final int ABOUT = Menu.FIRST + 2;
+	public static final int EXIT = Menu.FIRST + 3;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, SETTING, Menu.NONE, "设置");
+		menu.add(0, REFRESH, Menu.NONE, "刷新");
 		menu.add(0, ABOUT, Menu.NONE, "关于");
 		menu.add(0, EXIT, Menu.NONE, "注销");
 
@@ -453,8 +477,49 @@ public class HomeActivity extends Activity implements OnClickListener {
 		case SETTING:
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm",
-					"com.athena.asm.SettingActivity");
+			"com.athena.asm.SettingActivity");
 			startActivity(intent);
+			break;
+		case REFRESH:
+			int index = (int) (currentTabIndex / 10);
+			switch (index) {
+			case 1:
+				guidanceSectionNames = null;
+				reloadGuidanceList();
+				break;
+			case 2:
+				favList = null;
+				reloadFavorite(favList, 20);
+				break;
+			case 3:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("耗时较长，确定吗？");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								boolean isDeleted = deleteFile("CategoryList");
+								if (isDeleted) {
+									categoryList = null;
+									reloadCategory(categoryList, 30);
+								}
+		
+							}
+				});
+				builder.setNegativeButton("取消", null);
+				builder.create().show();
+				break;
+			case 4:
+				reloadMail();
+				break;
+			case 5:
+				currentProfile = null;
+				reloadProfile(currentProfile, 50);
+				break;
+			default:
+				break;
+			}
 			break;
 		case ABOUT:
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
@@ -465,11 +530,11 @@ public class HomeActivity extends Activity implements OnClickListener {
 			alertBuilder.setMessage(R.string.about_content);
 			alertBuilder.setPositiveButton("确认",
 					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int i) {
-							dialog.dismiss();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int i) {
+					dialog.dismiss();
+				}
+			});
 			alertBuilder.show();
 			break;
 		case EXIT:
@@ -484,17 +549,19 @@ public class HomeActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.btn_go_board) {
-			AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout)view.getParent()).findViewById(R.id.search_board);
-			
+			AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
+					.getParent()).findViewById(R.id.search_board);
+
 			InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-			
+
 			Intent intent = new Intent();
 			Bundle bundle = new Bundle();
-			bundle.putSerializable(StringUtility.BOARD, boardHashMap.get(textView.getText().toString()));
+			bundle.putSerializable(StringUtility.BOARD,
+					boardHashMap.get(textView.getText().toString()));
 			intent.putExtras(bundle);
 			intent.setClassName("com.athena.asm",
-					"com.athena.asm.SubjectListActivity");
+			"com.athena.asm.SubjectListActivity");
 			this.startActivity(intent);
 		}
 	}

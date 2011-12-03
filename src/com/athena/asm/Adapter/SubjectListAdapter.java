@@ -67,7 +67,8 @@ public class SubjectListAdapter extends BaseAdapter {
 				bundle.putInt(StringUtility.BOARD_TYPE, activity.boardType);
 				intent.putExtras(bundle);
 				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
-				activity.startActivity(intent);
+				//activity.startActivity(intent);
+				activity.startActivityForResult(intent, 0);
 			}
 		});
 
