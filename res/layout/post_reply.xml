@@ -34,7 +34,7 @@
 			android:layout_marginTop="1dp" android:singleLine="true" />
 		<!-- 发送按钮 -->
 		<Button android:id="@+id/btn_send_post" android:layout_width="wrap_content"
-			android:layout_height="fill_parent" android:layout_alignParentRight="true"
+			android:layout_height="wrap_content" android:layout_alignParentRight="true"
 			android:layout_marginRight="10dp" style="@style/simple_button"
 			android:text="@string/write_label_post" />
 	</LinearLayout>
