@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 import com.athena.asm.util.StringUtility;
 
@@ -61,7 +62,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 			boardNameTextView.setText("[" + board.getEngName() + "]"
 					+ board.getChsName());
 			layout.setTag(board);
-
+			
 			layout.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -70,6 +71,8 @@ public class FavoriteListAdapter extends BaseAdapter {
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.BOARD,
 							(Board) v.getTag());
+					aSMApplication application = (aSMApplication)activity.getApplication();
+					application.addRecentBoard((Board) v.getTag());
 					intent.putExtras(bundle);
 					intent.setClassName("com.athena.asm",
 							"com.athena.asm.SubjectListActivity");

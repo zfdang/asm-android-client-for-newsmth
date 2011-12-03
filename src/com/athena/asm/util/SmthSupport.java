@@ -168,12 +168,18 @@ public class SmthSupport {
 	}
 
 	/**
-	 * 获取版面收藏列表.
+	 * 获取版面收藏列表. type用来区别版面自己是不是目录
 	 * 
 	 * @return
 	 */
-	public void getFavorite(String id, List<Board> boardList) {
-		String url = "http://www.newsmth.net/bbsfav.php?select=" + id;
+	public void getFavorite(String id, List<Board> boardList, int type) {
+		String url;
+		if (type == 0) {
+			url = "http://www.newsmth.net/bbsfav.php?select=" + id;
+		}
+		else {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + id;
+		}
 
 		String content = crawler.getUrlContent(url);
 		if (content == null) {
@@ -195,7 +201,7 @@ public class SmthSupport {
 		}
 
 		for (int i = 0; i < list.size(); i++) {
-			getFavorite(list.get(i), boardList.get(i).getChildBoards());
+			getFavorite(list.get(i), boardList.get(i).getChildBoards(), 0);
 		}
 
 		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
@@ -217,6 +223,11 @@ public class SmthSupport {
 			board.setEngName(engName);
 			board.setChsName(chsName);
 			board.setModerator(moderator);
+			if (moderator.contains("[目录]")) {
+				board.setDirectory(true);
+				board.setDirectoryName(chsName);
+				getFavorite(engName, board.getChildBoards(), 1);
+			}
 			boardList.add(board);
 		}
 
@@ -812,8 +823,14 @@ public class SmthSupport {
 		if (type == 0) {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=6";
 		}
-		else {
+		else if (type == 1) {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=0";
+		}
+		else if (type == 2) {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=1";
+		}
+		else {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=3";
 		}
 		if (pageno > 0) {
 			url = url + "&page=" + pageno;

@@ -1,13 +1,30 @@
 package com.athena.asm;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
+import com.athena.asm.data.Board;
 import com.athena.asm.data.Preferences;
+import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class aSMApplication extends Application {
 	private boolean isRememberUser = true;
@@ -20,16 +37,36 @@ public class aSMApplication extends Application {
 	private String defaultTab = "001";
 	private String defaultBoardType = "001";
 	
+	private int lastLaunchVersionCode = 4;
+	private int currentVersionCode = 5;
+	
 	private int guidanceFontSize = 25;
 	private int guidanceSecondFontSize = 20;
 	private int subjectFontSize = 18;
 	private int postFontSize = 17;
 	
+	private LinkedList<Board> recentBoards = null;
+	private Set<String> recentBoardNameSet = null;
+	
 	private ArrayList<String> blackList = new ArrayList<String>();
 	
+	public void syncPreferences() {
+		try {
+			FileOutputStream fos = openFileOutput("RecentFavList",
+					Context.MODE_PRIVATE);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(recentBoards);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void initPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
+		
 		if (!settings.contains(Preferences.REMEMBER_USER)) {
 			editor.putBoolean(Preferences.REMEMBER_USER, true);
 		}
@@ -118,16 +155,68 @@ public class aSMApplication extends Application {
 			}
 		}
 		
-		editor.commit();
+
+		PackageManager pm = getPackageManager();  
+		try {
+			PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+			currentVersionCode = pi.versionCode;
+		} catch (NameNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (settings.contains(Preferences.LAST_LAUNCH_VERSION)) {
+			String versionCode = settings.getString(Preferences.LAST_LAUNCH_VERSION, "4");
+			lastLaunchVersionCode = StringUtility.filterUnNumber(versionCode); 
+		}
+		editor.putString(Preferences.LAST_LAUNCH_VERSION, currentVersionCode + "");
 		
 		setAutoUserName(settings.getString(Preferences.USERNAME_KEY, ""));
 		setAutoPassword(settings.getString(Preferences.PASSWORD_KEY, ""));
+		
+		if (lastLaunchVersionCode == 4) {
+			try {
+				autoPassword = SimpleCrypto.encrypt("comathenaasm", autoPassword);
+				editor.putString(Preferences.PASSWORD_KEY, autoPassword);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		editor.commit();
+		
+		try {
+			autoPassword = SimpleCrypto.decrypt("comathenaasm", autoPassword);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (recentBoards == null) {
+			try {
+				FileInputStream fis = openFileInput("RecentFavList");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				recentBoards = (LinkedList<Board>) ois.readObject();
+				for (Iterator<Board> iterator = recentBoards.iterator(); iterator
+						.hasNext();) {
+					Board board = (Board) iterator.next();
+					recentBoardNameSet.add(board.getEngName());
+				}
+				Log.d("com.athena.asm", "loading from file");
+				fis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void updateAutoUserNameAndPassword(String username, String password) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(Preferences.USERNAME_KEY, username);
+		try {
+			password = SimpleCrypto.encrypt("comathenaasm", password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		editor.putString(Preferences.PASSWORD_KEY, password);
 		editor.commit();
 	}
@@ -213,5 +302,33 @@ public class aSMApplication extends Application {
 	
 	public ArrayList<String> getBlackList() {
 		return blackList;
+	}
+	
+	public void addRecentBoard(Board board) {
+		if (recentBoards == null) {
+			recentBoards = new LinkedList<Board>();
+		}
+		if (recentBoardNameSet == null) {
+			recentBoardNameSet = new HashSet<String>();
+		}
+		if (recentBoardNameSet.contains(board.getEngName())) {
+			recentBoards.remove(board);
+		}
+		recentBoards.addFirst(board);
+		recentBoardNameSet.add(board.getEngName());
+		if (recentBoards.size() > 10) {
+			recentBoards.removeLast();
+		}
+	}
+
+	public void setRecentBoards(LinkedList<Board> recentBoards) {
+		this.recentBoards = recentBoards;
+	}
+
+	public Queue<Board> getRecentBoards() {
+		if (recentBoards == null) {
+			recentBoards = new LinkedList<Board>();
+		}
+		return recentBoards;
 	}
 }
