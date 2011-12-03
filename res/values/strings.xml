@@ -29,9 +29,10 @@
 	<string name="next_page">\u0020\u0020&gt;\u0020</string>
 	<string name="go_page">GO</string>
 	<!-- 普通模式下导航 -->
-	<string name="topic_first_page">同主题第一篇</string>
-	<string name="topic_pre_page">同主题上篇</string>
-	<string name="topic_next_page">同主题下篇</string>
+	<string name="topic_first_page">主题首篇</string>
+	<string name="topic_pre_page">主题上篇</string>
+	<string name="topic_next_page">主题下篇</string>
+	<string name="topic_all_page">主题展开</string>
 	 <!-- 资料页 -->
 	<string name="profile_send_mail">发信</string>
 	<string name="profile_alive_number">生命力</string>

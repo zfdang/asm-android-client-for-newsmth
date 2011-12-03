@@ -47,8 +47,13 @@ public class PostListAdapter extends BaseAdapter {
 		layout = inflater.inflate(R.layout.post_list_item, null);
 		aSMApplication application = (aSMApplication)activity.getApplication();
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
-		authorTextView.setText(post.getAuthor());
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
+		if (post.getAuthor() == null) {
+			titleTextView.setText("错误的文章号,原文可能已经被删除");
+			return layout;
+		}
+		authorTextView.setText(post.getAuthor());
+		
 		titleTextView.setText(post.getTitle());
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
@@ -107,7 +112,8 @@ public class PostListAdapter extends BaseAdapter {
 														+ "&reid="
 														+ post.getSubjectID());
 										intent.putExtra(StringUtility.WRITE_TYPE, 0);
-										activity.startActivity(intent);
+										//activity.startActivity(intent);
+										activity.startActivityForResult(intent, 0);
 										break;
 									case 1:
 										intent = new Intent();
