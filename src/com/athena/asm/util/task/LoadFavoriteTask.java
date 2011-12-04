@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 
 public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
@@ -29,12 +28,12 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... params) {
 		homeActivity.favList = new ArrayList<Board>();
 		homeActivity.smthSupport.getFavorite("0", homeActivity.favList,0);
-		aSMApplication application = (aSMApplication)homeActivity.getApplication();
+		//aSMApplication application = (aSMApplication)homeActivity.getApplication();
 		Board board = new Board();
 		board.setDirectory(true);
 		board.setDirectoryName("最近访问版面");
 		board.setCategoryName("目录");
-		board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
+		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
 		homeActivity.favList.add(board);
 		pdialog.cancel();
 		return null;

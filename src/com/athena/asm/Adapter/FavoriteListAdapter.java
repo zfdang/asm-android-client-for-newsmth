@@ -1,5 +1,6 @@
 package com.athena.asm.Adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -44,8 +45,14 @@ public class FavoriteListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View v) {
-					activity.reloadFavorite(
-							((Board) v.getTag()).getChildBoards(), ++step);
+					Board board = (Board) v.getTag();
+					if (board.getDirectoryName().equals("最近访问版面")) {
+						aSMApplication application = (aSMApplication)activity.getApplication();
+						activity.reloadFavorite(new ArrayList<Board>(application.getRecentBoards()), ++step);
+					}
+					else {
+						activity.reloadFavorite(board.getChildBoards(), ++step);
+					}
 				}
 			});
 		} else {

@@ -195,13 +195,26 @@ public class aSMApplication extends Application {
 				FileInputStream fis = openFileInput("RecentFavList");
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				recentBoards = (LinkedList<Board>) ois.readObject();
+				recentBoardNameSet = new HashSet<String>();
+				ArrayList<Board> toDeleteBoards = new ArrayList<Board>();
 				for (Iterator<Board> iterator = recentBoards.iterator(); iterator
 						.hasNext();) {
 					Board board = (Board) iterator.next();
-					recentBoardNameSet.add(board.getEngName());
+					if (recentBoardNameSet.contains(board.getEngName())) {
+						toDeleteBoards.add(board);
+					}
+					else {
+						recentBoardNameSet.add(board.getEngName());
+					}
 				}
 				Log.d("com.athena.asm", "loading from file");
 				fis.close();
+				for (Iterator<Board> iterator = toDeleteBoards.iterator(); iterator
+						.hasNext();) {
+					Board board = (Board) iterator.next();
+					recentBoards.remove(board);
+					
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -312,7 +325,13 @@ public class aSMApplication extends Application {
 			recentBoardNameSet = new HashSet<String>();
 		}
 		if (recentBoardNameSet.contains(board.getEngName())) {
-			recentBoards.remove(board);
+			for (Iterator<Board> iterator = recentBoards.iterator(); iterator.hasNext();) {
+				Board board2 = (Board) iterator.next();
+				if (board2.getEngName().equals(board.getEngName())) {
+					recentBoards.remove(board2);
+					break;
+				}
+			}
 		}
 		recentBoards.addFirst(board);
 		recentBoardNameSet.add(board.getEngName());
