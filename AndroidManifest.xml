@@ -24,5 +24,6 @@
         <activity android:name="com.athena.asm.SearchPostResultListActivity"></activity>
         <activity android:name="com.athena.asm.MailListActivity"></activity>
         <activity android:name="com.athena.asm.ReadMailActivity"></activity>
+        <activity android:name="com.athena.asm.ViewProfileActivity"></activity>
     </application>
 </manifest>

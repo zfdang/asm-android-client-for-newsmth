@@ -72,6 +72,7 @@ public class ReadMailAdapter extends BaseAdapter {
 					final String authorID = (String) ((TextView)relativeLayout.findViewById(R.id.AuthorID)).getText();
 					final Mail mail = (Mail) relativeLayout.getTag();
 					final String[] items = { activity.getString(R.string.mail_reply),
+							activity.getString(R.string.post_query_author),
 							activity.getString(R.string.post_copy_author)};// ,
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							activity);
@@ -101,6 +102,13 @@ public class ReadMailAdapter extends BaseAdapter {
 										activity.startActivity(intent);
 										break;
 									case 1:
+										intent = new Intent();
+										intent.setClassName("com.athena.asm",
+												"com.athena.asm.ViewProfileActivity");
+										intent.putExtra(StringUtility.USERID, authorID);
+										activity.startActivity(intent);
+										break;
+									case 2:
 										ClipboardManager clip = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
 										clip.setText(authorID);
 										Toast.makeText(activity.getApplicationContext(), "ID ： " + authorID + "已复制到剪贴板",

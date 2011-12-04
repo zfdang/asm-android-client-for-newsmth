@@ -91,6 +91,7 @@ public class PostListAdapter extends BaseAdapter {
 					final Post post = (Post) relativeLayout.getTag();
 					final String[] items = { activity.getString(R.string.post_reply_post),
 							activity.getString(R.string.post_reply_mail),
+							activity.getString(R.string.post_query_author),
 							activity.getString(R.string.post_copy_author)};
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							activity);
@@ -129,6 +130,13 @@ public class PostListAdapter extends BaseAdapter {
 										activity.startActivity(intent);
 										break;
 									case 2:
+										intent = new Intent();
+										intent.setClassName("com.athena.asm",
+												"com.athena.asm.ViewProfileActivity");
+										intent.putExtra(StringUtility.USERID, authorID);
+										activity.startActivity(intent);
+										break;
+									case 3:
 										ClipboardManager clip = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
 										clip.setText(authorID);
 										Toast.makeText(activity.getApplicationContext(), "ID ： " + authorID + "已复制到剪贴板",

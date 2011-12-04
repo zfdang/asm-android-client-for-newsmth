@@ -20,6 +20,7 @@ public class StringUtility {
 
 	public static final String URL = "url";
 
+	public static final String USERID = "userid";
 	public static final String BOARD = "board";
 	public static final String BID = "bid";
 	public static final String SUBJECT_ID = "subjectID";
@@ -29,6 +30,7 @@ public class StringUtility {
 	public static final String POST = "post";
 	public static final String BOARD_TYPE = "boardType";
 	public static final String SUBJECT_LIST = "subjectList";
+	public static final String PROFILE = "profile";
 	public static final String MAIL_BOX_TYPE = "boxType";
 	public static final String MAIL = "mail";
 	public static final String WRITE_TYPE = "write_type";

@@ -322,6 +322,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 			loadProfileTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.profile, null);
+			
+			RelativeLayout relativeLayout = (RelativeLayout) layout.findViewById(R.id.headerLinearLayout);
+			relativeLayout.setVisibility(View.GONE);
 
 			ImageButton searchButton = (ImageButton) layout
 			.findViewById(R.id.btn_search);
@@ -428,7 +431,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 			if (cacheViewStack.size() == 0) {
 				if (isLogined) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setTitle("确认注销？");
+					builder.setTitle("确认要注销退出吗？");
 					builder.setPositiveButton("确定",
 							new DialogInterface.OnClickListener() {
 						@Override

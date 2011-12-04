@@ -116,7 +116,6 @@ public final class R {
         public static final int BoardName=0x7f0a0006;
         public static final int BoxName=0x7f0a0025;
         public static final int CategoryName=0x7f0a0004;
-        public static final int LinearLayout01=0x7f0a0012;
         public static final int MailSendDate=0x7f0a0023;
         public static final int MailTitle=0x7f0a0024;
         public static final int ModeratorID=0x7f0a0005;
@@ -161,6 +160,7 @@ public final class R {
         public static final int footer_btn_profile=0x7f0a000d;
         public static final int guest_button=0x7f0a001d;
         public static final int guidance_list=0x7f0a000e;
+        public static final int headerLinearLayout=0x7f0a0012;
         public static final int imageView1=0x7f0a0026;
         public static final int layout_root=0x7f0a0035;
         public static final int linearLayout1=0x7f0a0054;

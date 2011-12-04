@@ -3,6 +3,8 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:background="@color/body_background">
 
+    <include layout="@layout/header" />
+    
 	<ScrollView android:background="#FFEFF0F4"
 		android:scrollbars="horizontal" android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
