@@ -101,6 +101,13 @@ public class StringUtility {
 		end = content.indexOf("] 身份");
 		profile.setAliveness(getIntFromSubString(begin, end, content));
 
+		if (content.contains("积分")) {
+			begin = content.indexOf("积分: [") + 5;
+			String subScoreString = content.substring(begin);
+			end = subScoreString.indexOf("]") + begin;
+			profile.setScore(getIntFromSubString(begin, end, content));
+		}
+		
 		if (content.contains("目前在站上")) {
 			profile.setOnlineStatus(2);
 		} else if (content.contains("因在线上或非常断线不详")) {

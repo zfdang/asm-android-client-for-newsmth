@@ -415,6 +415,15 @@ public class HomeActivity extends Activity implements OnClickListener {
 			TextView userIDTextView = (TextView) layout
 			.findViewById(R.id.profile_userid);
 			userIDTextView.setText(profile.getUserID());
+			
+			TextView userScoreTextView = (TextView) layout
+			.findViewById(R.id.profile_user_score);
+			if (profile.getScore() != 0) {
+				userScoreTextView.setText("积分：" + profile.getScore());
+			}
+			else {
+				userScoreTextView.setVisibility(View.GONE);
+			}
 
 			TextView userNicknameTextView = (TextView) layout
 			.findViewById(R.id.profile_user_nickname);

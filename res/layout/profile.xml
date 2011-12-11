@@ -42,9 +42,13 @@
 					android:layout_width="wrap_content" android:layout_height="24.0dip"
 					style="@style/LinkText.Bold.Huge"></TextView>
 				<!-- 用户昵称 -->
-				<TextView android:id="@+id/profile_user_nickname"
+				<TextView android:id="@+id/profile_user_score"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
 					android:layout_below="@id/profile_userid" style="@style/normalText" />
+				<!-- 用户昵称 -->
+				<TextView android:id="@+id/profile_user_nickname"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_below="@id/profile_user_score" style="@style/normalText" />
 
 				<LinearLayout android:orientation="vertical"
 					android:layout_alignParentRight="true" android:layout_width="wrap_content"

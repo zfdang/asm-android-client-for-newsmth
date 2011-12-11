@@ -8,6 +8,7 @@ public class Profile {
 	private int loginTime;
 	private int postNumber;
 	private int onlineStatus; // 0, 离线; 1, 未知； 2， 在线
+	private int score;
 
 	public void setUserID(String userID) {
 		this.userID = userID;
@@ -63,6 +64,14 @@ public class Profile {
 
 	public int getOnlineStatus() {
 		return onlineStatus;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getScore() {
+		return score;
 	}
 
 }
