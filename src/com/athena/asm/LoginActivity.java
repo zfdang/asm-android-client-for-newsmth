@@ -37,14 +37,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		smthSupport = SmthSupport.getInstance();
 
-		boolean isLogout = getIntent().getBooleanExtra(StringUtility.LOGOUT, false);
-		boolean isAutoLogin = false;
-		
 		aSMApplication application = (aSMApplication) getApplication();
-		application.initPreferences();
+		
 		String userName = application.getAutoUserName();
 		String password = application.getAutoPassword();
-		isAutoLogin = application.isAutoLogin();
 
 		userNameEditText = (EditText) findViewById(R.id.username_edit);
 		userNameEditText.setText(userName);
@@ -58,12 +54,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		button.setOnClickListener(this);
 
 		Button gbutton = (Button) findViewById(R.id.guest_button);
-		gbutton.setOnClickListener(this);
-		
-		if (isAutoLogin & !isLogout) {
-			onClick(button);
-		}
-		
+		gbutton.setOnClickListener(this);		
 	}
 
 	public void showSuccessToast() {
@@ -118,8 +109,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 						intent.setClassName("com.athena.asm",
 								"com.athena.asm.HomeActivity");
 						intent.putExtra(StringUtility.LOGINED, true);
+						intent.putExtra(StringUtility.GUEST_LOGINED, false);
 						intent.putExtra(StringUtility.LOGINED_ID, newUserName);
 						startActivity(intent);
+						finish();
 					}
 					pdialog.cancel();
 				}
@@ -129,7 +122,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm", "com.athena.asm.HomeActivity");
 			intent.putExtra(StringUtility.LOGINED, false);
+			intent.putExtra(StringUtility.GUEST_LOGINED, true);
 			startActivity(intent);
+			finish();
 		}
 	}
 

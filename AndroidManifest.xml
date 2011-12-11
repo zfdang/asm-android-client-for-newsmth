@@ -7,15 +7,13 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application android:name=".aSMApplication" android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name="com.athena.asm.LoginActivity"
-                  android:label="@string/app_name">
+        <activity android:name="com.athena.asm.LoginActivity"></activity>
+        <activity android:name="com.athena.asm.HomeActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.athena.asm.HomeActivity"></activity>
         <activity android:name="com.athena.asm.PostListActivity"></activity>
         <activity android:name="com.athena.asm.SubjectListActivity"></activity>
         <activity android:name="com.athena.asm.WritePostActivity"></activity>

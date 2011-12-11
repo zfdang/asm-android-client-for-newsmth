@@ -14,6 +14,7 @@ import com.athena.asm.data.Profile;
 public class StringUtility {
 
 	public static final String LOGINED = "logined";
+	public static final String GUEST_LOGINED = "guest_logined";
 	public static final String LOGINED_ID = "loginedID";
 	
 	public static final String LOGOUT = "logout";

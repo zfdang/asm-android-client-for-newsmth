@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,8 +50,10 @@ import com.athena.asm.util.task.LoadCategoryTask;
 import com.athena.asm.util.task.LoadFavoriteTask;
 import com.athena.asm.util.task.LoadGuidanceTask;
 import com.athena.asm.util.task.LoadMailTask;
+import com.athena.asm.util.task.LoginTask;
 //import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoadProfileTask;
+
 
 public class HomeActivity extends Activity implements OnClickListener {
 
@@ -89,27 +92,87 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public String loginUserID = "guest";
 	private boolean isLogined = false;
+	private boolean isGuestLogined = false;
 
+	private Handler handler = new Handler();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.home);
 
-		this.isLogined = (Boolean) this.getIntent().getExtras()
-		.get(StringUtility.LOGINED);
-		if (isLogined) {
-			loginUserID = (String) this.getIntent().getExtras()
-			.get(StringUtility.LOGINED_ID);
-		}
+		smthSupport = SmthSupport.getInstance();
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		smthSupport = SmthSupport.getInstance();
-
 		bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
 		titleTextView = (TextView) findViewById(R.id.title);
-
+		
+		aSMApplication application = (aSMApplication) getApplication();
+		application.initPreferences();
+		boolean isAutoLogin = application.isAutoLogin();
+		
+		if (this.getIntent().getExtras() != null) {
+			this.isLogined = (Boolean) this.getIntent().getExtras().get(StringUtility.LOGINED);
+			this.isGuestLogined = (Boolean) this.getIntent().getExtras().get(StringUtility.GUEST_LOGINED);
+		}
+		
+		// 如果已从login页面登陆过来
+		if (isLogined) {
+			loginUserID = (String) this.getIntent().getExtras().get(StringUtility.LOGINED_ID);
+			init();
+		}
+		// 如果是从login页面用guest登陆过来
+		else if (isGuestLogined) {
+			init();
+		}
+		// 如果是第一次启动且保存了自动登陆
+		else if (isAutoLogin) {
+			smthSupport.restore();
+			
+			String userName = application.getAutoUserName();
+			String password = application.getAutoPassword();
+			
+			LoginTask loginTask = new LoginTask(this, userName, password);
+			loginTask.execute();
+		}
+		// 如果是第一次启动且没有自动登陆
+		else {
+			Intent intent = new Intent();
+			intent.setClassName("com.athena.asm","com.athena.asm.LoginActivity");
+			startActivity(intent);
+			finish();
+		}
+	}
+	
+	public void showFailedToast() {
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), "用户名或密码错.",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+	
+	public void loginTaskDone(boolean result) {
+		if (!result) {
+			showFailedToast();
+			
+			Intent intent = new Intent();
+			intent.setClassName("com.athena.asm","com.athena.asm.LoginActivity");
+			startActivity(intent);
+			finish();
+		} else {
+			isLogined = true;
+			aSMApplication application = (aSMApplication) getApplication();
+			loginUserID = application.getAutoUserName();
+			init();
+		}
+	}
+	
+	private void init() {
 		initTabListeners();
 		// initTasks();
 
@@ -126,7 +189,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 		} else {
 			reloadProfile(currentProfile, 50);
 		}
-
 	}
 
 	private void initTabListeners() {
@@ -402,10 +464,22 @@ public class HomeActivity extends Activity implements OnClickListener {
 		inflater = null;
 		cacheViewStack.clear();
 	}
+	
+	private void exit() {
+		aSMApplication application = (aSMApplication) getApplication();
+		Boolean rememberUser = application.isRememberUser();
+		if (!rememberUser) {
+			application.updateAutoUserNameAndPassword("", "");
+		}
+		application.syncPreferences();
 
-	private void logout() {
+		finish();
+		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
+	private void logout(final boolean isToExit) {
 		final ProgressDialog pdialog = new ProgressDialog(this);
-		pdialog.setMessage("正在退出...");
+		pdialog.setMessage("正在注销...");
 		pdialog.show();
 		clearData();
 		Thread th = new Thread() {
@@ -413,13 +487,18 @@ public class HomeActivity extends Activity implements OnClickListener {
 			public void run() {
 				smthSupport.destory();
 				pdialog.cancel();
-
-				Intent intent = new Intent();
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra(StringUtility.LOGOUT, true);
-				intent.setClassName("com.athena.asm",
-				"com.athena.asm.LoginActivity");
-				startActivity(intent);
+				if (!isToExit) {
+					Intent intent = new Intent();
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtra(StringUtility.LOGOUT, true);
+					intent.setClassName("com.athena.asm",
+					"com.athena.asm.LoginActivity");
+					startActivity(intent);
+					finish();
+				}
+				else {
+					exit();
+				}
 			}
 		};
 		th.start();
@@ -437,14 +516,16 @@ public class HomeActivity extends Activity implements OnClickListener {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {
-							logout();
+							logout(true);
 						}
 					});
 					builder.setNegativeButton("取消", null);
 					builder.create().show();
 					// logout();
 				} else {
-					return super.onKeyDown(keyCode, event);
+					finish();
+					android.os.Process.killProcess(android.os.Process.myPid());
+					//return super.onKeyDown(keyCode, event);
 				}
 			} else if (cacheViewStack.size() > 0) {
 				View lastView = cacheViewStack.get(cacheViewStack.size() - 1);
@@ -460,7 +541,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 	public static final int SETTING = Menu.FIRST;
 	public static final int REFRESH = Menu.FIRST + 1;
 	public static final int ABOUT = Menu.FIRST + 2;
-	public static final int EXIT = Menu.FIRST + 3;
+	public static final int LOGOUT = Menu.FIRST + 3;
+	public static final int EXIT = Menu.FIRST + 4;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -468,7 +550,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 		menu.add(0, SETTING, Menu.NONE, "设置");
 		menu.add(0, REFRESH, Menu.NONE, "刷新");
 		menu.add(0, ABOUT, Menu.NONE, "关于");
-		menu.add(0, EXIT, Menu.NONE, "注销");
+		menu.add(0, LOGOUT, Menu.NONE, "注销");
+		menu.add(0, EXIT, Menu.NONE, "退出");
 
 		return true;
 	}
@@ -540,8 +623,17 @@ public class HomeActivity extends Activity implements OnClickListener {
 			});
 			alertBuilder.show();
 			break;
+		case LOGOUT:
+			logout(false);
+			break;
 		case EXIT:
-			logout();
+			if (isLogined) {
+				logout(true);
+			}
+			else {
+				smthSupport.destory();
+				exit();
+			}
 			break;
 		default:
 			break;
