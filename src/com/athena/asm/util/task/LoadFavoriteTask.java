@@ -26,6 +26,8 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
+		ArrayList<Board> tempArrayList = new ArrayList<Board>();
+		homeActivity.smthSupport.getFavorite("0", tempArrayList,0);
 		homeActivity.favList = new ArrayList<Board>();
 		Board board = new Board();
 		board.setDirectory(true);
@@ -33,8 +35,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 		board.setCategoryName("目录");
 		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
 		homeActivity.favList.add(board);
-		homeActivity.smthSupport.getFavorite("0", homeActivity.favList,0);
-		
+		homeActivity.favList.addAll(tempArrayList);
 		pdialog.cancel();
 		return null;
 	}
