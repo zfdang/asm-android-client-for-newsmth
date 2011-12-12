@@ -713,9 +713,9 @@ public class SmthSupport {
 	 * @param pageno
 	 * @return
 	 */
-	public List<Post> getPostList(Subject subject, ArrayList<String> blackList) {
+	public List<Post> getPostList(Subject subject, ArrayList<String> blackList, int startNumber) {
 		String result = getPostListContent(subject.getBoardEngName(),
-				subject.getSubjectID(), subject.getCurrentPageNo());
+				subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
 		if (result == null) {
 			return Collections.emptyList();
 		}
@@ -809,11 +809,14 @@ public class SmthSupport {
 		return crawler.getUrlContent(url);
 	}
 
-	private String getPostListContent(String board, String subjectid, int pageno) {
+	private String getPostListContent(String board, String subjectid, int pageno, int startNumber) {
 		String url = "http://www.newsmth.net/bbstcon.php?board=" + board
 				+ "&gid=" + subjectid;
 		if (pageno > 0) {
 			url += "&pno=" + pageno;
+		}
+		if (startNumber > 0) {
+			url += "&start=" + startNumber;
 		}
 		return crawler.getUrlContent(url);
 	}

@@ -11,11 +11,13 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private ProgressDialog pdialog;
 	private int boardType;
 	private int action;
+	private int startNumber;
 
-	public LoadPostTask(PostListActivity activity, int boardType, int action) {
+	public LoadPostTask(PostListActivity activity, int boardType, int action, int startNumber) {
 		this.postListActivity = activity;
 		this.boardType = boardType;
 		this.action = action;
+		this.startNumber = startNumber;
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... params) {
 		if (boardType == 0) {
 			aSMApplication application = (aSMApplication)postListActivity.getApplication();
-			postListActivity.postList = postListActivity.smthSupport.getPostList(postListActivity.currentSubject, application.getBlackList());
+			postListActivity.postList = postListActivity.smthSupport.getPostList(postListActivity.currentSubject, application.getBlackList(), startNumber);
 		}
 		else {
 			if (action == 0) {

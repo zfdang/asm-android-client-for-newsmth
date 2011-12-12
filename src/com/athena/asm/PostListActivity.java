@@ -75,7 +75,7 @@ public class PostListActivity extends Activity implements OnClickListener {
 		
 		boardType = getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0);
 
-		LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0);
+		LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0, 0);
 		loadPostTask.execute();
 		// reloadPostList();
 	}
@@ -178,11 +178,12 @@ public class PostListActivity extends Activity implements OnClickListener {
 				((View) view.getParent()).requestFocus();
 			}
 			
-			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0);
+			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0, 0);
 			loadPostTask.execute();
 		}
 		else {
 			int action = 0;
+			int startNumber = 0;
 			if (view.getId() == R.id.btn_first_page) {
 				action = 1;
 			} else if (view.getId() == R.id.btn_pre_page) {
@@ -191,9 +192,10 @@ public class PostListActivity extends Activity implements OnClickListener {
 				action = 3;
 			} else if (view.getId() == R.id.btn_last_page){
 				boardType = 0;
+				startNumber = Integer.parseInt(currentSubject.getSubjectID());
 				currentSubject.setSubjectID(currentSubject.getTopicSubjectID());
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, action);
+			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, action, startNumber);
 			loadPostTask.execute();
 		}
 	}
