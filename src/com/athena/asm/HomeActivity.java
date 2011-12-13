@@ -655,14 +655,26 @@ public class HomeActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.btn_go_board) {
 			AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
 					.getParent()).findViewById(R.id.search_board);
+			
+			Board board = boardHashMap.get(textView.getText().toString().toLowerCase());
+			
+			if (board == null) {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(getApplicationContext(), "版面不存在.",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+				return;
+			}
 
 			InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
 			Intent intent = new Intent();
 			Bundle bundle = new Bundle();
-			bundle.putSerializable(StringUtility.BOARD,
-					boardHashMap.get(textView.getText().toString()));
+			bundle.putSerializable(StringUtility.BOARD,board);
 			intent.putExtras(bundle);
 			intent.setClassName("com.athena.asm",
 			"com.athena.asm.SubjectListActivity");

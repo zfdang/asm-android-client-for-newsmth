@@ -58,8 +58,10 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		for (Iterator<Board> iterator = boards.iterator(); iterator.hasNext();) {
 			Board board = (Board) iterator.next();
 			if (board != null && board.getEngName() != null) {
-				homeActivity.boardFullStrings.add(board.getEngName());
-				homeActivity.boardHashMap.put(board.getEngName(), board);
+				if (!homeActivity.boardFullStrings.contains(board.getEngName())) {
+					homeActivity.boardFullStrings.add(board.getEngName());
+				}
+				homeActivity.boardHashMap.put(board.getEngName().toLowerCase(), board);
 			}
 			readBoadInfo(board.getChildBoards());
 		}
