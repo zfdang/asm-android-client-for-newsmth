@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="wrap_content" android:paddingTop="4dp"
 	android:paddingBottom="2dp" android:paddingLeft="12dp"
-	android:paddingRight="12dp">
+	android:paddingRight="12dp" android:id="@+id/PostListLayout">
 	<TextView android:id="@+id/AuthorID"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textColor="@color/blue_text" android:textSize="15dp" />
@@ -16,7 +16,7 @@
 		android:layout_below="@+id/AuthorID" android:paddingTop="1dp"
 		android:textColor="@color/status_text" android:textSize="15dp" />
 	<View android:id="@+id/SeperatorView" android:layout_width="fill_parent"
-		android:layout_height="3px" android:background="?android:attr/listDivider"
+		android:layout_height="3dp" android:background="?android:attr/listDivider"
 		android:layout_below="@+id/PostTitle" />
 	<TextView android:id="@+id/PostContent"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"

@@ -73,9 +73,12 @@
 	<string name="setting_post_font_size">帖子内容读字体大小</string>
 	<string name="setting_black_list">黑名单</string>
 	<string name="setting_black_list_details">请以空格隔开ID</string>
+	<string name="setting_touch_scroll">触屏翻页</string>
+	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
 	<!-- 下拉刷新 -->
 	<string name="pull_to_refresh_pull_label">下拉刷新...</string>
 	<string name="pull_to_refresh_release_label">松开刷新...</string>
 	<string name="pull_to_refresh_refreshing_label">读取中...</string>
 	<string name="pull_to_refresh_tap_label">点击刷新...</string>
+	
 </resources>

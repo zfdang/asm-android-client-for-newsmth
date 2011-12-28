@@ -14,6 +14,7 @@ public class Preferences {
 	public static final String SUBJECT_FONT_SIZE = "subject_font_size";
 	public static final String POST_FONT_SIZE = "post_font_size";
 	
+	public static final String TOUCH_SCROLL = "touch_scroll";
 	public static final String BLACK_LIST = "black_list";
 	
 	public static final String LAST_LAUNCH_VERSION = "last_launch_version";

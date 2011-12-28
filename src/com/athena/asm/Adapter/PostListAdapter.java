@@ -3,29 +3,19 @@ package com.athena.asm.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
-import com.athena.asm.util.StringUtility;
 
 public class PostListAdapter extends BaseAdapter {
 
@@ -45,7 +35,7 @@ public class PostListAdapter extends BaseAdapter {
 		Post post = postList.get(position);
 
 		layout = inflater.inflate(R.layout.post_list_item, null);
-		aSMApplication application = (aSMApplication)activity.getApplication();
+		aSMApplication application = (aSMApplication) activity.getApplication();
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 		if (post.getAuthor() == null) {
@@ -53,15 +43,17 @@ public class PostListAdapter extends BaseAdapter {
 			return layout;
 		}
 		authorTextView.setText(post.getAuthor());
-		
+
 		titleTextView.setText(post.getTitle());
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
-		//contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		// contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		contentTextView.setText(Html.fromHtml(post.getContent()));
-		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
-		
-		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
+		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+				application.getPostFontSize());
+
+		TextView attachTextView = (TextView) layout
+				.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
 		String contentString = "";
@@ -70,92 +62,16 @@ public class PostListAdapter extends BaseAdapter {
 					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
 		}
 		attachTextView.setText(Html.fromHtml(contentString));
-		
+
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 		dateTextView.setText(post.getDate().toLocaleString());
 		layout.setTag(post);
-		
-		OnLongClickListener listener = new OnLongClickListener() {
 
-			@Override
-			public boolean onLongClick(View v) {
-				if (activity.smthSupport.getLoginStatus()) {
-					RelativeLayout relativeLayout = null;
-					if (v.getId() == R.id.PostContent) {
-						relativeLayout = (RelativeLayout) v.getParent();
-					}
-					else {
-						relativeLayout = (RelativeLayout) v;
-					}
-					final String authorID = (String) ((TextView)relativeLayout.findViewById(R.id.AuthorID)).getText();
-					final Post post = (Post) relativeLayout.getTag();
-					final String[] items = { activity.getString(R.string.post_reply_post),
-							activity.getString(R.string.post_reply_mail),
-							activity.getString(R.string.post_query_author),
-							activity.getString(R.string.post_copy_author)};
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							activity);
-					builder.setTitle(R.string.post_alert_title);
-					builder.setItems(items,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int item) {
-									Intent intent;
-									switch (item) {
-									case 0:
-										intent = new Intent();
-										intent.setClassName("com.athena.asm",
-												"com.athena.asm.WritePostActivity");
-										intent.putExtra(
-												StringUtility.URL,
-												"http://www.newsmth.net/bbspst.php?board="
-														+ post.getBoard()
-														+ "&reid="
-														+ post.getSubjectID());
-										intent.putExtra(StringUtility.WRITE_TYPE, 0);
-										//activity.startActivity(intent);
-										activity.startActivityForResult(intent, 0);
-										break;
-									case 1:
-										intent = new Intent();
-										intent.setClassName("com.athena.asm",
-												"com.athena.asm.WritePostActivity");
-										intent.putExtra(
-												StringUtility.URL,
-												"http://www.newsmth.net/bbspstmail.php?board="
-														+ post.getBoard()
-														+ "&id="
-														+ post.getSubjectID());
-										intent.putExtra(StringUtility.WRITE_TYPE, 1);
-										activity.startActivity(intent);
-										break;
-									case 2:
-										intent = new Intent();
-										intent.setClassName("com.athena.asm",
-												"com.athena.asm.ViewProfileActivity");
-										intent.putExtra(StringUtility.USERID, authorID);
-										activity.startActivity(intent);
-										break;
-									case 3:
-										ClipboardManager clip = (ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
-										clip.setText(authorID);
-										Toast.makeText(activity.getApplicationContext(), "ID ： " + authorID + "已复制到剪贴板",
-												Toast.LENGTH_SHORT).show();
-									default:
-										break;
-									}
-									dialog.dismiss();
-								}
-							});
-					AlertDialog alert = builder.create();
-					alert.show();
-				}
-				return false;
-			}
-		};
+		contentTextView.setOnLongClickListener(activity);
+		layout.setOnLongClickListener(activity);
 
-		contentTextView.setOnLongClickListener(listener);
-		layout.setOnLongClickListener(listener);
+		contentTextView.setOnTouchListener(activity);
+		layout.setOnTouchListener(activity);
 
 		return layout;
 	}

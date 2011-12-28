@@ -33,6 +33,9 @@
 			android:dialogTitle="请输入数字" android:defaultValue="17"  />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="其他">
+		<CheckBoxPreference android:key="touch_scroll"
+			android:summary="@string/setting_touch_scroll_details" android:title="@string/setting_touch_scroll" />
+		
 		<EditTextPreference  android:key="black_list" 
 			android:title="@string/setting_black_list" android:summary="@string/setting_black_list_details"
 			android:dialogTitle="请输入ID" android:defaultValue=""  />
