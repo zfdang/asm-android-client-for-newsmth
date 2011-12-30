@@ -68,7 +68,7 @@ public class aSMApplication extends Application {
 	}
 	
 	public boolean isFirstLaunchAfterUpdate() {
-		if (lastLaunchVersionCode != currentVersionCode) {
+		if (lastLaunchVersionCode < currentVersionCode) {
 			return true;
 		}
 		else {
