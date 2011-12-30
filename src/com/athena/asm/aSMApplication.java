@@ -48,7 +48,9 @@ public class aSMApplication extends Application {
 	private LinkedList<Board> recentBoards = null;
 	private Set<String> recentBoardNameSet = null;
 	
-	private boolean isTouchScroll = false;
+	
+	
+	private boolean isTouchScroll = true;
 	private ArrayList<String> blackList = new ArrayList<String>();
 	
 	public void syncPreferences() {
@@ -141,10 +143,10 @@ public class aSMApplication extends Application {
 		}
 		
 		if (!settings.contains(Preferences.TOUCH_SCROLL)) {
-			editor.putBoolean(Preferences.TOUCH_SCROLL, false);
+			editor.putBoolean(Preferences.TOUCH_SCROLL, true);
 		}
 		else {
-			setTouchScroll(settings.getBoolean(Preferences.TOUCH_SCROLL, false));
+			setTouchScroll(settings.getBoolean(Preferences.TOUCH_SCROLL, true));
 		}
 		
 		if (!settings.contains(Preferences.BLACK_LIST)) {
