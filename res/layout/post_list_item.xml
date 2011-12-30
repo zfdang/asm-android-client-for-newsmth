@@ -26,4 +26,13 @@
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:layout_below="@+id/PostContent"
 		android:textColor="@color/status_text" android:textSize="15dp" />
+	<LinearLayout
+	    android:id="@+id/imageLayout"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/PostAttach"
+	    android:layout_below="@+id/PostAttach"
+	    android:orientation="vertical" >
+	</LinearLayout>
+
 </RelativeLayout>
