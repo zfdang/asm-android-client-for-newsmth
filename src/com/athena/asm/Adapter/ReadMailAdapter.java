@@ -20,9 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.ReadMailActivity;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
 
@@ -40,7 +40,6 @@ public class ReadMailAdapter extends BaseAdapter {
 		Mail mail = activity.currentMail;
 
 		layout = inflater.inflate(R.layout.post_list_item, null);
-		aSMApplication application = (aSMApplication)activity.getApplication();
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		authorTextView.setText(mail.getSenderID());
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
@@ -48,7 +47,7 @@ public class ReadMailAdapter extends BaseAdapter {
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
 		contentTextView.setText(Html.fromHtml(mail.getContent()));
-		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getPostFontSize());
+		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getPostFontSize());
 		
 		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());

@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Preferences;
+import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
 
@@ -48,7 +49,8 @@ public class aSMApplication extends Application {
 	private LinkedList<Board> recentBoards = null;
 	private Set<String> recentBoardNameSet = null;
 	
-	
+	private boolean isAutoOptimize = true;
+	private float imageSizeThreshold = 50;
 	
 	private boolean isTouchScroll = true;
 	private ArrayList<String> blackList = new ArrayList<String>();
@@ -65,8 +67,20 @@ public class aSMApplication extends Application {
 		}
 	}
 	
+	public boolean isFirstLaunchAfterUpdate() {
+		if (lastLaunchVersionCode != currentVersionCode) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void initPreferences() {
+		CrashHandler crashHandler = CrashHandler.getInstance();  
+        crashHandler.init(getApplicationContext());  
+		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
 		
@@ -146,7 +160,22 @@ public class aSMApplication extends Application {
 			editor.putBoolean(Preferences.TOUCH_SCROLL, true);
 		}
 		else {
-			setTouchScroll(settings.getBoolean(Preferences.TOUCH_SCROLL, true));
+			isTouchScroll = settings.getBoolean(Preferences.TOUCH_SCROLL, true);
+		}
+		
+		if (!settings.contains(Preferences.AUTO_OPTIMIZE)) {
+			editor.putBoolean(Preferences.AUTO_OPTIMIZE, true);
+		}
+		else {
+			setAutoOptimize(settings.getBoolean(Preferences.AUTO_OPTIMIZE, true));
+		}
+		
+		if (!settings.contains(Preferences.IMAGE_SIZE_THRESHOLD)) {
+			editor.putString(Preferences.IMAGE_SIZE_THRESHOLD, "50");
+		}
+		else {
+			String size = settings.getString(Preferences.IMAGE_SIZE_THRESHOLD, "50");
+			setImageSizeThreshold(StringUtility.filterUnNumber(size));
 		}
 		
 		if (!settings.contains(Preferences.BLACK_LIST)) {
@@ -367,5 +396,21 @@ public class aSMApplication extends Application {
 
 	public void setTouchScroll(boolean isTouchScroll) {
 		this.isTouchScroll = isTouchScroll;
+	}
+
+	public boolean isAutoOptimize() {
+		return isAutoOptimize;
+	}
+
+	public void setAutoOptimize(boolean isAutoOptimize) {
+		this.isAutoOptimize = isAutoOptimize;
+	}
+
+	public float getImageSizeThreshold() {
+		return imageSizeThreshold;
+	}
+
+	public void setImageSizeThreshold(float imageSizeThreshold) {
+		this.imageSizeThreshold = imageSizeThreshold;
 	}
 }

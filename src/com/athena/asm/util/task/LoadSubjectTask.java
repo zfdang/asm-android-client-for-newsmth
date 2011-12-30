@@ -3,8 +3,8 @@ package com.athena.asm.util.task;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.SubjectListActivity;
-import com.athena.asm.aSMApplication;
 
 public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	private SubjectListActivity subjectListActivity;
@@ -27,9 +27,8 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
-		aSMApplication application = (aSMApplication)subjectListActivity.getApplication();
 		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, 
-				boardType, isReloadPageNo, application.getBlackList());
+				boardType, isReloadPageNo, HomeActivity.application.getBlackList());
 		pdialog.cancel();
 		return null;
 	}

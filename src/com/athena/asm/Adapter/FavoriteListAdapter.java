@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 import com.athena.asm.util.StringUtility;
 
@@ -47,8 +46,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 				public void onClick(View v) {
 					Board board = (Board) v.getTag();
 					if (board.getDirectoryName().equals("最近访问版面")) {
-						aSMApplication application = (aSMApplication)activity.getApplication();
-						activity.reloadFavorite(new ArrayList<Board>(application.getRecentBoards()), ++step);
+						activity.reloadFavorite(new ArrayList<Board>(HomeActivity.application.getRecentBoards()), ++step);
 					}
 					else {
 						activity.reloadFavorite(board.getChildBoards(), ++step);
@@ -78,8 +76,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.BOARD,
 							(Board) v.getTag());
-					aSMApplication application = (aSMApplication)activity.getApplication();
-					application.addRecentBoard((Board) v.getTag());
+					HomeActivity.application.addRecentBoard((Board) v.getTag());
 					intent.putExtras(bundle);
 					intent.setClassName("com.athena.asm",
 							"com.athena.asm.SubjectListActivity");

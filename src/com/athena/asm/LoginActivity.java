@@ -37,10 +37,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		smthSupport = SmthSupport.getInstance();
 
-		aSMApplication application = (aSMApplication) getApplication();
-		
-		String userName = application.getAutoUserName();
-		String password = application.getAutoPassword();
+		String userName = HomeActivity.application.getAutoUserName();
+		String password = HomeActivity.application.getAutoPassword();
 
 		userNameEditText = (EditText) findViewById(R.id.username_edit);
 		userNameEditText.setText(userName);
@@ -102,8 +100,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						showFailedToast();
 					} else {
 						// showSuccessToast();
-						aSMApplication application = (aSMApplication) getApplication();
-						application.updateAutoUserNameAndPassword(newUserName, newPassword);
+						HomeActivity.application.updateAutoUserNameAndPassword(newUserName, newPassword);
 						
 						Intent intent = new Intent();
 						intent.setClassName("com.athena.asm",
@@ -131,12 +128,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			aSMApplication application = (aSMApplication) getApplication();
-			Boolean rememberUser = application.isRememberUser();
+			Boolean rememberUser = HomeActivity.application.isRememberUser();
 			if (!rememberUser) {
-				application.updateAutoUserNameAndPassword("", "");
+				HomeActivity.application.updateAutoUserNameAndPassword("", "");
 			}
-			application.syncPreferences();
+			HomeActivity.application.syncPreferences();
 
 			finish();
 			android.os.Process.killProcess(android.os.Process.myPid());

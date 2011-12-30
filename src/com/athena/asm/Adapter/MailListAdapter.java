@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
 
@@ -41,8 +41,6 @@ public class MailListAdapter extends BaseAdapter {
 			layout = inflater.inflate(R.layout.mail_list_item, null);
 		}
 		
-		aSMApplication application = (aSMApplication)activity.getApplication();
-		
 		Mail mail = mailList.get(mailList.size() - position - 1);
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.SenderID);
@@ -63,7 +61,7 @@ public class MailListAdapter extends BaseAdapter {
 			tp.setFakeBoldText(false);
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.MailSendDate);
 		dateTextView.setText(mail.getDateString());

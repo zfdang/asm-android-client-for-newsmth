@@ -72,8 +72,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		Button nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
 
-		aSMApplication application = (aSMApplication)getApplication();
-		String defaultBoardType = application.getDefaultBoardType();
+		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
 		if (defaultBoardType.equals("001")) {
 			boardType = 0;
 		} else {

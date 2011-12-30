@@ -234,8 +234,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		aSMApplication application = (aSMApplication) getApplication();
-		if (application.isTouchScroll()) {
+		if (HomeActivity.application.isTouchScroll()) {
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				isLongPressed = false;
 			}

@@ -5,17 +5,24 @@ import java.util.List;
 
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class PostListAdapter extends BaseAdapter {
 
@@ -31,11 +38,10 @@ public class PostListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View layout = null;
+		RelativeLayout layout = null;
 		Post post = postList.get(position);
 
-		layout = inflater.inflate(R.layout.post_list_item, null);
-		aSMApplication application = (aSMApplication) activity.getApplication();
+		layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 		if (post.getAuthor() == null) {
@@ -50,16 +56,28 @@ public class PostListAdapter extends BaseAdapter {
 		// contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		contentTextView.setText(Html.fromHtml(post.getContent()));
 		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-				application.getPostFontSize());
+				HomeActivity.application.getPostFontSize());
 
 		TextView attachTextView = (TextView) layout
 				.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
 		String contentString = "";
+		LinearLayout linearLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
 		for (int i = 0; i < attachments.size(); i++) {
-			contentString += "<a href='" + attachments.get(i).getAttachUrl()
+			String attachUrl = attachments.get(i).getAttachUrl();
+			contentString += "<a href='" + attachUrl
 					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
+			String fileType = attachUrl.toLowerCase();
+			if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
+					|| fileType.endsWith("bmp") || fileType.endsWith("gif")) {
+				Log.d("image", attachUrl);
+				ImageView imageView = new ImageView(activity);
+				LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				imageView.setLayoutParams(layoutParams);
+				linearLayout.addView(imageView);
+				UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60);
+			}
 		}
 		attachTextView.setText(Html.fromHtml(contentString));
 

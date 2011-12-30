@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.SearchPostResultListActivity;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
 
@@ -43,8 +43,6 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 			layout = inflater.inflate(R.layout.subject_list_item, null);
 		}
 		
-		aSMApplication application = (aSMApplication)activity.getApplication();
-		
 		Subject subject = subjectList.get(subjectList.size() - position - 1);
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
@@ -55,7 +53,7 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		Date date = subject.getDate();
 		if (date.getYear() == 70) {

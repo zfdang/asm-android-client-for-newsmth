@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
 
@@ -36,14 +35,13 @@ public class GuidanceListAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
-		aSMApplication application = (aSMApplication)activity.getApplication();
 		if (itemType == 0) {
 			layout = activity.inflater.inflate(
 					R.layout.guidance_list_section_header, null);
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.SectionName);
 			boardNameTextView.setText(sections.get(position));
-			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getGuidanceFontSize());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
 		} else {
 			Subject subject = subjects.get(dataIndex).get(position);
 			layout = activity.inflater.inflate(R.layout.guidance_list_item,
@@ -57,7 +55,7 @@ public class GuidanceListAdapter extends BaseAdapter {
 			TextView titleTextView = (TextView) layout
 					.findViewById(R.id.SubjectTitle);
 			titleTextView.setText(subject.getTitle());
-			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, application.getGuidanceSecondFontSize());
+			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 			layout.setTag(subject);
 
 			layout.setOnClickListener(new OnClickListener() {

@@ -48,8 +48,7 @@ public class SettingActivity extends PreferenceActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			aSMApplication application = (aSMApplication)getApplication();
-			application.initPreferences();
+			HomeActivity.application.initPreferences();
 			return super.onKeyDown(keyCode, event);
 		} else {
 			return super.onKeyDown(keyCode, event);

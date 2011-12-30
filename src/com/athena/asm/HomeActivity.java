@@ -96,6 +96,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	private Handler handler = new Handler();
 	
+	public static aSMApplication application;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +111,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 		bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
 		titleTextView = (TextView) findViewById(R.id.title);
 		
-		aSMApplication application = (aSMApplication) getApplication();
+		application = (aSMApplication) getApplication();
+		
 		application.initPreferences();
 		boolean isAutoLogin = application.isAutoLogin();
 		
@@ -166,7 +169,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 			finish();
 		} else {
 			isLogined = true;
-			aSMApplication application = (aSMApplication) getApplication();
 			loginUserID = application.getAutoUserName();
 			init();
 		}
@@ -175,8 +177,19 @@ public class HomeActivity extends Activity implements OnClickListener {
 	private void init() {
 		initTabListeners();
 		// initTasks();
+		if (application.isFirstLaunchAfterUpdate()) {
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+			alertBuilder.setTitle(R.string.update_title);
+			alertBuilder.setMessage(R.string.update_info);
+			alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int i) {
+					dialog.dismiss();
+				}
+			});
+			alertBuilder.show();
+		}
 
-		aSMApplication application = (aSMApplication) getApplication();
 		String defaultTab = application.getDefaultTab();
 		if (defaultTab.equals("001")) {
 			reloadGuidanceList();
@@ -475,7 +488,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 	}
 	
 	private void exit() {
-		aSMApplication application = (aSMApplication) getApplication();
 		Boolean rememberUser = application.isRememberUser();
 		if (!rememberUser) {
 			application.updateAutoUserNameAndPassword("", "");
