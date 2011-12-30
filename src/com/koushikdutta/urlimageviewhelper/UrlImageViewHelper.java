@@ -331,7 +331,7 @@ public final class UrlImageViewHelper {
 		}
 		float threshold = HomeActivity.application.getImageSizeThreshold();
 		// 非自动优化或者自动优化但在移动网络中，需阈值判断
-		if (imageSize < threshold*1024) {
+		if (threshold == 0 || imageSize < threshold*1024) {
 			return true;
 		}
 		
