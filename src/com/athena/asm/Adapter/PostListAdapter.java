@@ -101,6 +101,9 @@ public class PostListAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
+		if (position >= postList.size()) {
+			position = postList.size() - 1;
+		}
 		return postList.get(position);
 	}
 
