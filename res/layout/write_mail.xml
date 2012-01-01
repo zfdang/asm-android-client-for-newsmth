@@ -15,7 +15,7 @@
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5dp"
 			android:text="标     题" android:textColor="@color/status_text" />
-		<EditText android:id="@+id/post_title" android:layout_width="fill_parent"
+		<EditText android:id="@+id/post_title" android:layout_width="0dip"
 			android:layout_height="wrap_content" android:layout_weight="1"
 			android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
 			android:layout_marginTop="1dp" android:singleLine="true" />
@@ -27,14 +27,14 @@
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:paddingLeft="5dp"
 			android:text="收信ID" android:textColor="@color/status_text" />
-		<EditText android:id="@+id/post_userid" android:layout_width="fill_parent"
+		<EditText android:id="@+id/post_userid" android:layout_width="0dip"
 			android:layout_height="wrap_content" android:layout_weight="1"
 			android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
 			android:layout_marginTop="1dp" android:singleLine="true" />
 		<!-- 发送按钮 -->
 		<Button android:id="@+id/btn_send_post" android:layout_width="wrap_content"
 			android:layout_height="fill_parent" android:layout_alignParentRight="true"
-			android:layout_marginRight="10dp" style="@style/simple_button"
+			android:layout_marginRight="10dp" style="@style/blue_button"
 			android:text="@string/write_label_post" />
 	</LinearLayout>
 
