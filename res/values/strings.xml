@@ -60,7 +60,7 @@
 \n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
 	<!-- 更新 -->
 	<string name="update_title">更新说明</string>
-	<string name="update_info">1.4更新内容：\n1. 添加图片查看功能，具体见设置“图片加载”部分。\n2. 添加帖子阅读界面上下半区屏幕点击导航功能。\n3. 新程序ICON，感谢小鸭子与ssggs。\n4. 修正分区页面输入名称有误时崩溃问题。\n新年快乐！
+	<string name="update_info">1.4.1更新内容：\n1. 优化图片查看的内存占用，减少崩溃发生。\n2. 收藏夹字体使用首页导读第一级字体设置。\n3. 一些细节调整。\n提前祝大家龙年吉祥！
 	    </string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
@@ -71,7 +71,7 @@
 	<string name="setting_default_tab_details">选择默认要加载标签页</string>
 	<string name="setting_default_board_type">默认版面模式</string>
 	<string name="setting_default_board_type_details">选择默认的版面模式</string>
-	<string name="setting_guidance_font_size">首页导读字体大小</string>
+	<string name="setting_guidance_font_size">首页导读与收藏夹字体大小</string>
 	<string name="setting_guidance_second_font_size">首页导读二级字体大小</string>
 	<string name="setting_subject_font_size">版面帖子标题字体大小</string>
 	<string name="setting_post_font_size">帖子内容读字体大小</string>

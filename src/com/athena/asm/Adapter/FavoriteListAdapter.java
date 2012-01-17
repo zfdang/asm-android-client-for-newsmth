@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText(board.getDirectoryName());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
 			layout.setTag(board);
 			layout.setOnClickListener(new OnClickListener() {
 
@@ -66,6 +68,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText("[" + board.getEngName() + "]"
 					+ board.getChsName());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
 			layout.setTag(board);
 			
 			layout.setOnClickListener(new OnClickListener() {
