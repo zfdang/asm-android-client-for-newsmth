@@ -16,10 +16,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.athena.asm.HomeActivity;
-import com.athena.asm.R;
-import com.athena.asm.util.SmthCrawler;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -34,6 +30,10 @@ import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.athena.asm.HomeActivity;
+import com.athena.asm.R;
+import com.athena.asm.util.SmthCrawler;
 
 public final class UrlImageViewHelper {
 	private static final String LOGTAG = "UrlImageViewHelper";
@@ -64,13 +64,70 @@ public final class UrlImageViewHelper {
 		mResources = new Resources(mgr, mMetrics, null);
 	}
 
+	private static int calculateSampleNumber(InputStream stream) {
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(stream, null, opts);
+		opts.inSampleSize = computeSampleSize(opts, -1, 480 * 800);
+		opts.inJustDecodeBounds = false;
+
+		return opts.inSampleSize;
+	}
+
 	private static BitmapDrawable loadDrawableFromStream(Context context,
-			InputStream stream) {
+			InputStream stream, int sampleSize) {
 		prepareResources(context);
-		final Bitmap bitmap = BitmapFactory.decodeStream(stream);
+
+		BitmapFactory.Options sampleOptions = new BitmapFactory.Options();
+		sampleOptions.inSampleSize = sampleSize;
+
+		final Bitmap bitmap = BitmapFactory.decodeStream(stream, null,
+				sampleOptions);
 		// Log.i(LOGTAG, String.format("Loaded bitmap (%dx%d).",
 		// bitmap.getWidth(), bitmap.getHeight()));
 		return new BitmapDrawable(mResources, bitmap);
+	}
+
+	public static int computeSampleSize(BitmapFactory.Options options,
+			int minSideLength, int maxNumOfPixels) {
+		int initialSize = computeInitialSampleSize(options, minSideLength,
+				maxNumOfPixels);
+
+		int roundedSize;
+		if (initialSize <= 8) {
+			roundedSize = 1;
+			while (roundedSize < initialSize) {
+				roundedSize <<= 1;
+			}
+		} else {
+			roundedSize = (initialSize + 7) / 8 * 8;
+		}
+
+		return roundedSize;
+	}
+
+	private static int computeInitialSampleSize(BitmapFactory.Options options,
+			int minSideLength, int maxNumOfPixels) {
+		double w = options.outWidth;
+		double h = options.outHeight;
+
+		int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math
+				.sqrt(w * h / maxNumOfPixels));
+		int upperBound = (minSideLength == -1) ? 128 : (int) Math.min(
+				Math.floor(w / minSideLength), Math.floor(h / minSideLength));
+
+		if (upperBound < lowerBound) {
+			// return the larger one when there is no overlapping zone.
+			return lowerBound;
+		}
+
+		if ((maxNumOfPixels == -1) && (minSideLength == -1)) {
+			return 1;
+		} else if (minSideLength == -1) {
+			return lowerBound;
+		} else {
+			return upperBound;
+		}
 	}
 
 	public static final int CACHE_DURATION_INFINITE = Integer.MAX_VALUE;
@@ -156,7 +213,7 @@ public final class UrlImageViewHelper {
 
 				File f = new File(file);
 				if (System.currentTimeMillis() > f.lastModified()
-						+ CACHE_DURATION_ONE_WEEK)
+						+ CACHE_DURATION_TWO_DAYS)
 					f.delete();
 			}
 		} catch (Exception e) {
@@ -199,8 +256,11 @@ public final class UrlImageViewHelper {
 					// (System.currentTimeMillis() - file.lastModified()) +
 					// "ms old.");
 					FileInputStream fis = context.openFileInput(filename);
+					int sampleSize = calculateSampleNumber(fis);
+					fis.close();
+					fis = context.openFileInput(filename);
 					BitmapDrawable drawable = loadDrawableFromStream(context,
-							fis);
+							fis, sampleSize);
 					fis.close();
 					if (imageView != null)
 						imageView.setImageDrawable(drawable);
@@ -263,23 +323,29 @@ public final class UrlImageViewHelper {
 					Log.d(LOGTAG, header.getValue());
 					if (header.getValue().contains("image")) {
 						float size = entity.getContentLength();
-						
+
 						boolean isToLoad = checkIsToLoadImage(context, size);
 						if (isToLoad) {
-							Log.i(LOGTAG, url + " Image Content Length: " + size);
+							// Log.i(LOGTAG, url + " Image Content Length: " +
+							// size);
 							InputStream is = entity.getContent();
-							FileOutputStream fos = context.openFileOutput(filename,
-									Context.MODE_PRIVATE);
+							FileOutputStream fos = context.openFileOutput(
+									filename, Context.MODE_PRIVATE);
 							copyStream(is, fos);
 							fos.close();
 							is.close();
-							FileInputStream fis = context.openFileInput(filename);
-							return loadDrawableFromStream(context, fis);
+							FileInputStream fis = context
+									.openFileInput(filename);
+							int sampleSize = calculateSampleNumber(fis);
+							fis.close();
+							fis = context.openFileInput(filename);
+							return loadDrawableFromStream(context, fis,
+									sampleSize);
 						}
-					} /*else {
-						String content = EntityUtils.toString(entity);
-						Log.d(LOGTAG, content);
-					}*/
+					} /*
+					 * else { String content = EntityUtils.toString(entity);
+					 * Log.d(LOGTAG, content); }
+					 */
 
 					return null;
 				} catch (Exception ex) {
@@ -292,7 +358,8 @@ public final class UrlImageViewHelper {
 
 			protected void onPostExecute(Drawable result) {
 				if (result == null)
-					result = imageView.getResources().getDrawable(R.drawable.defalutimage);
+					result = imageView.getResources().getDrawable(
+							R.drawable.defalutimage);
 				mPendingDownloads.remove(url);
 				cache.put(url, result);
 				for (ImageView iv : downloads) {
@@ -315,13 +382,13 @@ public final class UrlImageViewHelper {
 		};
 		downloader.execute();
 	}
-	
+
 	private static boolean checkIsToLoadImage(Context context, float imageSize) {
 		boolean isAutoOptimize = HomeActivity.application.isAutoOptimize();
 		// 自动优化
 		if (isAutoOptimize) {
 			ConnectivityManager connectionManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
 			int netType = networkInfo.getType();
 			// WIFI下全部下载
@@ -331,10 +398,10 @@ public final class UrlImageViewHelper {
 		}
 		float threshold = HomeActivity.application.getImageSizeThreshold();
 		// 非自动优化或者自动优化但在移动网络中，需阈值判断
-		if (threshold == 0 || imageSize < threshold*1024) {
+		if (threshold == 0 || imageSize < threshold * 1024) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
