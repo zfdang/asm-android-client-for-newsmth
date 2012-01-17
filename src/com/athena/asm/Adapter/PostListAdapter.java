@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +70,7 @@ public class PostListAdapter extends BaseAdapter {
 			String fileType = attachUrl.toLowerCase();
 			if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
 					|| fileType.endsWith("bmp") || fileType.endsWith("gif")) {
-				Log.d("image", attachUrl);
+				//Log.d("image", attachUrl);
 				ImageView imageView = new ImageView(activity);
 				LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				imageView.setLayoutParams(layoutParams);

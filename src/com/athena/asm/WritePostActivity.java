@@ -77,6 +77,12 @@ public class WritePostActivity extends Activity implements OnClickListener {
 			titleTextView.setText("写信件");
 			parseMailToHandleUrl();
 		}
+		
+		boolean isReply = getIntent().getBooleanExtra(StringUtility.IS_REPLY, false);
+		if (isReply) {
+			contentEditText.requestFocus();
+			contentEditText.setSelection(0);
+		}
 	}
 
 	private void parsePostToHandleUrl() {
@@ -110,7 +116,7 @@ public class WritePostActivity extends Activity implements OnClickListener {
 			contentEditText.setText(Html.fromHtml("<br />"
 					+ postContent));
 		}
-
+		
 	}
 
 	private void parseMailToHandleUrl() {

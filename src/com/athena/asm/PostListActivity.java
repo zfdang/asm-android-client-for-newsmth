@@ -294,6 +294,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 										+ post.getBoard() + "&reid="
 										+ post.getSubjectID());
 						intent.putExtra(StringUtility.WRITE_TYPE, 0);
+						intent.putExtra(StringUtility.IS_REPLY, true);
 						// activity.startActivity(intent);
 						startActivityForResult(intent, 0);
 						break;
@@ -307,6 +308,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 										+ post.getBoard() + "&id="
 										+ post.getSubjectID());
 						intent.putExtra(StringUtility.WRITE_TYPE, 1);
+						intent.putExtra(StringUtility.IS_REPLY, true);
 						startActivity(intent);
 						break;
 					case 2:

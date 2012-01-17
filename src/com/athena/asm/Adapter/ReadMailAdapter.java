@@ -94,6 +94,7 @@ public class ReadMailAdapter extends BaseAdapter {
 															+ "&num=" + mail.getNumber()
 															+ "&file=" + mail.getValueString()
 															+ "&title=" + URLEncoder.encode(mail.getTitle(), "GBK"));
+											intent.putExtra(StringUtility.IS_REPLY, true);
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
 										}

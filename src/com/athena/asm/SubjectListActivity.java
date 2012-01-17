@@ -210,6 +210,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 					"http://www.newsmth.net/bbspst.php?board="
 							+ currentBoard.getEngName());
 			intent.putExtra(StringUtility.WRITE_TYPE, 0);
+			intent.putExtra(StringUtility.IS_REPLY, false);
 			//startActivity(intent);
 			startActivityForResult(intent, 0);
 			break;

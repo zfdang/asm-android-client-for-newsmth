@@ -81,6 +81,7 @@ public class MailAdapter extends BaseAdapter {
 							StringUtility.URL,
 							"http://www.newsmth.net/bbspstmail.php");
 					intent.putExtra(StringUtility.WRITE_TYPE, 1);
+					intent.putExtra(StringUtility.IS_REPLY, false);
 					activity.startActivity(intent);
 				}
 			});
