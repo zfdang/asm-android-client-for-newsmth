@@ -2,6 +2,7 @@ package com.athena.asm;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,19 +18,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 
-public class WritePostActivity extends Activity implements OnClickListener {
+public class WritePostActivity extends Activity implements OnClickListener, OnItemSelectedListener {
 	private EditText titleEditText;
 	private EditText useridEditText;
 	private EditText contentEditText;
+	private Spinner sigSpinner;
 
 	private SmthSupport smthSupport;
 
@@ -44,6 +50,7 @@ public class WritePostActivity extends Activity implements OnClickListener {
 	private String num = "";
 	private String dir = "";
 	private String file = "";
+	private int sigNum = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,9 +63,9 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		titleEditText = (EditText) findViewById(R.id.post_title);
 		useridEditText = (EditText) findViewById(R.id.post_userid);
 		contentEditText = (EditText) findViewById(R.id.post_content);
+		sigSpinner = (Spinner) findViewById(R.id.sig_spinner);
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
-		
 
 		Button button = (Button) findViewById(R.id.btn_send_post);
 		button.setOnClickListener(this);
@@ -77,6 +84,22 @@ public class WritePostActivity extends Activity implements OnClickListener {
 			titleTextView.setText("写信件");
 			parseMailToHandleUrl();
 		}
+		
+		ArrayList<String> list=new ArrayList<String>();
+		list.add("不使用签名档");
+		for (int i = 1; i <= sigNum; i++) {
+                    list.add("第" + i + "个");
+                }
+		if (sigNum > 0) {
+                    list.add("随机签名档");
+                }
+		ArrayAdapter<String> sigSpinnerAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,list);
+		sigSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sigSpinner.setAdapter(sigSpinnerAdapter);
+		sigSpinner.setOnItemSelectedListener(this);
+		if (sigNum > 0) {
+		    sigSpinner.setSelection(1);
+                }
 		
 		boolean isReply = getIntent().getBooleanExtra(StringUtility.IS_REPLY, false);
 		if (isReply) {
@@ -98,10 +121,12 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		}
 
 		String contentString = smthSupport.getUrlContent(toHandleUrl);
-		Pattern p = Pattern.compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+");
+		// function replyForm(board,reid,title,att,signum,sig,ano,outgo,lsave)
+		Pattern p = Pattern.compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+,(\\d+)");
 		Matcher m = p.matcher(contentString);
 		if (m.find()) {
 			postTitle = m.group(1);
+			sigNum = Integer.parseInt(m.group(2));
 			if (!postTitle.contains("Re:") && isReply) {
 				postTitle = "Re: " + postTitle;
 			}
@@ -157,6 +182,9 @@ public class WritePostActivity extends Activity implements OnClickListener {
 		}
 		
 		String contentString = smthSupport.getUrlContent(toHandleUrl);
+		
+		sigNum = StringUtility.getOccur(contentString, "<option") - 2;
+		
 		Pattern pattern = Pattern.compile("<textarea[^<>]+>([^<>]+)</textarea>");
 		Matcher matcher = pattern.matcher(contentString);
 		if (matcher.find()) {
@@ -227,6 +255,12 @@ public class WritePostActivity extends Activity implements OnClickListener {
 				userid = useridEditText.getText().toString().trim();
 			}
 			postContent = contentEditText.getText().toString();
+			
+			int selectedSig = sigSpinner.getSelectedItemPosition();
+			if (selectedSig == sigNum+1) {
+                            selectedSig = -1;
+                        }
+			final String sigParams = String.valueOf(selectedSig);
 
 			((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
 					.hideSoftInputFromWindow(contentEditText.getWindowToken(),
@@ -238,10 +272,11 @@ public class WritePostActivity extends Activity implements OnClickListener {
 					boolean result = false;
 					if (writeType == 0) {
 						result = smthSupport.sendPost(postUrl, postTitle,
-								postContent);
+								postContent, sigParams);
 					}
 					else {
-						result = smthSupport.sendMail(postUrl, postTitle, userid, num, dir, file, postContent);
+						result = smthSupport.sendMail(postUrl, postTitle, userid, num,
+						        dir, file, sigParams, postContent);
 					}
 					if (!result) {
 						showFailedToast();
@@ -254,4 +289,17 @@ public class WritePostActivity extends Activity implements OnClickListener {
 			th.start();
 		}
 	}
+
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+            long arg3) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+        
+    }
 }

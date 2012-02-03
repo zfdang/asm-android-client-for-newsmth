@@ -129,12 +129,13 @@ public class SmthCrawler {
 		return true;
 	}
 
-	public boolean sendPost(String postUrl, String postTitle, String postContent) {
+	public boolean sendPost(String postUrl, String postTitle, 
+	        String postContent, String signature) {
 		HttpPost httpPost = new HttpPost(postUrl);
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("title", postTitle));
 		formparams.add(new BasicNameValuePair("text", postContent));
-		formparams.add(new BasicNameValuePair("signature", "0"));
+		formparams.add(new BasicNameValuePair("signature", signature));
 		UrlEncodedFormEntity entity;
 		try {
 			entity = new UrlEncodedFormEntity(formparams, "GBK");
@@ -156,7 +157,8 @@ public class SmthCrawler {
 		return true;
 	}
 	
-	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, String file, String mailContent) {
+	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, 
+	        String dir, String file, String signature, String mailContent) {
 		HttpPost httpPost = new HttpPost(mailUrl);
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("title", mailTitle));
@@ -164,7 +166,7 @@ public class SmthCrawler {
 		formparams.add(new BasicNameValuePair("num", num));
 		formparams.add(new BasicNameValuePair("dir", dir));
 		formparams.add(new BasicNameValuePair("file", file));
-		formparams.add(new BasicNameValuePair("signature", "0"));
+		formparams.add(new BasicNameValuePair("signature", signature));
 		formparams.add(new BasicNameValuePair("backup", "1"));
 		formparams.add(new BasicNameValuePair("text", mailContent));
 		

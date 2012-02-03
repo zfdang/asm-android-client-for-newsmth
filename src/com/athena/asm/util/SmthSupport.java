@@ -75,12 +75,13 @@ public class SmthSupport {
 		crawler.destroy();
 	}
 	
-	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, String file, String mailContent) {
-		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file, mailContent);
+	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, 
+	        String file, String signature, String mailContent) {
+		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file, signature, mailContent);
 	}
 
-	public boolean sendPost(String postUrl, String postTitle, String postContent) {
-		return crawler.sendPost(postUrl, postTitle, postContent);
+	public boolean sendPost(String postUrl, String postTitle, String postContent, String signature) {
+		return crawler.sendPost(postUrl, postTitle, postContent, signature);
 	}
 
 	public String getUrlContent(String urlString) {
