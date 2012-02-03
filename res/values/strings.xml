@@ -53,6 +53,7 @@
 	<string name="post_copy_author">复制作者ID</string>
 	<string name="post_query_author">查看作者信息</string>
 	<string name="write_label_post">发表</string>
+	<string name="post_attach">附件</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
 	<string name="about_content">aSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：

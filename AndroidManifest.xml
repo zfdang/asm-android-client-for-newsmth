@@ -1,29 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.athena.asm"
-      android:versionCode="8"
-      android:versionName="1.4.1">
-    <uses-sdk android:minSdkVersion="7" />
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    package="com.athena.asm"
+    android:versionCode="8"
+    android:versionName="1.4.1" >
 
-    <application android:name=".aSMApplication" android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name="com.athena.asm.LoginActivity"></activity>
-        <activity android:name="com.athena.asm.HomeActivity" android:label="@string/app_name">
-            <intent-filter>
+    <uses-sdk android:minSdkVersion="7" />
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:name=".aSMApplication" >
+        <activity android:name="com.athena.asm.LoginActivity" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name="com.athena.asm.HomeActivity" >
+            <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.athena.asm.PostListActivity"></activity>
-        <activity android:name="com.athena.asm.SubjectListActivity"></activity>
-        <activity android:name="com.athena.asm.WritePostActivity"></activity>
-        <activity android:name="com.athena.asm.SettingActivity"></activity>
-        <activity android:name="com.athena.asm.SearchPostActivity"></activity>
-        <activity android:name="com.athena.asm.SearchPostResultListActivity"></activity>
-        <activity android:name="com.athena.asm.MailListActivity"></activity>
-        <activity android:name="com.athena.asm.ReadMailActivity"></activity>
-        <activity android:name="com.athena.asm.ViewProfileActivity"></activity>
+        <activity android:name="com.athena.asm.PostListActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.SubjectListActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.WritePostActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.SettingActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.SearchPostActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.SearchPostResultListActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.MailListActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.ReadMailActivity" >
+        </activity>
+        <activity android:name="com.athena.asm.ViewProfileActivity" >
+        </activity>
+        <activity
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:name="com.athena.asm.FileChooserActivity"
+            android:theme="@android:style/Theme.Light" >
+            <intent-filter >
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
     </application>
+
 </manifest>
