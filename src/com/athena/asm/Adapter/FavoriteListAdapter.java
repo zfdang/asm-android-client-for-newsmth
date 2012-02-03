@@ -68,7 +68,7 @@ public class FavoriteListAdapter extends BaseAdapter {
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText("[" + board.getEngName() + "]"
 					+ board.getChsName());
-			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 			layout.setTag(board);
 			
 			layout.setOnClickListener(new OnClickListener() {
