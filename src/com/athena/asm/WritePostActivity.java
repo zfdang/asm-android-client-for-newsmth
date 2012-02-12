@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -118,6 +119,12 @@ public class WritePostActivity extends Activity implements OnClickListener,
             contentEditText.setSelection(0);
         }
     }
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
+	}
 
     private void parsePostToHandleUrl() {
         postUrl = "http://www.newsmth.net/bbssnd.php";

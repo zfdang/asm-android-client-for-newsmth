@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -148,6 +149,12 @@ public class HomeActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 			finish();
 		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 	
 	public void showFailedToast() {

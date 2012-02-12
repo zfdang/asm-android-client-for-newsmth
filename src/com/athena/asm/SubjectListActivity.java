@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -81,6 +82,12 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 		loadSubjectTask.execute();
 		// reloadPostList();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	public void reloadPostList() {

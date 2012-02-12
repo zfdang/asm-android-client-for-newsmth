@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.util.Log;
@@ -99,6 +100,12 @@ public class PostListActivity extends Activity implements OnClickListener,
 		LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0, 0);
 		loadPostTask.execute();
 		// reloadPostList();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	public void reloadPostList() {

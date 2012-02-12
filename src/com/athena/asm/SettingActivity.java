@@ -2,6 +2,7 @@ package com.athena.asm;
 
 import com.athena.asm.data.Preferences;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -28,6 +29,12 @@ public class SettingActivity extends PreferenceActivity implements
 		rememberUser.setOnPreferenceClickListener(this);
 		defaultTab.setOnPreferenceChangeListener(this);
 		defaultTab.setOnPreferenceClickListener(this);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.athena.asm;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,12 @@ public class MailListActivity extends Activity implements OnClickListener {
 
 		LoadMailListTask loadMailListTask = new LoadMailListTask(this, boxType, -1);
 		loadMailListTask.execute();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	public void reloadMailList() {

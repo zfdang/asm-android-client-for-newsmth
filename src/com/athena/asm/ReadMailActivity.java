@@ -1,6 +1,7 @@
 package com.athena.asm;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,12 @@ public class ReadMailActivity extends Activity {
 		
 		LoadMailContentTask loadMailContentTask = new LoadMailContentTask(this);
 		loadMailContentTask.execute();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	public void loadMailContent() {

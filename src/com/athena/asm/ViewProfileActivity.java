@@ -1,6 +1,7 @@
 package com.athena.asm;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -30,6 +31,12 @@ public class ViewProfileActivity extends Activity {
 		
 		LoadProfileTask loadProfileTask = new LoadProfileTask(this,	userID, 50);
 		loadProfileTask.execute();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 	
 	public void reloadProfile(Profile profile) {

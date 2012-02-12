@@ -11,6 +11,7 @@ import com.athena.asm.util.StringUtility;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +65,12 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		
 		startSearchButton = (Button) findViewById(R.id.btn_start_post_search);
 		startSearchButton.setOnClickListener(this);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.athena.asm;
 import java.io.File;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +23,12 @@ public class FileChooserActivity extends
         //showFileChooser("选择要上传的文件", "*/*");
         //showFileChooser("选择要上传的文件", null);
     }
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
+	}
 
     @Override
     protected void onFileSelect(File file) {

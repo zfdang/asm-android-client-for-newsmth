@@ -6,6 +6,7 @@ import com.athena.asm.util.StringUtility;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.LinkMovementMethod;
@@ -53,6 +54,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		Button gbutton = (Button) findViewById(R.id.guest_button);
 		gbutton.setOnClickListener(this);		
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 
 	public void showSuccessToast() {

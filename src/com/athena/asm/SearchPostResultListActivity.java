@@ -3,6 +3,7 @@ package com.athena.asm;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Window;
@@ -47,5 +48,11 @@ public class SearchPostResultListActivity extends Activity {
 		
 		ListView listView = (ListView) findViewById(R.id.search_result_subject_list);
 		listView.setAdapter(new SearchPostResultListAdapter(this, inflater, subjectList));
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// do nothing to stop onCreated
+		super.onConfigurationChanged(newConfig);
 	}
 }
