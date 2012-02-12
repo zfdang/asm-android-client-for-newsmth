@@ -75,7 +75,7 @@ public class PostListAdapter extends BaseAdapter {
 				LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				imageView.setLayoutParams(layoutParams);
 				linearLayout.addView(imageView);
-				UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60);
+				UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60000);
 			}
 		}
 		attachTextView.setText(Html.fromHtml(contentString));

@@ -53,6 +53,7 @@ import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoginTask;
 //import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoadProfileTask;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 
 public class HomeActivity extends Activity implements OnClickListener {
@@ -561,15 +562,17 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 	public static final int SETTING = Menu.FIRST;
 	public static final int REFRESH = Menu.FIRST + 1;
-	public static final int ABOUT = Menu.FIRST + 2;
-	public static final int LOGOUT = Menu.FIRST + 3;
-	public static final int EXIT = Menu.FIRST + 4;
+	public static final int CLEAN = Menu.FIRST + 2;
+	public static final int ABOUT = Menu.FIRST + 3;
+	public static final int LOGOUT = Menu.FIRST + 4;
+	public static final int EXIT = Menu.FIRST + 5;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, SETTING, Menu.NONE, "设置");
 		menu.add(0, REFRESH, Menu.NONE, "刷新");
+		menu.add(0, CLEAN, Menu.NONE, "清除缓存");
 		menu.add(0, ABOUT, Menu.NONE, "关于");
 		menu.add(0, LOGOUT, Menu.NONE, "注销");
 		menu.add(0, EXIT, Menu.NONE, "退出");
@@ -627,6 +630,11 @@ public class HomeActivity extends Activity implements OnClickListener {
 			default:
 				break;
 			}
+			break;
+		case CLEAN:
+			UrlImageViewHelper.cleanup(this);
+			Toast.makeText(getApplicationContext(), "已清空图片缓存",
+					Toast.LENGTH_SHORT).show();
 			break;
 		case ABOUT:
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
