@@ -2,11 +2,11 @@ package com.athena.asm;
 
 import java.io.File;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ipaulpro.afilechooser.utils.FileUtils;
+import com.athena.asm.util.StringUtility;
 
 public class FileChooserActivity extends
         com.ipaulpro.afilechooser.FileChooserActivity {
@@ -16,21 +16,25 @@ public class FileChooserActivity extends
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Display the file chooser with all file types
-        showFileChooser("选择要上传的文件", "*/*");
+        if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+            showFileChooser();
+        }
+        //showFileChooser("选择要上传的文件", "*/*");
+        //showFileChooser("选择要上传的文件", null);
     }
 
     @Override
     protected void onFileSelect(File file) {
         if (file != null) {
-            final Context context = getApplicationContext();
+            //final Context context = getApplicationContext();
 
             // Get the path of the Selected File.
-            final String path = file.getAbsolutePath();
-            Log.d(TAG, "File path: " + path);
+            //final String path = file.getAbsolutePath();
+            //Log.d(TAG, "File path: " + path);
 
             // Get the MIME type of the Selected File.          
-            String mimeType = FileUtils.getMimeType(context, file);
-            Log.d(TAG, "File MIME type: " + mimeType);
+            //String mimeType = FileUtils.getMimeType(context, file);
+            //Log.d(TAG, "File MIME type: " + mimeType);
 
             // Get the Uri of the Selected File
             // final Uri uri = Uri.fromFile(file);
@@ -39,6 +43,11 @@ public class FileChooserActivity extends
             // final Bitmap bm = FileUtils.getThumbnail(context, uri, mimeType);
 
             // Here you can return any data from above to the calling Activity  
+            Intent intent = new Intent();
+            intent.putExtra(StringUtility.SELECTED_FILE, file);
+            //intent.putExtra(StringUtility.SELECTED_FILE, path);
+            setResult(RESULT_OK, intent);
+            
             finish();
         }
     }

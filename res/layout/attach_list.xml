@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:background="@color/body_background">
+
+	<!-- Header -->
+	<include layout="@layout/header" />
+
+	<!-- Body -->
+	<ListView android:layout_width="wrap_content"
+		android:layout_height="0dip" android:layout_weight="1"
+		android:cacheColorHint="#00000000" android:id="@+id/attach_list" />
+	
+	<!-- <CheckBox
+	    android:id="@+id/checkbox_resize"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="10dp"
+	    style="@style/normalText"
+	    android:text="@string/attach_resize" /> -->
+
+	<LinearLayout
+	    android:id="@+id/linearLayout1"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+
+	    <Button
+	        android:id="@+id/btn_select_file"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_weight="1"
+	        android:text="@string/attach_add" />
+
+	    <Button
+	        android:id="@+id/btn_start_upload_attach"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_weight="1"
+	        android:text="@string/attach_upload" />
+	</LinearLayout>
+
+</LinearLayout>

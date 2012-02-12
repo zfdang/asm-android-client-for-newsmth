@@ -1,6 +1,7 @@
 package com.athena.asm.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +30,9 @@ import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
@@ -121,6 +125,33 @@ public class SmthCrawler {
 			} else if (content.contains("您的用户名并不存在，或者您的密码错误")) {
 				return false;
 			} else if (content.contains("用户密码错误")) {
+				return false;
+			}
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean uploadAttachFile(File file) {
+		HttpPost httpPost = new HttpPost("http://www.newsmth.net/bbsupload.php?act=add");
+		MultipartEntity entity = new MultipartEntity();
+
+//		entity.addPart(file.getName(), new FileBody(file));
+		try {
+			entity.addPart("attachfile0", new FileBody(file));
+			entity.addPart("counter", new StringBody("1"));
+			entity.addPart("MAX_FILE_SIZE", new StringBody("5242880"));
+		} catch (UnsupportedEncodingException e1) {
+			return false;
+		}
+		httpPost.setEntity(entity);
+		httpPost.setHeader("User-Agent", userAgent);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity e = response.getEntity();
+			String content = EntityUtils.toString(e, smthEncoding);
+			if (!content.contains("上传成功")) {
 				return false;
 			}
 		} catch (IOException e) {

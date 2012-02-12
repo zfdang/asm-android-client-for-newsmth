@@ -37,6 +37,9 @@ public class StringUtility {
     public static final String WRITE_TYPE = "write_type";
     public static final String IS_REPLY = "is_reply";
     public static final String REFRESH_BOARD = "refreshBoard";
+    public static final String SELECTED_FILE = "selectedFile";
+    
+    public static final String STATUS_OK = "statusOK";
 
     /**
      * 从链接中提取相关参数

@@ -44,6 +44,8 @@
         </activity>
         <activity android:name="com.athena.asm.ViewProfileActivity" >
         </activity>
+        <activity android:name="com.athena.asm.AttachUploadActivity" >
+        </activity>
         <activity
             android:configChanges="orientation|keyboard|keyboardHidden"
             android:name="com.athena.asm.FileChooserActivity"

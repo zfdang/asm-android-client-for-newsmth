@@ -33,10 +33,13 @@ import com.athena.asm.util.StringUtility;
 
 public class WritePostActivity extends Activity implements OnClickListener,
         OnItemSelectedListener {
+	static final int ATTACH_REQUST = 0;
+	
     private EditText titleEditText;
     private EditText useridEditText;
     private EditText contentEditText;
     private Spinner sigSpinner;
+    private Button attachButton;
 
     private SmthSupport smthSupport;
 
@@ -71,7 +74,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
         Button sendButton = (Button) findViewById(R.id.btn_send_post);
         sendButton.setOnClickListener(this);
 
-        Button attachButton = (Button) findViewById(R.id.btn_attach);
+        attachButton = (Button) findViewById(R.id.btn_attach);
         attachButton.setOnClickListener(this);
 
         toHandleUrl = getIntent().getStringExtra(StringUtility.URL);
@@ -252,14 +255,22 @@ public class WritePostActivity extends Activity implements OnClickListener,
         });
         this.finish();
     }
+    
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ATTACH_REQUST) {
+			if (resultCode == RESULT_OK) {
+				attachButton.setEnabled(false);
+			}
+		}
+	}
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_attach) {
             Intent intent = new Intent();
             intent.setClassName("com.athena.asm",
-                            "com.athena.asm.FileChooserActivity");
-            startActivity(intent);
+                            "com.athena.asm.AttachUploadActivity");
+            startActivityForResult(intent, ATTACH_REQUST);
         }
         else if (view.getId() == R.id.btn_send_post) {
             final ProgressDialog pdialog = new ProgressDialog(this);

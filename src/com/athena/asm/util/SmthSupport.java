@@ -1,5 +1,6 @@
 package com.athena.asm.util;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +74,10 @@ public class SmthSupport {
 	public void destory() {
 		logout();
 		crawler.destroy();
+	}
+	
+	public boolean uploadAttachFile(File file) {
+		return crawler.uploadAttachFile(file);
 	}
 	
 	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, 
