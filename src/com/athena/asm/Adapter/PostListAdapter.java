@@ -40,7 +40,13 @@ public class PostListAdapter extends BaseAdapter {
 		RelativeLayout layout = null;
 		Post post = postList.get(position);
 
-		layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
+		if (convertView != null) {
+			layout = (RelativeLayout) convertView;
+		}
+		else {
+			layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
+		}
+		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 		if (post.getAuthor() == null) {
