@@ -198,7 +198,7 @@ public final class UrlImageViewHelper {
 		return "" + url.hashCode() + ".urlimage";
 	}
 
-	private static void cleanup(Context context) {
+	public static void cleanup(Context context) {
 		if (mHasCleaned)
 			return;
 		mHasCleaned = true;
@@ -211,16 +211,17 @@ public final class UrlImageViewHelper {
 				if (!file.endsWith(".urlimage"))
 					continue;
 
-				File f = new File(file);
+				File f = context.getFileStreamPath(file);//new File(file);
 				if (System.currentTimeMillis() > f.lastModified()
-						+ CACHE_DURATION_TWO_DAYS)
+						+ CACHE_DURATION_TWO_DAYS) {
 					f.delete();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private static void setUrlDrawable(final Context context,
 			final ImageView imageView, final String url,
 			final Drawable defaultDrawable, long cacheDurationMs) {
