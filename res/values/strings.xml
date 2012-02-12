@@ -54,6 +54,23 @@
 	<string name="post_query_author">查看作者信息</string>
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
+	 <!-- search post相关 -->
+	<string name="search_tip1">标题含有</string>
+	<string name="search_tip2">AND</string>
+	<string name="search_tip3">标题不含</string>
+	<string name="search_tip4">作者帐号</string>
+	<string name="search_tip5">时间范围</string>
+	<string name="search_tip6">天以内</string>
+	<string name="search_tip7">7</string>
+	<string name="search_tip8">精华文章</string>
+	<string name="search_tip9">带附件文章</string>
+	<string name="search_tip10">不含跟贴</string>
+	<string name="search_tip11">开始查询</string>
+	 <!-- 附件 -->
+	<string name="attach_resize">压缩图片</string>
+	<string name="attach_add">添加</string>
+	<string name="attach_upload">上传</string>
+	<string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
 	<string name="about_content">aSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：

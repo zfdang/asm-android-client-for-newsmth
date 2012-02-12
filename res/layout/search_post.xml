@@ -12,7 +12,7 @@
 	<!-- Body -->
 
 	<RelativeLayout
-	    android:id="@+id/linearLayout1"
+	    android:id="@+id/relativeLayout1"
 	    android:gravity="center_vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -24,7 +24,7 @@
 		    android:layout_centerVertical="true"
 		    android:layout_marginLeft="10dp"
 		    style="@style/normalText"
-		    android:text="标题含有 " />
+		    android:text="@string/search_tip1" />
 
 		<EditText
 		    android:id="@+id/edittext_title"
@@ -37,7 +37,7 @@
 
 	</RelativeLayout>
 	<RelativeLayout
-	    android:id="@+id/linearLayout2"
+	    android:id="@+id/relativeLayout2"
 	    android:gravity="center_vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -50,7 +50,7 @@
 		    android:layout_marginLeft="10dp"
 		    android:layout_marginRight="30dp"
 		    style="@style/normalText"
-		    android:text="AND" />
+		    android:text="@string/search_tip2" />
 
 		<EditText
 		    android:id="@+id/edittext_title2"
@@ -64,7 +64,7 @@
 	</RelativeLayout>
 	
 	<RelativeLayout
-	    android:id="@+id/linearLayout3"
+	    android:id="@+id/relativeLayout3"
 	    android:gravity="center_vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -76,7 +76,7 @@
 		    android:layout_centerVertical="true"
 		    android:layout_marginLeft="10dp"
 		    style="@style/normalText"
-		    android:text="标题不含" />
+		    android:text="@string/search_tip3" />
 
 		<EditText
 		    android:id="@+id/edittext_title3"
@@ -90,7 +90,7 @@
 	</RelativeLayout>
 	
 	<RelativeLayout
-	    android:id="@+id/linearLayout4"
+	    android:id="@+id/relativeLayout4"
 	    android:gravity="center_vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -102,7 +102,7 @@
 		    android:layout_centerVertical="true"
 		    android:layout_marginLeft="10dp"
 		    style="@style/normalText"
-		    android:text="作者帐号" />
+		    android:text="@string/search_tip4" />
 
 		<EditText
 		    android:id="@+id/edittext_userid"
@@ -116,7 +116,7 @@
 	</RelativeLayout>
 	
 	<RelativeLayout
-	    android:id="@+id/linearLayout5"
+	    android:id="@+id/relativeLayout5"
 	    android:gravity="center_vertical"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
@@ -128,7 +128,7 @@
 		    android:layout_centerVertical="true"
 		    android:layout_marginLeft="10dp"
 		    style="@style/normalText"
-		    android:text="时间范围" />
+		    android:text="@string/search_tip5" />
 
 		<TextView
 		    android:id="@+id/textView6"
@@ -138,7 +138,7 @@
 		    android:layout_centerVertical="true"
 		    android:layout_alignParentRight="true"
 		    style="@style/normalText"
-		    android:text="天以内" />
+		    android:text="@string/search_tip6" />
 		
 		<EditText
 		    android:id="@+id/edittext_dt"
@@ -147,7 +147,7 @@
 		    android:layout_marginLeft="3dp"
 		    android:layout_marginRight="3dp"
 		    android:layout_marginTop="2dp"
-		    android:text="7"
+		    android:text="@string/search_tip7"
 		    android:layout_toRightOf="@id/textView5"
 		    android:layout_toLeftOf="@id/textView6" />
 		
@@ -157,32 +157,30 @@
 	    android:id="@+id/checkbox_mg"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentTop="true"
 	    android:layout_marginLeft="10dp"
 	    style="@style/normalText"
-	    android:text="精华文章" />
+	    android:text="@string/search_tip8" />
+	<!-- android:layout_alignParentTop="true" -->
 	<CheckBox
 	    android:id="@+id/checkbox_ag"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentTop="true"
 	    android:layout_marginLeft="10dp"
 	    style="@style/normalText"
-	    android:text="带附件文章" />
+	    android:text="@string/search_tip9" />
 	<CheckBox
 	    android:id="@+id/checkbox_og"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignParentTop="true"
 	    android:layout_marginLeft="10dp"
 	    style="@style/normalText"
-	    android:text="不含跟贴" />
+	    android:text="@string/search_tip10" />
 
 	<Button
 	    android:id="@+id/btn_start_post_search"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center"
-	    android:text="开始查询" />
+	    android:text="@string/search_tip11" />
 
 </LinearLayout>
