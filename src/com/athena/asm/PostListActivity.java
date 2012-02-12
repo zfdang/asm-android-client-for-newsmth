@@ -277,7 +277,8 @@ public class PostListActivity extends Activity implements OnClickListener,
 			final String[] items = { getString(R.string.post_reply_post),
 					getString(R.string.post_reply_mail),
 					getString(R.string.post_query_author),
-					getString(R.string.post_copy_author) };
+					getString(R.string.post_copy_author),
+					getString(R.string.post_copy_content)};
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.post_alert_title);
 			builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -323,6 +324,13 @@ public class PostListActivity extends Activity implements OnClickListener,
 						clip.setText(authorID);
 						Toast.makeText(getApplicationContext(),
 								"ID ： " + authorID + "已复制到剪贴板",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 4:
+						ClipboardManager clip2 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+						clip2.setText(post.getTextContent());
+						Toast.makeText(getApplicationContext(),
+								"帖子内容已复制到剪贴板",
 								Toast.LENGTH_SHORT).show();
 					default:
 						break;

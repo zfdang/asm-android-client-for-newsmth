@@ -3,6 +3,8 @@ package com.athena.asm.data;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.text.Html;
+
 public class Post {
 	private String subjectID;
 	private String topicSubjectID;
@@ -69,6 +71,11 @@ public class Post {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public String getTextContent() {
+		String text = Html.fromHtml(content).toString();
+		return text;
 	}
 
 	public String getContent() {

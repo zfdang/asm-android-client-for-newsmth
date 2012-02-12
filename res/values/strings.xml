@@ -52,6 +52,7 @@
 	<string name="post_reply_mail">回信给作者</string>
 	<string name="post_copy_author">复制作者ID</string>
 	<string name="post_query_author">查看作者信息</string>
+	<string name="post_copy_content">复制帖子内容</string>
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
 	 <!-- search post相关 -->
