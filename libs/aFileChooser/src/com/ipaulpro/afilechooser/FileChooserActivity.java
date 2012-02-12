@@ -42,7 +42,7 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
  */
 public class FileChooserActivity extends ListActivity {
 	
-	private static final boolean mLogging = true; // Set to false to disable logging
+	private static final boolean mLogging = false; // Set to false to disable logging
 	private static final String TAG = "ChooserActivity"; // The log tag
 
 	public static final int REQUEST_CODE = 6384; // onActivityResult request code
@@ -283,8 +283,8 @@ public class FileChooserActivity extends ListActivity {
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(PATH)) {
 				// Restore the previous path. Defaults to base external storage dir
-				this.mPath = savedInstanceState.getString(PATH, 
-						Environment.getExternalStorageDirectory().getAbsolutePath());
+				this.mPath = savedInstanceState.getString(PATH);//, 
+						//Environment.getExternalStorageDirectory().getAbsolutePath());
 			}
 			if (savedInstanceState.containsKey(PATH)) {
 				// Restore the previous breadcrumb
