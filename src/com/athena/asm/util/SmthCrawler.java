@@ -239,6 +239,26 @@ public class SmthCrawler {
 		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,true);
 		return newUrl;
 	}*/
+	
+	public String getPostRequestResult(String url, List<NameValuePair> params) {
+		HttpPost httpPost = new HttpPost(url);
+		UrlEncodedFormEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(params, "GBK");
+		} catch (UnsupportedEncodingException e1) {
+			return null;
+		}
+		httpPost.setEntity(entity);
+		httpPost.setHeader("User-Agent", userAgent);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity e = response.getEntity();
+			String content = EntityUtils.toString(e, smthEncoding);
+			return content;
+		} catch (IOException e) {
+			return null;
+		}
+	}
 
 	public String getUrlContent(String url) {
 		HttpGet httpget = new HttpGet(url);

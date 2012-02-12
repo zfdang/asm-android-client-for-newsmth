@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.util.Log;
 
 import com.athena.asm.data.Attachment;
@@ -772,7 +775,21 @@ public class SmthSupport {
 		return postList;
 	}
 
-	
+	public Boolean forwardPostToMailBox(Post post) {
+		String url = "http://www.newsmth.net/bbsfwd.php?do";
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("board", post.getBoard()));
+		params.add(new BasicNameValuePair("id", post.getSubjectID()));
+		params.add(new BasicNameValuePair("noansi", "1"));
+		params.add(new BasicNameValuePair("target", userid));
+		String content = crawler.getPostRequestResult(url, params);
+		if (content.contains("操作成功")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
 	/**
 	 * 获得个人信息

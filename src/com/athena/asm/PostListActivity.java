@@ -278,7 +278,8 @@ public class PostListActivity extends Activity implements OnClickListener,
 					getString(R.string.post_reply_mail),
 					getString(R.string.post_query_author),
 					getString(R.string.post_copy_author),
-					getString(R.string.post_copy_content)};
+					getString(R.string.post_copy_content),
+					getString(R.string.post_foward_self)};
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.post_alert_title);
 			builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -332,6 +333,15 @@ public class PostListActivity extends Activity implements OnClickListener,
 						Toast.makeText(getApplicationContext(),
 								"帖子内容已复制到剪贴板",
 								Toast.LENGTH_SHORT).show();
+						break;
+					case 5:
+						boolean result = smthSupport.forwardPostToMailBox(post);
+						if (result) {
+							Toast.makeText(getApplicationContext(),
+									"已转寄到自己信箱中",
+									Toast.LENGTH_SHORT).show();
+						}
+						break;
 					default:
 						break;
 					}
