@@ -157,7 +157,11 @@ public class WritePostActivity extends Activity implements OnClickListener,
         if (m.find()) {
             postContent = m.group(1);
             postContent = postContent.replace("\n", "\n<br/>");
-            contentEditText.setText(Html.fromHtml("<br />" + postContent));
+            aSMApplication application = (aSMApplication) getApplication();
+            if (application.isPromotionShow()) {
+            	postContent += "--<br/>发送自aSM水木客户端\n<br/>";
+			}
+            contentEditText.setText(Html.fromHtml("<br/>" + postContent));
         }
 
     }

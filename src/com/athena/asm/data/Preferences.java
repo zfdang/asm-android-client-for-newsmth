@@ -18,6 +18,7 @@ public class Preferences {
 	public static final String IMAGE_SIZE_THRESHOLD = "image_size_threshold";
 	
 	public static final String TOUCH_SCROLL = "touch_scroll";
+	public static final String PROMOTION_SHOW = "promotion_show";
 	public static final String BLACK_LIST = "black_list";
 	
 	public static final String LAST_LAUNCH_VERSION = "last_launch_version";

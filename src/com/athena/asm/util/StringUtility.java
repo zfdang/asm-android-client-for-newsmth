@@ -157,7 +157,7 @@ public class StringUtility {
                 }
             }
             if (line.equals("--")) {
-                if (seperator > 0) {
+                if (seperator > 1) {
                     break;
                 }
 

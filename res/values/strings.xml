@@ -80,7 +80,7 @@
 \n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
 	<!-- 更新 -->
 	<string name="update_title">更新说明</string>
-	<string name="update_info">1.4.1更新内容：\n1. 优化图片查看的内存占用，减少崩溃发生。\n2. 收藏夹字体使用首页导读第一级字体设置。\n3. 一些细节调整。\n提前祝大家龙年吉祥！
+	<string name="update_info">本次更新添加了发帖结尾增加宣传语的选项，默认开启，若有妨碍可在设置中关闭。\n1.5更新内容：\n1. 支持发文附件与签名档选择。\n2. 修正图片缓存不清空的问题。\n3. 支持复制文章内容。\n4. 支持文章转寄到自己信箱。\n5. 暂时取消横屏支持。\n6. 一些细节调整。\n单身不单身的都节日快乐~
 	    </string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
@@ -91,8 +91,8 @@
 	<string name="setting_default_tab_details">选择默认要加载标签页</string>
 	<string name="setting_default_board_type">默认版面模式</string>
 	<string name="setting_default_board_type_details">选择默认的版面模式</string>
-	<string name="setting_guidance_font_size">首页导读与收藏夹目录项字体大小</string>
-	<string name="setting_guidance_second_font_size">首页导读二级与收藏夹分区项字体大小</string>
+	<string name="setting_guidance_font_size">导读收藏目录邮箱分类字体大小</string>
+	<string name="setting_guidance_second_font_size">导读二级收藏版面邮件字体大小</string>
 	<string name="setting_subject_font_size">版面帖子标题字体大小</string>
 	<string name="setting_post_font_size">帖子内容读字体大小</string>
 	<string name="setting_auto_optimize">根据WIFI自动优化</string>
@@ -103,6 +103,8 @@
 	<string name="setting_black_list_details">请以空格隔开ID</string>
 	<string name="setting_touch_scroll">触屏翻页</string>
 	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
+	<string name="setting_promotion_show">发帖显示宣传语</string>
+	<string name="setting_promotion_show_details">选中后发帖时结尾添加宣传语</string>
 	<!-- 下拉刷新 -->
 	<string name="pull_to_refresh_pull_label">下拉刷新</string>
 	<string name="pull_to_refresh_release_label">松开刷新</string>

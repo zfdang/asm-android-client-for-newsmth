@@ -53,6 +53,7 @@ public class aSMApplication extends Application {
 	private float imageSizeThreshold = 50;
 	
 	private boolean isTouchScroll = true;
+	private boolean isPromotionShow = true;
 	private ArrayList<String> blackList = new ArrayList<String>();
 	
 	public void syncPreferences() {
@@ -161,6 +162,13 @@ public class aSMApplication extends Application {
 		}
 		else {
 			isTouchScroll = settings.getBoolean(Preferences.TOUCH_SCROLL, true);
+		}
+		
+		if (!settings.contains(Preferences.PROMOTION_SHOW)) {
+			editor.putBoolean(Preferences.PROMOTION_SHOW, true);
+		}
+		else {
+			setPromotionShow(settings.getBoolean(Preferences.PROMOTION_SHOW, true));
 		}
 		
 		if (!settings.contains(Preferences.AUTO_OPTIMIZE)) {
@@ -396,6 +404,14 @@ public class aSMApplication extends Application {
 
 	public void setTouchScroll(boolean isTouchScroll) {
 		this.isTouchScroll = isTouchScroll;
+	}
+
+	public boolean isPromotionShow() {
+		return isPromotionShow;
+	}
+
+	public void setPromotionShow(boolean isPromotionShow) {
+		this.isPromotionShow = isPromotionShow;
 	}
 
 	public boolean isAutoOptimize() {

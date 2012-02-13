@@ -335,10 +335,10 @@ public final class R {
         public static final int profile_send_mail=0x7f07001c;
         /**  下拉刷新 
          */
-        public static final int pull_to_refresh_pull_label=0x7f070057;
-        public static final int pull_to_refresh_refreshing_label=0x7f070059;
-        public static final int pull_to_refresh_release_label=0x7f070058;
-        public static final int pull_to_refresh_tap_label=0x7f07005a;
+        public static final int pull_to_refresh_pull_label=0x7f070059;
+        public static final int pull_to_refresh_refreshing_label=0x7f07005b;
+        public static final int pull_to_refresh_release_label=0x7f07005a;
+        public static final int pull_to_refresh_tap_label=0x7f07005c;
         /**  search post相关 
          */
         public static final int search_tip1=0x7f070030;
@@ -368,6 +368,8 @@ public final class R {
         public static final int setting_image_size_threshold=0x7f070051;
         public static final int setting_image_size_threshold_details=0x7f070052;
         public static final int setting_post_font_size=0x7f07004e;
+        public static final int setting_promotion_show=0x7f070057;
+        public static final int setting_promotion_show_details=0x7f070058;
         /**  设置 
          */
         public static final int setting_remember_user=0x7f070043;
