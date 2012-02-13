@@ -1,5 +1,6 @@
 package com.athena.asm.Adapter;
 
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,6 +28,8 @@ public class MailAdapter extends BaseAdapter {
 		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
 		TextView numberTextView = (TextView) layout
 				.findViewById(R.id.mailNumber);
+		boxNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
+		numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
 		switch (position) {
 		case 0:
 			boxNameTextView.setText(R.string.mail_inbox);

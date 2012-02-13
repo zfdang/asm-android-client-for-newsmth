@@ -54,7 +54,7 @@ public class MailListAdapter extends BaseAdapter {
 			tp.setFakeBoldText(false);
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.MailSendDate);
 		dateTextView.setText(mail.getDateString());
