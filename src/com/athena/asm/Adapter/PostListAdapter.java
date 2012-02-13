@@ -87,7 +87,7 @@ public class PostListAdapter extends BaseAdapter {
 
 		contentTextView.setOnLongClickListener(activity);
 		layout.setOnLongClickListener(activity);
-
+		
 		contentTextView.setOnTouchListener(activity);
 		layout.setOnTouchListener(activity);
 

@@ -2,32 +2,25 @@ package com.athena.asm.Adapter;
 
 import java.util.List;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.Html;
 import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
-import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.Mail;
-import com.athena.asm.util.StringUtility;
 
 public class MailListAdapter extends BaseAdapter {
 
-	private MailListActivity activity;
 	private LayoutInflater inflater;
 	private List<Mail> mailList;
 
-	public MailListAdapter(MailListActivity activity, LayoutInflater inflater, List<Mail> mailList) {
-		this.activity = activity;
+	public MailListAdapter(LayoutInflater inflater, List<Mail> mailList) {
 		this.inflater = inflater;
 		this.mailList = mailList;
 	}
@@ -67,18 +60,18 @@ public class MailListAdapter extends BaseAdapter {
 		dateTextView.setText(mail.getDateString());
 		
 		layout.setTag(mail);
-		layout.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.MAIL, (Mail)v.getTag());
-				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
-				activity.startActivity(intent);
-			}
-		});
+//		layout.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent();
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable(StringUtility.MAIL, (Mail)v.getTag());
+//				intent.putExtras(bundle);
+//				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
+//				activity.startActivity(intent);
+//			}
+//		});
 
 		return layout;
 	}

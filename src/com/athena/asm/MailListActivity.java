@@ -3,16 +3,19 @@ package com.athena.asm;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
@@ -85,7 +88,20 @@ public class MailListActivity extends Activity implements OnClickListener {
 
 	public void reloadMailList() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new MailListAdapter(this, inflater, maillList));
+		listView.setAdapter(new MailListAdapter(inflater, maillList));
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(StringUtility.MAIL, (Mail)view.getTag());
+				intent.putExtras(bundle);
+				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override

@@ -2,31 +2,24 @@ package com.athena.asm.Adapter;
 
 import java.util.List;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
-import com.athena.asm.SubjectListActivity;
 import com.athena.asm.data.Subject;
-import com.athena.asm.util.StringUtility;
 
 public class SubjectListAdapter extends BaseAdapter {
 
-	private SubjectListActivity activity;
 	private LayoutInflater inflater;
 	private List<Subject> subjectList;
 
-	public SubjectListAdapter(SubjectListActivity activity, LayoutInflater inflater, List<Subject> subjectList) {
-		this.activity = activity;
+	public SubjectListAdapter(LayoutInflater inflater, List<Subject> subjectList) {
 		this.inflater = inflater;
 		this.subjectList = subjectList;
 	}
@@ -55,20 +48,20 @@ public class SubjectListAdapter extends BaseAdapter {
 		dateTextView.setText(subject.getDate().toLocaleString());
 		
 		layout.setTag(subject);
-		layout.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.SUBJECT, (Subject)v.getTag());
-				bundle.putInt(StringUtility.BOARD_TYPE, activity.boardType);
-				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
-				//activity.startActivity(intent);
-				activity.startActivityForResult(intent, 0);
-			}
-		});
+//		layout.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent();
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable(StringUtility.SUBJECT, (Subject)v.getTag());
+//				bundle.putInt(StringUtility.BOARD_TYPE, activity.boardType);
+//				intent.putExtras(bundle);
+//				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
+//				//activity.startActivity(intent);
+//				activity.startActivityForResult(intent, 0);
+//			}
+//		});
 
 		return layout;
 	}

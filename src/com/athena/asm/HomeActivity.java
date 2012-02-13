@@ -56,7 +56,6 @@ import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.util.task.LoadProfileTask;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-
 public class HomeActivity extends Activity implements OnClickListener {
 
 	public List<String> guidanceSectionNames = null;
@@ -97,9 +96,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 	private boolean isGuestLogined = false;
 
 	private Handler handler = new Handler();
-	
+
 	public static aSMApplication application;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,20 +111,23 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 		bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
 		titleTextView = (TextView) findViewById(R.id.title);
-		
+
 		application = (aSMApplication) getApplication();
-		
+
 		application.initPreferences();
 		boolean isAutoLogin = application.isAutoLogin();
-		
+
 		if (this.getIntent().getExtras() != null) {
-			this.isLogined = (Boolean) this.getIntent().getExtras().get(StringUtility.LOGINED);
-			this.isGuestLogined = (Boolean) this.getIntent().getExtras().get(StringUtility.GUEST_LOGINED);
+			this.isLogined = (Boolean) this.getIntent().getExtras()
+					.get(StringUtility.LOGINED);
+			this.isGuestLogined = (Boolean) this.getIntent().getExtras()
+					.get(StringUtility.GUEST_LOGINED);
 		}
-		
+
 		// 如果已从login页面登陆过来
 		if (isLogined) {
-			loginUserID = (String) this.getIntent().getExtras().get(StringUtility.LOGINED_ID);
+			loginUserID = (String) this.getIntent().getExtras()
+					.get(StringUtility.LOGINED_ID);
 			init();
 		}
 		// 如果是从login页面用guest登陆过来
@@ -135,28 +137,29 @@ public class HomeActivity extends Activity implements OnClickListener {
 		// 如果是第一次启动且保存了自动登陆
 		else if (isAutoLogin) {
 			smthSupport.restore();
-			
+
 			String userName = application.getAutoUserName();
 			String password = application.getAutoPassword();
-			
+
 			LoginTask loginTask = new LoginTask(this, userName, password);
 			loginTask.execute();
 		}
 		// 如果是第一次启动且没有自动登陆
 		else {
 			Intent intent = new Intent();
-			intent.setClassName("com.athena.asm","com.athena.asm.LoginActivity");
+			intent.setClassName("com.athena.asm",
+					"com.athena.asm.LoginActivity");
 			startActivity(intent);
 			finish();
 		}
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	public void showFailedToast() {
 		handler.post(new Runnable() {
 			@Override
@@ -166,13 +169,14 @@ public class HomeActivity extends Activity implements OnClickListener {
 			}
 		});
 	}
-	
+
 	public void loginTaskDone(boolean result) {
 		if (!result) {
 			showFailedToast();
-			
+
 			Intent intent = new Intent();
-			intent.setClassName("com.athena.asm","com.athena.asm.LoginActivity");
+			intent.setClassName("com.athena.asm",
+					"com.athena.asm.LoginActivity");
 			startActivity(intent);
 			finish();
 		} else {
@@ -181,7 +185,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 			init();
 		}
 	}
-	
+
 	private void init() {
 		initTabListeners();
 		// initTasks();
@@ -189,12 +193,13 @@ public class HomeActivity extends Activity implements OnClickListener {
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 			alertBuilder.setTitle(R.string.update_title);
 			alertBuilder.setMessage(R.string.update_info);
-			alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int i) {
-					dialog.dismiss();
-				}
-			});
+			alertBuilder.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							dialog.dismiss();
+						}
+					});
 			alertBuilder.show();
 		}
 
@@ -308,7 +313,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		} else {
 			View layout = inflater.inflate(R.layout.guidance, null);
 			ListView listView = (ListView) layout
-			.findViewById(R.id.guidance_list);
+					.findViewById(R.id.guidance_list);
 			listView.setAdapter(new GuidanceListAdapter(this, 0, 0,
 					guidanceSectionNames, guidanceSectionDetails));
 			listView.setOnItemClickListener(new OnItemClickListener() {
@@ -318,56 +323,125 @@ public class HomeActivity extends Activity implements OnClickListener {
 					LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 					View layout = inflater.inflate(R.layout.guidance, null);
 					ListView listView = (ListView) layout
-					.findViewById(R.id.guidance_list);
+							.findViewById(R.id.guidance_list);
 					listView.setAdapter(new GuidanceListAdapter(
 							HomeActivity.this, 1, position,
 							guidanceSectionNames, guidanceSectionDetails));
+					listView.setOnItemClickListener(new OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> parent,
+								View view, final int position, long id) {
+							Intent intent = new Intent();
+							Bundle bundle = new Bundle();
+							bundle.putSerializable(StringUtility.SUBJECT,
+									(Subject) view.getTag());
+							intent.putExtras(bundle);
+							intent.setClassName("com.athena.asm",
+									"com.athena.asm.PostListActivity");
+							startActivity(intent);
+						}
+					});
 					switchToView(listView, 11);
 				}
 			});
-			// ExpandableListView listView = (ExpandableListView)
-			// layout.findViewById(R.id.guidance_list);
-			// listView.setAdapter(new GuidanceListAdapter(this,
-			// guidanceSectionNames, guidanceSectionDetails));
 			titleTextView.setText(R.string.title_guidance);
 			switchToView(listView, 10);
 		}
 	}
 
-	public void reloadFavorite(List<Board> boardList, int step) {
+	public void reloadFavorite(final List<Board> boardList, int step) {
 		if (favList == null) {
 			LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(this);
 			loadFavoriteTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.favorite, null);
 			ListView listView = (ListView) layout
-			.findViewById(R.id.favorite_list);
-			listView.setAdapter(new FavoriteListAdapter(this, boardList, step));
+					.findViewById(R.id.favorite_list);
+			final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
+					this, boardList, step);
+			listView.setAdapter(favoriteListAdapter);
+
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						final int position, long id) {
+					Board outBoard = boardList.get(position);
+					if (outBoard.isDirectory()) {
+						Board board = (Board) view.getTag();
+						if (board.getDirectoryName().equals("最近访问版面")) {
+							reloadFavorite(
+									new ArrayList<Board>(
+											HomeActivity.application
+													.getRecentBoards()),
+									++favoriteListAdapter.step);
+						} else {
+							reloadFavorite(board.getChildBoards(),
+									++favoriteListAdapter.step);
+						}
+					} else {
+						Intent intent = new Intent();
+						Bundle bundle = new Bundle();
+						bundle.putSerializable(StringUtility.BOARD,
+								(Board) view.getTag());
+						HomeActivity.application.addRecentBoard((Board) view
+								.getTag());
+						intent.putExtras(bundle);
+						intent.setClassName("com.athena.asm",
+								"com.athena.asm.SubjectListActivity");
+						startActivity(intent);
+					}
+				}
+			});
 
 			titleTextView.setText(R.string.title_favorite);
 			switchToView(listView, step);
 		}
 	}
 
-	public void reloadCategory(List<Board> boardList, int step) {
+	public void reloadCategory(final List<Board> boardList, int step) {
 		if (categoryList == null) {
 			LoadCategoryTask loadCategoryTask = new LoadCategoryTask(this);
 			loadCategoryTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.category, null);
 			ListView listView = (ListView) layout
-			.findViewById(R.id.category_list);
-			listView.setAdapter(new CategoryListAdapter(this, boardList, step));
+					.findViewById(R.id.category_list);
+			final CategoryListAdapter categoryListAdapter = new CategoryListAdapter(
+					this, boardList, step);
+			listView.setAdapter(categoryListAdapter);
+
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						final int position, long id) {
+					Board board = boardList.get(position);
+					if (board.isDirectory()) {
+						categoryListAdapter.step++;
+						reloadCategory(
+								((Board) view.getTag()).getChildBoards(),
+								categoryListAdapter.step);
+					} else {
+						Intent intent = new Intent();
+						Bundle bundle = new Bundle();
+						bundle.putSerializable(StringUtility.BOARD,
+								(Board) view.getTag());
+						intent.putExtras(bundle);
+						intent.setClassName("com.athena.asm",
+								"com.athena.asm.SubjectListActivity");
+						startActivity(intent);
+					}
+				}
+			});
 
 			RelativeLayout relativeLayout = (RelativeLayout) layout
-			.findViewById(R.id.board_relative_layout);
+					.findViewById(R.id.board_relative_layout);
 
 			Button goButton = (Button) relativeLayout
-			.findViewById(R.id.btn_go_board);
+					.findViewById(R.id.btn_go_board);
 			goButton.setOnClickListener(this);
 
 			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout
-			.findViewById(R.id.search_board);
+					.findViewById(R.id.search_board);
 			textView.setCompletionHint("请输入版面英文名");
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_dropdown_item_1line,
@@ -383,6 +457,30 @@ public class HomeActivity extends Activity implements OnClickListener {
 		View layout = inflater.inflate(R.layout.mail, null);
 		ListView listView = (ListView) layout.findViewById(R.id.mail_list);
 		listView.setAdapter(new MailAdapter(this, mailBox));
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				if (position == 0 || position == 1 || position == 2) {
+					final int boxType = position;
+					Intent intent = new Intent();
+					intent.putExtra(StringUtility.MAIL_BOX_TYPE, boxType);
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.MailListActivity");
+					startActivity(intent);
+				} else if (position == 3) {
+					Intent intent = new Intent();
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.WritePostActivity");
+					intent.putExtra(StringUtility.URL,
+							"http://www.newsmth.net/bbspstmail.php");
+					intent.putExtra(StringUtility.WRITE_TYPE, 1);
+					intent.putExtra(StringUtility.IS_REPLY, false);
+					startActivity(intent);
+				}
+			}
+		});
 
 		titleTextView.setText(R.string.title_mail);
 		switchToView(listView, 40);
@@ -405,25 +503,26 @@ public class HomeActivity extends Activity implements OnClickListener {
 			loadProfileTask.execute();
 		} else {
 			View layout = inflater.inflate(R.layout.profile, null);
-			
-			RelativeLayout relativeLayout = (RelativeLayout) layout.findViewById(R.id.headerLinearLayout);
+
+			RelativeLayout relativeLayout = (RelativeLayout) layout
+					.findViewById(R.id.headerLinearLayout);
 			relativeLayout.setVisibility(View.GONE);
 
 			ImageButton searchButton = (ImageButton) layout
-			.findViewById(R.id.btn_search);
+					.findViewById(R.id.btn_search);
 			searchButton.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					RelativeLayout relativeLayout = (RelativeLayout) v
-					.getParent();
+							.getParent();
 					EditText searchEditText = (EditText) relativeLayout
-					.findViewById(R.id.search_edit);
+							.findViewById(R.id.search_edit);
 					((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-					.hideSoftInputFromWindow(
-							searchEditText.getWindowToken(), 0);
+							.hideSoftInputFromWindow(
+									searchEditText.getWindowToken(), 0);
 					String idString = searchEditText.getText().toString()
-					.trim();
+							.trim();
 					if (idString.length() > 0) {
 						LoadProfileTask profileTask = new LoadProfileTask(
 								HomeActivity.this, idString, step);
@@ -434,37 +533,36 @@ public class HomeActivity extends Activity implements OnClickListener {
 			});
 
 			TextView userIDTextView = (TextView) layout
-			.findViewById(R.id.profile_userid);
+					.findViewById(R.id.profile_userid);
 			userIDTextView.setText(profile.getUserID());
-			
+
 			TextView userScoreTextView = (TextView) layout
-			.findViewById(R.id.profile_user_score);
+					.findViewById(R.id.profile_user_score);
 			if (profile.getScore() != 0) {
 				userScoreTextView.setText("积分：" + profile.getScore());
-			}
-			else {
+			} else {
 				userScoreTextView.setVisibility(View.GONE);
 			}
 
 			TextView userNicknameTextView = (TextView) layout
-			.findViewById(R.id.profile_user_nickname);
+					.findViewById(R.id.profile_user_nickname);
 			userNicknameTextView.setText(profile.getNickName());
 
 			TextView descTextView = (TextView) layout
-			.findViewById(R.id.profile_user_desc);
+					.findViewById(R.id.profile_user_desc);
 			descTextView.setText(Html.fromHtml(profile.getDescription()));
 
 			TextView aliveTextView = (TextView) layout
-			.findViewById(R.id.profile_aliveness);
+					.findViewById(R.id.profile_aliveness);
 			aliveTextView.setText(profile.getAliveness() + "");
 			TextView loginedTimeTextView = (TextView) layout
-			.findViewById(R.id.profile_login_times);
+					.findViewById(R.id.profile_login_times);
 			loginedTimeTextView.setText(profile.getLoginTime() + "");
 			TextView postNoTextView = (TextView) layout
-			.findViewById(R.id.profile_post_number);
+					.findViewById(R.id.profile_post_number);
 			postNoTextView.setText(profile.getPostNumber() + "");
 			TextView onlineTextView = (TextView) layout
-			.findViewById(R.id.profile_online_status);
+					.findViewById(R.id.profile_online_status);
 			switch (profile.getOnlineStatus()) {
 			case 0:
 				onlineTextView.setText("离线");
@@ -494,7 +592,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		inflater = null;
 		cacheViewStack.clear();
 	}
-	
+
 	private void exit() {
 		Boolean rememberUser = application.isRememberUser();
 		if (!rememberUser) {
@@ -521,11 +619,10 @@ public class HomeActivity extends Activity implements OnClickListener {
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra(StringUtility.LOGOUT, true);
 					intent.setClassName("com.athena.asm",
-					"com.athena.asm.LoginActivity");
+							"com.athena.asm.LoginActivity");
 					startActivity(intent);
 					finish();
-				}
-				else {
+				} else {
 					exit();
 				}
 			}
@@ -542,19 +639,19 @@ public class HomeActivity extends Activity implements OnClickListener {
 					builder.setTitle("确认要注销退出吗？");
 					builder.setPositiveButton("确定",
 							new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog,
-								int which) {
-							logout(true);
-						}
-					});
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									logout(true);
+								}
+							});
 					builder.setNegativeButton("取消", null);
 					builder.create().show();
 					// logout();
 				} else {
 					finish();
 					android.os.Process.killProcess(android.os.Process.myPid());
-					//return super.onKeyDown(keyCode, event);
+					// return super.onKeyDown(keyCode, event);
 				}
 			} else if (cacheViewStack.size() > 0) {
 				View lastView = cacheViewStack.get(cacheViewStack.size() - 1);
@@ -594,7 +691,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		case SETTING:
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm",
-			"com.athena.asm.SettingActivity");
+					"com.athena.asm.SettingActivity");
 			startActivity(intent);
 			break;
 		case REFRESH:
@@ -621,9 +718,9 @@ public class HomeActivity extends Activity implements OnClickListener {
 									categoryList = null;
 									reloadCategory(categoryList, 30);
 								}
-		
+
 							}
-				});
+						});
 				builder.setNegativeButton("取消", null);
 				builder.create().show();
 				break;
@@ -652,11 +749,11 @@ public class HomeActivity extends Activity implements OnClickListener {
 			alertBuilder.setMessage(R.string.about_content);
 			alertBuilder.setPositiveButton("确认",
 					new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int i) {
-					dialog.dismiss();
-				}
-			});
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							dialog.dismiss();
+						}
+					});
 			alertBuilder.show();
 			break;
 		case LOGOUT:
@@ -665,8 +762,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		case EXIT:
 			if (isLogined) {
 				logout(true);
-			}
-			else {
+			} else {
 				smthSupport.destory();
 				exit();
 			}
@@ -682,9 +778,10 @@ public class HomeActivity extends Activity implements OnClickListener {
 		if (view.getId() == R.id.btn_go_board) {
 			AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
 					.getParent()).findViewById(R.id.search_board);
-			
-			Board board = boardHashMap.get(textView.getText().toString().toLowerCase());
-			
+
+			Board board = boardHashMap.get(textView.getText().toString()
+					.toLowerCase());
+
 			if (board == null) {
 				handler.post(new Runnable() {
 					@Override
@@ -701,10 +798,10 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 			Intent intent = new Intent();
 			Bundle bundle = new Bundle();
-			bundle.putSerializable(StringUtility.BOARD,board);
+			bundle.putSerializable(StringUtility.BOARD, board);
 			intent.putExtras(bundle);
 			intent.setClassName("com.athena.asm",
-			"com.athena.asm.SubjectListActivity");
+					"com.athena.asm.SubjectListActivity");
 			this.startActivity(intent);
 		}
 	}

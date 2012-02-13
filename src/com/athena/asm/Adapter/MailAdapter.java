@@ -1,16 +1,13 @@
 package com.athena.asm.Adapter;
 
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.MailBox;
-import com.athena.asm.util.StringUtility;
 
 public class MailAdapter extends BaseAdapter {
 
@@ -55,37 +52,37 @@ public class MailAdapter extends BaseAdapter {
 			break;
 		}
 		
-		if (position == 0 || position == 1 || position == 2) {
-			final int boxType = position;
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					intent.putExtra(StringUtility.MAIL_BOX_TYPE, boxType);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.MailListActivity");
-					activity.startActivity(intent);
-				}
-			});
-		}
-		else if (position == 3) {
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.WritePostActivity");
-					intent.putExtra(
-							StringUtility.URL,
-							"http://www.newsmth.net/bbspstmail.php");
-					intent.putExtra(StringUtility.WRITE_TYPE, 1);
-					intent.putExtra(StringUtility.IS_REPLY, false);
-					activity.startActivity(intent);
-				}
-			});
-		}
+//		if (position == 0 || position == 1 || position == 2) {
+//			final int boxType = position;
+//			layout.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					Intent intent = new Intent();
+//					intent.putExtra(StringUtility.MAIL_BOX_TYPE, boxType);
+//					intent.setClassName("com.athena.asm",
+//							"com.athena.asm.MailListActivity");
+//					activity.startActivity(intent);
+//				}
+//			});
+//		}
+//		else if (position == 3) {
+//			layout.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					Intent intent = new Intent();
+//					intent.setClassName("com.athena.asm",
+//							"com.athena.asm.WritePostActivity");
+//					intent.putExtra(
+//							StringUtility.URL,
+//							"http://www.newsmth.net/bbspstmail.php");
+//					intent.putExtra(StringUtility.WRITE_TYPE, 1);
+//					intent.putExtra(StringUtility.IS_REPLY, false);
+//					activity.startActivity(intent);
+//				}
+//			});
+//		}
 
 		return layout;
 	}

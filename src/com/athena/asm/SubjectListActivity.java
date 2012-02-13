@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,7 +43,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	TextView totalPageNoTextView;
 
 	private boolean isFirstIn = true;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +51,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		setContentView(R.layout.post_list);
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-
+		
 		smthSupport = SmthSupport.getInstance();
 
 		currentBoard = (Board) getIntent().getSerializableExtra(
@@ -98,7 +99,23 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		}
 
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new SubjectListAdapter(this, inflater, subjectList));
+		listView.setAdapter(new SubjectListAdapter(inflater, subjectList));
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
+				bundle.putInt(StringUtility.BOARD_TYPE, boardType);
+				intent.putExtras(bundle);
+				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
+				//activity.startActivity(intent);
+				startActivityForResult(intent, 0);
+			}
+		});
+		
 		totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
 		totalPageNoTextView.setText(" / " + currentBoard.getTotalPageNo());
 		listView.requestFocus();

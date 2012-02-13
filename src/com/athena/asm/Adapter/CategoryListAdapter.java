@@ -2,10 +2,7 @@ package com.athena.asm.Adapter;
 
 import java.util.List;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -13,13 +10,12 @@ import android.widget.TextView;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.Board;
-import com.athena.asm.util.StringUtility;
 
 public class CategoryListAdapter extends BaseAdapter {
 
 	private HomeActivity activity;
 	private List<Board> boards;
-	private int step;
+	public int step;
 
 	public CategoryListAdapter(HomeActivity activity, List<Board> boardList,
 			int viewStep) {
@@ -47,15 +43,15 @@ public class CategoryListAdapter extends BaseAdapter {
 			}
 			boardDesTextView.setText(desString);
 			layout.setTag(board);
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					step++;
-					activity.reloadCategory(
-							((Board) v.getTag()).getChildBoards(), step);
-				}
-			});
+//			layout.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					step++;
+//					activity.reloadCategory(
+//							((Board) v.getTag()).getChildBoards(), step);
+//				}
+//			});
 		} else {
 			layout = activity.inflater.inflate(R.layout.category_list_item,
 					null);
@@ -71,20 +67,20 @@ public class CategoryListAdapter extends BaseAdapter {
 					+ board.getChsName());
 			layout.setTag(board);
 
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.BOARD,
-							(Board) v.getTag());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.SubjectListActivity");
-					activity.startActivity(intent);
-				}
-			});
+//			layout.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					Intent intent = new Intent();
+//					Bundle bundle = new Bundle();
+//					bundle.putSerializable(StringUtility.BOARD,
+//							(Board) v.getTag());
+//					intent.putExtras(bundle);
+//					intent.setClassName("com.athena.asm",
+//							"com.athena.asm.SubjectListActivity");
+//					activity.startActivity(intent);
+//				}
+//			});
 		}
 		return layout;
 	}

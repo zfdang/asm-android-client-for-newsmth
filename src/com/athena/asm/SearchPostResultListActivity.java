@@ -3,10 +3,14 @@ package com.athena.asm;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,7 +51,20 @@ public class SearchPostResultListActivity extends Activity {
 		}
 		
 		ListView listView = (ListView) findViewById(R.id.search_result_subject_list);
-		listView.setAdapter(new SearchPostResultListAdapter(this, inflater, subjectList));
+		listView.setAdapter(new SearchPostResultListAdapter(inflater, subjectList));
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
+				bundle.putInt(StringUtility.BOARD_TYPE, boardType);
+				intent.putExtras(bundle);
+				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override

@@ -2,11 +2,8 @@ package com.athena.asm.Adapter;
 
 import java.util.List;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.Subject;
-import com.athena.asm.util.StringUtility;
 
 public class GuidanceListAdapter extends BaseAdapter {
 
@@ -58,20 +54,20 @@ public class GuidanceListAdapter extends BaseAdapter {
 			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 			layout.setTag(subject);
 
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.SUBJECT,
-							(Subject) v.getTag());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.PostListActivity");
-					activity.startActivity(intent);
-				}
-			});
+//			layout.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					Intent intent = new Intent();
+//					Bundle bundle = new Bundle();
+//					bundle.putSerializable(StringUtility.SUBJECT,
+//							(Subject) v.getTag());
+//					intent.putExtras(bundle);
+//					intent.setClassName("com.athena.asm",
+//							"com.athena.asm.PostListActivity");
+//					activity.startActivity(intent);
+//				}
+//			});
 		}
 		return layout;
 	}
