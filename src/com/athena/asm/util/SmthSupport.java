@@ -477,7 +477,7 @@ public class SmthSupport {
 			getCategory(list.get(i), boardList.get(i).getChildBoards(), false);
 		}
 
-		patternStr = "o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
+		patternStr = "o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
 		List<Board> dirList = new ArrayList<Board>();
