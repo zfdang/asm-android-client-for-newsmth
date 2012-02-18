@@ -213,7 +213,8 @@ public class SmthSupport {
 			getFavorite(list.get(i), boardList.get(i).getChildBoards(), 0);
 		}
 
-		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
+		//o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
+		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
 		while (matcher.find()) {
