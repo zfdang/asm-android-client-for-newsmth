@@ -100,6 +100,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		}
 
 		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
+		listView.onRefreshComplete();
 		listView.setAdapter(new SubjectListAdapter(inflater, subjectList));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
