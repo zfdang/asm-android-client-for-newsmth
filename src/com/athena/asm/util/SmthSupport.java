@@ -17,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.util.Log;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Mail;
@@ -589,6 +590,11 @@ public class SmthSupport {
 				continue;
 			}
 			String type = matcher.group(3).trim();
+			// 隐藏置底
+			if (HomeActivity.application.isHidePinSubject()
+			        && type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
+                            continue;
+                        }
 			String dateStr = matcher.group(4);
 			Date date = StringUtility.toDate(dateStr);
 			String title = matcher.group(5);

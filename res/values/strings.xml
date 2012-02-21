@@ -99,10 +99,12 @@
 	<string name="setting_auto_optimize_details">开启后WIFI时不限制，无WIFI时根据下面阈值下载图片</string>
 	<string name="setting_image_size_threshold">自动下载图片大小阈值</string>
 	<string name="setting_image_size_threshold_details">阈值大小以KB为单位，设为0时不限制</string>
-	<string name="setting_black_list">黑名单</string>
-	<string name="setting_black_list_details">请以空格隔开ID</string>
+	<string name="setting_hide_pin_subject">隐藏置底</string>
+	<string name="setting_hide_pin_subject_details">不显示置底文章</string>
 	<string name="setting_touch_scroll">触屏翻页</string>
 	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
+	<string name="setting_black_list">黑名单</string>
+	<string name="setting_black_list_details">请以空格隔开ID</string>
 	<string name="setting_promotion_show">发帖显示宣传语</string>
 	<string name="setting_promotion_show_details">选中后发帖时结尾添加宣传语</string>
 	<!-- 下拉刷新 -->
