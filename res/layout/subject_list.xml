@@ -7,7 +7,7 @@
 	<include layout="@layout/header" />
 
 	<!-- Body -->
-	<ListView android:layout_width="wrap_content"
+	<com.markupartist.android.widget.PullToRefreshListView android:layout_width="wrap_content"
 		android:layout_height="0dp" android:layout_weight="1"
 		android:cacheColorHint="#00000000" android:id="@+id/subject_list" />
 
