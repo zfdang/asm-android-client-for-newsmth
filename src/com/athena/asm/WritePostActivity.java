@@ -56,6 +56,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
     private String dir = "";
     private String file = "";
     private int sigNum = 0;
+    private int selectedSigValue = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,12 @@ public class WritePostActivity extends Activity implements OnClickListener,
         sigSpinner.setAdapter(sigSpinnerAdapter);
         sigSpinner.setOnItemSelectedListener(this);
         if (sigNum > 0) {
-            sigSpinner.setSelection(1);
+            if (selectedSigValue != -1) {
+                sigSpinner.setSelection(selectedSigValue);
+            }
+            else {
+                sigSpinner.setSelection(sigNum + 1);
+            }
         }
 
         boolean isReply = getIntent().getBooleanExtra(StringUtility.IS_REPLY,
@@ -141,11 +147,12 @@ public class WritePostActivity extends Activity implements OnClickListener,
         String contentString = smthSupport.getUrlContent(toHandleUrl);
         // function replyForm(board,reid,title,att,signum,sig,ano,outgo,lsave)
         Pattern p = Pattern
-                .compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+,(\\d+)");
+                .compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+,(\\d+),([+-]?\\d+)");
         Matcher m = p.matcher(contentString);
         if (m.find()) {
             postTitle = m.group(1);
             sigNum = Integer.parseInt(m.group(2));
+            selectedSigValue = Integer.parseInt(m.group(3));
             if (!postTitle.contains("Re:") && isReply) {
                 postTitle = "Re: " + postTitle;
             }
@@ -157,8 +164,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
         if (m.find()) {
             postContent = m.group(1);
             postContent = postContent.replace("\n", "\n<br/>");
-            aSMApplication application = (aSMApplication) getApplication();
-            if (application.isPromotionShow()) {
+            if (HomeActivity.application.isPromotionShow()) {
             	postContent += "--<br/>发送自aSM水木客户端\n<br/>";
 			}
             contentEditText.setText(Html.fromHtml("<br/>" + postContent));

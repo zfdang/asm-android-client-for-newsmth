@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.athena.asm.Adapter.SubjectListAdapter;
@@ -27,6 +26,8 @@ import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadSubjectTask;
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 public class SubjectListActivity extends Activity implements OnClickListener, android.content.DialogInterface.OnClickListener {
 
@@ -48,7 +49,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.post_list);
+		setContentView(R.layout.subject_list);
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		
@@ -98,7 +99,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			isFirstIn = false;
 		}
 
-		ListView listView = (ListView) findViewById(R.id.post_list);
+		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
 		listView.setAdapter(new SubjectListAdapter(inflater, subjectList));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -115,6 +116,14 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 				startActivityForResult(intent, 0);
 			}
 		});
+		
+		listView.setOnRefreshListener(new OnRefreshListener() {
+                    
+                    @Override
+                    public void onRefresh() {
+                        refreshSubjectList();
+                    }
+                });
 		
 		totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
 		totalPageNoTextView.setText(" / " + currentBoard.getTotalPageNo());
@@ -150,6 +159,11 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 		loadSubjectTask.execute();
 	}
+	
+	private void refreshSubjectList() {
+	    LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+            loadSubjectTask.execute();
+        }
 
 	public static final int SWITCH_BOARD_TYPE = Menu.FIRST;
 	//public static final int SWITCH_BOARD_AREA = Menu.FIRST + 1;

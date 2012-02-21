@@ -40,9 +40,13 @@
 			android:title="@string/setting_image_size_threshold" android:summary="@string/setting_image_size_threshold_details"
 			android:dialogTitle="请输入过滤大小，以KB为单位" android:defaultValue="50"  />
 	</PreferenceCategory>
-	<PreferenceCategory android:title="其他">
+	<PreferenceCategory android:title="版面阅读">
 		<CheckBoxPreference android:key="touch_scroll"
 			android:summary="@string/setting_touch_scroll_details" android:title="@string/setting_touch_scroll" />
+		<CheckBoxPreference android:key="hide_pin_subject"
+			android:summary="@string/setting_hide_pin_subject_details" android:title="@string/setting_hide_pin_subject" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="其他">
 		<CheckBoxPreference android:key="promotion_show"
 			android:summary="@string/setting_promotion_show_details" android:title="@string/setting_promotion_show" />
 		<EditTextPreference  android:key="black_list" 
