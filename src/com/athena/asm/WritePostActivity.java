@@ -85,13 +85,13 @@ public class WritePostActivity extends Activity implements OnClickListener,
             ((LinearLayout) useridEditText.getParent())
                     .setVisibility(View.GONE);
             ((LinearLayout) useridEditText.getParent()).removeView(sendButton);
-            LinearLayout layout = (LinearLayout) findViewById(R.id.post_first_layout);
+            LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
             layout.addView(sendButton);
             titleTextView.setText("写帖子");
             parsePostToHandleUrl();
         } else {
             attachButton.setVisibility(View.GONE);
-            titleTextView.setText("写信件");
+            titleTextView.setText("写  信");
             parseMailToHandleUrl();
         }
 
@@ -213,6 +213,12 @@ public class WritePostActivity extends Activity implements OnClickListener,
         String contentString = smthSupport.getUrlContent(toHandleUrl);
 
         sigNum = StringUtility.getOccur(contentString, "<option") - 2;
+        Pattern p = Pattern
+                .compile("option value=\"([+-]?\\d+)\" selected");
+        Matcher m = p.matcher(contentString);
+        if (m.find()) {
+            selectedSigValue = Integer.parseInt(m.group(1));
+        }
 
         Pattern pattern = Pattern
                 .compile("<textarea[^<>]+>([^<>]+)</textarea>");
