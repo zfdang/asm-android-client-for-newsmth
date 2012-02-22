@@ -3,7 +3,6 @@ package com.athena.asm.Adapter;
 import java.util.List;
 
 import android.text.Html;
-import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,12 +45,13 @@ public class MailListAdapter extends BaseAdapter {
 		TextView titleTextView = (TextView) layout.findViewById(R.id.MailTitle);
 		String titleString = mail.getTitle();
 		if (mail.isUnread()) {
-			TextPaint tp = titleTextView.getPaint();
-			tp.setFakeBoldText(true);
+			//TextPaint tp = titleTextView.getPaint();
+			//tp.setFakeBoldText(true);
+			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		else {
-			TextPaint tp = titleTextView.getPaint();
-			tp.setFakeBoldText(false);
+			//TextPaint tp = titleTextView.getPaint();
+			//tp.setFakeBoldText(false);
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
 		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
