@@ -4,7 +4,7 @@
 	android:orientation="vertical" android:background="@color/body_background">
 
 	<!-- Header -->
-	<include layout="@layout/header" />
+	<include layout="@layout/header_subject_list" />
 
 	<!-- Body -->
 	<com.markupartist.android.widget.PullToRefreshListView android:layout_width="wrap_content"

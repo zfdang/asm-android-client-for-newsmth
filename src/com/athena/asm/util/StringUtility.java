@@ -138,6 +138,12 @@ public class StringUtility {
         sb.append("<br />");
         ArrayList<String> attachList = new ArrayList<String>();
         for (String line : lines) {
+        	Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"><img");
+			Matcher urlMatcher = urlPattern.matcher(line);
+			if (urlMatcher.find()) {
+				attachList.add(line);
+				continue;
+			}
         	if (isMainbodyEnd) {
         		attachList.add(line);
         		continue;

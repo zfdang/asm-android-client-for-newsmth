@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.athena.asm.Adapter.SubjectListAdapter;
@@ -57,7 +58,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 		currentBoard = (Board) getIntent().getSerializableExtra(
 				StringUtility.BOARD);
-		TextView titleTextView = (TextView) findViewById(R.id.title);
+		TextView titleTextView = (TextView) findViewById(R.id.boardTitle);
 		titleTextView.setText("[" + currentBoard.getEngName() + "]"
 				+ currentBoard.getChsName());
 
@@ -74,6 +75,11 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		goButton.setOnClickListener(this);
 		Button nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
+		
+		ImageButton writeImageButton = (ImageButton) findViewById(R.id.writePost);
+		writeImageButton.setOnClickListener(this);
+		ImageButton switchModeImageButton = (ImageButton) findViewById(R.id.switchBoardMode);
+		switchModeImageButton.setOnClickListener(this);
 
 		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
 		if (defaultBoardType.equals("001")) {
@@ -134,6 +140,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 	@Override
 	public void onClick(View view) {
+		boolean isToRefresh = true;
 		if (view.getId() == R.id.btn_first_page) {
 			currentPageNo = 1;
 		} else if (view.getId() == R.id.btn_last_page) {
@@ -154,11 +161,33 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			if (currentPageNo > currentBoard.getTotalPageNo()) {
 				currentPageNo = currentBoard.getTotalPageNo();
 			}
+		} else if (view.getId() == R.id.switchBoardMode) {
+			isToRefresh = false;
+			boardType = (boardType + 1) % 2;// switch type and excute refresh
+			isFirstIn = true;
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+			loadSubjectTask.execute();
+		} else if (view.getId() == R.id.writePost) {
+			isToRefresh = false;
+			Intent intent = new Intent();
+			intent.setClassName("com.athena.asm",
+					"com.athena.asm.WritePostActivity");
+			intent.putExtra(
+					StringUtility.URL,
+					"http://www.newsmth.net/bbspst.php?board="
+							+ currentBoard.getEngName());
+			intent.putExtra(StringUtility.WRITE_TYPE, 0);
+			intent.putExtra(StringUtility.IS_REPLY, false);
+			startActivityForResult(intent, 0);
 		}
-		currentBoard.setCurrentPageNo(currentPageNo);
-		pageNoEditText.setText(currentPageNo + "");
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
-		loadSubjectTask.execute();
+		
+		if (isToRefresh) {
+			currentBoard.setCurrentPageNo(currentPageNo);
+			pageNoEditText.setText(currentPageNo + "");
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+			loadSubjectTask.execute();
+		}
+		
 	}
 	
 	private void refreshSubjectList() {
