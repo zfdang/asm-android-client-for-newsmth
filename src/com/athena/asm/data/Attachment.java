@@ -9,12 +9,17 @@ public class Attachment {
 	private String name;
 	private int len;
 	private int pos;
+	private boolean isMobileType;
+	private String mobileUrlString;
 
 	private int getIntValue(String contentString) {
 		return Integer.parseInt(contentString);
 	}
 
 	public String getAttachUrl() {
+		if (isMobileType) {
+			return mobileUrlString;
+		}
 		if (bid < 0) {
 			return "#";
 		}
@@ -112,5 +117,21 @@ public class Attachment {
 
 	public void setPos(String pos) {
 		this.pos = getIntValue(pos);
+	}
+
+	public boolean isMobileType() {
+		return isMobileType;
+	}
+
+	public void setMobileType(boolean isMobileType) {
+		this.isMobileType = isMobileType;
+	}
+
+	public String getMobileUrlString() {
+		return mobileUrlString;
+	}
+
+	public void setMobileUrlString(String mobileUrlString) {
+		this.mobileUrlString = mobileUrlString;
 	}
 }

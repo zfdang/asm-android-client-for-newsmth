@@ -68,7 +68,7 @@ public class PostListAdapter extends BaseAdapter {
 			String attachUrl = attachments.get(i).getAttachUrl();
 			contentString += "<a href='" + attachUrl
 					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
-			String fileType = attachUrl.toLowerCase();
+			String fileType = attachments.get(i).getName().toLowerCase();
 			if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
 					|| fileType.endsWith("bmp") || fileType.endsWith("gif")) {
 				//Log.d("image", attachUrl);

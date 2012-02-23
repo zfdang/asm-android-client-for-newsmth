@@ -2,6 +2,7 @@ package com.athena.asm.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -121,6 +122,70 @@ public class StringUtility {
         }
 
         return profile;
+    }
+    
+    public static Object[] parseMobilePostContent(String content) {
+    	if (content == null) {
+    		return new Object[] { "", null };
+    	}
+    	content = content.replace("<br />", "<br/>");
+    	String[] lines = content.split("<br/>");
+    	StringBuilder sb = new StringBuilder();
+        int linebreak = 0;
+        int linequote = 0;
+        int seperator = 0;
+        boolean isMainbodyEnd = false;
+        sb.append("<br />");
+        ArrayList<String> attachList = new ArrayList<String>();
+        for (String line : lines) {
+        	if (isMainbodyEnd) {
+        		attachList.add(line);
+        		continue;
+			}
+            if (line.equals("--")) {
+                if (seperator > 1) {
+                    break;
+                }
+
+                seperator++;
+            } else {
+                if (seperator > 0) {
+                    if (line.length() > 0) {
+                        line = "<font color=#33CC66>" + line + "</font>";
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            if (line.startsWith(":")) {
+                linequote++;
+                if (linequote > 5) {
+                    continue;
+                } else {
+                    line = "<font color=#006699>" + line + "</font>";
+                }
+            } else {
+                linequote = 0;
+            }
+            
+            if (seperator > 0 && !line.contains("修改") && line.contains("FROM ")) {
+            	isMainbodyEnd = true;
+			}
+
+            if (line.equals("")) {
+                linebreak++;
+                if (linebreak > 1) {
+                    continue;
+                }
+            } else {
+                linebreak = 0;
+            }
+            sb.append(line).append("<br />");
+        }
+
+        String result = sb.toString().trim();
+        return new Object[] {result, attachList};
     }
 
     public static Object[] parsePostContent(String content) {

@@ -30,7 +30,8 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		if (boardType == 0) {
-			postListActivity.postList = postListActivity.smthSupport.getPostList(postListActivity.currentSubject, HomeActivity.application.getBlackList(), startNumber);
+			postListActivity.postList = postListActivity.smthSupport.getPostListFromMobile(postListActivity.currentSubject, HomeActivity.application.getBlackList());
+			//postListActivity.postList = postListActivity.smthSupport.getPostList(postListActivity.currentSubject, HomeActivity.application.getBlackList(), startNumber);
 		}
 		else {
 			if (action == 0) {

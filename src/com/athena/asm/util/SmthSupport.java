@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.text.Html;
 import android.util.Log;
 
 import com.athena.asm.HomeActivity;
@@ -730,8 +731,17 @@ public class SmthSupport {
 	 * @return
 	 */
 	public List<Post> getPostList(Subject subject, ArrayList<String> blackList, int startNumber) {
-		String result = getPostListContent(subject.getBoardEngName(),
-				subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
+//		String result = getPostListContent(subject.getBoardEngName(),
+//				subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
+		String url = "http://www.newsmth.net/bbstcon.php?board=" + subject.getBoardEngName()
+				+ "&gid=" + subject.getSubjectID();
+		if (subject.getCurrentPageNo() > 0) {
+			url += "&pno=" + subject.getCurrentPageNo();
+		}
+		if (startNumber > 0) {
+			url += "&start=" + startNumber;
+		}
+		String result =  crawler.getUrlContent(url);
 		if (result == null) {
 			return Collections.emptyList();
 		}
@@ -779,6 +789,154 @@ public class SmthSupport {
 		}
 
 		crawler.getPostList(postList);
+		return postList;
+	}
+	
+	/**
+	 * 获取移动版水木帖子列表.
+	 * 
+	 * @param board
+	 * @param mainSubjectid
+	 * @param pageno
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Post> getPostListFromMobile(Subject subject, ArrayList<String> blackList) {
+		String url = "http://m.newsmth.net/article/" + subject.getBoardEngName()
+				+ "/" + subject.getSubjectID();
+		int currentPageNo = subject.getCurrentPageNo();
+		if (currentPageNo > 0) {
+			url += "?p=" + currentPageNo;
+		}
+		String result =  crawler.getUrlContentFromMobile(url);
+		if (result == null) {
+			return Collections.emptyList();
+		}
+		
+		List<Post> postList = new ArrayList<Post>();
+		
+		boolean flag = true;
+		// <a userid href="/user/query/
+		Pattern userIDPattern = Pattern
+				.compile("<a href=\"/user/query/([^<>]+)\"");
+		Matcher userIDMatcher = userIDPattern.matcher(result);
+		
+		while (userIDMatcher.find()) {
+			Post post = new Post();
+			post.setTopicSubjectID(subject.getTopicSubjectID());
+			post.setSubjectID(subject.getSubjectID());
+			post.setBoardID(subject.getBoardID());
+			post.setBoard(subject.getBoardEngName());
+			String author = userIDMatcher.group(1);
+			post.setAuthor(author);
+			
+			if (flag) {
+				flag = false;
+				if (!StringUtility.isEmpty(author)
+						&& StringUtility.isEmpty(subject.getAuthor())) {
+					subject.setAuthor(author);
+				}
+			}
+			
+			postList.add(post);
+		}
+		
+		// <a class="plant">2012-02-23 00:16:41</a>
+		Pattern datePattern = Pattern.compile("<a class=\"plant\">(\\d)([^<>]+)</a>");
+		Matcher dateMatcher = datePattern.matcher(result);
+		int index = 0;
+		boolean isOdd = false;
+		flag = true;
+		while (dateMatcher.find()) {
+			if (isOdd) {
+				if (currentPageNo > 0) {
+					dateMatcher.group(1);
+					currentPageNo = 0;
+					continue;
+				}
+				
+				isOdd = false;
+				
+				SimpleDateFormat sdf = new SimpleDateFormat(
+	                    "yyyy-MM-dd HH:mm:ss");
+				try {
+					postList.get(index).setDate((java.util.Date) sdf.parse(dateMatcher.group(1)+dateMatcher.group(2)));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				++index;
+			}
+			else {
+				if (flag) {
+					flag = false;
+					String pageString = dateMatcher.group(1)+dateMatcher.group(2);
+					int splitIndex = pageString.indexOf("/"); 
+					int totalPage = Integer.parseInt(pageString.substring(splitIndex+1));
+					subject.setTotalPageNo(totalPage);
+					int page = Integer.parseInt(pageString.substring(0, splitIndex));
+					subject.setCurrentPageNo(page);
+				}
+				
+				isOdd = true;
+				continue;
+			}
+		}
+		
+		//<li class="f">title</li>
+		index = 0;
+		Pattern titlePattern = Pattern.compile("<li class=\"f\">([^<>]+)</li>");
+		Matcher titleMatcher = titlePattern.matcher(result);
+		String titleString = "";
+		if (titleMatcher.find()) {
+			titleString = Html.fromHtml(titleMatcher.group(1)).toString();
+			postList.get(index).setTitle(titleString);
+		}
+		titleString = "Re: " + titleString;
+		for (int i = 1; i < postList.size(); i++) {
+			postList.get(i).setTitle(titleString);
+		}
+		
+		// post content
+		index = 0; 
+		Pattern contentPattern = Pattern.compile("<div class=\"sp\">(.*?)</div>");		
+		Matcher contentMatcher = contentPattern.matcher(result);
+		while (contentMatcher.find()) {
+			String contentString = contentMatcher.group(1);
+			Object[] objects = StringUtility
+					.parseMobilePostContent(contentString);
+			postList.get(index).setContent((String) objects[0]);
+			ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
+			ArrayList<String> attachList = (ArrayList<String>) objects[1];
+			for (Iterator<String> iterator = attachList.iterator(); iterator.hasNext();) {
+				String attach = (String) iterator.next();
+				Attachment innerAtt = new Attachment();
+				
+				if (attach.contains("<img")) {
+					Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
+					Matcher urlMatcher = urlPattern.matcher(attach);
+					if (urlMatcher.find()) {
+						String urlString = urlMatcher.group(1);
+						innerAtt.setMobileUrlString(urlString);
+						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/")+1) + ".jpg");
+					}
+				}
+				else {
+					Pattern urlPattern = Pattern.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
+					Matcher urlMatcher = urlPattern.matcher(attach);
+					if (urlMatcher.find()) {
+						innerAtt.setMobileUrlString(urlMatcher.group(1));
+						innerAtt.setName(urlMatcher.group(2));
+					}
+				}
+				
+				innerAtt.setMobileType(true);
+				
+				attachFiles.add(innerAtt);
+			}
+			postList.get(index).setAttachFiles(attachFiles);
+			++index;
+		}	
+		
 		return postList;
 	}
 
@@ -839,17 +997,17 @@ public class SmthSupport {
 		return crawler.getUrlContent(url);
 	}
 
-	private String getPostListContent(String board, String subjectid, int pageno, int startNumber) {
-		String url = "http://www.newsmth.net/bbstcon.php?board=" + board
-				+ "&gid=" + subjectid;
-		if (pageno > 0) {
-			url += "&pno=" + pageno;
-		}
-		if (startNumber > 0) {
-			url += "&start=" + startNumber;
-		}
-		return crawler.getUrlContent(url);
-	}
+//	private String getPostListContent(String board, String subjectid, int pageno, int startNumber) {
+//		String url = "http://www.newsmth.net/bbstcon.php?board=" + board
+//				+ "&gid=" + subjectid;
+//		if (pageno > 0) {
+//			url += "&pno=" + pageno;
+//		}
+//		if (startNumber > 0) {
+//			url += "&start=" + startNumber;
+//		}
+//		return crawler.getUrlContent(url);
+//	}
 
 	public String getMainSubjectList(String board, int pageno, int type) {
 		String url = "";

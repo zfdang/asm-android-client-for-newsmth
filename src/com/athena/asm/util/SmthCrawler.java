@@ -48,6 +48,7 @@ import com.athena.asm.data.Post;
 
 public class SmthCrawler {
 	public static String smthEncoding = "GBK";
+	public static String mobileSMTHEncoding = "UTF-8";
 	public static String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.4) Gecko/20091016 Firefox/3.5.4";
 
 	private int threadNum;
@@ -259,8 +260,8 @@ public class SmthCrawler {
 			return null;
 		}
 	}
-
-	public String getUrlContent(String url) {
+	
+	public String fetchContent(String url, String encoding) {
 		HttpGet httpget = new HttpGet(url);
 		httpget.setHeader("User-Agent", userAgent);
 		httpget.addHeader("Accept-Encoding", "gzip, deflate");
@@ -282,7 +283,7 @@ public class SmthCrawler {
 				InputStream is = entity.getContent();
 				BufferedReader br = new java.io.BufferedReader(
 						new InputStreamReader(new GZIPInputStream(is),
-								smthEncoding));
+								encoding));
 				String line;
 				StringBuilder sb = new StringBuilder();
 				while ((line = br.readLine()) != null) {
@@ -292,13 +293,21 @@ public class SmthCrawler {
 				br.close();
 				content = sb.toString();
 			} else {
-				content = EntityUtils.toString(entity, smthEncoding);
+				content = EntityUtils.toString(entity, encoding);
 			}
 		} catch (IOException e) {
 			Log.d("com.athena.asm", "get url failed,", e);
 			content = null;
 		}
 		return content;
+	}
+	
+	public String getUrlContentFromMobile(String url) {
+		return fetchContent(url, mobileSMTHEncoding);
+	}
+
+	public String getUrlContent(String url) {
+		return fetchContent(url, smthEncoding);
 	}
 
 	public void getPostList(List<Post> postList) {
@@ -431,6 +440,7 @@ public class SmthCrawler {
 				innerAtt.setFtype(ftype);
 				innerAtt.setNum(num);
 				innerAtt.setCacheable(cacheable);
+				innerAtt.setMobileType(false);
 				String name = attachPartTwoMatcher.group(1);
 				String len = attachPartTwoMatcher.group(2);
 				String pos = attachPartTwoMatcher.group(3);
