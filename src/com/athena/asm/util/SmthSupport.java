@@ -824,7 +824,6 @@ public class SmthSupport {
 		while (userIDMatcher.find()) {
 			Post post = new Post();
 			post.setTopicSubjectID(subject.getTopicSubjectID());
-			post.setSubjectID(subject.getSubjectID());
 			post.setBoardID(subject.getBoardID());
 			post.setBoard(subject.getBoardEngName());
 			String author = userIDMatcher.group(1);
@@ -841,15 +840,25 @@ public class SmthSupport {
 			postList.add(post);
 		}
 		
+		// <a href="/article/NewExpress/post/11111">回复
+		Pattern subjectPattern = Pattern.compile("<a href=\"/article/" + subject.getBoardEngName() + "/post/(\\d+)\"");
+		Matcher subjectMatcher = subjectPattern.matcher(result);
+		int index = 0;
+		while (subjectMatcher.find()) {
+			postList.get(index).setSubjectID(subjectMatcher.group(1));
+			
+			++index;
+		}
+		
 		// <a class="plant">2012-02-23 00:16:41</a>
 		Pattern datePattern = Pattern.compile("<a class=\"plant\">(\\d)([^<>]+)</a>");
 		Matcher dateMatcher = datePattern.matcher(result);
-		int index = 0;
+		index = 0;
 		boolean isOdd = false;
 		flag = true;
 		while (dateMatcher.find()) {
 			if (isOdd) {
-				if (currentPageNo > 0) {
+				if (currentPageNo > 1) {
 					dateMatcher.group(1);
 					currentPageNo = 0;
 					continue;
