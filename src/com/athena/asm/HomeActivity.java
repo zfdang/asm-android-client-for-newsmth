@@ -702,8 +702,11 @@ public class HomeActivity extends Activity implements OnClickListener {
 				reloadGuidanceList();
 				break;
 			case 2:
-				favList = null;
-				reloadFavorite(favList, 20);
+				boolean isDeleted = deleteFile("FavList");
+				if (isDeleted) {
+					favList = null;
+					reloadFavorite(favList, 20);
+				}
 				break;
 			case 3:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
