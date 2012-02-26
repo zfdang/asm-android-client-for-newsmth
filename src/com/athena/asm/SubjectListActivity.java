@@ -163,7 +163,12 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			}
 		} else if (view.getId() == R.id.switchBoardMode) {
 			isToRefresh = false;
-			boardType = (boardType + 1) % 2;// switch type and excute refresh
+			if (boardType == 0) {
+				boardType = 1;
+			}
+			else {
+				boardType = 0;
+			}
 			isFirstIn = true;
 			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 			loadSubjectTask.execute();
@@ -220,12 +225,6 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		/*if (boardType == 1) {
-			menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换为同主题");
-		}
-		else {
-			menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换为普通模式");
-		}*/
 		menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...");
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新");
 		menu.add(0, SEARCH_POST, Menu.NONE, "搜索");
@@ -287,29 +286,12 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		}
 		return true;
 	}
-	
-	/*@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (boardType == 1) {
-			menu.getItem(0).setTitle("切换为同主题");
-		}
-		else {
-			menu.getItem(0).setTitle("切换为普通模式");
-		}
-		
-		return true;
-	}*/
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		isFirstIn = true;
-		if (which == 0) {
-			boardType = 0;
-		}
-		else {
-			boardType = 1;
-		}
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, which, isFirstIn);
+		boardType = which;
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
 		loadSubjectTask.execute();
 		dialog.dismiss();
 	}
