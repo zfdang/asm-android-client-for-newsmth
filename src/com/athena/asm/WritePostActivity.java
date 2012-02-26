@@ -145,6 +145,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
         }
 
         String contentString = smthSupport.getUrlContent(toHandleUrl);
+		if (contentString == null) return;
         // function replyForm(board,reid,title,att,signum,sig,ano,outgo,lsave)
         Pattern p = Pattern
                 .compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+,(\\d+),([+-]?\\d+)");

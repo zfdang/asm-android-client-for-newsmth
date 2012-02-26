@@ -15,6 +15,10 @@ public class Post {
 	private Date date;
 	private String content;
 	private ArrayList<Attachment> attachFiles;
+	
+	public Post() {
+		date = new Date();
+	}
 
 	@Override
 	public String toString() {
