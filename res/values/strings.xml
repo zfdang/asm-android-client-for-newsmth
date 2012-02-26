@@ -75,12 +75,12 @@
 	<string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
-	<string name="about_content">aSM 1.6\naSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：
+	<string name="about_content">aSM 1.6.1\naSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：
 \n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴或者回信给作者。\n3. 帖子附件显示于每个帖子的结尾处。\n4. 在版面的主题列表页面中按MENU键可以发表新贴及搜索版面。(回贴发帖均需要登录后才能使用)\n5. 因为水木版面设置的特殊性，分类讨论区第一次加载时间较长，之后会在本地保存直接加载。
 \n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
 	<!-- 更新 -->
 	<string name="update_title">更新说明</string>
-	<string name="update_info">1.6更新内容：\n1. 新增：同主题模式改为抓取m.newsmth.net，加载更快（内容解析有待进一步测试）\n2. 新增：版面主题列表内下拉刷新\n3. 新增：版面主题列表视图的快捷发帖与普通\同主题切换按钮\n4. 修改：发文的按钮布局\n5. 修正：无版主收藏夹版面无法获取的bug\n6. 修正：签名档没有记住的bug\n
+	<string name="update_info">1.6.1更新内容：\n1. 新增：同主题下一页/普通模式下一贴预读功能\n2. 新增：收藏夹本地缓存（有更新时请在打开收藏夹时手动菜单刷新）\n3. 修正：同主题的各楼帖子回复\n4. 修正：同主题的导航到第1页崩溃问题\n5. 其他：一些细微调整\n
 	    </string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
