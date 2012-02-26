@@ -18,6 +18,24 @@ public class Subject implements Serializable {
 
 	private int totalPageNo;
 	private int currentPageNo;
+	
+	public Subject() {
+		date = new Date();
+	}
+	
+	public Subject(Subject subject) {
+		this.subjectID = subject.subjectID;
+		this.topicSubjectID = subject.topicSubjectID;
+		this.title = subject.title;
+		this.author = subject.author;
+		this.boardID = subject.boardID;
+		this.boardEngName = subject.boardEngName;
+		this.boardChsName = subject.boardChsName;
+		this.date = subject.date;
+		this.type = subject.type;
+		this.totalPageNo = subject.totalPageNo;
+		this.currentPageNo = subject.currentPageNo;
+	}
 
 	public String getSubjectID() {
 		return subjectID;

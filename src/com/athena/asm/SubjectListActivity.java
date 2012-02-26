@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.athena.asm.Adapter.BoardTypeListAdapter;
 import com.athena.asm.Adapter.SubjectListAdapter;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
@@ -248,11 +249,12 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			loadSubjectTask.execute();
 			break;*/
 		case SWITCH_BOARD_TYPE:
-			String[] items = { "同主题", "普通模式", "文摘区", "保留区" };
+			//String[] items = { "同主题", "普通模式", "文摘区", "保留区" };
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					this);
 			builder.setTitle(R.string.post_alert_title);
-			builder.setItems(items,this);
+			//builder.setItems(items,this);
+			builder.setAdapter(new BoardTypeListAdapter(boardType, inflater), this);
 			AlertDialog alert = builder.create();
 			alert.show();
 			break;

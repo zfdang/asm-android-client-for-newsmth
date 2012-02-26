@@ -608,6 +608,7 @@ public class SmthSupport {
 			subject.setTitle(title);
 			subject.setType(type);
 			subject.setDate(date);
+			subject.setCurrentPageNo(1);
 			subjectList.add(subject);
 		}
 

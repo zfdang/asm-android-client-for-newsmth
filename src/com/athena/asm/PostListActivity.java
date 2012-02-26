@@ -58,6 +58,10 @@ public class PostListActivity extends Activity implements OnClickListener,
 	private boolean isLongPressed;
 	private int screenHeight;
 	private ListView listView;
+	
+	public boolean isPreloadFinish = false;
+	public List<Post> preloadPostList;
+	public Subject preloadSubject;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class PostListActivity extends Activity implements OnClickListener,
 		currentSubject = (Subject) getIntent().getSerializableExtra(
 				StringUtility.SUBJECT);
 		currentPageNo = currentSubject.getCurrentPageNo();
+		
+		preloadSubject = new Subject(currentSubject);
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(currentSubject.getTitle());
@@ -97,7 +103,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 		boardType = getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0);
 
-		LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0, 0);
+		LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, 0, false, false);
 		loadPostTask.execute();
 		// reloadPostList();
 	}
@@ -134,6 +140,22 @@ public class PostListActivity extends Activity implements OnClickListener,
 			pageNoEditText.setVisibility(View.GONE);
 			totalPageNoTextView.setVisibility(View.GONE);
 		}
+		
+		if (boardType == 0) {
+			int nextPage = currentPageNo + 1;
+			if (nextPage <= currentSubject.getTotalPageNo()) {
+				isPreloadFinish = false;
+				preloadSubject.setCurrentPageNo(nextPage);
+				LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 0, true, false);
+				loadPostTask.execute();
+			}
+		}
+		else {
+			isPreloadFinish = false;
+			preloadSubject = new Subject(currentSubject);
+			LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 3, true, false);
+			loadPostTask.execute();
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -168,7 +190,9 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View view) {
+		boolean isNext = false;
 		if (boardType == 0) { // 同主题导航
+			
 			if (view.getId() == R.id.btn_first_page) {
 				if (currentPageNo == 1) {
 					return;
@@ -198,6 +222,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 					currentPageNo = currentSubject.getTotalPageNo();
 					return;
 				}
+				isNext = true;
 			}
 			currentSubject.setCurrentPageNo(currentPageNo);
 			pageNoEditText.setText(currentPageNo + "");
@@ -205,24 +230,25 @@ public class PostListActivity extends Activity implements OnClickListener,
 				((View) view.getParent()).requestFocus();
 			}
 
-			LoadPostTask loadPostTask = new LoadPostTask(this, boardType, 0, 0);
+			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, 0, false, isNext);
 			loadPostTask.execute();
 		} else {
 			int action = 0;
-			int startNumber = 0;
+			//int startNumber = 0;
 			if (view.getId() == R.id.btn_first_page) {
 				action = 1;
 			} else if (view.getId() == R.id.btn_pre_page) {
 				action = 2;
 			} else if (view.getId() == R.id.btn_next_page) {
 				action = 3;
+				isNext = true;
 			} else if (view.getId() == R.id.btn_last_page) {
 				boardType = 0;
-				startNumber = Integer.parseInt(currentSubject.getSubjectID());
+				//startNumber = Integer.parseInt(currentSubject.getSubjectID());
 				currentSubject.setSubjectID(currentSubject.getTopicSubjectID());
+				currentSubject.setCurrentPageNo(1);
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(this, boardType,
-					action, startNumber);
+			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, action, false, isNext);
 			loadPostTask.execute();
 		}
 	}

@@ -32,7 +32,7 @@
 	<string name="topic_first_page">主题首篇</string>
 	<string name="topic_pre_page">主题上篇</string>
 	<string name="topic_next_page">主题下篇</string>
-	<string name="topic_all_page">当前展开</string>
+	<string name="topic_all_page">主题展开</string>
 	 <!-- 资料页 -->
 	<string name="profile_send_mail">发信</string>
 	<string name="profile_alive_number">生命力</string>
