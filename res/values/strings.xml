@@ -103,6 +103,8 @@
 	<string name="setting_hide_pin_subject_details">不显示置底文章</string>
 	<string name="setting_touch_scroll">触屏翻页</string>
 	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
+	<string name="setting_force_screen_portrait">强制竖屏</string>
+	<string name="setting_force_screen_portrait_details">选中后不显示横屏界面</string>
 	<string name="setting_black_list">黑名单</string>
 	<string name="setting_black_list_details">请以空格隔开ID</string>
 	<string name="setting_promotion_show">发帖显示宣传语</string>

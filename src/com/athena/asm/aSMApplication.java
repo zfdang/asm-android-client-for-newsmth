@@ -55,6 +55,7 @@ public class aSMApplication extends Application {
     private boolean isTouchScroll = true;
     private boolean isHidePinSubject = false;
 
+    private boolean isForceScreenPortrait = false;
     private boolean isPromotionShow = true;
     private ArrayList<String> blackList = new ArrayList<String>();
 
@@ -169,6 +170,13 @@ public class aSMApplication extends Application {
             setHidePinSubject(settings.getBoolean(Preferences.HIDE_PIN_SUBJECT,
                     false));
         }
+        
+        if (!settings.contains(Preferences.FORCE_SCREEN_PORTRAIT)) {
+			editor.putBoolean(Preferences.FORCE_SCREEN_PORTRAIT, false);
+		}
+        else {
+			setForceScreenPortrait(settings.getBoolean(Preferences.FORCE_SCREEN_PORTRAIT, false));
+		}
 
         if (!settings.contains(Preferences.PROMOTION_SHOW)) {
             editor.putBoolean(Preferences.PROMOTION_SHOW, true);
@@ -455,4 +463,12 @@ public class aSMApplication extends Application {
     public void setImageSizeThreshold(float imageSizeThreshold) {
         this.imageSizeThreshold = imageSizeThreshold;
     }
+
+	public boolean isForceScreenPortrait() {
+		return isForceScreenPortrait;
+	}
+
+	public void setForceScreenPortrait(boolean isForceScreenPortrait) {
+		this.isForceScreenPortrait = isForceScreenPortrait;
+	}
 }
