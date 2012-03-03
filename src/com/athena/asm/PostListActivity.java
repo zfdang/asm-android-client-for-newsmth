@@ -122,6 +122,9 @@ public class PostListActivity extends Activity implements OnClickListener,
 		currentPageNo = currentSubject.getCurrentPageNo();
 		pageNoEditText.setText(currentPageNo + "");
 		listView.requestFocus();
+		
+		isPreloadFinish = false;
+		preloadSubject = new Subject(currentSubject);
 
 		if (boardType == 0) {
 			firstButton.setText(R.string.first_page);
@@ -144,15 +147,12 @@ public class PostListActivity extends Activity implements OnClickListener,
 		if (boardType == 0) {
 			int nextPage = currentPageNo + 1;
 			if (nextPage <= currentSubject.getTotalPageNo()) {
-				isPreloadFinish = false;
 				preloadSubject.setCurrentPageNo(nextPage);
 				LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 0, true, false);
 				loadPostTask.execute();
 			}
 		}
 		else {
-			isPreloadFinish = false;
-			preloadSubject = new Subject(currentSubject);
 			LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 3, true, false);
 			loadPostTask.execute();
 		}
@@ -273,21 +273,23 @@ public class PostListActivity extends Activity implements OnClickListener,
 			}
 			if (event.getAction() == MotionEvent.ACTION_UP && !isLongPressed) {
 				int touchY = (int) event.getRawY();
-				float scale = screenHeight / 800;
+				float scale = (float) (screenHeight / 800.0);
 				if (touchY > 60 * scale && touchY < 390 * scale) {
-					Log.d("mouse", "up");
-					if (v.getId() != R.id.PostListLayout) {
-						setListOffset(-1);
-					} else {
-						setListOffset(-1);
-					}
+//					Log.d("mouse", "up");
+//					if (v.getId() != R.id.PostListLayout) {
+//						setListOffset(-1);
+//					} else {
+//						setListOffset(-1);
+//					}
+					setListOffset(-1);
 				} else if (touchY > 410 * scale && touchY < 740 * scale) {
-					Log.d("mouse", "down");
-					if (v.getId() != R.id.PostListLayout) {
-						setListOffset(1);
-					} else {
-						setListOffset(1);
-					}
+//					Log.d("mouse", "down");
+//					if (v.getId() != R.id.PostListLayout) {
+//						setListOffset(1);
+//					} else {
+//						setListOffset(1);
+//					}
+					setListOffset(1);
 				}
 			}
 		}
