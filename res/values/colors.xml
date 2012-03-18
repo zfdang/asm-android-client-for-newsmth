@@ -27,4 +27,8 @@
   
   <color name="self_background">#FFFAF4BE</color>
   <color name="mention_background">#FFC9E6F8</color>
+  
+  <color name="body_background_night">#232529</color>
+  <color name="status_text_night">#ABC2DA</color>
+  <color name="blue_text_night">#FBA50E</color>
 </resources>

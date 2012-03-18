@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -46,6 +47,11 @@ public class MailListActivity extends Activity implements OnClickListener {
 		boxType = getIntent().getIntExtra(StringUtility.MAIL_BOX_TYPE, 0);
 		
 		TextView titleTextView = (TextView) findViewById(R.id.title);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
+		
 		switch (boxType) {
 		case 0:
 			titleTextView.setText("收件箱");
@@ -62,8 +68,6 @@ public class MailListActivity extends Activity implements OnClickListener {
 		
 		EditText pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setVisibility(View.GONE);
-		TextView totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
-		totalPageNoTextView.setVisibility(View.GONE);
 
 		Button firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setOnClickListener(this);

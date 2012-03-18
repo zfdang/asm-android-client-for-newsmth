@@ -128,6 +128,13 @@ public class ReadMailAdapter extends BaseAdapter {
 
 		contentTextView.setOnLongClickListener(listener);
 		layout.setOnLongClickListener(listener);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+		}
 
 		return layout;
 	}

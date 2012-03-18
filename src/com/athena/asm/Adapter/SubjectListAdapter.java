@@ -44,24 +44,16 @@ public class SubjectListAdapter extends BaseAdapter {
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
 		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
+		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDate().toLocaleString());
 		
 		layout.setTag(subject);
-//		layout.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable(StringUtility.SUBJECT, (Subject)v.getTag());
-//				bundle.putInt(StringUtility.BOARD_TYPE, activity.boardType);
-//				intent.putExtras(bundle);
-//				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
-//				//activity.startActivity(intent);
-//				activity.startActivityForResult(intent, 0);
-//			}
-//		});
+		
+		if (HomeActivity.application.isNightTheme()) {
+			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+		}
 
 		return layout;
 	}

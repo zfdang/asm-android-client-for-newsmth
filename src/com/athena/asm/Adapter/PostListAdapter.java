@@ -90,6 +90,13 @@ public class PostListAdapter extends BaseAdapter {
 		
 		contentTextView.setOnTouchListener(activity);
 		layout.setOnTouchListener(activity);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+		}
 
 		return layout;
 	}

@@ -37,19 +37,9 @@ public class FavoriteListAdapter extends BaseAdapter {
 			boardNameTextView.setText(board.getDirectoryName());
 			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
 			layout.setTag(board);
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Board board = (Board) v.getTag();
-//					if (board.getDirectoryName().equals("最近访问版面")) {
-//						activity.reloadFavorite(new ArrayList<Board>(HomeActivity.application.getRecentBoards()), ++step);
-//					}
-//					else {
-//						activity.reloadFavorite(board.getChildBoards(), ++step);
-//					}
-//				}
-//			});
+			if (HomeActivity.application.isNightTheme()) {
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			}
 		} else {
 			layout = activity.inflater.inflate(R.layout.favorite_list_item,
 					null);
@@ -65,22 +55,11 @@ public class FavoriteListAdapter extends BaseAdapter {
 					+ board.getChsName());
 			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 			layout.setTag(board);
-			
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent();
-//					Bundle bundle = new Bundle();
-//					bundle.putSerializable(StringUtility.BOARD,
-//							(Board) v.getTag());
-//					HomeActivity.application.addRecentBoard((Board) v.getTag());
-//					intent.putExtras(bundle);
-//					intent.setClassName("com.athena.asm",
-//							"com.athena.asm.SubjectListActivity");
-//					activity.startActivity(intent);
-//				}
-//			});
+			if (HomeActivity.application.isNightTheme()) {
+				categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+				moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			}
 		}
 		return layout;
 	}

@@ -55,37 +55,10 @@ public class MailAdapter extends BaseAdapter {
 			break;
 		}
 		
-//		if (position == 0 || position == 1 || position == 2) {
-//			final int boxType = position;
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent();
-//					intent.putExtra(StringUtility.MAIL_BOX_TYPE, boxType);
-//					intent.setClassName("com.athena.asm",
-//							"com.athena.asm.MailListActivity");
-//					activity.startActivity(intent);
-//				}
-//			});
-//		}
-//		else if (position == 3) {
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent();
-//					intent.setClassName("com.athena.asm",
-//							"com.athena.asm.WritePostActivity");
-//					intent.putExtra(
-//							StringUtility.URL,
-//							"http://www.newsmth.net/bbspstmail.php");
-//					intent.putExtra(StringUtility.WRITE_TYPE, 1);
-//					intent.putExtra(StringUtility.IS_REPLY, false);
-//					activity.startActivity(intent);
-//				}
-//			});
-//		}
+		if (HomeActivity.application.isNightTheme()) {
+			boxNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			numberTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+		}
 
 		return layout;
 	}

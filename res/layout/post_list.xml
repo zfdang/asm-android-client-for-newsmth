@@ -4,7 +4,7 @@
 	android:orientation="vertical" android:background="@color/body_background">
 
 	<!-- Header -->
-	<include layout="@layout/header" />
+	<include layout="@layout/header_post_list" />
 
 	<!-- Body -->
 	<!-- <LinearLayout android:orientation="vertical" android:id="@+id/bodyContainer" 

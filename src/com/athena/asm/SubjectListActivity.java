@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.athena.asm.Adapter.BoardTypeListAdapter;
@@ -43,7 +44,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	private int currentPageNo = 1;
 	public int boardType = 0;
 	EditText pageNoEditText;
-	TextView totalPageNoTextView;
+	TextView titleTextView;
 
 	private boolean isFirstIn = true;
 	
@@ -59,9 +60,11 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 		currentBoard = (Board) getIntent().getSerializableExtra(
 				StringUtility.BOARD);
-		TextView titleTextView = (TextView) findViewById(R.id.boardTitle);
-		titleTextView.setText("[" + currentBoard.getEngName() + "]"
-				+ currentBoard.getChsName());
+		titleTextView = (TextView) findViewById(R.id.boardTitle);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setText(currentPageNo + "");
@@ -133,8 +136,8 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
                     }
                 });
 		
-		totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
-		totalPageNoTextView.setText(" / " + currentBoard.getTotalPageNo());
+		titleTextView.setText("[" + currentPageNo + "/" + currentBoard.getTotalPageNo() + "]" + currentBoard.getChsName());
+		
 		listView.requestFocus();
 
 	}

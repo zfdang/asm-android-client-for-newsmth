@@ -10,9 +10,7 @@
 	<LinearLayout android:orientation="vertical" android:id="@+id/bodyContainer"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:layout_weight="1.0" />
-	<!-- <ExpandableListView android:layout_width="wrap_content" android:layout_height="wrap_content" 
-		android:layout_weight="1" android:cacheColorHint="#00000000" android:id="@+id/guidance_list" 
-		/> -->
+
 	<!-- footer -->
 	<include android:id="@+id/footer" layout="@layout/footer" />
 

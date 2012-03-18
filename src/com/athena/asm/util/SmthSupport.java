@@ -152,7 +152,7 @@ public class SmthSupport {
 			String sectionName = sm.group(1);
 			sectionList.add(sectionName);
 			String sc = sm.group(2);
-			System.out.println(sectionName);
+			//System.out.println(sectionName);
 
 			Pattern boardNamePattern = Pattern
 					.compile("\"SectionItem\">.<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
@@ -810,7 +810,7 @@ public class SmthSupport {
 			url += "?p=" + currentPageNo;
 		}
 		String result =  crawler.getUrlContentFromMobile(url);
-		if (result == null) {
+		if (result == null || result.contains("指定的文章不存在或链接错误") || result.contains("您无权阅读此版面")) {
 			return Collections.emptyList();
 		}
 		

@@ -7,24 +7,27 @@
 	<!-- 防止默认焦点为edittext -->
 	<LinearLayout android:focusable="true" android:focusableInTouchMode="true" android:layout_width="0px" android:layout_height="0px"/> 
 	<Button android:id="@+id/btn_first_page" android:layout_height="wrap_content"
+	    android:padding="5dip" android:textSize="14sp"
 		android:layout_width="wrap_content" android:text="@string/first_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_pre_page" android:layout_height="wrap_content"
+	    android:padding="5dip" android:textSize="14sp"
 		android:layout_width="wrap_content" android:text="@string/pre_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<EditText android:id="@+id/edittext_page_no"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:singleLine="true"
 		android:inputType="number" android:layout_marginTop="3dip" />
-	<TextView android:id="@+id/textview_page_total_no"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_marginTop="1dip" />
 	<Button android:id="@+id/btn_go_page" android:layout_height="wrap_content"
+	    android:padding="5dip" android:textSize="14sp"
 		android:layout_width="wrap_content" android:text="@string/go_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_next_page" android:layout_height="wrap_content"
+	    android:padding="5dip" android:textSize="14sp"
 		android:layout_width="wrap_content" android:text="@string/next_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_last_page" android:layout_height="wrap_content"
+	    android:padding="5dip" android:textSize="14sp"
 		android:layout_width="wrap_content" android:text="@string/last_page"
 		android:layout_gravity="center" android:layout_marginTop="3dip" />
 

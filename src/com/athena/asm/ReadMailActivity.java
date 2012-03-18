@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,11 +41,13 @@ public class ReadMailActivity extends Activity {
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(currentMail.getTitle());
+		
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
 
 		EditText pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setVisibility(View.GONE);
-		TextView totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
-		totalPageNoTextView.setVisibility(View.GONE);
 
 		Button firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setVisibility(View.GONE);

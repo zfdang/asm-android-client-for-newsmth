@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,7 +40,7 @@ public class ViewProfileActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 	}
 	
-	public void reloadProfile(Profile profile) {
+	public void reloadProfile(Profile profile) {	
 		ImageButton searchButton = (ImageButton) findViewById(R.id.btn_search);
 		((RelativeLayout)searchButton.getParent()).setVisibility(View.GONE);
 		
@@ -84,5 +85,9 @@ public class ViewProfileActivity extends Activity {
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(R.string.title_profile);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
 	}
 }

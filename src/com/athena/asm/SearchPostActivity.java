@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SearchPostActivity extends Activity implements OnClickListener {
@@ -50,6 +51,9 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		boardName = getIntent().getStringExtra(StringUtility.BOARD);
 		titleTextView.setText(boardName + "版内文章搜索");
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
 		
 		boardID = getIntent().getStringExtra(StringUtility.BID);
 		

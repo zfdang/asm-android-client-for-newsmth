@@ -5,10 +5,10 @@
 	android:paddingLeft="12dp" android:paddingRight="12dp">
 	<TextView android:id="@+id/BoardName" android:text="TextView01"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:textColor="@color/status_text" />
+		android:textColor="@color/blue_text" />
 	<TextView android:id="@+id/AuthorID" android:text="TextView02"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:textColor="@color/status_text" android:gravity="right" />
+		android:textColor="@color/blue_text" android:gravity="right" />
 	<TextView android:id="@+id/SubjectTitle" android:text="TextView03"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:layout_below="@+id/BoardName" android:textColor="@color/status_text"

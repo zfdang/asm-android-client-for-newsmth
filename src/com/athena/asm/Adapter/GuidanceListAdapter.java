@@ -38,6 +38,9 @@ public class GuidanceListAdapter extends BaseAdapter {
 					.findViewById(R.id.SectionName);
 			boardNameTextView.setText(sections.get(position));
 			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
+			if (HomeActivity.application.isNightTheme()) {
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			}
 		} else {
 			Subject subject = subjects.get(dataIndex).get(position);
 			layout = activity.inflater.inflate(R.layout.guidance_list_item,
@@ -53,21 +56,12 @@ public class GuidanceListAdapter extends BaseAdapter {
 			titleTextView.setText(subject.getTitle());
 			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
 			layout.setTag(subject);
-
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent();
-//					Bundle bundle = new Bundle();
-//					bundle.putSerializable(StringUtility.SUBJECT,
-//							(Subject) v.getTag());
-//					intent.putExtras(bundle);
-//					intent.setClassName("com.athena.asm",
-//							"com.athena.asm.PostListActivity");
-//					activity.startActivity(intent);
-//				}
-//			});
+			
+			if (HomeActivity.application.isNightTheme()) {
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+				titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+				authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			}
 		}
 		return layout;
 	}

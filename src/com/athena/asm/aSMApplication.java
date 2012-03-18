@@ -54,6 +54,7 @@ public class aSMApplication extends Application {
 
     private boolean isTouchScroll = true;
     private boolean isHidePinSubject = false;
+    private boolean isNightTheme = false;
 
     private boolean isForceScreenPortrait = false;
     private boolean isPromotionShow = true;
@@ -168,6 +169,13 @@ public class aSMApplication extends Application {
             editor.putBoolean(Preferences.HIDE_PIN_SUBJECT, false);
         } else {
             setHidePinSubject(settings.getBoolean(Preferences.HIDE_PIN_SUBJECT,
+                    false));
+        }
+        
+        if (!settings.contains(Preferences.NIGHT_THEME)) {
+            editor.putBoolean(Preferences.NIGHT_THEME, false);
+        } else {
+            setNightTheme(settings.getBoolean(Preferences.NIGHT_THEME,
                     false));
         }
         
@@ -470,5 +478,13 @@ public class aSMApplication extends Application {
 
 	public void setForceScreenPortrait(boolean isForceScreenPortrait) {
 		this.isForceScreenPortrait = isForceScreenPortrait;
+	}
+
+	public boolean isNightTheme() {
+		return isNightTheme;
+	}
+
+	public void setNightTheme(boolean isNightTheme) {
+		this.isNightTheme = isNightTheme;
 	}
 }

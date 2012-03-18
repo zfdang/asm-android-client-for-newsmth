@@ -43,15 +43,11 @@ public class CategoryListAdapter extends BaseAdapter {
 			}
 			boardDesTextView.setText(desString);
 			layout.setTag(board);
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					step++;
-//					activity.reloadCategory(
-//							((Board) v.getTag()).getChildBoards(), step);
-//				}
-//			});
+			if (HomeActivity.application.isNightTheme()) {
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+				boardDesTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			}
+			
 		} else {
 			layout = activity.inflater.inflate(R.layout.category_list_item,
 					null);
@@ -66,22 +62,14 @@ public class CategoryListAdapter extends BaseAdapter {
 			boardNameTextView.setText("[" + board.getEngName() + "]"
 					+ board.getChsName());
 			layout.setTag(board);
-
-//			layout.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					Intent intent = new Intent();
-//					Bundle bundle = new Bundle();
-//					bundle.putSerializable(StringUtility.BOARD,
-//							(Board) v.getTag());
-//					intent.putExtras(bundle);
-//					intent.setClassName("com.athena.asm",
-//							"com.athena.asm.SubjectListActivity");
-//					activity.startActivity(intent);
-//				}
-//			});
+			
+			if (HomeActivity.application.isNightTheme()) {
+				categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+				moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			}
 		}
+		
 		return layout;
 	}
 

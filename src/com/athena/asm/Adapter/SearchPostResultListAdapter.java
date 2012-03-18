@@ -58,19 +58,11 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 		}
 		
 		layout.setTag(subject);
-//		layout.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable(StringUtility.SUBJECT, (Subject)v.getTag());
-//				bundle.putInt(StringUtility.BOARD_TYPE, activity.boardType);
-//				intent.putExtras(bundle);
-//				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
-//				activity.startActivity(intent);
-//			}
-//		});
+		
+		if (HomeActivity.application.isNightTheme()) {
+			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+		}
 
 		return layout;
 	}

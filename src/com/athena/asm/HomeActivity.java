@@ -153,6 +153,27 @@ public class HomeActivity extends Activity implements OnClickListener {
 			finish();
 		}
 	}
+	
+	@Override
+	protected void onResume () {
+		super.onResume();
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
+		else {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background));
+		}
+		
+		if (bodyContainer.getChildCount() > 0) {
+			int index = (int) (currentTabIndex / 10);
+			if (index == 1) {
+				reloadFavorite(favList, 20);
+			}
+			else {
+				reloadGuidanceList();
+			}
+		}
+	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -260,13 +281,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 			}
 		});
 	}
-
-	/*
-	 * private void initTasks() { loadGuidanceTask = new LoadGuidanceTask(this);
-	 * loadFavoriteTask = new LoadFavoriteTask(this); loadMailTask = new
-	 * LoadMailTask(this); loadCategoryTask = new LoadCategoryTask(this);
-	 * loadProfileTask = new LoadProfileTask(this, loginUserID, 50); }
-	 */
 
 	private void switchToView(View targetView, double targetIndex) {
 		if (currentTabIndex == targetIndex) {
@@ -576,6 +590,12 @@ public class HomeActivity extends Activity implements OnClickListener {
 
 			default:
 				break;
+			}
+			
+			if (HomeActivity.application.isNightTheme()) {
+				userIDTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+				userScoreTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+				userNicknameTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			}
 
 			titleTextView.setText(R.string.title_profile);

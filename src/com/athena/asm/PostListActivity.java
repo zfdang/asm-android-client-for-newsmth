@@ -21,6 +21,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,12 +48,13 @@ public class PostListActivity extends Activity implements OnClickListener,
 	private int currentPageNo = 1;
 	private int boardType = 0; // 1是普通，0是同主题
 	EditText pageNoEditText;
-	TextView totalPageNoTextView;
 	Button firstButton;
 	Button lastButton;
 	Button preButton;
 	Button goButton;
 	Button nextButton;
+	
+	TextView titleTextView;
 
 	// 暂时的，为解决event继续dispatch而设
 	private boolean isLongPressed;
@@ -82,8 +84,11 @@ public class PostListActivity extends Activity implements OnClickListener,
 		
 		preloadSubject = new Subject(currentSubject);
 
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText(currentSubject.getTitle());
+		titleTextView = (TextView) findViewById(R.id.title);
+		
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setText(currentPageNo + "");
@@ -116,32 +121,35 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 	public void reloadPostList() {
 		listView.setAdapter(new PostListAdapter(this, inflater, postList));
-		totalPageNoTextView = (TextView) findViewById(R.id.textview_page_total_no);
-		totalPageNoTextView.setText(" / " + currentSubject.getTotalPageNo());
 
 		currentPageNo = currentSubject.getCurrentPageNo();
 		pageNoEditText.setText(currentPageNo + "");
 		listView.requestFocus();
 		
+		
 		isPreloadFinish = false;
 		preloadSubject = new Subject(currentSubject);
 
 		if (boardType == 0) {
+			goButton.setVisibility(View.VISIBLE);
+			pageNoEditText.setVisibility(View.VISIBLE);
 			firstButton.setText(R.string.first_page);
 			lastButton.setText(R.string.last_page);
 			preButton.setText(R.string.pre_page);
-			goButton.setVisibility(View.VISIBLE);
 			nextButton.setText(R.string.next_page);
-			pageNoEditText.setVisibility(View.VISIBLE);
-			totalPageNoTextView.setVisibility(View.VISIBLE);
+			
+			titleTextView.setText("[" + currentPageNo + "/" + currentSubject.getTotalPageNo() + "]" + currentSubject.getTitle());
+			
 		} else {
+			goButton.setVisibility(View.GONE);
+			pageNoEditText.setVisibility(View.GONE);
 			firstButton.setText(R.string.topic_first_page);
 			lastButton.setText(R.string.topic_all_page);
 			preButton.setText(R.string.topic_pre_page);
-			goButton.setVisibility(View.GONE);
 			nextButton.setText(R.string.topic_next_page);
-			pageNoEditText.setVisibility(View.GONE);
-			totalPageNoTextView.setVisibility(View.GONE);
+			
+			titleTextView.setText(currentSubject.getTitle());
+			
 		}
 		
 		if (boardType == 0) {

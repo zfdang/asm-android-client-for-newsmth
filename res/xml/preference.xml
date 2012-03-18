@@ -45,6 +45,8 @@
 			android:summary="@string/setting_touch_scroll_details" android:title="@string/setting_touch_scroll" />
 		<CheckBoxPreference android:key="hide_pin_subject"
 			android:summary="@string/setting_hide_pin_subject_details" android:title="@string/setting_hide_pin_subject" />
+		<CheckBoxPreference android:key="night_theme"
+			android:summary="@string/setting_night_theme_details" android:title="@string/setting_night_theme" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="其他">
 	    <!-- <CheckBoxPreference android:key="force_screen_portrait"

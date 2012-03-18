@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,6 +44,10 @@ public class SearchPostResultListActivity extends Activity {
 		subjectList = (List<Subject>) getIntent().getSerializableExtra(StringUtility.SUBJECT_LIST);
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
+		if (HomeActivity.application.isNightTheme()) {
+			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		}
+		
 		if (subjectList.size() > 0) {
 			titleTextView.setText("搜索结果");
 		}

@@ -60,18 +60,11 @@ public class MailListAdapter extends BaseAdapter {
 		dateTextView.setText(mail.getDateString());
 		
 		layout.setTag(mail);
-//		layout.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent();
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable(StringUtility.MAIL, (Mail)v.getTag());
-//				intent.putExtras(bundle);
-//				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
-//				activity.startActivity(intent);
-//			}
-//		});
+		
+		if (HomeActivity.application.isNightTheme()) {
+			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+		}
 
 		return layout;
 	}

@@ -145,7 +145,11 @@ public class StringUtility {
 				continue;
 			}
         	if (isMainbodyEnd) {
-        		attachList.add(line);
+        		Pattern aPattern = Pattern.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
+    			Matcher aMatcher = aPattern.matcher(line);
+    			if (aMatcher.find()) {
+    				attachList.add(line);
+    			}
         		continue;
 			}
             if (line.equals("--")) {

@@ -23,11 +23,11 @@
     <!-- 分区 -->
     <string name="board_autocomplete_tip">请输入分区名</string>
     <!-- 同主题下导航 -->
-    <string name="first_page">&lt;&lt;</string>
-    <string name="last_page">&gt;&gt;</string>
-	<string name="pre_page">\u0020&lt;\u0020\u0020</string>
-	<string name="next_page">\u0020\u0020&gt;\u0020</string>
-	<string name="go_page">GO</string>
+    <string name="first_page">\u0020\u0020首页\u0020</string>
+    <string name="last_page">\u0020\u0020末页\u0020</string>
+	<string name="pre_page">\u0020\u0020上页\u0020\u0020</string>
+	<string name="next_page">\u0020\u0020下页\u0020\u0020</string>
+	<string name="go_page">\u0020GO\u0020</string>
 	<!-- 普通模式下导航 -->
 	<string name="topic_first_page">主题首篇</string>
 	<string name="topic_pre_page">主题上篇</string>
@@ -103,6 +103,8 @@
 	<string name="setting_hide_pin_subject_details">不显示置底文章</string>
 	<string name="setting_touch_scroll">触屏翻页</string>
 	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
+	<string name="setting_night_theme">夜间模式</string>
+	<string name="setting_night_theme_details">启用夜间模式</string>
 	<string name="setting_force_screen_portrait">强制竖屏</string>
 	<string name="setting_force_screen_portrait_details">选中后不显示横屏界面</string>
 	<string name="setting_black_list">黑名单</string>

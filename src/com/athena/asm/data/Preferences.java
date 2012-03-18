@@ -20,6 +20,7 @@ public class Preferences {
 	public static final String FORCE_SCREEN_PORTRAIT = "force_screen_portrait";
 	public static final String TOUCH_SCROLL = "touch_scroll";
 	public static final String HIDE_PIN_SUBJECT = "hide_pin_subject";
+	public static final String NIGHT_THEME = "night_theme";
 	
 	public static final String PROMOTION_SHOW = "promotion_show";
 	public static final String BLACK_LIST = "black_list";
