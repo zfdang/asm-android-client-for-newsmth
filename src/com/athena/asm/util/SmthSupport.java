@@ -653,6 +653,10 @@ public class SmthSupport {
 			}
 		}
 		String content = crawler.getUrlContent(url);
+		if (content == null) {
+                    return null;
+                }
+		
 		Post post = new Post();
 		
 		post.setBoardID(subject.getBoardID());
@@ -811,7 +815,7 @@ public class SmthSupport {
 		}
 		String result =  crawler.getUrlContentFromMobile(url);
 		if (result == null || result.contains("指定的文章不存在或链接错误") || result.contains("您无权阅读此版面")) {
-			return Collections.emptyList();
+			return null;
 		}
 		
 		List<Post> postList = new ArrayList<Post>();

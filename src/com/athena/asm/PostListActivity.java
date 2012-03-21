@@ -1,5 +1,6 @@
 package com.athena.asm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -120,6 +121,21 @@ public class PostListActivity extends Activity implements OnClickListener,
 	}
 
 	public void reloadPostList() {
+	    if (postList == null) {
+	        postList = new ArrayList<Post>();
+                Post post = new Post();
+                post.setAuthor("guest");
+                post.setSubjectID(currentSubject.getSubjectID());
+                post.setBoardID(currentSubject.getBoardID());
+                post.setBoard(currentSubject.getBoardEngName());
+                post.setContent("无法加载该贴");
+                postList.add(post);
+                firstButton.setEnabled(false);
+                preButton.setEnabled(false);
+                nextButton.setEnabled(false);
+                lastButton.setEnabled(false);
+            }
+	    
 		listView.setAdapter(new PostListAdapter(this, inflater, postList));
 
 		currentPageNo = currentSubject.getCurrentPageNo();

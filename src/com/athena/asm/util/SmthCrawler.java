@@ -410,6 +410,10 @@ public class SmthCrawler {
 				post.setContent((String) objects[0]);
 				post.setDate((java.util.Date) objects[1]);
 			}
+			
+			if (content == null) {
+                            return;
+                        }
 
 			Matcher infoMatcher = infoPattern.matcher(content);
 			if (infoMatcher.find()) {

@@ -62,24 +62,26 @@ public class PostListAdapter extends BaseAdapter {
 				.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
-		String contentString = "";
-		LinearLayout linearLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
-		for (int i = 0; i < attachments.size(); i++) {
-			String attachUrl = attachments.get(i).getAttachUrl();
-			contentString += "<a href='" + attachUrl
-					+ "'>" + attachments.get(i).getName() + "</a><br/><br/>";
-			String fileType = attachments.get(i).getName().toLowerCase();
-			if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
-					|| fileType.endsWith("bmp") || fileType.endsWith("gif")) {
-				//Log.d("image", attachUrl);
-				ImageView imageView = new ImageView(activity);
-				LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				imageView.setLayoutParams(layoutParams);
-				linearLayout.addView(imageView);
-				UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60000);
-			}
-		}
-		attachTextView.setText(Html.fromHtml(contentString));
+		if (attachments != null) {
+		    String contentString = "";
+	                LinearLayout linearLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
+	                for (int i = 0; i < attachments.size(); i++) {
+	                        String attachUrl = attachments.get(i).getAttachUrl();
+	                        contentString += "<a href='" + attachUrl
+	                                        + "'>" + attachments.get(i).getName() + "</a><br/><br/>";
+	                        String fileType = attachments.get(i).getName().toLowerCase();
+	                        if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
+	                                        || fileType.endsWith("bmp") || fileType.endsWith("gif")) {
+	                                //Log.d("image", attachUrl);
+	                                ImageView imageView = new ImageView(activity);
+	                                LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	                                imageView.setLayoutParams(layoutParams);
+	                                linearLayout.addView(imageView);
+	                                UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60000);
+	                        }
+	                }
+	                attachTextView.setText(Html.fromHtml(contentString));
+                }
 
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 		dateTextView.setText(post.getDate().toLocaleString());
