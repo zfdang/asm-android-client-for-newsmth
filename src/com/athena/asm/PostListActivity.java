@@ -12,6 +12,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -36,7 +38,7 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadPostTask;
 
 public class PostListActivity extends Activity implements OnClickListener,
-		OnTouchListener, OnLongClickListener {
+		OnTouchListener, OnLongClickListener, OnGestureListener {
 
 	public SmthSupport smthSupport;
 
@@ -54,17 +56,17 @@ public class PostListActivity extends Activity implements OnClickListener,
 	Button preButton;
 	Button goButton;
 	Button nextButton;
-	
+
 	TextView titleTextView;
 
-	// 暂时的，为解决event继续dispatch而设
-	private boolean isLongPressed;
 	private int screenHeight;
 	private ListView listView;
-	
+
 	public boolean isPreloadFinish = false;
 	public List<Post> preloadPostList;
 	public Subject preloadSubject;
+
+	private GestureDetector mGestureDetector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +78,20 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 		smthSupport = SmthSupport.getInstance();
 
-		this.isLongPressed = false;
 		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 
 		currentSubject = (Subject) getIntent().getSerializableExtra(
 				StringUtility.SUBJECT);
 		currentPageNo = currentSubject.getCurrentPageNo();
-		
+
 		preloadSubject = new Subject(currentSubject);
 
 		titleTextView = (TextView) findViewById(R.id.title);
-		
+
 		if (HomeActivity.application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+			((LinearLayout) titleTextView.getParent().getParent())
+					.setBackgroundColor(getResources().getColor(
+							R.color.body_background_night));
 		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
@@ -109,11 +112,14 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 		boardType = getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0);
 
-		LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, 0, false, false);
+		mGestureDetector = new GestureDetector(this);
+
+		LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject,
+				boardType, 0, false, false);
 		loadPostTask.execute();
 		// reloadPostList();
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// do nothing to stop onCreated
@@ -121,28 +127,27 @@ public class PostListActivity extends Activity implements OnClickListener,
 	}
 
 	public void reloadPostList() {
-	    if (postList == null) {
-	        postList = new ArrayList<Post>();
-                Post post = new Post();
-                post.setAuthor("guest");
-                post.setSubjectID(currentSubject.getSubjectID());
-                post.setBoardID(currentSubject.getBoardID());
-                post.setBoard(currentSubject.getBoardEngName());
-                post.setContent("无法加载该贴");
-                postList.add(post);
-                firstButton.setEnabled(false);
-                preButton.setEnabled(false);
-                nextButton.setEnabled(false);
-                lastButton.setEnabled(false);
-            }
-	    
+		if (postList == null) {
+			postList = new ArrayList<Post>();
+			Post post = new Post();
+			post.setAuthor("guest");
+			post.setSubjectID(currentSubject.getSubjectID());
+			post.setBoardID(currentSubject.getBoardID());
+			post.setBoard(currentSubject.getBoardEngName());
+			post.setContent("无法加载该贴");
+			postList.add(post);
+			firstButton.setEnabled(false);
+			preButton.setEnabled(false);
+			nextButton.setEnabled(false);
+			lastButton.setEnabled(false);
+		}
+
 		listView.setAdapter(new PostListAdapter(this, inflater, postList));
 
 		currentPageNo = currentSubject.getCurrentPageNo();
 		pageNoEditText.setText(currentPageNo + "");
 		listView.requestFocus();
-		
-		
+
 		isPreloadFinish = false;
 		preloadSubject = new Subject(currentSubject);
 
@@ -153,9 +158,11 @@ public class PostListActivity extends Activity implements OnClickListener,
 			lastButton.setText(R.string.last_page);
 			preButton.setText(R.string.pre_page);
 			nextButton.setText(R.string.next_page);
-			
-			titleTextView.setText("[" + currentPageNo + "/" + currentSubject.getTotalPageNo() + "]" + currentSubject.getTitle());
-			
+
+			titleTextView.setText("[" + currentPageNo + "/"
+					+ currentSubject.getTotalPageNo() + "]"
+					+ currentSubject.getTitle());
+
 		} else {
 			goButton.setVisibility(View.GONE);
 			pageNoEditText.setVisibility(View.GONE);
@@ -163,21 +170,22 @@ public class PostListActivity extends Activity implements OnClickListener,
 			lastButton.setText(R.string.topic_all_page);
 			preButton.setText(R.string.topic_pre_page);
 			nextButton.setText(R.string.topic_next_page);
-			
+
 			titleTextView.setText(currentSubject.getTitle());
-			
+
 		}
-		
+
 		if (boardType == 0) {
 			int nextPage = currentPageNo + 1;
 			if (nextPage <= currentSubject.getTotalPageNo()) {
 				preloadSubject.setCurrentPageNo(nextPage);
-				LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 0, true, false);
+				LoadPostTask loadPostTask = new LoadPostTask(this,
+						preloadSubject, boardType, 0, true, false);
 				loadPostTask.execute();
 			}
-		}
-		else {
-			LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject, boardType, 3, true, false);
+		} else {
+			LoadPostTask loadPostTask = new LoadPostTask(this, preloadSubject,
+					boardType, 3, true, false);
 			loadPostTask.execute();
 		}
 	}
@@ -216,7 +224,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 	public void onClick(View view) {
 		boolean isNext = false;
 		if (boardType == 0) { // 同主题导航
-			
+
 			if (view.getId() == R.id.btn_first_page) {
 				if (currentPageNo == 1) {
 					return;
@@ -254,11 +262,12 @@ public class PostListActivity extends Activity implements OnClickListener,
 				((View) view.getParent()).requestFocus();
 			}
 
-			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, 0, false, isNext);
+			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject,
+					boardType, 0, false, isNext);
 			loadPostTask.execute();
 		} else {
 			int action = 0;
-			//int startNumber = 0;
+			// int startNumber = 0;
 			if (view.getId() == R.id.btn_first_page) {
 				action = 1;
 			} else if (view.getId() == R.id.btn_pre_page) {
@@ -268,11 +277,13 @@ public class PostListActivity extends Activity implements OnClickListener,
 				isNext = true;
 			} else if (view.getId() == R.id.btn_last_page) {
 				boardType = 0;
-				//startNumber = Integer.parseInt(currentSubject.getSubjectID());
+				// startNumber =
+				// Integer.parseInt(currentSubject.getSubjectID());
 				currentSubject.setSubjectID(currentSubject.getTopicSubjectID());
 				currentSubject.setCurrentPageNo(1);
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject, boardType, action, false, isNext);
+			LoadPostTask loadPostTask = new LoadPostTask(this, currentSubject,
+					boardType, action, false, isNext);
 			loadPostTask.execute();
 		}
 	}
@@ -291,32 +302,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		if (HomeActivity.application.isTouchScroll()) {
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				isLongPressed = false;
-			}
-			if (event.getAction() == MotionEvent.ACTION_UP && !isLongPressed) {
-				int touchY = (int) event.getRawY();
-				float scale = (float) (screenHeight / 800.0);
-				if (touchY > 60 * scale && touchY < 390 * scale) {
-//					Log.d("mouse", "up");
-//					if (v.getId() != R.id.PostListLayout) {
-//						setListOffset(-1);
-//					} else {
-//						setListOffset(-1);
-//					}
-					setListOffset(-1);
-				} else if (touchY > 410 * scale && touchY < 740 * scale) {
-//					Log.d("mouse", "down");
-//					if (v.getId() != R.id.PostListLayout) {
-//						setListOffset(1);
-//					} else {
-//						setListOffset(1);
-//					}
-					setListOffset(1);
-				}
-			}
-		}
+		mGestureDetector.onTouchEvent(event);
 		return false;
 
 	}
@@ -338,7 +324,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 					getString(R.string.post_query_author),
 					getString(R.string.post_copy_author),
 					getString(R.string.post_copy_content),
-					getString(R.string.post_foward_self)};
+					getString(R.string.post_foward_self) };
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.post_alert_title);
 			builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -389,16 +375,14 @@ public class PostListActivity extends Activity implements OnClickListener,
 					case 4:
 						ClipboardManager clip2 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 						clip2.setText(post.getTextContent());
-						Toast.makeText(getApplicationContext(),
-								"帖子内容已复制到剪贴板",
+						Toast.makeText(getApplicationContext(), "帖子内容已复制到剪贴板",
 								Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
 						boolean result = smthSupport.forwardPostToMailBox(post);
 						if (result) {
 							Toast.makeText(getApplicationContext(),
-									"已转寄到自己信箱中",
-									Toast.LENGTH_SHORT).show();
+									"已转寄到自己信箱中", Toast.LENGTH_SHORT).show();
 						}
 						break;
 					default:
@@ -410,7 +394,63 @@ public class PostListActivity extends Activity implements OnClickListener,
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
-		isLongPressed = true;
 		return true;
 	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		if (HomeActivity.application.isTouchScroll()) {
+			int touchY = (int) e.getRawY();
+			float scale = (float) (screenHeight / 800.0);
+			if (touchY > 60 * scale && touchY < 390 * scale) {
+				setListOffset(-1);
+			} else if (touchY > 410 * scale && touchY < 740 * scale) {
+				setListOffset(1);
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		final int flingMinXDistance = 100, flingMaxYDistance = 100;
+		if (e1.getX() - e2.getX() > flingMinXDistance
+				&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
+			// Fling left
+			Toast.makeText(this, "下一页", Toast.LENGTH_SHORT).show();
+			nextButton.performClick();
+		} else if (e2.getX() - e1.getX() > flingMinXDistance
+				&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
+			// Fling right
+			Toast.makeText(this, "上一页", Toast.LENGTH_SHORT).show();
+			preButton.performClick();
+		}
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
