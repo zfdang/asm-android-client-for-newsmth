@@ -37,6 +37,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 
 	public static final int TYPE_POST = 0;
 	public static final int TYPE_MAIL = 1;
+	public static final int TYPE_POST_EDIT = 2;
 
 	private EditText titleEditText;
 	private EditText useridEditText;
@@ -82,8 +83,9 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		attachButton.setOnClickListener(this);
 
 		toHandleUrl = getIntent().getStringExtra(StringUtility.URL);
-		writeType = getIntent().getIntExtra(StringUtility.WRITE_TYPE, 0);
-		if (writeType == 0) {
+		writeType = getIntent()
+				.getIntExtra(StringUtility.WRITE_TYPE, TYPE_POST);
+		if (writeType == TYPE_POST) {
 			((LinearLayout) useridEditText.getParent())
 					.setVisibility(View.GONE);
 			((LinearLayout) useridEditText.getParent()).removeView(sendButton);
@@ -91,10 +93,23 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			layout.addView(sendButton);
 			titleTextView.setText("写帖子");
 			new LoadWritePostTask(this, TYPE_POST).execute();
-		} else {
+		} else if (writeType == TYPE_MAIL) {
 			attachButton.setVisibility(View.GONE);
 			titleTextView.setText("写  信");
 			new LoadWritePostTask(this, TYPE_MAIL).execute();
+		} else if (writeType == TYPE_POST_EDIT) {
+			((LinearLayout) useridEditText.getParent())
+					.setVisibility(View.GONE);
+			((LinearLayout) useridEditText.getParent()).removeView(sendButton);
+			LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
+			layout.addView(sendButton);
+			titleTextView.setText("修改帖子");
+			
+			postTitle = getIntent().getStringExtra(StringUtility.TITLE);
+			titleEditText.setText(postTitle);
+			sigSpinner.setEnabled(false);
+			attachButton.setEnabled(false);
+			new LoadWritePostTask(this, TYPE_POST_EDIT).execute();
 		}
 	}
 
@@ -165,6 +180,21 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		}
 
 	}
+	
+	public void parsePostEditToHandleUrl(String contentString) {
+
+		if (contentString == null)
+			return;
+		// function replyForm(board,reid,title,att,signum,sig,ano,outgo,lsave)
+		Pattern pattern = Pattern
+				.compile("<textarea[^<>]+>([^<>]+)</textarea>");
+		Matcher matcher = pattern.matcher(contentString);
+		if (matcher.find()) {
+			postContent = matcher.group(1);
+			postContent = postContent.replace("\n", "\n<br/>");
+			contentEditText.setText(Html.fromHtml(postContent));
+		}
+	}
 
 	public void parseMailToHandleUrl(String contentString) {
 		Map<String, String> paramsMap = StringUtility.getUrlParams(toHandleUrl);
@@ -221,7 +251,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 			}
 		});
-		if (writeType == 0) {
+		if (writeType == TYPE_POST) {
 			Intent i = new Intent();
 
 			Bundle b = new Bundle();
@@ -284,12 +314,15 @@ public class WritePostActivity extends Activity implements OnClickListener,
 				@Override
 				public void run() {
 					boolean result = false;
-					if (writeType == 0) {
+					if (writeType == TYPE_POST) {
 						result = smthSupport.sendPost(postUrl, postTitle,
-								postContent, sigParams);
-					} else {
+								postContent, sigParams, false);
+					} else if (writeType == TYPE_MAIL) {
 						result = smthSupport.sendMail(postUrl, postTitle,
 								userid, num, dir, file, sigParams, postContent);
+					} else if (writeType == TYPE_POST_EDIT) {
+						result = smthSupport.sendPost(postUrl, postTitle,
+								postContent, sigParams, true);
 					}
 					if (!result) {
 						showFailedToast();

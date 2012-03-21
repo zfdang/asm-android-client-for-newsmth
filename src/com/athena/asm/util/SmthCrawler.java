@@ -88,8 +88,8 @@ public class SmthCrawler {
 		// 10000);
 		// httpClient.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT,
 		// 10000);
-		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,
-				true);
+		httpClient.getParams()
+				.setParameter(ClientPNames.HANDLE_REDIRECTS, true);
 
 		threadNum = 10;
 		execService = Executors.newFixedThreadPool(threadNum);
@@ -133,12 +133,13 @@ public class SmthCrawler {
 		}
 		return true;
 	}
-	
+
 	public boolean uploadAttachFile(File file) {
-		HttpPost httpPost = new HttpPost("http://www.newsmth.net/bbsupload.php?act=add");
+		HttpPost httpPost = new HttpPost(
+				"http://www.newsmth.net/bbsupload.php?act=add");
 		MultipartEntity entity = new MultipartEntity();
 
-//		entity.addPart(file.getName(), new FileBody(file));
+		// entity.addPart(file.getName(), new FileBody(file));
 		try {
 			entity.addPart("attachfile0", new FileBody(file));
 			entity.addPart("counter", new StringBody("1"));
@@ -161,13 +162,20 @@ public class SmthCrawler {
 		return true;
 	}
 
-	public boolean sendPost(String postUrl, String postTitle, 
-	        String postContent, String signature) {
-		HttpPost httpPost = new HttpPost(postUrl);
+	public boolean sendPost(String postUrl, String postTitle,
+			String postContent, String signature, boolean isEdit) {
+		
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("title", postTitle));
 		formparams.add(new BasicNameValuePair("text", postContent));
-		formparams.add(new BasicNameValuePair("signature", signature));
+		if (isEdit) {
+			postUrl += "&do";
+		}
+		else {
+			formparams.add(new BasicNameValuePair("signature", signature));
+		}
+		
+		HttpPost httpPost = new HttpPost(postUrl);
 		UrlEncodedFormEntity entity;
 		try {
 			entity = new UrlEncodedFormEntity(formparams, "GBK");
@@ -180,7 +188,7 @@ public class SmthCrawler {
 			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity e = response.getEntity();
 			String content = EntityUtils.toString(e, smthEncoding);
-			if (!content.contains("发文成功")) {
+			if (!content.contains("成功")) {
 				return false;
 			}
 		} catch (IOException e) {
@@ -188,9 +196,10 @@ public class SmthCrawler {
 		}
 		return true;
 	}
-	
-	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, 
-	        String dir, String file, String signature, String mailContent) {
+
+	public boolean sendMail(String mailUrl, String mailTitle, String userid,
+			String num, String dir, String file, String signature,
+			String mailContent) {
 		HttpPost httpPost = new HttpPost(mailUrl);
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("title", mailTitle));
@@ -201,7 +210,7 @@ public class SmthCrawler {
 		formparams.add(new BasicNameValuePair("signature", signature));
 		formparams.add(new BasicNameValuePair("backup", "1"));
 		formparams.add(new BasicNameValuePair("text", mailContent));
-		
+
 		UrlEncodedFormEntity entity;
 		try {
 			entity = new UrlEncodedFormEntity(formparams, "GBK");
@@ -222,25 +231,20 @@ public class SmthCrawler {
 		}
 		return true;
 	}
-	
-	/*public String getRedirectUrl(String url) {
-		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,false);
-		HttpGet httpget = new HttpGet(url);
-		httpget.setHeader("User-Agent", userAgent);
-		httpget.addHeader("Accept-Encoding", "gzip, deflate");
-		String newUrl;
-		try {
-			HttpResponse response = httpClient.execute(httpget);
-			Header locationHeader = response.getLastHeader("Location");
-			newUrl = locationHeader.getValue();
-		} catch (IOException e) {
-			Log.d("com.athena.asm", "get url failed,", e);
-			newUrl = null;
-		}
-		httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,true);
-		return newUrl;
-	}*/
-	
+
+	/*
+	 * public String getRedirectUrl(String url) {
+	 * httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,false);
+	 * HttpGet httpget = new HttpGet(url); httpget.setHeader("User-Agent",
+	 * userAgent); httpget.addHeader("Accept-Encoding", "gzip, deflate"); String
+	 * newUrl; try { HttpResponse response = httpClient.execute(httpget); Header
+	 * locationHeader = response.getLastHeader("Location"); newUrl =
+	 * locationHeader.getValue(); } catch (IOException e) {
+	 * Log.d("com.athena.asm", "get url failed,", e); newUrl = null; }
+	 * httpClient.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS,true);
+	 * return newUrl; }
+	 */
+
 	public String getPostRequestResult(String url, List<NameValuePair> params) {
 		HttpPost httpPost = new HttpPost(url);
 		UrlEncodedFormEntity entity;
@@ -260,7 +264,7 @@ public class SmthCrawler {
 			return null;
 		}
 	}
-	
+
 	public String fetchContent(String url, String encoding) {
 		HttpGet httpget = new HttpGet(url);
 		httpget.setHeader("User-Agent", userAgent);
@@ -282,8 +286,7 @@ public class SmthCrawler {
 			if (isgzip) {
 				InputStream is = entity.getContent();
 				BufferedReader br = new java.io.BufferedReader(
-						new InputStreamReader(new GZIPInputStream(is),
-								encoding));
+						new InputStreamReader(new GZIPInputStream(is), encoding));
 				String line;
 				StringBuilder sb = new StringBuilder();
 				while ((line = br.readLine()) != null) {
@@ -301,7 +304,7 @@ public class SmthCrawler {
 		}
 		return content;
 	}
-	
+
 	public String getUrlContentFromMobile(String url) {
 		return fetchContent(url, mobileSMTHEncoding);
 	}
@@ -315,7 +318,8 @@ public class SmthCrawler {
 			return;
 		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
 				Pattern.DOTALL);
-		Pattern infoPattern = Pattern.compile("conWriter\\(\\d+, '[^']+', \\d+, (\\d+), (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
+		Pattern infoPattern = Pattern
+				.compile("conWriter\\(\\d+, '[^']+', \\d+, (\\d+), (\\d+), (\\d+), '[^']+', (\\d+), \\d+,'([^']+)'\\);");
 		List<Future<?>> futureList = new ArrayList<Future<?>>(postList.size());
 		for (Post post : postList) {
 			Future<?> future = execService.submit(new PostContentCrawler(post,
@@ -410,10 +414,10 @@ public class SmthCrawler {
 				post.setContent((String) objects[0]);
 				post.setDate((java.util.Date) objects[1]);
 			}
-			
+
 			if (content == null) {
-                            return;
-                        }
+				return;
+			}
 
 			Matcher infoMatcher = infoPattern.matcher(content);
 			if (infoMatcher.find()) {

@@ -54,6 +54,7 @@
 	<string name="post_query_author">查看作者信息</string>
 	<string name="post_copy_content">复制帖子内容</string>
 	<string name="post_foward_self">转寄到自己信箱</string>
+	<string name="post_edit_post">修改文章</string>
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
 	 <!-- search post相关 -->

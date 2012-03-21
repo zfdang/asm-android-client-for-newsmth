@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -319,15 +320,23 @@ public class PostListActivity extends Activity implements OnClickListener,
 			final String authorID = (String) ((TextView) relativeLayout
 					.findViewById(R.id.AuthorID)).getText();
 			final Post post = (Post) relativeLayout.getTag();
-			final String[] items = { getString(R.string.post_reply_post),
-					getString(R.string.post_reply_mail),
-					getString(R.string.post_query_author),
-					getString(R.string.post_copy_author),
-					getString(R.string.post_copy_content),
-					getString(R.string.post_foward_self) };
+			List<String> itemList = new ArrayList<String>();
+			itemList.add(getString(R.string.post_reply_post));
+			itemList.add(getString(R.string.post_reply_mail));
+			itemList.add(getString(R.string.post_query_author));
+			itemList.add(getString(R.string.post_copy_author));
+			itemList.add(getString(R.string.post_copy_content));
+			itemList.add(getString(R.string.post_foward_self));
+			if (post.getAuthor().equals(smthSupport.userid)) {
+				itemList.add(getString(R.string.post_edit_post));
+			}
+			final String[] items = new String[itemList.size()];
+			itemList.toArray(items);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.post_alert_title);
-			builder.setItems(items, new DialogInterface.OnClickListener() {
+			builder.setAdapter(new ArrayAdapter(PostListActivity.this,
+                    R.layout.alert_narrow_item, items), new DialogInterface.OnClickListener() {
+			//builder.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Intent intent;
 					switch (item) {
@@ -340,7 +349,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 								"http://www.newsmth.net/bbspst.php?board="
 										+ post.getBoard() + "&reid="
 										+ post.getSubjectID());
-						intent.putExtra(StringUtility.WRITE_TYPE, 0);
+						intent.putExtra(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST);
 						intent.putExtra(StringUtility.IS_REPLY, true);
 						// activity.startActivity(intent);
 						startActivityForResult(intent, 0);
@@ -385,6 +394,18 @@ public class PostListActivity extends Activity implements OnClickListener,
 									"已转寄到自己信箱中", Toast.LENGTH_SHORT).show();
 						}
 						break;
+					case 6:
+						intent = new Intent();
+						intent.setClassName("com.athena.asm",
+								"com.athena.asm.WritePostActivity");
+						intent.putExtra(
+								StringUtility.URL,
+								"http://www.newsmth.net/bbsedit.php?board="
+										+ post.getBoard() + "&id="
+										+ post.getSubjectID() + "&ftype=");
+						intent.putExtra(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST_EDIT);
+						intent.putExtra(StringUtility.TITLE, post.getTitle().replace("主题:", ""));
+						startActivityForResult(intent, 0);
 					default:
 						break;
 					}

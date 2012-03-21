@@ -28,7 +28,7 @@ import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
 
 public class SmthSupport {
-	private String userid;
+	public String userid;
 	private String passwd;
 	private boolean loginned;
 	SmthCrawler crawler;
@@ -90,8 +90,8 @@ public class SmthSupport {
 		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file, signature, mailContent);
 	}
 
-	public boolean sendPost(String postUrl, String postTitle, String postContent, String signature) {
-		return crawler.sendPost(postUrl, postTitle, postContent, signature);
+	public boolean sendPost(String postUrl, String postTitle, String postContent, String signature, boolean isEdit) {
+		return crawler.sendPost(postUrl, postTitle, postContent, signature, isEdit);
 	}
 
 	public String getUrlContent(String urlString) {

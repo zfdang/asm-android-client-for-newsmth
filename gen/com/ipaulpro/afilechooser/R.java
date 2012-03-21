@@ -252,52 +252,53 @@ public final class R {
         public static final int writePost=0x7f0a001d;
     }
     public static final class layout {
-        public static final int attach_list=0x7f030000;
-        public static final int attach_list_item=0x7f030001;
-        public static final int category=0x7f030002;
-        public static final int category_list_item=0x7f030003;
-        public static final int category_list_section_header=0x7f030004;
-        public static final int explorer=0x7f030005;
-        public static final int favorite=0x7f030006;
-        public static final int favorite_list_item=0x7f030007;
-        public static final int favorite_list_section_header=0x7f030008;
-        public static final int file=0x7f030009;
-        public static final int footer=0x7f03000a;
-        public static final int guidance=0x7f03000b;
-        public static final int guidance_list_item=0x7f03000c;
-        public static final int guidance_list_section_header=0x7f03000d;
-        public static final int header=0x7f03000e;
-        public static final int header_post_list=0x7f03000f;
-        public static final int header_subject_list=0x7f030010;
-        public static final int home=0x7f030011;
-        public static final int login=0x7f030012;
-        public static final int mail=0x7f030013;
-        public static final int mail_list_item=0x7f030014;
-        public static final int mail_list_section_header=0x7f030015;
-        public static final int post_list=0x7f030016;
-        public static final int post_list_footer=0x7f030017;
-        public static final int post_list_item=0x7f030018;
-        public static final int post_reply=0x7f030019;
-        public static final int profile=0x7f03001a;
-        public static final int pull_to_refresh_header=0x7f03001b;
-        public static final int search_post=0x7f03001c;
-        public static final int search_post_result_list=0x7f03001d;
-        public static final int subject_list=0x7f03001e;
-        public static final int subject_list_item=0x7f03001f;
-        public static final int write_mail=0x7f030020;
+        public static final int alert_narrow_item=0x7f030000;
+        public static final int attach_list=0x7f030001;
+        public static final int attach_list_item=0x7f030002;
+        public static final int category=0x7f030003;
+        public static final int category_list_item=0x7f030004;
+        public static final int category_list_section_header=0x7f030005;
+        public static final int explorer=0x7f030006;
+        public static final int favorite=0x7f030007;
+        public static final int favorite_list_item=0x7f030008;
+        public static final int favorite_list_section_header=0x7f030009;
+        public static final int file=0x7f03000a;
+        public static final int footer=0x7f03000b;
+        public static final int guidance=0x7f03000c;
+        public static final int guidance_list_item=0x7f03000d;
+        public static final int guidance_list_section_header=0x7f03000e;
+        public static final int header=0x7f03000f;
+        public static final int header_post_list=0x7f030010;
+        public static final int header_subject_list=0x7f030011;
+        public static final int home=0x7f030012;
+        public static final int login=0x7f030013;
+        public static final int mail=0x7f030014;
+        public static final int mail_list_item=0x7f030015;
+        public static final int mail_list_section_header=0x7f030016;
+        public static final int post_list=0x7f030017;
+        public static final int post_list_footer=0x7f030018;
+        public static final int post_list_item=0x7f030019;
+        public static final int post_reply=0x7f03001a;
+        public static final int profile=0x7f03001b;
+        public static final int pull_to_refresh_header=0x7f03001c;
+        public static final int search_post=0x7f03001d;
+        public static final int search_post_result_list=0x7f03001e;
+        public static final int subject_list=0x7f03001f;
+        public static final int subject_list_item=0x7f030020;
+        public static final int write_mail=0x7f030021;
     }
     public static final class string {
-        public static final int about_content=0x7f070040;
+        public static final int about_content=0x7f070041;
         /**  关于 
          */
-        public static final int about_title=0x7f07003f;
+        public static final int about_title=0x7f070040;
         public static final int app_name=0x7f070000;
-        public static final int attach_add=0x7f07003c;
-        public static final int attach_delete=0x7f07003e;
+        public static final int attach_add=0x7f07003d;
+        public static final int attach_delete=0x7f07003f;
         /**  附件 
          */
-        public static final int attach_resize=0x7f07003b;
-        public static final int attach_upload=0x7f07003d;
+        public static final int attach_resize=0x7f07003c;
+        public static final int attach_upload=0x7f07003e;
         /**  分区 
          */
         public static final int board_autocomplete_tip=0x7f070012;
@@ -332,9 +333,10 @@ public final class R {
         /**  post相关 
          */
         public static final int post_alert_title=0x7f070027;
-        public static final int post_attach=0x7f07002f;
+        public static final int post_attach=0x7f070030;
         public static final int post_copy_author=0x7f07002a;
         public static final int post_copy_content=0x7f07002c;
+        public static final int post_edit_post=0x7f07002e;
         public static final int post_foward_self=0x7f07002d;
         public static final int post_query_author=0x7f07002b;
         public static final int post_reply_mail=0x7f070029;
@@ -349,54 +351,54 @@ public final class R {
         public static final int profile_send_mail=0x7f07001c;
         /**  下拉刷新 
          */
-        public static final int pull_to_refresh_pull_label=0x7f07005f;
-        public static final int pull_to_refresh_refreshing_label=0x7f070061;
-        public static final int pull_to_refresh_release_label=0x7f070060;
-        public static final int pull_to_refresh_tap_label=0x7f070062;
+        public static final int pull_to_refresh_pull_label=0x7f070060;
+        public static final int pull_to_refresh_refreshing_label=0x7f070062;
+        public static final int pull_to_refresh_release_label=0x7f070061;
+        public static final int pull_to_refresh_tap_label=0x7f070063;
         /**  search post相关 
          */
-        public static final int search_tip1=0x7f070030;
-        public static final int search_tip10=0x7f070039;
-        public static final int search_tip11=0x7f07003a;
-        public static final int search_tip2=0x7f070031;
-        public static final int search_tip3=0x7f070032;
-        public static final int search_tip4=0x7f070033;
-        public static final int search_tip5=0x7f070034;
-        public static final int search_tip6=0x7f070035;
-        public static final int search_tip7=0x7f070036;
-        public static final int search_tip8=0x7f070037;
-        public static final int search_tip9=0x7f070038;
+        public static final int search_tip1=0x7f070031;
+        public static final int search_tip10=0x7f07003a;
+        public static final int search_tip11=0x7f07003b;
+        public static final int search_tip2=0x7f070032;
+        public static final int search_tip3=0x7f070033;
+        public static final int search_tip4=0x7f070034;
+        public static final int search_tip5=0x7f070035;
+        public static final int search_tip6=0x7f070036;
+        public static final int search_tip7=0x7f070037;
+        public static final int search_tip8=0x7f070038;
+        public static final int search_tip9=0x7f070039;
         public static final int select_file=0x7f070001;
-        public static final int setting_auto_login=0x7f070045;
-        public static final int setting_auto_login_details=0x7f070046;
-        public static final int setting_auto_optimize=0x7f07004f;
-        public static final int setting_auto_optimize_details=0x7f070050;
-        public static final int setting_black_list=0x7f07005b;
-        public static final int setting_black_list_details=0x7f07005c;
-        public static final int setting_default_board_type=0x7f070049;
-        public static final int setting_default_board_type_details=0x7f07004a;
-        public static final int setting_default_tab=0x7f070047;
-        public static final int setting_default_tab_details=0x7f070048;
-        public static final int setting_force_screen_portrait=0x7f070059;
-        public static final int setting_force_screen_portrait_details=0x7f07005a;
-        public static final int setting_guidance_font_size=0x7f07004b;
-        public static final int setting_guidance_second_font_size=0x7f07004c;
-        public static final int setting_hide_pin_subject=0x7f070053;
-        public static final int setting_hide_pin_subject_details=0x7f070054;
-        public static final int setting_image_size_threshold=0x7f070051;
-        public static final int setting_image_size_threshold_details=0x7f070052;
-        public static final int setting_night_theme=0x7f070057;
-        public static final int setting_night_theme_details=0x7f070058;
-        public static final int setting_post_font_size=0x7f07004e;
-        public static final int setting_promotion_show=0x7f07005d;
-        public static final int setting_promotion_show_details=0x7f07005e;
+        public static final int setting_auto_login=0x7f070046;
+        public static final int setting_auto_login_details=0x7f070047;
+        public static final int setting_auto_optimize=0x7f070050;
+        public static final int setting_auto_optimize_details=0x7f070051;
+        public static final int setting_black_list=0x7f07005c;
+        public static final int setting_black_list_details=0x7f07005d;
+        public static final int setting_default_board_type=0x7f07004a;
+        public static final int setting_default_board_type_details=0x7f07004b;
+        public static final int setting_default_tab=0x7f070048;
+        public static final int setting_default_tab_details=0x7f070049;
+        public static final int setting_force_screen_portrait=0x7f07005a;
+        public static final int setting_force_screen_portrait_details=0x7f07005b;
+        public static final int setting_guidance_font_size=0x7f07004c;
+        public static final int setting_guidance_second_font_size=0x7f07004d;
+        public static final int setting_hide_pin_subject=0x7f070054;
+        public static final int setting_hide_pin_subject_details=0x7f070055;
+        public static final int setting_image_size_threshold=0x7f070052;
+        public static final int setting_image_size_threshold_details=0x7f070053;
+        public static final int setting_night_theme=0x7f070058;
+        public static final int setting_night_theme_details=0x7f070059;
+        public static final int setting_post_font_size=0x7f07004f;
+        public static final int setting_promotion_show=0x7f07005e;
+        public static final int setting_promotion_show_details=0x7f07005f;
         /**  设置 
          */
-        public static final int setting_remember_user=0x7f070043;
-        public static final int setting_remember_user_details=0x7f070044;
-        public static final int setting_subject_font_size=0x7f07004d;
-        public static final int setting_touch_scroll=0x7f070055;
-        public static final int setting_touch_scroll_details=0x7f070056;
+        public static final int setting_remember_user=0x7f070044;
+        public static final int setting_remember_user_details=0x7f070045;
+        public static final int setting_subject_font_size=0x7f07004e;
+        public static final int setting_touch_scroll=0x7f070056;
+        public static final int setting_touch_scroll_details=0x7f070057;
         public static final int title_category=0x7f070024;
         public static final int title_favorite=0x7f070022;
         /**  标题栏文字 
@@ -411,11 +413,11 @@ public final class R {
         public static final int topic_first_page=0x7f070018;
         public static final int topic_next_page=0x7f07001a;
         public static final int topic_pre_page=0x7f070019;
-        public static final int update_info=0x7f070042;
+        public static final int update_info=0x7f070043;
         /**  更新 
          */
-        public static final int update_title=0x7f070041;
-        public static final int write_label_post=0x7f07002e;
+        public static final int update_title=0x7f070042;
+        public static final int write_label_post=0x7f07002f;
     }
     public static final class style {
         public static final int Button=0x7f080014;
