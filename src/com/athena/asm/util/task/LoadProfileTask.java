@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.ViewProfileActivity;
 import com.athena.asm.data.Profile;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity = null;
@@ -14,12 +15,15 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	private Profile profile;
 	private int step;
 	private int type;
+	
+	private HomeViewModel m_viewModel;
 
-	public LoadProfileTask(HomeActivity activity, String userID, int step) {
+	public LoadProfileTask(HomeActivity activity, HomeViewModel viewModel, String userID, int step) {
 		this.homeActivity = activity;
 		this.userID = userID;
 		this.step = step;
 		type = 0;
+		m_viewModel = viewModel;
 	}
 	
 	public LoadProfileTask(ViewProfileActivity activity, String userID, int step) {
@@ -46,10 +50,7 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		if (type == 0) {
-			profile = homeActivity.smthSupport.getProfile(userID);
-			if (userID.equals(homeActivity.loginUserID)) {
-				homeActivity.currentProfile = profile;
-			}
+			profile = m_viewModel.getProfile(userID);
 		}
 		else {
 			profile = viewProfileActivity.smthSupport.getProfile(userID);

@@ -41,11 +41,8 @@ import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.Adapter.GuidanceListAdapter;
 import com.athena.asm.Adapter.MailAdapter;
 import com.athena.asm.data.Board;
-import com.athena.asm.data.Mail;
-import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
-import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadCategoryTask;
 import com.athena.asm.util.task.LoadFavoriteTask;
@@ -54,22 +51,12 @@ import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoginTask;
 //import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoadProfileTask;
+import com.athena.asm.viewmodel.HomeViewModel;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class HomeActivity extends Activity implements OnClickListener {
 
-    public List<String> guidanceSectionNames = null;
-    public List<List<Subject>> guidanceSectionDetails = null;
-    public List<Board> favList = null;
-    public MailBox mailBox = null;
-    public List<Mail> mailList = null;
-    public List<Board> categoryList = null;
-    public List<String> boardFullStrings = null;
-    public HashMap<String, Board> boardHashMap = null;
-
-    public Profile currentProfile = null;
-
-    public SmthSupport smthSupport;
+    private HomeViewModel m_viewModel;
 
     public LayoutInflater inflater;
     private LinearLayout bodyContainer;
@@ -91,10 +78,6 @@ public class HomeActivity extends Activity implements OnClickListener {
     private ArrayList<View> cacheViewStack = new ArrayList<View>();
     private double currentTabIndex = 0;
 
-    public String loginUserID = "guest";
-    private boolean isLogined = false;
-    private boolean isGuestLogined = false;
-
     private boolean isIntoSettings = false;
 
     private Handler handler = new Handler();
@@ -107,38 +90,37 @@ public class HomeActivity extends Activity implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.home);
 
-        smthSupport = SmthSupport.getInstance();
-
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
         bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
         titleTextView = (TextView) findViewById(R.id.title);
 
         application = (aSMApplication) getApplication();
-
         application.initPreferences();
+        
+        m_viewModel = application.homeViewModel();
+        
         boolean isAutoLogin = application.isAutoLogin();
-
+        
+        m_viewModel.updateLoginStatus();
         if (this.getIntent().getExtras() != null) {
-            this.isLogined = (Boolean) this.getIntent().getExtras()
-                    .get(StringUtility.LOGINED);
-            this.isGuestLogined = (Boolean) this.getIntent().getExtras()
-                    .get(StringUtility.GUEST_LOGINED);
+            m_viewModel.setLoggedin((Boolean) this.getIntent().getExtras()
+                    .get(StringUtility.LOGINED));
+            m_viewModel.setGuestLogined((Boolean) this.getIntent().getExtras()
+                    .get(StringUtility.GUEST_LOGINED));
         }
 
         // 如果已从login页面登陆过来
-        if (isLogined) {
-            loginUserID = (String) this.getIntent().getExtras()
-                    .get(StringUtility.LOGINED_ID);
+        if (m_viewModel.isLogined()) {
             init();
         }
         // 如果是从login页面用guest登陆过来
-        else if (isGuestLogined) {
+        else if (m_viewModel.isGuestLogined()) {
             init();
         }
         // 如果是第一次启动且保存了自动登陆
         else if (isAutoLogin) {
-            smthSupport.restore();
+            m_viewModel.restorSmthSupport();
 
             String userName = application.getAutoUserName();
             String password = application.getAutoPassword();
@@ -173,7 +155,7 @@ public class HomeActivity extends Activity implements OnClickListener {
             isIntoSettings = false;
             int index = (int) (currentTabIndex / 10);
             if (index == 1) {
-                reloadFavorite(favList, 20);
+                reloadFavorite(m_viewModel.favList(), 20);
             } else {
                 reloadGuidanceList();
             }
@@ -206,8 +188,7 @@ public class HomeActivity extends Activity implements OnClickListener {
             startActivity(intent);
             finish();
         } else {
-            isLogined = true;
-            loginUserID = application.getAutoUserName();
+            m_viewModel.updateLoginStatus();
             init();
         }
     }
@@ -229,17 +210,17 @@ public class HomeActivity extends Activity implements OnClickListener {
             alertBuilder.show();
         }
 
-        String defaultTab = application.getDefaultTab();
-        if (defaultTab.equals("001")) {
+        String tab = m_viewModel.currentTab() == null ? application.getDefaultTab() : m_viewModel.currentTab();
+        if (tab.equals("001")) {
             reloadGuidanceList();
-        } else if (defaultTab.equals("002")) {
-            reloadFavorite(favList, 20);
-        } else if (defaultTab.equals("003")) {
-            reloadCategory(categoryList, 30);
-        } else if (defaultTab.equals("004")) {
+        } else if (tab.equals("002")) {
+            reloadFavorite(m_viewModel.favList(), 20);
+        } else if (tab.equals("003")) {
+            reloadCategory(m_viewModel.categoryList(), 30);
+        } else if (tab.equals("004")) {
             reloadMail();
         } else {
-            reloadProfile(currentProfile, 50);
+            reloadProfile(m_viewModel.currentProfile(), 50);
         }
     }
 
@@ -253,6 +234,7 @@ public class HomeActivity extends Activity implements OnClickListener {
         btnGuidance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            	m_viewModel.setCurrentTab("001");
                 reloadGuidanceList();
             }
         });
@@ -260,20 +242,23 @@ public class HomeActivity extends Activity implements OnClickListener {
         btnFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reloadFavorite(favList, 20);
+            	m_viewModel.setCurrentTab("002");
+                reloadFavorite(m_viewModel.favList(), 20);
             }
         });
 
         btnCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reloadCategory(categoryList, 30);
+            	m_viewModel.setCurrentTab("003");
+                reloadCategory(m_viewModel.categoryList(), 30);
             }
         });
 
         btnMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            	m_viewModel.setCurrentTab("004");
                 reloadMail();
             }
         });
@@ -282,7 +267,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 
             @Override
             public void onClick(View v) {
-                reloadProfile(currentProfile, 50);
+            	m_viewModel.setCurrentTab("005");
+                reloadProfile(m_viewModel.currentProfile(), 50);
             }
         });
     }
@@ -326,15 +312,15 @@ public class HomeActivity extends Activity implements OnClickListener {
     }
 
     public void reloadGuidanceList() {
-        if (guidanceSectionNames == null || guidanceSectionDetails == null) {
-            LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(this);
+        if (m_viewModel.guidanceSectionNames() == null || m_viewModel.guidanceSectionDetails() == null) {
+            LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(this, m_viewModel);
             loadGuidanceTask.execute();
         } else {
             View layout = inflater.inflate(R.layout.guidance, null);
             ListView listView = (ListView) layout
                     .findViewById(R.id.guidance_list);
             listView.setAdapter(new GuidanceListAdapter(this, 0, 0,
-                    guidanceSectionNames, guidanceSectionDetails));
+            		m_viewModel.guidanceSectionNames(), m_viewModel.guidanceSectionDetails()));
             listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -345,7 +331,7 @@ public class HomeActivity extends Activity implements OnClickListener {
                             .findViewById(R.id.guidance_list);
                     listView.setAdapter(new GuidanceListAdapter(
                             HomeActivity.this, 1, position,
-                            guidanceSectionNames, guidanceSectionDetails));
+                            m_viewModel.guidanceSectionNames(), m_viewModel.guidanceSectionDetails()));
                     listView.setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent,
@@ -369,8 +355,8 @@ public class HomeActivity extends Activity implements OnClickListener {
     }
 
     public void reloadFavorite(final List<Board> boardList, int step) {
-        if (favList == null) {
-            LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(this);
+        if (boardList == null) {
+            LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(this, m_viewModel);
             loadFavoriteTask.execute();
         } else {
             View layout = inflater.inflate(R.layout.favorite, null);
@@ -418,8 +404,8 @@ public class HomeActivity extends Activity implements OnClickListener {
     }
 
     public void reloadCategory(final List<Board> boardList, int step) {
-        if (categoryList == null) {
-            LoadCategoryTask loadCategoryTask = new LoadCategoryTask(this);
+        if (boardList == null) {
+            LoadCategoryTask loadCategoryTask = new LoadCategoryTask(this, m_viewModel);
             loadCategoryTask.execute();
         } else {
             View layout = inflater.inflate(R.layout.category, null);
@@ -464,7 +450,7 @@ public class HomeActivity extends Activity implements OnClickListener {
             textView.setCompletionHint("请输入版面英文名");
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_dropdown_item_1line,
-                    boardFullStrings);
+                    m_viewModel.boardFullStrings());
             textView.setAdapter(adapter);
 
             titleTextView.setText(R.string.title_category);
@@ -475,7 +461,7 @@ public class HomeActivity extends Activity implements OnClickListener {
     public void loadMail() {
         View layout = inflater.inflate(R.layout.mail, null);
         ListView listView = (ListView) layout.findViewById(R.id.mail_list);
-        listView.setAdapter(new MailAdapter(this, mailBox));
+        listView.setAdapter(new MailAdapter(this, m_viewModel.mailBox()));
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -506,8 +492,8 @@ public class HomeActivity extends Activity implements OnClickListener {
     }
 
     public void reloadMail() {
-        if (isLogined) {
-            LoadMailTask loadMailTask = new LoadMailTask(this);
+        if (m_viewModel.isLogined()) {
+            LoadMailTask loadMailTask = new LoadMailTask(this, m_viewModel);
             loadMailTask.execute();
         } else {
             Toast.makeText(getApplicationContext(), "请登陆后再使用.",
@@ -517,8 +503,8 @@ public class HomeActivity extends Activity implements OnClickListener {
 
     public void reloadProfile(Profile profile, final int step) {
         if (profile == null) {
-            LoadProfileTask loadProfileTask = new LoadProfileTask(this,
-                    loginUserID, 50);
+            LoadProfileTask loadProfileTask = new LoadProfileTask(this, m_viewModel,
+                    m_viewModel.loginUserID(), 50);
             loadProfileTask.execute();
         } else {
             View layout = inflater.inflate(R.layout.profile, null);
@@ -544,7 +530,7 @@ public class HomeActivity extends Activity implements OnClickListener {
                             .trim();
                     if (idString.length() > 0) {
                         LoadProfileTask profileTask = new LoadProfileTask(
-                                HomeActivity.this, idString, step);
+                                HomeActivity.this, m_viewModel, idString, step);
                         profileTask.execute();
                     }
 
@@ -612,11 +598,11 @@ public class HomeActivity extends Activity implements OnClickListener {
     }
 
     private void clearData() {
-        guidanceSectionDetails = null;
-        guidanceSectionNames = null;
-        favList = null;
-        categoryList = null;
-        currentProfile = null;
+    	m_viewModel.setGuidanceSectionNames(null);
+    	m_viewModel.setGuidanceSectionDetails(null);
+    	m_viewModel.setFavList(null);
+    	m_viewModel.setCategoryList(null);
+        m_viewModel.setCurrentProfile(null);
         inflater = null;
         cacheViewStack.clear();
     }
@@ -640,7 +626,7 @@ public class HomeActivity extends Activity implements OnClickListener {
         Thread th = new Thread() {
             @Override
             public void run() {
-                smthSupport.destory();
+                m_viewModel.logout();
                 pdialog.cancel();
                 if (!isToExit) {
                     Intent intent = new Intent();
@@ -662,7 +648,7 @@ public class HomeActivity extends Activity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (cacheViewStack.size() == 0) {
-                if (isLogined) {
+                if (m_viewModel.isLogined()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("确认要注销退出吗？");
                     builder.setPositiveButton("确定",
@@ -727,14 +713,14 @@ public class HomeActivity extends Activity implements OnClickListener {
             int index = (int) (currentTabIndex / 10);
             switch (index) {
             case 1:
-                guidanceSectionNames = null;
+            	m_viewModel.setGuidanceSectionNames(null);
                 reloadGuidanceList();
                 break;
             case 2:
                 boolean isDeleted = deleteFile("FavList");
                 if (isDeleted) {
-                    favList = null;
-                    reloadFavorite(favList, 20);
+                    m_viewModel.setFavList(null);
+                    reloadFavorite(m_viewModel.favList(), 20);
                 }
                 break;
             case 3:
@@ -747,8 +733,8 @@ public class HomeActivity extends Activity implements OnClickListener {
                                     int which) {
                                 boolean isDeleted = deleteFile("CategoryList");
                                 if (isDeleted) {
-                                    categoryList = null;
-                                    reloadCategory(categoryList, 30);
+                                    m_viewModel.setCategoryList(null);
+                                    reloadCategory(m_viewModel.categoryList(), 30);
                                 }
 
                             }
@@ -760,8 +746,8 @@ public class HomeActivity extends Activity implements OnClickListener {
                 reloadMail();
                 break;
             case 5:
-                currentProfile = null;
-                reloadProfile(currentProfile, 50);
+                m_viewModel.setCurrentProfile(null);
+                reloadProfile(m_viewModel.currentProfile(), 50);
                 break;
             default:
                 break;
@@ -792,10 +778,10 @@ public class HomeActivity extends Activity implements OnClickListener {
             logout(false);
             break;
         case EXIT:
-            if (isLogined) {
+            if (m_viewModel.isLogined()) {
                 logout(true);
             } else {
-                smthSupport.destory();
+                m_viewModel.logout();
                 exit();
             }
             break;
@@ -811,7 +797,7 @@ public class HomeActivity extends Activity implements OnClickListener {
             AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
                     .getParent()).findViewById(R.id.search_board);
 
-            Board board = boardHashMap.get(textView.getText().toString()
+            Board board = m_viewModel.boardHashMap().get(textView.getText().toString()
                     .toLowerCase());
 
             if (board == null) {

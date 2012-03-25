@@ -4,12 +4,16 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadMailTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity;
+	
+	private HomeViewModel m_viewModel;
 
-	public LoadMailTask(HomeActivity activity) {
+	public LoadMailTask(HomeActivity activity, HomeViewModel viewModel) {
 		this.homeActivity = activity;
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;
@@ -23,7 +27,7 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		homeActivity.mailBox = homeActivity.smthSupport.getMailBoxInfo();
+		m_viewModel.updateMailbox();
 		pdialog.cancel();
 		return null;
 	}

@@ -17,12 +17,16 @@ import android.util.Log;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Board;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity;
+	
+	private HomeViewModel m_viewModel;
 
-	public LoadCategoryTask(HomeActivity activity) {
+	public LoadCategoryTask(HomeActivity activity, HomeViewModel viewModel) {
 		this.homeActivity = activity;
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;
@@ -40,49 +44,34 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		try {
 			FileInputStream fis = homeActivity.openFileInput("CategoryList");
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			homeActivity.categoryList = (List<Board>) ois.readObject();
+			m_viewModel.setCategoryList((List<Board>) ois.readObject());
 			Log.d("com.athena.asm", "loading from file");
 			fis.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (homeActivity.categoryList == null) {
-			homeActivity.categoryList = new ArrayList<Board>();
-			homeActivity.smthSupport.getCategory("TOP",	homeActivity.categoryList, false);
+		if (m_viewModel.categoryList() == null) {
+			m_viewModel.updateCategoryList();
 		}
-		pdialog.cancel();
-		return null;
-	}
-	
-	private void readBoadInfo(List<Board> boards) {
-		for (Iterator<Board> iterator = boards.iterator(); iterator.hasNext();) {
-			Board board = (Board) iterator.next();
-			if (board != null && board.getEngName() != null) {
-				if (!homeActivity.boardFullStrings.contains(board.getEngName())) {
-					homeActivity.boardFullStrings.add(board.getEngName());
-				}
-				homeActivity.boardHashMap.put(board.getEngName().toLowerCase(), board);
-			}
-			readBoadInfo(board.getChildBoards());
-		}
-	}
-
-	@Override
-	protected void onPostExecute(String result) {
-
+		
 		try {
 			FileOutputStream fos = homeActivity.openFileOutput("CategoryList",
 					Context.MODE_PRIVATE);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(homeActivity.categoryList);
+			os.writeObject(m_viewModel.categoryList());
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		m_viewModel.updateBoardInfo();
+		
+		pdialog.cancel();
+		return null;
+	}
 
-		homeActivity.boardFullStrings = new ArrayList<String>();
-		homeActivity.boardHashMap = new HashMap<String, Board>();
-		readBoadInfo(homeActivity.categoryList);
-		homeActivity.reloadCategory(homeActivity.categoryList, 30);
+	@Override
+	protected void onPostExecute(String result) {
+		homeActivity.reloadCategory(m_viewModel.categoryList(), 30);
 	}
 }

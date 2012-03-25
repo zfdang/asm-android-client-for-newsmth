@@ -29,6 +29,7 @@ import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadSubjectTask;
+import com.athena.asm.viewmodel.SubjectListViewModel;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
@@ -38,11 +39,8 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 	private LayoutInflater inflater;
 
-	public Board currentBoard;
-	public List<Subject> subjectList;
+	private SubjectListViewModel m_viewModel;
 
-	private int currentPageNo = 1;
-	public int boardType = 0;
 	EditText pageNoEditText;
 	TextView titleTextView;
 
@@ -56,10 +54,14 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		
+		aSMApplication application = (aSMApplication) getApplication();
+		m_viewModel = application.subjectListViewModel();
+		
 		smthSupport = SmthSupport.getInstance();
 
-		currentBoard = (Board) getIntent().getSerializableExtra(
+		Board currentBoard = (Board) getIntent().getSerializableExtra(
 				StringUtility.BOARD);
+		m_viewModel.setCurrentBoard(currentBoard);
 		titleTextView = (TextView) findViewById(R.id.boardTitle);
 		
 		if (HomeActivity.application.isNightTheme()) {
@@ -67,7 +69,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
-		pageNoEditText.setText(currentPageNo + "");
+		pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
 
 		Button firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setOnClickListener(this);
@@ -87,11 +89,11 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
 		if (defaultBoardType.equals("001")) {
-			boardType = 0;
+			m_viewModel.setBoardType(0);
 		} else {
-			boardType = 1;
+			m_viewModel.setBoardType(0);
 		}
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 		loadSubjectTask.execute();
 		// reloadPostList();
 	}
@@ -104,14 +106,14 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 
 	public void reloadPostList() {
 		if (isFirstIn) {
-			currentPageNo = currentBoard.getTotalPageNo();
-			pageNoEditText.setText(currentPageNo + "");
+			m_viewModel.gotoLastPage();
+			pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
 			isFirstIn = false;
 		}
 
 		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
 		listView.onRefreshComplete();
-		listView.setAdapter(new SubjectListAdapter(inflater, subjectList));
+		listView.setAdapter(new SubjectListAdapter(inflater, m_viewModel.subjectList()));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -120,7 +122,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
 				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
-				bundle.putInt(StringUtility.BOARD_TYPE, boardType);
+				bundle.putInt(StringUtility.BOARD_TYPE, m_viewModel.boardType());
 				intent.putExtras(bundle);
 				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
 				//activity.startActivity(intent);
@@ -136,7 +138,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
                     }
                 });
 		
-		titleTextView.setText("[" + currentPageNo + "/" + currentBoard.getTotalPageNo() + "]" + currentBoard.getChsName());
+		titleTextView.setText(m_viewModel.titleText());
 		
 		listView.requestFocus();
 
@@ -146,35 +148,21 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	public void onClick(View view) {
 		boolean isToRefresh = true;
 		if (view.getId() == R.id.btn_first_page) {
-			currentPageNo = 1;
+			m_viewModel.gotoFirstPage();
 		} else if (view.getId() == R.id.btn_last_page) {
-			currentPageNo = currentBoard.getTotalPageNo();
+			m_viewModel.gotoLastPage();
 		} else if (view.getId() == R.id.btn_pre_page) {
-			currentPageNo--;
-			if (currentPageNo < 1) {
-				currentPageNo = 1;
-			}
+			m_viewModel.gotoPrevPage();
 		} else if (view.getId() == R.id.btn_go_page) {
 			int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
-			if (pageSet > currentBoard.getTotalPageNo()) {
-				return;
-			}
-			currentPageNo = pageSet;
+			m_viewModel.setCurrentPageNumber(pageSet);
 		} else if (view.getId() == R.id.btn_next_page) {
-			currentPageNo++;
-			if (currentPageNo > currentBoard.getTotalPageNo()) {
-				currentPageNo = currentBoard.getTotalPageNo();
-			}
+			m_viewModel.gotoNextPage();
 		} else if (view.getId() == R.id.switchBoardMode) {
 			isToRefresh = false;
-			if (boardType == 0) {
-				boardType = 1;
-			}
-			else {
-				boardType = 0;
-			}
+			m_viewModel.toggleBoardType();
 			isFirstIn = true;
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 			loadSubjectTask.execute();
 		} else if (view.getId() == R.id.writePost) {
 			isToRefresh = false;
@@ -184,23 +172,23 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			intent.putExtra(
 					StringUtility.URL,
 					"http://www.newsmth.net/bbspst.php?board="
-							+ currentBoard.getEngName());
+							+ m_viewModel.currentBoard().getEngName());
 			intent.putExtra(StringUtility.WRITE_TYPE, 0);
 			intent.putExtra(StringUtility.IS_REPLY, false);
 			startActivityForResult(intent, 0);
 		}
 		
 		if (isToRefresh) {
-			currentBoard.setCurrentPageNo(currentPageNo);
-			pageNoEditText.setText(currentPageNo + "");
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+			m_viewModel.updateBoardCurrentPage();
+			pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 			loadSubjectTask.execute();
 		}
 		
 	}
 	
 	private void refreshSubjectList() {
-	    LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+	    LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
             loadSubjectTask.execute();
         }
 
@@ -216,7 +204,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			Bundle b = data.getExtras();
 			boolean isToRefreshBoard = b.getBoolean(StringUtility.REFRESH_BOARD);
 			if (isToRefreshBoard) {
-				LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+				LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 				loadSubjectTask.execute();
 			}
 			break;
@@ -257,20 +245,20 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 					this);
 			builder.setTitle(R.string.post_alert_title);
 			//builder.setItems(items,this);
-			builder.setAdapter(new BoardTypeListAdapter(boardType, inflater), this);
+			builder.setAdapter(new BoardTypeListAdapter(m_viewModel.boardType(), inflater), this);
 			AlertDialog alert = builder.create();
 			alert.show();
 			break;
 		case REFRESH_SUBJECTLIST:
-			loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+			loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 			loadSubjectTask.execute();
 			break;
 		case SEARCH_POST:
 			Intent postIntent = new Intent();
 			postIntent.setClassName("com.athena.asm",
 					"com.athena.asm.SearchPostActivity");
-			postIntent.putExtra(StringUtility.BOARD, currentBoard.getEngName());
-			postIntent.putExtra(StringUtility.BID, currentBoard.getBoardID());
+			postIntent.putExtra(StringUtility.BOARD, m_viewModel.currentBoard().getEngName());
+			postIntent.putExtra(StringUtility.BID, m_viewModel.currentBoard().getBoardID());
 			startActivity(postIntent);
 			break;
 		case CREATE_ID:
@@ -280,7 +268,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 			intent.putExtra(
 					StringUtility.URL,
 					"http://www.newsmth.net/bbspst.php?board="
-							+ currentBoard.getEngName());
+							+ m_viewModel.currentBoard().getEngName());
 			intent.putExtra(StringUtility.WRITE_TYPE, 0);
 			intent.putExtra(StringUtility.IS_REPLY, false);
 			//startActivity(intent);
@@ -295,8 +283,8 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		isFirstIn = true;
-		boardType = which;
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, boardType, isFirstIn);
+		m_viewModel.setBoardType(which);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 		loadSubjectTask.execute();
 		dialog.dismiss();
 	}

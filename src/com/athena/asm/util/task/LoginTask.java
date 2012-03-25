@@ -4,12 +4,15 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoginTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity;
 	private String userName;
 	private String password;
 	private boolean isLogined;
+	
+	private HomeViewModel m_viewModel;
 
 	public LoginTask(HomeActivity activity, String userName, String password) {
 		this.homeActivity = activity;
@@ -28,9 +31,7 @@ public class LoginTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		homeActivity.smthSupport.setUserid(userName);
-		homeActivity.smthSupport.setPasswd(password);
-		isLogined = homeActivity.smthSupport.login();
+		isLogined = m_viewModel.login(userName, password);
 		pdialog.cancel();
 		return null;
 	}

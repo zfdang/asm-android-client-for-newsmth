@@ -1,20 +1,25 @@
 package com.athena.asm.util.task;
 
+import java.util.List;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.SubjectListActivity;
+import com.athena.asm.data.Subject;
+import com.athena.asm.viewmodel.SubjectListViewModel;
 
 public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	private SubjectListActivity subjectListActivity;
 	private ProgressDialog pdialog;
-	private int boardType;
 	private boolean isReloadPageNo;
 	
-	public LoadSubjectTask(SubjectListActivity activity, int boardType, boolean isReloadPageNo) {
+	private SubjectListViewModel m_viewModel;
+	
+	public LoadSubjectTask(SubjectListActivity activity, SubjectListViewModel viewModel, boolean isReloadPageNo) {
 		this.subjectListActivity = activity;
-		this.boardType = boardType;
+		m_viewModel = viewModel;
 		this.isReloadPageNo = isReloadPageNo;
 	}
 	
@@ -27,8 +32,9 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
-		subjectListActivity.subjectList = subjectListActivity.smthSupport.getSubjectList(subjectListActivity.currentBoard, 
-				boardType, isReloadPageNo, HomeActivity.application.getBlackList());
+		List<Subject> subjectList = subjectListActivity.smthSupport.getSubjectList(m_viewModel.currentBoard(), 
+				m_viewModel.boardType(), isReloadPageNo, HomeActivity.application.getBlackList());
+		m_viewModel.setSubjectList(subjectList);
 		pdialog.cancel();
 		return null;
 	}

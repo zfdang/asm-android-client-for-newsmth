@@ -13,14 +13,18 @@ import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Board;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity;
 	private ArrayList<Board> realFavList;
+	
+	private HomeViewModel m_viewModel;
 
-	public LoadFavoriteTask(HomeActivity activity) {
+	public LoadFavoriteTask(HomeActivity activity, HomeViewModel viewModel) {
 		this.homeActivity = activity;
 		this.realFavList = null;
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;
@@ -43,25 +47,9 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (realFavList == null) {
-			realFavList = new ArrayList<Board>();
-			homeActivity.smthSupport.getFavorite("0", realFavList,0);
-		}
 		
-		homeActivity.favList = new ArrayList<Board>();
-		Board board = new Board();
-		board.setDirectory(true);
-		board.setDirectoryName("最近访问版面");
-		board.setCategoryName("目录");
-		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
-		homeActivity.favList.add(board);
-		homeActivity.favList.addAll(realFavList);
-		pdialog.cancel();
-		return null;
-	}
-
-	@Override
-	protected void onPostExecute(String result) {
+		realFavList = m_viewModel.updateFavList(realFavList);
+		
 		try {
 			FileOutputStream fos = homeActivity.openFileOutput("FavList",
 					Context.MODE_PRIVATE);
@@ -72,6 +60,12 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 			e.printStackTrace();
 		}
 		
-		homeActivity.reloadFavorite(homeActivity.favList, 20);
+		pdialog.cancel();
+		return null;
+	}
+
+	@Override
+	protected void onPostExecute(String result) {
+		homeActivity.reloadFavorite(m_viewModel.favList(), 20);
 	}
 }

@@ -17,6 +17,8 @@ import com.athena.asm.data.Preferences;
 import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.SubjectListViewModel;
 
 import android.app.Application;
 import android.content.Context;
@@ -59,6 +61,10 @@ public class aSMApplication extends Application {
     private boolean isForceScreenPortrait = false;
     private boolean isPromotionShow = true;
     private ArrayList<String> blackList = new ArrayList<String>();
+    
+    //View models for Activities
+    private HomeViewModel m_homeViewModel = new HomeViewModel();
+    private SubjectListViewModel m_subjectListViewModel = new SubjectListViewModel();
 
     public void syncPreferences() {
         try {
@@ -486,5 +492,13 @@ public class aSMApplication extends Application {
 
 	public void setNightTheme(boolean isNightTheme) {
 		this.isNightTheme = isNightTheme;
+	}
+	
+	public HomeViewModel homeViewModel() {
+		return m_homeViewModel;
+	}
+	
+	public SubjectListViewModel subjectListViewModel() {
+		return m_subjectListViewModel;
 	}
 }

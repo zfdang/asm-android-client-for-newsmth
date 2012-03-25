@@ -7,12 +7,16 @@ import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Subject;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 	private HomeActivity homeActivity;
+	
+	private HomeViewModel m_viewModel;
 
-	public LoadGuidanceTask(HomeActivity activity) {
+	public LoadGuidanceTask(HomeActivity activity, HomeViewModel viewModel) {
 		this.homeActivity = activity;
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;
@@ -24,12 +28,10 @@ public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 		pdialog.show();
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected String doInBackground(String... params) {
-		Object[] guidance = homeActivity.smthSupport.getGuidance();
-		homeActivity.guidanceSectionNames = (List<String>) guidance[0];
-		homeActivity.guidanceSectionDetails = (List<List<Subject>>) guidance[1];
+		m_viewModel.updateGuidance();
 		pdialog.cancel();
 		return null;
 	}
