@@ -5,9 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -72,6 +69,6 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		homeActivity.reloadCategory(m_viewModel.categoryList(), 30);
+		m_viewModel.NotifyCategoryChanged();
 	}
 }

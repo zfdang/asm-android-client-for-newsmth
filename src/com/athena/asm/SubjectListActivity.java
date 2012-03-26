@@ -1,7 +1,5 @@
 package com.athena.asm;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,10 +28,13 @@ import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadSubjectTask;
 import com.athena.asm.viewmodel.SubjectListViewModel;
+import com.athena.asm.viewmodel.BaseViewModel;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
-public class SubjectListActivity extends Activity implements OnClickListener, android.content.DialogInterface.OnClickListener {
+public class SubjectListActivity extends Activity
+								implements OnClickListener, android.content.DialogInterface.OnClickListener,
+								BaseViewModel.OnViewModelChangObserver {
 
 	public SmthSupport smthSupport;
 
@@ -56,6 +57,7 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.subjectListViewModel();
+		m_viewModel.RegisterViewModelChangeObserver(this);
 		
 		smthSupport = SmthSupport.getInstance();
 
@@ -102,6 +104,13 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 	public void onConfigurationChanged(Configuration newConfig) {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void onDestroy() {
+		m_viewModel.UnregisterViewModelChangeObserver();
+		
+		super.onDestroy();
 	}
 
 	public void reloadPostList() {
@@ -287,5 +296,12 @@ public class SubjectListActivity extends Activity implements OnClickListener, an
 		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 		loadSubjectTask.execute();
 		dialog.dismiss();
+	}
+
+	@Override
+	public void OnViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
+		if (changedPropertyName.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
+			reloadPostList();
+		}
 	}
 }

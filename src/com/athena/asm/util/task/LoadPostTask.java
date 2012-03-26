@@ -9,6 +9,7 @@ import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
+import com.athena.asm.viewmodel.PostListViewModel;
 
 public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private PostListActivity postListActivity;
@@ -18,15 +19,19 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private boolean isSilent;
 	private boolean isUsePreload;
 	private Subject subject;
+	
+	private PostListViewModel m_viewModel;
 
-	public LoadPostTask(PostListActivity activity, Subject subject, int boardType, int action, 
+	public LoadPostTask(PostListActivity activity, PostListViewModel viewModel, Subject subject, int action, 
 			boolean isSilent, boolean isUsePreload) {
 		this.postListActivity = activity;
-		this.boardType = boardType;
+		this.boardType = viewModel.boardType();
 		this.action = action;
 		this.isSilent = isSilent;
 		this.isUsePreload = isUsePreload;
 		this.subject = subject;
+		
+		m_viewModel = viewModel;
 	}
 
 	@Override
@@ -59,21 +64,18 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... params) {
 		
 		if (isSilent) {
-			postListActivity.preloadPostList = getPostList();
-			postListActivity.isPreloadFinish = true;
+			m_viewModel.setPreloadPostList(getPostList());
+			m_viewModel.setIsPreloadFinished(true);
 		}
 		else {
-			if (isUsePreload && postListActivity.isPreloadFinish && postListActivity.preloadPostList != null) {
-				postListActivity.isPreloadFinish = false;
-				postListActivity.postList = postListActivity.preloadPostList;
-				postListActivity.preloadPostList = null;
-				postListActivity.currentSubject = postListActivity.preloadSubject;
+			if (isUsePreload && m_viewModel.isPreloadFinished() && m_viewModel.preloadPostList() != null) {
+				m_viewModel.setIsPreloadFinished(false);
+				m_viewModel.updatePostListFromPreloadPostList();
+				m_viewModel.updateCurrentSubjectFromPreloadSubject();
 			}
 			else {
-				postListActivity.postList = getPostList();
+				m_viewModel.setPostList(getPostList());
 			}
-			
-			pdialog.cancel();
 		}
 		
 		return null;
@@ -82,7 +84,8 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		if (!isSilent) {
-			postListActivity.reloadPostList();
+			pdialog.cancel();
+			m_viewModel.NotifyPostListChanged();
 		}
 	}
 

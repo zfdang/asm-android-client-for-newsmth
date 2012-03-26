@@ -1,29 +1,29 @@
 package com.athena.asm.util.task;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.ViewProfileActivity;
 import com.athena.asm.data.Profile;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadProfileTask extends AsyncTask<String, Integer, String> {
-	private HomeActivity homeActivity = null;
 	private ViewProfileActivity viewProfileActivity = null;
 	private String userID;
 	private Profile profile;
 	private int step;
 	private int type;
+	private ProgressDialog pdialog;
 	
 	private HomeViewModel m_viewModel;
 
-	public LoadProfileTask(HomeActivity activity, HomeViewModel viewModel, String userID, int step) {
-		this.homeActivity = activity;
+	public LoadProfileTask(Context ctx, HomeViewModel viewModel, String userID, int step) {
 		this.userID = userID;
 		this.step = step;
 		type = 0;
 		m_viewModel = viewModel;
+		pdialog = new ProgressDialog(ctx);
 	}
 	
 	public LoadProfileTask(ViewProfileActivity activity, String userID, int step) {
@@ -31,18 +31,11 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 		this.userID = userID;
 		this.step = step;
 		type = 1;
+		pdialog = new ProgressDialog(activity);
 	}
-
-	private ProgressDialog pdialog;
 
 	@Override
 	protected void onPreExecute() {
-		if (type == 0) {
-			pdialog = new ProgressDialog(homeActivity);
-		}
-		else {
-			pdialog = new ProgressDialog(viewProfileActivity);
-		}
 		pdialog.setMessage("加载用户信息中...");
 		pdialog.show();
 	}
@@ -63,7 +56,7 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		step++;
 		if (type == 0) {
-			homeActivity.reloadProfile(profile, step);
+			m_viewModel.NotifyProfileChanged(profile, step);
 		}
 		else {
 			viewProfileActivity.reloadProfile(profile);

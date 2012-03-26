@@ -66,6 +66,6 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		homeActivity.reloadFavorite(m_viewModel.favList(), 20);
+		m_viewModel.NotifyFavListChanged();
 	}
 }

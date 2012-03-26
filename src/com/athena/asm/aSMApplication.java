@@ -18,6 +18,7 @@ import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.PostListViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 
 import android.app.Application;
@@ -65,6 +66,7 @@ public class aSMApplication extends Application {
     //View models for Activities
     private HomeViewModel m_homeViewModel = new HomeViewModel();
     private SubjectListViewModel m_subjectListViewModel = new SubjectListViewModel();
+    private PostListViewModel m_postListViewModel = new PostListViewModel();
 
     public void syncPreferences() {
         try {
@@ -500,5 +502,9 @@ public class aSMApplication extends Application {
 	
 	public SubjectListViewModel subjectListViewModel() {
 		return m_subjectListViewModel;
+	}
+	
+	public PostListViewModel postListViewModel() {
+		return m_postListViewModel;
 	}
 }

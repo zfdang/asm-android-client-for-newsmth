@@ -1,7 +1,6 @@
 package com.athena.asm;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -52,9 +51,10 @@ import com.athena.asm.util.task.LoginTask;
 //import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.util.task.LoadProfileTask;
 import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.BaseViewModel;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class HomeActivity extends Activity implements OnClickListener {
+public class HomeActivity extends Activity implements OnClickListener, BaseViewModel.OnViewModelChangObserver {
 
     private HomeViewModel m_viewModel;
 
@@ -99,6 +99,7 @@ public class HomeActivity extends Activity implements OnClickListener {
         application.initPreferences();
         
         m_viewModel = application.homeViewModel();
+        m_viewModel.RegisterViewModelChangeObserver(this);
         
         boolean isAutoLogin = application.isAutoLogin();
         
@@ -125,7 +126,7 @@ public class HomeActivity extends Activity implements OnClickListener {
             String userName = application.getAutoUserName();
             String password = application.getAutoPassword();
 
-            LoginTask loginTask = new LoginTask(this, userName, password);
+            LoginTask loginTask = new LoginTask(this, m_viewModel, userName, password);
             loginTask.execute();
         }
         // 如果是第一次启动且没有自动登陆
@@ -167,6 +168,13 @@ public class HomeActivity extends Activity implements OnClickListener {
         // do nothing to stop onCreated
         super.onConfigurationChanged(newConfig);
     }
+    
+    @Override
+	public void onDestroy() {
+		m_viewModel.UnregisterViewModelChangeObserver();
+		
+		super.onDestroy();
+	}
 
     public void showFailedToast() {
         handler.post(new Runnable() {
@@ -211,17 +219,7 @@ public class HomeActivity extends Activity implements OnClickListener {
         }
 
         String tab = m_viewModel.currentTab() == null ? application.getDefaultTab() : m_viewModel.currentTab();
-        if (tab.equals("001")) {
-            reloadGuidanceList();
-        } else if (tab.equals("002")) {
-            reloadFavorite(m_viewModel.favList(), 20);
-        } else if (tab.equals("003")) {
-            reloadCategory(m_viewModel.categoryList(), 30);
-        } else if (tab.equals("004")) {
-            reloadMail();
-        } else {
-            reloadProfile(m_viewModel.currentProfile(), 50);
-        }
+        m_viewModel.setCurrentTab(tab);
     }
 
     private void initTabListeners() {
@@ -235,7 +233,6 @@ public class HomeActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("001");
-                reloadGuidanceList();
             }
         });
 
@@ -243,7 +240,6 @@ public class HomeActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("002");
-                reloadFavorite(m_viewModel.favList(), 20);
             }
         });
 
@@ -251,7 +247,6 @@ public class HomeActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("003");
-                reloadCategory(m_viewModel.categoryList(), 30);
             }
         });
 
@@ -259,7 +254,6 @@ public class HomeActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("004");
-                reloadMail();
             }
         });
 
@@ -268,7 +262,6 @@ public class HomeActivity extends Activity implements OnClickListener {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("005");
-                reloadProfile(m_viewModel.currentProfile(), 50);
             }
         });
     }
@@ -823,4 +816,42 @@ public class HomeActivity extends Activity implements OnClickListener {
             this.startActivity(intent);
         }
     }
+
+	@Override
+	public void OnViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
+		
+		if (changedPropertyName.equals(HomeViewModel.GUIDANCE_PROPERTY_NAME)) {
+			reloadGuidanceList();
+		}
+		else if (changedPropertyName.equals(HomeViewModel.CATEGORYLIST_PROPERTY_NAME)) {
+			reloadCategory(m_viewModel.categoryList(), 30);
+		}
+		else if (changedPropertyName.equals(HomeViewModel.FAVLIST_PROPERTY_NAME)) {
+			reloadFavorite(m_viewModel.favList(), 20);
+		}
+		else if (changedPropertyName.equals(HomeViewModel.MAILBOX_PROPERTY_NAME)) {
+			loadMail();
+		}
+		else if (changedPropertyName.equals(HomeViewModel.PROFILE_PROPERTY_NAME)) {
+			Profile profile = (Profile)params[0];
+			int step = (Integer)params[1];
+			
+			reloadProfile(profile, step);
+		}
+		else if (changedPropertyName.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+			String tab = m_viewModel.currentTab();
+			if (tab.equals("001")) {
+	            reloadGuidanceList();
+	        } else if (tab.equals("002")) {
+	            reloadFavorite(m_viewModel.favList(), 20);
+	        } else if (tab.equals("003")) {
+	            reloadCategory(m_viewModel.categoryList(), 30);
+	        } else if (tab.equals("004")) {
+	            reloadMail();
+	        } else {
+	            reloadProfile(m_viewModel.currentProfile(), 50);
+	        }
+		}
+		
+	}
 }

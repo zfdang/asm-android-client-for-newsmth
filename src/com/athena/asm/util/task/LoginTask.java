@@ -14,10 +14,11 @@ public class LoginTask extends AsyncTask<String, Integer, String> {
 	
 	private HomeViewModel m_viewModel;
 
-	public LoginTask(HomeActivity activity, String userName, String password) {
+	public LoginTask(HomeActivity activity, HomeViewModel viewModel, String userName, String password) {
 		this.homeActivity = activity;
 		this.userName = userName;
 		this.password = password;
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;

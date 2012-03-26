@@ -41,7 +41,7 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected void onPostExecute(String result) {
-		subjectListActivity.reloadPostList();
+		m_viewModel.NotifySubjectListChanged();
 	}
 
 }

@@ -11,7 +11,7 @@ import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 
-public class HomeViewModel {
+public class HomeViewModel extends BaseViewModel {
 
 	private List<String> m_guidanceSectionNames = null;
 	private List<List<Subject>> m_guidanceSectionDetails = null;
@@ -30,6 +30,13 @@ public class HomeViewModel {
     private String m_currentTab;
 
 	private SmthSupport m_smthSupport;
+	
+	public static final String CURRENTTAB_PROPERTY_NAME = "CurrentTab";
+	public static final String GUIDANCE_PROPERTY_NAME = "Guidance";
+	public static final String CATEGORYLIST_PROPERTY_NAME = "CategoryList";
+	public static final String FAVLIST_PROPERTY_NAME = "FavList";
+	public static final String MAILBOX_PROPERTY_NAME = "Mailbox";
+	public static final String PROFILE_PROPERTY_NAME = "Profile";
 	
 	public HomeViewModel() {
 		m_smthSupport = SmthSupport.getInstance();
@@ -106,16 +113,8 @@ public class HomeViewModel {
 		return m_boardFullStrings;
 	}
 	
-	public void setBoardFullStrings(List<String> boardFullStrings) {
-		m_boardFullStrings = boardFullStrings;
-	}
-	
 	public HashMap<String, Board> boardHashMap() {
 		return m_boardHashMap;
-	}
-	
-	public void setBoardHashMap(HashMap<String, Board> boardHashMap) {
-		m_boardHashMap = boardHashMap;
 	}
 	
 	public Profile currentProfile() {
@@ -132,6 +131,8 @@ public class HomeViewModel {
 	
 	public void setCurrentTab(String currentTab) {
 		m_currentTab = currentTab;
+		
+		m_changeObserver.OnViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
 	}
 	
 	public boolean login(String userName, String password) {
@@ -212,5 +213,25 @@ public class HomeViewModel {
 			readBoadInfo(board.getChildBoards());
 		}
 	}
-
+	
+	public void NotifyGuidanceChanged() {
+		m_changeObserver.OnViewModelChange(this, GUIDANCE_PROPERTY_NAME);
+	}
+	
+	public void NotifyFavListChanged() {
+		m_changeObserver.OnViewModelChange(this, FAVLIST_PROPERTY_NAME);
+	}
+	
+	public void NotifyCategoryChanged() {
+		m_changeObserver.OnViewModelChange(this, CATEGORYLIST_PROPERTY_NAME);
+	}
+	
+	public void NotifyMailboxChanged() {
+		m_changeObserver.OnViewModelChange(this, MAILBOX_PROPERTY_NAME);
+	}
+	
+	public void NotifyProfileChanged(Profile profile, int step) {
+		m_changeObserver.OnViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
+	}
+	
 }
