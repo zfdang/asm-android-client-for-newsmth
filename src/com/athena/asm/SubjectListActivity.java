@@ -60,10 +60,11 @@ public class SubjectListActivity extends Activity
 		m_viewModel.RegisterViewModelChangeObserver(this);
 		
 		smthSupport = SmthSupport.getInstance();
-
-		Board currentBoard = (Board) getIntent().getSerializableExtra(
-				StringUtility.BOARD);
-		m_viewModel.setCurrentBoard(currentBoard);
+		
+		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
+		Board currentBoard = (Board) getIntent().getSerializableExtra(StringUtility.BOARD);
+		boolean isNewBoard = m_viewModel.updateCurrentBoard(currentBoard, defaultBoardType);
+		
 		titleTextView = (TextView) findViewById(R.id.boardTitle);
 		
 		if (HomeActivity.application.isNightTheme()) {
@@ -88,16 +89,14 @@ public class SubjectListActivity extends Activity
 		writeImageButton.setOnClickListener(this);
 		ImageButton switchModeImageButton = (ImageButton) findViewById(R.id.switchBoardMode);
 		switchModeImageButton.setOnClickListener(this);
-
-		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
-		if (defaultBoardType.equals("001")) {
-			m_viewModel.setBoardType(0);
-		} else {
-			m_viewModel.setBoardType(0);
+		
+		if (isNewBoard) {
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+			loadSubjectTask.execute();
 		}
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
-		loadSubjectTask.execute();
-		// reloadPostList();
+		else {
+			reloadPostList();
+		}		
 	}
 
 	@Override

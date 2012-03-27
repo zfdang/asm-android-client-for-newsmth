@@ -171,6 +171,24 @@ public class PostListViewModel extends BaseViewModel {
 		m_isToRefreshBoard = isToRefreshBoard;
 	}
 	
+	public boolean updateSubject(Subject subject) {
+		
+		boolean isNewSubject = true;
+		
+		if (m_currentSubject != null) {
+			isNewSubject = !m_currentSubject.getSubjectID().equals(subject.getSubjectID()) ||
+					   	    m_currentSubject.getCurrentPageNo() != subject.getCurrentPageNo();
+		}
+		
+		if (isNewSubject) {
+			setCurrentSubject(subject);
+			updateCurrentPageNumberFromSubject();
+			updatePreloadSubjectFromCurrentSubject();
+		}
+		
+		return isNewSubject;
+	}
+	
 	public void NotifyPostListChanged() {
 		m_changeObserver.OnViewModelChange(this, POSTLIST_PROPERTY_NAME);
 	}

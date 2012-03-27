@@ -78,12 +78,11 @@ public class PostListActivity extends Activity implements OnClickListener,
 		m_viewModel.RegisterViewModelChangeObserver(this);
 
 		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
-
-		m_viewModel.setCurrentSubject((Subject) getIntent().getSerializableExtra(
-				StringUtility.SUBJECT));
-		m_viewModel.updateCurrentPageNumberFromSubject();
-		m_viewModel.updatePreloadSubjectFromCurrentSubject();
-
+		
+		Subject newSubject = (Subject) getIntent().getSerializableExtra(
+				StringUtility.SUBJECT);
+		boolean isNewSubject = m_viewModel.updateSubject(newSubject);
+		
 		titleTextView = (TextView) findViewById(R.id.title);
 
 		if (HomeActivity.application.isNightTheme()) {
@@ -112,9 +111,14 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 		mGestureDetector = new GestureDetector(this);
 
-		LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.currentSubject(),
-				0, false, false);
-		loadPostTask.execute();
+		if (isNewSubject) {
+			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.currentSubject(),
+					0, false, false);
+			loadPostTask.execute();
+		}
+		else {
+			reloadPostList();
+		}
 		// reloadPostList();
 	}
 
