@@ -12,6 +12,8 @@ import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 
 public class HomeViewModel extends BaseViewModel {
+	
+	private static final String GUEST_ID = "guest";
 
 	private List<String> m_guidanceSectionNames = null;
 	private List<List<Subject>> m_guidanceSectionDetails = null;
@@ -25,7 +27,7 @@ public class HomeViewModel extends BaseViewModel {
 	
 	private boolean m_isLogined = false;
     private boolean m_isGuestLoggedin = false;
-    private String m_loginUserID = "guest";
+    private String m_loginUserID = GUEST_ID;
     
     private String m_currentTab;
 
@@ -143,6 +145,14 @@ public class HomeViewModel extends BaseViewModel {
 	
 	public void logout() {
 		m_smthSupport.destory();
+		
+		m_currentTab = null;
+		m_loginUserID = GUEST_ID;
+		m_isLogined = false;
+		m_isGuestLoggedin = false;
+		m_currentProfile = null;
+		m_favList = null;
+		m_mailBox = null;
 	}
 	
 	public void restorSmthSupport() {
