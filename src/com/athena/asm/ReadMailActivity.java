@@ -17,14 +17,16 @@ import com.athena.asm.data.Mail;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadMailContentTask;
+import com.athena.asm.viewmodel.BaseViewModel;
+import com.athena.asm.viewmodel.MailViewModel;
 
-public class ReadMailActivity extends Activity {
+public class ReadMailActivity extends Activity implements BaseViewModel.OnViewModelChangObserver {
 
 	public SmthSupport smthSupport;
 
 	private LayoutInflater inflater;
 
-	public Mail currentMail;
+	private MailViewModel m_viewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +37,16 @@ public class ReadMailActivity extends Activity {
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		smthSupport = SmthSupport.getInstance();
+		
+		aSMApplication application = (aSMApplication) getApplication();
+		m_viewModel = application.getMailViewModel();
+	    m_viewModel.RegisterViewModelChangeObserver(this);
 
-		currentMail = (Mail) getIntent().getSerializableExtra(
-				StringUtility.MAIL);
+		boolean isNewMail = m_viewModel.tryUpdateCurrentMail((Mail) getIntent().getSerializableExtra(
+				StringUtility.MAIL));
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText(currentMail.getTitle());
+		titleTextView.setText(m_viewModel.getCurrentMailTitle());
 		
 		if (HomeActivity.application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
@@ -60,8 +66,14 @@ public class ReadMailActivity extends Activity {
 		Button nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setVisibility(View.GONE);
 		
-		LoadMailContentTask loadMailContentTask = new LoadMailContentTask(this);
-		loadMailContentTask.execute();
+		if (isNewMail) {
+			LoadMailContentTask loadMailContentTask = new LoadMailContentTask(this, m_viewModel);
+			loadMailContentTask.execute();
+		}
+		else {
+			loadMailContent();
+		}
+			
 	}
 
 	@Override
@@ -69,10 +81,25 @@ public class ReadMailActivity extends Activity {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
+	
+	@Override
+	public void onDestroy() {
+		m_viewModel.UnregisterViewModelChangeObserver();
+		
+		super.onDestroy();
+	}
 
 	public void loadMailContent() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new ReadMailAdapter(this, inflater));
+		listView.setAdapter(new ReadMailAdapter(this, m_viewModel.getCurrentMail(), inflater));
+	}
+
+	@Override
+	public void OnViewModelChange(BaseViewModel viewModel,
+			String changedPropertyName, Object... params) {
+		if (changedPropertyName.equals(MailViewModel.CURRENT_MAIL_CONTENT_PROPERTY_NAME)) {
+			loadMailContent();
+		}
 	}
 
 }

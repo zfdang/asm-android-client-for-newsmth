@@ -1,39 +1,43 @@
 package com.athena.asm.util.task;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
-import com.athena.asm.MailListActivity;
+import com.athena.asm.viewmodel.MailViewModel;
 
 public class LoadMailListTask extends AsyncTask<String, Integer, String> {
-	private MailListActivity mailListActivity;
 	private ProgressDialog pdialog;
-	private int boxType;
+	private int m_mailboxType;
 	private int startNumber;
 	
-	public LoadMailListTask(MailListActivity activity, int boxType, int startNumber) {
-		this.mailListActivity = activity;
-		this.boxType = boxType;
+	private MailViewModel m_viewModel;
+	
+	public LoadMailListTask(Context context, MailViewModel viewModel, int startNumber) {
 		this.startNumber = startNumber;
+		
+		m_viewModel = viewModel;
+		m_mailboxType = viewModel.getMailboxType();
+		
+		pdialog = new ProgressDialog(context);
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		pdialog = new ProgressDialog(mailListActivity);
 		pdialog.setMessage("加载邮件中...");
 		pdialog.show();
 	}
 	
 	@Override
 	protected String doInBackground(String... params) {
-		mailListActivity.maillList = mailListActivity.smthSupport.getMailList(boxType, startNumber);
-		pdialog.cancel();
+		m_viewModel.updateMailList(m_mailboxType, startNumber);
 		return null;
 	}
 	
 	@Override
 	protected void onPostExecute(String result) {
-		mailListActivity.reloadMailList();
+		pdialog.cancel();
+		m_viewModel.NotifyMailListChanged();
 	}
 
 }

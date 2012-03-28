@@ -29,15 +29,17 @@ import com.athena.asm.util.StringUtility;
 public class ReadMailAdapter extends BaseAdapter {
 	private ReadMailActivity activity;
 	private LayoutInflater inflater;
+	private Mail m_currentMail;
 
-	public ReadMailAdapter(ReadMailActivity activity, LayoutInflater inflater) {
+	public ReadMailAdapter(ReadMailActivity activity, Mail currentMail, LayoutInflater inflater) {
 		this.activity = activity;
 		this.inflater = inflater;
+		m_currentMail = currentMail;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
-		Mail mail = activity.currentMail;
+		Mail mail = m_currentMail;
 
 		layout = inflater.inflate(R.layout.post_list_item, null);
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);

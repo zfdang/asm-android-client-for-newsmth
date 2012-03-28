@@ -1,7 +1,5 @@
 package com.athena.asm;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,19 +18,16 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
-import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadMailListTask;
+import com.athena.asm.viewmodel.BaseViewModel;
+import com.athena.asm.viewmodel.MailViewModel;
 
-public class MailListActivity extends Activity implements OnClickListener {
-
-	public SmthSupport smthSupport;
+public class MailListActivity extends Activity implements OnClickListener, BaseViewModel.OnViewModelChangObserver {
 
 	private LayoutInflater inflater;
 
-	public List<Mail> maillList;
-
-	public int boxType = 0;
+	private MailViewModel m_viewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +37,11 @@ public class MailListActivity extends Activity implements OnClickListener {
 
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		smthSupport = SmthSupport.getInstance();
+		aSMApplication application = (aSMApplication) getApplication();
+		m_viewModel = application.getMailViewModel();
+	    m_viewModel.RegisterViewModelChangeObserver(this);
 
-		boxType = getIntent().getIntExtra(StringUtility.MAIL_BOX_TYPE, 0);
+		boolean isToUpdate = m_viewModel.tryUpdateMailboxType((getIntent().getIntExtra(StringUtility.MAIL_BOX_TYPE, 0)));
 		
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		
@@ -52,19 +49,7 @@ public class MailListActivity extends Activity implements OnClickListener {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 		
-		switch (boxType) {
-		case 0:
-			titleTextView.setText("收件箱");
-			break;
-		case 1:
-			titleTextView.setText("发件箱");
-			break;
-		case 2:
-			titleTextView.setText("垃圾箱");
-			break;
-		default:
-			break;
-		}
+		titleTextView.setText(m_viewModel.getTitleText());
 		
 		EditText pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setVisibility(View.GONE);
@@ -80,8 +65,14 @@ public class MailListActivity extends Activity implements OnClickListener {
 		Button nextButton = (Button) findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
 
-		LoadMailListTask loadMailListTask = new LoadMailListTask(this, boxType, -1);
-		loadMailListTask.execute();
+		if (isToUpdate) {
+			LoadMailListTask loadMailListTask = new LoadMailListTask(this, m_viewModel, -1);
+			loadMailListTask.execute();
+		}
+		else {
+			reloadMailList();
+		}
+		
 	}
 
 	@Override
@@ -89,10 +80,17 @@ public class MailListActivity extends Activity implements OnClickListener {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
+	
+	@Override
+	public void onDestroy() {
+		m_viewModel.UnregisterViewModelChangeObserver();
+		
+		super.onDestroy();
+	}
 
 	public void reloadMailList() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new MailListAdapter(inflater, maillList));
+		listView.setAdapter(new MailListAdapter(inflater, m_viewModel.getMailList()));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -116,11 +114,20 @@ public class MailListActivity extends Activity implements OnClickListener {
 		} else if (view.getId() == R.id.btn_last_page) {
 			startNumber = -1;
 		} else if (view.getId() == R.id.btn_pre_page) {
-			startNumber = maillList.get(0).getNumber() - 20 + 1;
+			startNumber = m_viewModel.getPrevPageStartNumber();
 		} else if (view.getId() == R.id.btn_next_page) {
-			startNumber = maillList.get(maillList.size() - 1).getNumber() + 1;
+			startNumber = m_viewModel.getNextPageStartNumber();
 		}
-		LoadMailListTask loadMailListTask = new LoadMailListTask(this, boxType, startNumber);
+		LoadMailListTask loadMailListTask = new LoadMailListTask(this, m_viewModel, startNumber);
 		loadMailListTask.execute();
+	}
+
+	@Override
+	public void OnViewModelChange(BaseViewModel viewModel,
+			String changedPropertyName, Object... params) {
+		
+		if (changedPropertyName.equals(MailViewModel.MAILLIST_PROPERTY_NAME)) {
+			reloadMailList();
+		}
 	}
 }

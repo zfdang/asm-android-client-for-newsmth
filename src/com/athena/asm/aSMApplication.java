@@ -18,6 +18,7 @@ import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.MailViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 
@@ -67,6 +68,7 @@ public class aSMApplication extends Application {
     private HomeViewModel m_homeViewModel = new HomeViewModel();
     private SubjectListViewModel m_subjectListViewModel = new SubjectListViewModel();
     private PostListViewModel m_postListViewModel = new PostListViewModel();
+    private MailViewModel m_mailViewModel = new MailViewModel();
 
     public void syncPreferences() {
         try {
@@ -506,5 +508,9 @@ public class aSMApplication extends Application {
 	
 	public PostListViewModel postListViewModel() {
 		return m_postListViewModel;
+	}
+	
+	public MailViewModel getMailViewModel() {
+		return m_mailViewModel;
 	}
 }
