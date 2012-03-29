@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadWritePostTask;
+import com.athena.asm.viewmodel.WritePostViewModel;
 
 public class WritePostActivity extends Activity implements OnClickListener,
 		OnItemSelectedListener {
@@ -49,17 +50,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 
 	private Handler handler = new Handler();
 
-	public String toHandleUrl;
-	private int writeType; // 0 is post, 1 is mail
-	public String postUrl = "";
-	public String postTitle = "";
-	private String postContent = "";
-	public String userid = "";
-	public String num = "";
-	public String dir = "";
-	public String file = "";
-	private int sigNum = 0;
-	private int selectedSigValue = 0;
+	private WritePostViewModel m_viewModel = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +59,15 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.post_reply);
 
 		smthSupport = SmthSupport.getInstance();
+		
+		m_viewModel = (WritePostViewModel)getLastNonConfigurationInstance();
+		boolean isNewActivity = true;
+		if (m_viewModel == null) {
+			m_viewModel = new WritePostViewModel();
+		}
+		else {
+			isNewActivity = false;
+		}
 
 		titleEditText = (EditText) findViewById(R.id.post_title);
 		useridEditText = (EditText) findViewById(R.id.post_userid);
@@ -82,22 +82,34 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		attachButton = (Button) findViewById(R.id.btn_attach);
 		attachButton.setOnClickListener(this);
 
-		toHandleUrl = getIntent().getStringExtra(StringUtility.URL);
-		writeType = getIntent()
-				.getIntExtra(StringUtility.WRITE_TYPE, TYPE_POST);
-		if (writeType == TYPE_POST) {
+		m_viewModel.setToHandlerUrl(getIntent().getStringExtra(StringUtility.URL));
+		m_viewModel.setWriteType(getIntent()
+				.getIntExtra(StringUtility.WRITE_TYPE, TYPE_POST));
+		if (m_viewModel.getWriteType() == TYPE_POST) {
 			((LinearLayout) useridEditText.getParent())
 					.setVisibility(View.GONE);
 			((LinearLayout) useridEditText.getParent()).removeView(sendButton);
 			LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
 			layout.addView(sendButton);
 			titleTextView.setText("写帖子");
-			new LoadWritePostTask(this, TYPE_POST).execute();
-		} else if (writeType == TYPE_MAIL) {
+			if (isNewActivity) {
+				new LoadWritePostTask(this, m_viewModel).execute();
+			}
+			else {
+				restoreFromViewModel();
+			}
+			
+		} else if (m_viewModel.getWriteType() == TYPE_MAIL) {
 			attachButton.setVisibility(View.GONE);
 			titleTextView.setText("写  信");
-			new LoadWritePostTask(this, TYPE_MAIL).execute();
-		} else if (writeType == TYPE_POST_EDIT) {
+			if (isNewActivity) {
+				new LoadWritePostTask(this, m_viewModel).execute();
+			}
+			else {
+				restoreFromViewModel();
+			}
+			
+		} else if (m_viewModel.getWriteType() == TYPE_POST_EDIT) {
 			((LinearLayout) useridEditText.getParent())
 					.setVisibility(View.GONE);
 			((LinearLayout) useridEditText.getParent()).removeView(sendButton);
@@ -105,11 +117,18 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			layout.addView(sendButton);
 			titleTextView.setText("修改帖子");
 			
-			postTitle = getIntent().getStringExtra(StringUtility.TITLE);
-			titleEditText.setText(postTitle);
+			m_viewModel.setPostTitile(getIntent().getStringExtra(StringUtility.TITLE));
+			titleEditText.setText(m_viewModel.getPostTitle());
 			sigSpinner.setEnabled(false);
 			attachButton.setEnabled(false);
-			new LoadWritePostTask(this, TYPE_POST_EDIT).execute();
+			
+			if (isNewActivity) {
+				new LoadWritePostTask(this, m_viewModel).execute();
+			}
+			else {
+				restoreFromViewModel();
+			}
+			
 		}
 	}
 
@@ -118,10 +137,28 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		updateViewModel();
+		return m_viewModel;
+	}
 
 	public void finishWork() {
+		createSigSpinner();
+
+		boolean isReply = getIntent().getBooleanExtra(StringUtility.IS_REPLY,
+				false);
+		if (isReply) {
+			contentEditText.requestFocus();
+			contentEditText.setSelection(0);
+		}
+	}
+
+	private void createSigSpinner() {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("不使用签名档");
+		int sigNum = m_viewModel.getSigNumber();
 		for (int i = 1; i <= sigNum; i++) {
 			list.add("第" + i + "个");
 		}
@@ -135,18 +172,11 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		sigSpinner.setAdapter(sigSpinnerAdapter);
 		sigSpinner.setOnItemSelectedListener(this);
 		if (sigNum > 0) {
-			if (selectedSigValue != -1) {
-				sigSpinner.setSelection(selectedSigValue);
+			if (m_viewModel.getSelectedSigValue() != -1) {
+				sigSpinner.setSelection(m_viewModel.getSelectedSigValue());
 			} else {
 				sigSpinner.setSelection(sigNum + 1);
 			}
-		}
-
-		boolean isReply = getIntent().getBooleanExtra(StringUtility.IS_REPLY,
-				false);
-		if (isReply) {
-			contentEditText.requestFocus();
-			contentEditText.setSelection(0);
 		}
 	}
 
@@ -159,24 +189,28 @@ public class WritePostActivity extends Activity implements OnClickListener,
 				.compile("replyForm\\('[^']+',\\d+,'([^']+)',\\d+,(\\d+),([+-]?\\d+)");
 		Matcher m = p.matcher(contentString);
 		if (m.find()) {
+			String postTitle;
 			postTitle = m.group(1);
-			sigNum = Integer.parseInt(m.group(2));
-			selectedSigValue = Integer.parseInt(m.group(3));
+			m_viewModel.setSigNumber(Integer.parseInt(m.group(2)));
+			m_viewModel.setSelectedSigValue(Integer.parseInt(m.group(3)));
 			if (!postTitle.contains("Re:") && isReply) {
 				postTitle = "Re: " + postTitle;
 			}
 			titleEditText.setText(postTitle);
+			m_viewModel.setPostTitile(postTitle);
 		}
 
 		p = Pattern.compile("-->[\\s\\S]*</script>([\\s\\S]*)</textarea>");
 		m = p.matcher(contentString);
 		if (m.find()) {
+			String postContent;
 			postContent = m.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
 			if (HomeActivity.application.isPromotionShow()) {
 				postContent += "--<br/>发送自aSM水木客户端\n<br/>";
 			}
 			contentEditText.setText(Html.fromHtml("<br/>" + postContent));
+			m_viewModel.setPostContent(postContent);
 		}
 
 	}
@@ -190,16 +224,18 @@ public class WritePostActivity extends Activity implements OnClickListener,
 				.compile("<textarea[^<>]+>([^<>]+)</textarea>");
 		Matcher matcher = pattern.matcher(contentString);
 		if (matcher.find()) {
+			String postContent;
 			postContent = matcher.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
 			contentEditText.setText(Html.fromHtml(postContent));
+			m_viewModel.setPostContent(postContent);
 		}
 	}
 
 	public void parseMailToHandleUrl(String contentString) {
-		Map<String, String> paramsMap = StringUtility.getUrlParams(toHandleUrl);
+		Map<String, String> paramsMap = StringUtility.getUrlParams(m_viewModel.getToHandlerUrl());
 		if (paramsMap.containsKey("title")) {
-			titleEditText.setText(postTitle);
+			titleEditText.setText(m_viewModel.getPostTitle());
 			Button button = (Button) findViewById(R.id.btn_send_post);
 			((LinearLayout) useridEditText.getParent())
 					.setVisibility(View.GONE);
@@ -208,20 +244,22 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			layout.addView(button);
 		}
 
-		sigNum = StringUtility.getOccur(contentString, "<option") - 2;
+		m_viewModel.setSigNumber(StringUtility.getOccur(contentString, "<option") - 2);
 		Pattern p = Pattern.compile("option value=\"([+-]?\\d+)\" selected");
 		Matcher m = p.matcher(contentString);
 		if (m.find()) {
-			selectedSigValue = Integer.parseInt(m.group(1));
+			m_viewModel.setSelectedSigValue(Integer.parseInt(m.group(1)));
 		}
 
 		Pattern pattern = Pattern
 				.compile("<textarea[^<>]+>([^<>]+)</textarea>");
 		Matcher matcher = pattern.matcher(contentString);
 		if (matcher.find()) {
+			String postContent;
 			postContent = matcher.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
 			contentEditText.setText(Html.fromHtml("<br />" + postContent));
+			m_viewModel.setPostContent(postContent);
 		}
 
 		if (paramsMap.containsKey("board")) {
@@ -229,11 +267,13 @@ public class WritePostActivity extends Activity implements OnClickListener,
 					.compile("<input class=\"sb1\" type=\"text\" name=\"title\"[^<>]+value=\"([^<>]+)\">");
 			matcher = pattern.matcher(contentString);
 			if (matcher.find()) {
+				String postTitle;
 				postTitle = matcher.group(1);
 				if (!postTitle.contains("Re:")) {
 					postTitle = "Re: " + postTitle;
 				}
 				titleEditText.setText(postTitle);
+				m_viewModel.setPostTitile(postTitle);
 			}
 			pattern = Pattern
 					.compile("<input class=\"sb1\" type=\"text\" name=\"userid\" value=\"([^<>]+)\">");
@@ -251,7 +291,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 			}
 		});
-		if (writeType == TYPE_POST) {
+		if (m_viewModel.getWriteType() == TYPE_POST) {
 			Intent i = new Intent();
 
 			Bundle b = new Bundle();
@@ -294,17 +334,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			pdialog.setMessage("发表中...");
 			pdialog.show();
 
-			postTitle = titleEditText.getText().toString();
-			if (userid.length() < 1) {
-				userid = useridEditText.getText().toString().trim();
-			}
-			postContent = contentEditText.getText().toString();
-
-			int selectedSig = sigSpinner.getSelectedItemPosition();
-			if (selectedSig == sigNum + 1) {
-				selectedSig = -1;
-			}
-			final String sigParams = String.valueOf(selectedSig);
+			updateViewModel();
 
 			((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
 					.hideSoftInputFromWindow(contentEditText.getWindowToken(),
@@ -313,17 +343,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			Thread th = new Thread() {
 				@Override
 				public void run() {
-					boolean result = false;
-					if (writeType == TYPE_POST) {
-						result = smthSupport.sendPost(postUrl, postTitle,
-								postContent, sigParams, false);
-					} else if (writeType == TYPE_MAIL) {
-						result = smthSupport.sendMail(postUrl, postTitle,
-								userid, num, dir, file, sigParams, postContent);
-					} else if (writeType == TYPE_POST_EDIT) {
-						result = smthSupport.sendPost(postUrl, postTitle,
-								postContent, sigParams, true);
-					}
+					boolean result = m_viewModel.sendPost();
 					if (!result) {
 						showFailedToast();
 					} else {
@@ -334,6 +354,33 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			};
 			th.start();
 		}
+	}
+	
+	private void updateViewModel() {
+		m_viewModel.setPostTitile(titleEditText.getText().toString());
+		if (m_viewModel.getMailUserId().length() < 1) {
+			m_viewModel.setMailUserId(useridEditText.getText().toString().trim());
+		}
+		m_viewModel.setPostContent(contentEditText.getText().toString());
+
+		int selectedSig = sigSpinner.getSelectedItemPosition();
+		if (selectedSig == m_viewModel.getSigNumber() + 1) {
+			selectedSig = -1;
+		}
+		m_viewModel.setSelectedSigValue(selectedSig);
+	}
+	
+	private void restoreFromViewModel() {
+		titleEditText.setText(m_viewModel.getPostTitle());
+		useridEditText.setText(m_viewModel.getMailUserId());
+		contentEditText.setText(m_viewModel.getPostContent());
+
+		createSigSpinner();		
+		int selectedSig = m_viewModel.getSelectedSigValue();
+		if (selectedSig == -1) {
+			selectedSig = m_viewModel.getSigNumber() + 1;
+		}
+		sigSpinner.setSelection(selectedSig);
 	}
 
 	@Override

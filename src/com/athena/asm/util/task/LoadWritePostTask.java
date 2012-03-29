@@ -9,16 +9,20 @@ import android.os.AsyncTask;
 
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.viewmodel.WritePostViewModel;
 
 public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 	private WritePostActivity writePostActivity;
 	private int type;
 	private String contentString = null;
 	private boolean isReply = false;
+	
+	private WritePostViewModel m_viewModel;
 
-	public LoadWritePostTask(WritePostActivity activity, int type) {
+	public LoadWritePostTask(WritePostActivity activity, WritePostViewModel viewModel) {
 		this.writePostActivity = activity;
-		this.type = type;
+		this.type = viewModel.getWriteType();
+		m_viewModel = viewModel;
 	}
 
 	private ProgressDialog pdialog;
@@ -32,75 +36,81 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
+		String postUrl = "";
 		if (type == WritePostActivity.TYPE_POST) {
-			writePostActivity.postUrl = "http://www.newsmth.net/bbssnd.php";
+			postUrl = "http://www.newsmth.net/bbssnd.php";
 			Map<String, String> paramsMap = StringUtility
-					.getUrlParams(writePostActivity.toHandleUrl);
+					.getUrlParams(m_viewModel.getToHandlerUrl());
 			if (paramsMap.containsKey("board")) {
-				writePostActivity.postUrl += "?board=" + paramsMap.get("board");
+				postUrl += "?board=" + paramsMap.get("board");
 			}
 			if (paramsMap.containsKey("reid")) {
-				writePostActivity.postUrl += "&reid=" + paramsMap.get("reid");
+				postUrl += "&reid=" + paramsMap.get("reid");
 				isReply = true;
 			}
+			
+			m_viewModel.setPostUrl(postUrl);
 
 			contentString = writePostActivity.smthSupport
-					.getUrlContent(writePostActivity.toHandleUrl);
+					.getUrlContent(m_viewModel.getToHandlerUrl());
 		} else if (type == WritePostActivity.TYPE_MAIL) {
-			writePostActivity.postUrl = "http://www.newsmth.net/bbssendmail.php";
+			postUrl = "http://www.newsmth.net/bbssendmail.php";
 			Map<String, String> paramsMap = StringUtility
-					.getUrlParams(writePostActivity.toHandleUrl);
+					.getUrlParams(m_viewModel.getToHandlerUrl());
 			if (paramsMap.containsKey("dir")) {
-				writePostActivity.dir = paramsMap.get("dir");
-				writePostActivity.postUrl += "?dir=" + writePostActivity.dir;
+				m_viewModel.setMailDir(paramsMap.get("dir"));
+				postUrl += "?dir=" + m_viewModel.getMailDir();
 			}
 			if (paramsMap.containsKey("userid")) {
-				writePostActivity.userid = paramsMap.get("userid");
-				writePostActivity.postUrl += "?userid="
-						+ writePostActivity.userid;
+				m_viewModel.setMailUserId(paramsMap.get("userid"));
+				postUrl += "?userid="
+						+ m_viewModel.getMailUserId();
 			}
 			if (paramsMap.containsKey("num")) {
-				writePostActivity.num = paramsMap.get("num");
-				writePostActivity.postUrl += "?num=" + writePostActivity.num;
+				m_viewModel.setMailNumber(paramsMap.get("num"));
+				postUrl += "?num=" + m_viewModel.getMailNumber();
 			}
 			if (paramsMap.containsKey("file")) {
-				writePostActivity.file = paramsMap.get("file");
-				writePostActivity.postUrl += "?file=" + writePostActivity.file;
+				m_viewModel.setMailFile(paramsMap.get("file"));
+				postUrl += "?file=" + m_viewModel.getMailFile();
 			}
 			if (paramsMap.containsKey("title")) {
 				try {
-					writePostActivity.postTitle = URLDecoder.decode(
+					String postTitle;
+					postTitle = URLDecoder.decode(
 							paramsMap.get("title"), "GBK");
-					if (!writePostActivity.postTitle.contains("Re:")) {
-						writePostActivity.postTitle = "Re: "
-								+ writePostActivity.postTitle;
+					if (!postTitle.contains("Re:")) {
+						postTitle = "Re: "
+								+ postTitle;
 					}
+					m_viewModel.setPostTitile(postTitle);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
-				writePostActivity.postUrl += "?title=" + paramsMap.get("title");
+				postUrl += "?title=" + paramsMap.get("title");
 
 			}
+			
+			m_viewModel.setPostUrl(postUrl);
 
 			contentString = writePostActivity.smthSupport
-					.getUrlContent(writePostActivity.toHandleUrl);
+					.getUrlContent(m_viewModel.getToHandlerUrl());
 		} else if (type == WritePostActivity.TYPE_POST_EDIT) {
-			writePostActivity.postUrl = "http://www.newsmth.net/bbsedit.php";
+			postUrl = "http://www.newsmth.net/bbsedit.php";
 			Map<String, String> paramsMap = StringUtility
-					.getUrlParams(writePostActivity.toHandleUrl);
+					.getUrlParams(m_viewModel.getToHandlerUrl());
 			if (paramsMap.containsKey("board")) {
-				writePostActivity.postUrl += "?board=" + paramsMap.get("board");
+				postUrl += "?board=" + paramsMap.get("board");
 			}
 			if (paramsMap.containsKey("id")) {
-				writePostActivity.postUrl += "&id=" + paramsMap.get("id");
+				postUrl += "&id=" + paramsMap.get("id");
 			}
-			writePostActivity.postUrl += "&ftype=0";
-
+			postUrl += "&ftype=0";
+			m_viewModel.setPostUrl(postUrl);
+			
 			contentString = writePostActivity.smthSupport
-					.getUrlContent(writePostActivity.toHandleUrl);
+					.getUrlContent(m_viewModel.getToHandlerUrl());
 		}
-
-		pdialog.cancel();
 		return null;
 	}
 
@@ -113,6 +123,7 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 		} else if (type == WritePostActivity.TYPE_POST_EDIT) {
 			writePostActivity.parsePostEditToHandleUrl(contentString);
 		}
+		pdialog.cancel();
 		writePostActivity.finishWork();
 	}
 }
