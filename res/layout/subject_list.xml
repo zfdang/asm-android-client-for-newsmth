@@ -9,7 +9,8 @@
 	<!-- Body -->
 	<com.markupartist.android.widget.PullToRefreshListView android:layout_width="wrap_content"
 		android:layout_height="0dp" android:layout_weight="1"
-		android:cacheColorHint="#00000000" android:id="@+id/subject_list" />
+		android:cacheColorHint="#00000000" android:scrollingCache="false"
+		android:id="@+id/subject_list" />
 
 	<!-- footer -->
 	<include layout="@layout/post_list_footer" />
