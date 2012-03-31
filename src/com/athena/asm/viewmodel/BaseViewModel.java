@@ -8,7 +8,7 @@ public abstract class BaseViewModel {
 		
 	}
 	
-	protected OnViewModelChangObserver m_changeObserver;
+	private OnViewModelChangObserver m_changeObserver;
 	
 	public void RegisterViewModelChangeObserver(OnViewModelChangObserver observer) {
 		m_changeObserver = observer;
@@ -16,6 +16,12 @@ public abstract class BaseViewModel {
 	
 	public void UnregisterViewModelChangeObserver() {
 		m_changeObserver = null;
+	}
+	
+	public void NotifyViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
+		if (m_changeObserver != null) {
+			m_changeObserver.OnViewModelChange(viewModel, changedPropertyName, params);
+		}
 	}
 
 }

@@ -191,7 +191,7 @@ public class PostListViewModel extends BaseViewModel {
 	}
 	
 	public void NotifyPostListChanged() {
-		m_changeObserver.OnViewModelChange(this, POSTLIST_PROPERTY_NAME);
+		NotifyViewModelChange(this, POSTLIST_PROPERTY_NAME);
 	}
 
 }

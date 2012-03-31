@@ -73,11 +73,11 @@ public class MailViewModel extends BaseViewModel {
 	}
 	
 	public void NotifyMailListChanged() {
-		m_changeObserver.OnViewModelChange(this, MAILLIST_PROPERTY_NAME);
+		NotifyViewModelChange(this, MAILLIST_PROPERTY_NAME);
 	}
 	
 	public void NotifyCurrentMailContentChanged() {
-		m_changeObserver.OnViewModelChange(this, CURRENT_MAIL_CONTENT_PROPERTY_NAME);
+		NotifyViewModelChange(this, CURRENT_MAIL_CONTENT_PROPERTY_NAME);
 	}
 	
 	public void updateMailList(int mailboxType, int startNumber) {

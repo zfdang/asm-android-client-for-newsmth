@@ -134,7 +134,7 @@ public class HomeViewModel extends BaseViewModel {
 	public void setCurrentTab(String currentTab) {
 		m_currentTab = currentTab;
 		
-		m_changeObserver.OnViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
+		NotifyViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
 	}
 	
 	public boolean login(String userName, String password) {
@@ -225,23 +225,23 @@ public class HomeViewModel extends BaseViewModel {
 	}
 	
 	public void NotifyGuidanceChanged() {
-		m_changeObserver.OnViewModelChange(this, GUIDANCE_PROPERTY_NAME);
+		NotifyViewModelChange(this, GUIDANCE_PROPERTY_NAME);
 	}
 	
 	public void NotifyFavListChanged() {
-		m_changeObserver.OnViewModelChange(this, FAVLIST_PROPERTY_NAME);
+		NotifyViewModelChange(this, FAVLIST_PROPERTY_NAME);
 	}
 	
 	public void NotifyCategoryChanged() {
-		m_changeObserver.OnViewModelChange(this, CATEGORYLIST_PROPERTY_NAME);
+		NotifyViewModelChange(this, CATEGORYLIST_PROPERTY_NAME);
 	}
 	
 	public void NotifyMailboxChanged() {
-		m_changeObserver.OnViewModelChange(this, MAILBOX_PROPERTY_NAME);
+		NotifyViewModelChange(this, MAILBOX_PROPERTY_NAME);
 	}
 	
 	public void NotifyProfileChanged(Profile profile, int step) {
-		m_changeObserver.OnViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
+		NotifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
 	}
 	
 }

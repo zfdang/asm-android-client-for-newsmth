@@ -110,7 +110,7 @@ public class SubjectListViewModel extends BaseViewModel {
 	}
 	
 	public void NotifySubjectListChanged() {
-		m_changeObserver.OnViewModelChange(this, SUBJECTLIST_PROPERTY_NAME);
+		NotifyViewModelChange(this, SUBJECTLIST_PROPERTY_NAME);
 	}
 
 }
