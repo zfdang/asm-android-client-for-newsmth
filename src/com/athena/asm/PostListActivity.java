@@ -108,6 +108,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 		listView = (ListView) findViewById(R.id.post_list);
 
 		m_viewModel.setBoardType(getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0));
+		m_viewModel.setIsToRefreshBoard(false);
 
 		mGestureDetector = new GestureDetector(this);
 

@@ -196,7 +196,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			if (!postTitle.contains("Re:") && isReply) {
 				postTitle = "Re: " + postTitle;
 			}
-			titleEditText.setText(postTitle);
+			titleEditText.setText(postTitle.trim());
 			m_viewModel.setPostTitile(postTitle);
 		}
 
