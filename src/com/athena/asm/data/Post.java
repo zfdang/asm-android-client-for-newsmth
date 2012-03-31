@@ -13,7 +13,7 @@ public class Post {
 	private String board;
 	private String boardID;
 	private Date date;
-	private String content;
+	private CharSequence content;
 	private ArrayList<Attachment> attachFiles;
 	
 	public Post() {
@@ -22,7 +22,7 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return this.content;
+		return this.content.toString();
 	}
 
 	public String getSubjectID() {
@@ -74,15 +74,15 @@ public class Post {
 	}
 
 	public void setContent(String content) {
-		this.content = content;
+		this.content = Html.fromHtml(content);
 	}
 	
 	public String getTextContent() {
-		String text = Html.fromHtml(content).toString();
+		String text = content.toString();
 		return text;
 	}
 
-	public String getContent() {
+	public CharSequence getContent() {
 		return content;
 	}
 

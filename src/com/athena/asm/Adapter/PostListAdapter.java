@@ -28,6 +28,15 @@ public class PostListAdapter extends BaseAdapter {
 	private PostListActivity activity;
 	private LayoutInflater inflater;
 	private List<Post> postList;
+	
+	public class ViewHolder {
+		public TextView authorTextView;
+		public TextView titleTextView;
+		public TextView contentTextView;
+		public TextView attachTextView;
+		public TextView dateTextView;
+		public Post post;
+	}
 
 	public PostListAdapter(PostListActivity activity, LayoutInflater inflater,
 			List<Post> postList) {
@@ -37,30 +46,40 @@ public class PostListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
 		RelativeLayout layout = null;
 		Post post = postList.get(position);
-
-		layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
 		
-		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
-		TextView titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
+		if (convertView == null) {
+			layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
+			holder = new ViewHolder();
+			holder.authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
+			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
+			holder.contentTextView = (TextView) layout.findViewById(R.id.PostContent);
+			holder.attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
+			holder.dateTextView = (TextView) layout.findViewById(R.id.PostDate);
+			holder.post = post;
+			
+			holder.contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+					HomeActivity.application.getPostFontSize());
+			
+			layout.setTag(holder);
+		}
+		else {
+			layout = (RelativeLayout)convertView;
+			holder = (ViewHolder)layout.getTag();
+		}		
+		
 		if (post.getAuthor() == null) {
-			titleTextView.setText("错误的文章号,原文可能已经被删除");
+			holder.titleTextView.setText("错误的文章号,原文可能已经被删除");
 			return layout;
 		}
-		authorTextView.setText(post.getAuthor());
-
-		titleTextView.setText(post.getTitle());
-		TextView contentTextView = (TextView) layout
-				.findViewById(R.id.PostContent);
-		// contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-		contentTextView.setText(Html.fromHtml(post.getContent()));
-		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-				HomeActivity.application.getPostFontSize());
-
-		TextView attachTextView = (TextView) layout
-				.findViewById(R.id.PostAttach);
-		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		holder.authorTextView.setText(post.getAuthor());
+		holder.titleTextView.setText(post.getTitle());
+		
+		holder.contentTextView.setText(post.getContent());
+		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
 		if (attachments != null) {
 		    String contentString = "";
@@ -80,24 +99,22 @@ public class PostListAdapter extends BaseAdapter {
 	                                UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60000);
 	                        }
 	                }
-	                attachTextView.setText(Html.fromHtml(contentString));
+	                holder.attachTextView.setText(Html.fromHtml(contentString));
                 }
 
-		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
-		dateTextView.setText(post.getDate().toLocaleString());
-		layout.setTag(post);
+		holder.dateTextView.setText(post.getDate().toLocaleString());
 
-		contentTextView.setOnLongClickListener(activity);
+		holder.contentTextView.setOnLongClickListener(activity);
 		layout.setOnLongClickListener(activity);
 		
-		contentTextView.setOnTouchListener(activity);
+		holder.contentTextView.setOnTouchListener(activity);
 		layout.setOnTouchListener(activity);
 		
 		if (HomeActivity.application.isNightTheme()) {
-			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
-			contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
-			attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
-			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			holder.contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			holder.attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			holder.authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 		}
 
 		return layout;

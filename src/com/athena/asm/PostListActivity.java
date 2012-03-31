@@ -305,7 +305,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 			}
 			final String authorID = (String) ((TextView) relativeLayout
 					.findViewById(R.id.AuthorID)).getText();
-			final Post post = (Post) relativeLayout.getTag();
+			final Post post = ((PostListAdapter.ViewHolder)relativeLayout.getTag()).post;
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.post_reply_post));
 			itemList.add(getString(R.string.post_reply_mail));
