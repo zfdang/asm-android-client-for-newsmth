@@ -34,6 +34,7 @@ public class PostListAdapter extends BaseAdapter {
 		public TextView titleTextView;
 		public TextView contentTextView;
 		public TextView attachTextView;
+		public LinearLayout imageLayout;
 		public TextView dateTextView;
 		public Post post;
 	}
@@ -57,6 +58,7 @@ public class PostListAdapter extends BaseAdapter {
 			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 			holder.contentTextView = (TextView) layout.findViewById(R.id.PostContent);
 			holder.attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
+			holder.imageLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
 			holder.dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 			holder.post = post;
 			
@@ -82,25 +84,32 @@ public class PostListAdapter extends BaseAdapter {
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
 		if (attachments != null) {
-		    String contentString = "";
-	                LinearLayout linearLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
-	                for (int i = 0; i < attachments.size(); i++) {
-	                        String attachUrl = attachments.get(i).getAttachUrl();
-	                        contentString += "<a href='" + attachUrl
-	                                        + "'>" + attachments.get(i).getName() + "</a><br/><br/>";
-	                        String fileType = attachments.get(i).getName().toLowerCase();
-	                        if (fileType.endsWith("jpg") || fileType.endsWith("jpeg") || fileType.endsWith("png")
-	                                        || fileType.endsWith("bmp") || fileType.endsWith("gif")) {
-	                                //Log.d("image", attachUrl);
-	                                ImageView imageView = new ImageView(activity);
-	                                LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-	                                imageView.setLayoutParams(layoutParams);
-	                                linearLayout.addView(imageView);
-	                                UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading, 60000);
-	                        }
-	                }
-	                holder.attachTextView.setText(Html.fromHtml(contentString));
-                }
+			holder.imageLayout.removeAllViews();
+			StringBuilder contentBuilder = new StringBuilder();
+			contentBuilder.append("");
+
+			for (int i = 0; i < attachments.size(); i++) {
+				String attachUrl = attachments.get(i).getAttachUrl();
+				contentBuilder.append("<a href='").append(attachUrl).append("'>");
+				contentBuilder.append(attachments.get(i).getName()).append("</a><br/><br/>");
+				String fileType = attachments.get(i).getName().toLowerCase();
+				if (fileType.endsWith("jpg")
+						|| fileType.endsWith("jpeg")
+						|| fileType.endsWith("png") || fileType.endsWith("bmp")
+						|| fileType.endsWith("gif")) {
+					// Log.d("image", attachUrl);
+					ImageView imageView = new ImageView(activity);
+					LayoutParams layoutParams = new LayoutParams(
+							LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT);
+					imageView.setLayoutParams(layoutParams);
+					holder.imageLayout.addView(imageView);
+					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl,
+							R.drawable.loading, 60000);
+				}
+			}
+			holder.attachTextView.setText(Html.fromHtml(contentBuilder.toString()));
+		}
 
 		holder.dateTextView.setText(post.getDate().toLocaleString());
 
