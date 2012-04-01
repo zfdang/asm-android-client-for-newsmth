@@ -13,6 +13,8 @@ public class SubjectListViewModel extends BaseViewModel {
 	private int m_currentPageNo = 1;
 	private int m_boardType = 0;
 	
+	private boolean m_isInRotation = false;
+	
 	public static final String SUBJECTLIST_PROPERTY_NAME = "SubjectList";
 	
 	public Board currentBoard() {
@@ -111,6 +113,14 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	public void NotifySubjectListChanged() {
 		NotifyViewModelChange(this, SUBJECTLIST_PROPERTY_NAME);
+	}
+	
+	public boolean isInRotation() {
+		return m_isInRotation;
+	}
+	
+	public void setIsInRotation(boolean isInRotation) {
+		m_isInRotation = isInRotation;
 	}
 
 }

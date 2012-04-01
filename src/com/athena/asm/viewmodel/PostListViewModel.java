@@ -21,6 +21,7 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public static final String POSTLIST_PROPERTY_NAME = "PostList";
 	
+	
 	public Subject currentSubject() {
 		return m_currentSubject;
 	}
@@ -192,6 +193,17 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public void NotifyPostListChanged() {
 		NotifyViewModelChange(this, POSTLIST_PROPERTY_NAME);
+	}
+	
+	public void clear() {
+		m_currentSubject = null;
+		m_postList = null;
+		m_isToRefreshBoard = false;
+		m_currentPageNo = 1;
+		m_boardType = 0;
+		m_isPreloadFinished = false;
+		m_preloadPostList = null;
+		m_preloadSubject = null;
 	}
 
 }

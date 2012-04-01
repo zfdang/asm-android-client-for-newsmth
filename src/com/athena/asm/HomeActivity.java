@@ -840,6 +840,12 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 		}
 		else if (changedPropertyName.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
 			String tab = m_viewModel.currentTab();
+			
+			//TODO: find a better place to do this...
+			if (!tab.equals("004")) {
+				application.getMailViewModel().clear();
+			}
+			
 			if (tab.equals("001")) {
 	            reloadGuidanceList();
 	        } else if (tab.equals("002")) {

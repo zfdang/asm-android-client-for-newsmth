@@ -105,5 +105,10 @@ public class MailViewModel extends BaseViewModel {
 	public Mail getCurrentMail() {
 		return m_currentMail;
 	}
-
+	
+	public void clear() {
+		m_maillList = null;
+		m_boxType = -1;
+		m_currentMail = null;
+	}
 }

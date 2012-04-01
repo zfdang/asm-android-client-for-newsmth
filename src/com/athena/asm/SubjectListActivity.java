@@ -58,6 +58,7 @@ public class SubjectListActivity extends Activity
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.subjectListViewModel();
 		m_viewModel.RegisterViewModelChangeObserver(this);
+		m_viewModel.setIsInRotation(false);
 		
 		smthSupport = SmthSupport.getInstance();
 		
@@ -109,7 +110,20 @@ public class SubjectListActivity extends Activity
 	public void onDestroy() {
 		m_viewModel.UnregisterViewModelChangeObserver();
 		
+		//If we do exit(not called due to rotation here),
+		//clear the cache of post list
+		if (!m_viewModel.isInRotation()) {
+			aSMApplication application = (aSMApplication) getApplication();
+			application.postListViewModel().clear();
+		}
+		
 		super.onDestroy();
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		m_viewModel.setIsInRotation(true);
+		return m_viewModel;
 	}
 
 	public void reloadPostList() {
