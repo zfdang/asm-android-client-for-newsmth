@@ -17,7 +17,7 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	public static final String SUBJECTLIST_PROPERTY_NAME = "SubjectList";
 	
-	public Board currentBoard() {
+	public Board getCurrentBoard() {
 		return m_currentBoard;
 	}
 	
@@ -43,7 +43,7 @@ public class SubjectListViewModel extends BaseViewModel {
 		m_currentBoard = currentBoard;
 	}
 	
-	public List<Subject> subjectList() {
+	public List<Subject> getSubjectList() {
 		return m_subjectList;
 	}
 	
@@ -51,7 +51,7 @@ public class SubjectListViewModel extends BaseViewModel {
 		m_subjectList = subjectList;
 	}
 	
-	public int currentPageNumber() {
+	public int getCurrentPageNumber() {
 		return m_currentPageNo;
 	}
 	
@@ -63,7 +63,7 @@ public class SubjectListViewModel extends BaseViewModel {
 		m_currentPageNo = pageNumber;
 	}
 	
-	public int boardType() {
+	public int getBoardType() {
 		return m_boardType;
 	}
 	
@@ -89,7 +89,7 @@ public class SubjectListViewModel extends BaseViewModel {
 		}
 	}
 	
-	public String titleText() {
+	public String getTitleText() {
 		return "[" + m_currentPageNo + "/" +
 				m_currentBoard.getTotalPageNo() + "]" + m_currentBoard.getChsName();
 	}
@@ -111,8 +111,8 @@ public class SubjectListViewModel extends BaseViewModel {
 		}
 	}
 	
-	public void NotifySubjectListChanged() {
-		NotifyViewModelChange(this, SUBJECTLIST_PROPERTY_NAME);
+	public void notifySubjectListChanged() {
+		notifyViewModelChange(this, SUBJECTLIST_PROPERTY_NAME);
 	}
 	
 	public boolean isInRotation() {

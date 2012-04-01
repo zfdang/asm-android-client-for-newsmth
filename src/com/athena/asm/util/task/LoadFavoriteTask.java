@@ -66,6 +66,6 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		m_viewModel.NotifyFavListChanged();
+		m_viewModel.notifyFavListChanged();
 	}
 }

@@ -72,12 +72,12 @@ public class MailViewModel extends BaseViewModel {
 		return m_maillList.get(m_maillList.size() - 1).getNumber() + 1;
 	}
 	
-	public void NotifyMailListChanged() {
-		NotifyViewModelChange(this, MAILLIST_PROPERTY_NAME);
+	public void notifyMailListChanged() {
+		notifyViewModelChange(this, MAILLIST_PROPERTY_NAME);
 	}
 	
-	public void NotifyCurrentMailContentChanged() {
-		NotifyViewModelChange(this, CURRENT_MAIL_CONTENT_PROPERTY_NAME);
+	public void notifyCurrentMailContentChanged() {
+		notifyViewModelChange(this, CURRENT_MAIL_CONTENT_PROPERTY_NAME);
 	}
 	
 	public void updateMailList(int mailboxType, int startNumber) {

@@ -1,15 +1,12 @@
 package com.athena.asm;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.SearchPostViewModel;
-import com.athena.asm.viewmodel.WritePostViewModel;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -50,13 +47,10 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		smthSupport = SmthSupport.getInstance();
 		
 		m_viewModel = (SearchPostViewModel)getLastNonConfigurationInstance();
-		boolean isNewActivity = true;
 		if (m_viewModel == null) {
 			m_viewModel = new SearchPostViewModel();
 		}
-		else {
-			isNewActivity = false;
-		}
+		
 		
 		m_viewModel.setBoardName(getIntent().getStringExtra(StringUtility.BOARD));
 		m_viewModel.setBoardID(getIntent().getStringExtra(StringUtility.BID));

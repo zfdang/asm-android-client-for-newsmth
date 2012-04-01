@@ -47,7 +47,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (m_viewModel.categoryList() == null) {
+		if (m_viewModel.getCategoryList() == null) {
 			m_viewModel.updateCategoryList();
 		}
 		
@@ -55,7 +55,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 			FileOutputStream fos = homeActivity.openFileOutput("CategoryList",
 					Context.MODE_PRIVATE);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(m_viewModel.categoryList());
+			os.writeObject(m_viewModel.getCategoryList());
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -69,6 +69,6 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		m_viewModel.NotifyCategoryChanged();
+		m_viewModel.notifyCategoryChanged();
 	}
 }

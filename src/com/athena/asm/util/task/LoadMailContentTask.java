@@ -31,7 +31,7 @@ public class LoadMailContentTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		pdialog.cancel();
-		m_viewModel.NotifyCurrentMailContentChanged();
+		m_viewModel.notifyCurrentMailContentChanged();
 	}
 
 }

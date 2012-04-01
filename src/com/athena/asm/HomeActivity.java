@@ -98,8 +98,8 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
         application = (aSMApplication) getApplication();
         application.initPreferences();
         
-        m_viewModel = application.homeViewModel();
-        m_viewModel.RegisterViewModelChangeObserver(this);
+        m_viewModel = application.getHomeViewModel();
+        m_viewModel.registerViewModelChangeObserver(this);
         
         boolean isAutoLogin = application.isAutoLogin();
         
@@ -156,7 +156,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             isIntoSettings = false;
             int index = (int) (currentTabIndex / 10);
             if (index == 1) {
-                reloadFavorite(m_viewModel.favList(), 20);
+                reloadFavorite(m_viewModel.getFavList(), 20);
             } else {
                 reloadGuidanceList();
             }
@@ -171,7 +171,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     
     @Override
 	public void onDestroy() {
-		m_viewModel.UnregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver();
 		
 		super.onDestroy();
 	}
@@ -218,7 +218,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             alertBuilder.show();
         }
 
-        String tab = m_viewModel.currentTab() == null ? application.getDefaultTab() : m_viewModel.currentTab();
+        String tab = m_viewModel.getCurrentTab() == null ? application.getDefaultTab() : m_viewModel.getCurrentTab();
         m_viewModel.setCurrentTab(tab);
     }
 
@@ -305,7 +305,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     }
 
     public void reloadGuidanceList() {
-        if (m_viewModel.guidanceSectionNames() == null || m_viewModel.guidanceSectionDetails() == null) {
+        if (m_viewModel.getGuidanceSectionNames() == null || m_viewModel.getGuidanceSectionDetails() == null) {
             LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(this, m_viewModel);
             loadGuidanceTask.execute();
         } else {
@@ -313,7 +313,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             ListView listView = (ListView) layout
                     .findViewById(R.id.guidance_list);
             listView.setAdapter(new GuidanceListAdapter(this, 0, 0,
-            		m_viewModel.guidanceSectionNames(), m_viewModel.guidanceSectionDetails()));
+            		m_viewModel.getGuidanceSectionNames(), m_viewModel.getGuidanceSectionDetails()));
             listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -324,7 +324,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                             .findViewById(R.id.guidance_list);
                     listView.setAdapter(new GuidanceListAdapter(
                             HomeActivity.this, 1, position,
-                            m_viewModel.guidanceSectionNames(), m_viewModel.guidanceSectionDetails()));
+                            m_viewModel.getGuidanceSectionNames(), m_viewModel.getGuidanceSectionDetails()));
                     listView.setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent,
@@ -443,7 +443,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             textView.setCompletionHint("请输入版面英文名");
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_dropdown_item_1line,
-                    m_viewModel.boardFullStrings());
+                    m_viewModel.getBoardFullStrings());
             textView.setAdapter(adapter);
 
             titleTextView.setText(R.string.title_category);
@@ -454,7 +454,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     public void loadMail() {
         View layout = inflater.inflate(R.layout.mail, null);
         ListView listView = (ListView) layout.findViewById(R.id.mail_list);
-        listView.setAdapter(new MailAdapter(this, m_viewModel.mailBox()));
+        listView.setAdapter(new MailAdapter(this, m_viewModel.getMailBox()));
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -497,7 +497,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     public void reloadProfile(Profile profile, final int step) {
         if (profile == null) {
             LoadProfileTask loadProfileTask = new LoadProfileTask(this, m_viewModel,
-                    m_viewModel.loginUserID(), 50);
+                    m_viewModel.getLoginUserID(), 50);
             loadProfileTask.execute();
         } else {
             View layout = inflater.inflate(R.layout.profile, null);
@@ -713,7 +713,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                 boolean isDeleted = deleteFile("FavList");
                 if (isDeleted) {
                     m_viewModel.setFavList(null);
-                    reloadFavorite(m_viewModel.favList(), 20);
+                    reloadFavorite(m_viewModel.getFavList(), 20);
                 }
                 break;
             case 3:
@@ -727,7 +727,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                                 boolean isDeleted = deleteFile("CategoryList");
                                 if (isDeleted) {
                                     m_viewModel.setCategoryList(null);
-                                    reloadCategory(m_viewModel.categoryList(), 30);
+                                    reloadCategory(m_viewModel.getCategoryList(), 30);
                                 }
 
                             }
@@ -740,7 +740,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                 break;
             case 5:
                 m_viewModel.setCurrentProfile(null);
-                reloadProfile(m_viewModel.currentProfile(), 50);
+                reloadProfile(m_viewModel.getCurrentProfile(), 50);
                 break;
             default:
                 break;
@@ -790,7 +790,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
                     .getParent()).findViewById(R.id.search_board);
 
-            Board board = m_viewModel.boardHashMap().get(textView.getText().toString()
+            Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString()
                     .toLowerCase());
 
             if (board == null) {
@@ -818,16 +818,16 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     }
 
 	@Override
-	public void OnViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
+	public void onViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
 		
 		if (changedPropertyName.equals(HomeViewModel.GUIDANCE_PROPERTY_NAME)) {
 			reloadGuidanceList();
 		}
 		else if (changedPropertyName.equals(HomeViewModel.CATEGORYLIST_PROPERTY_NAME)) {
-			reloadCategory(m_viewModel.categoryList(), 30);
+			reloadCategory(m_viewModel.getCategoryList(), 30);
 		}
 		else if (changedPropertyName.equals(HomeViewModel.FAVLIST_PROPERTY_NAME)) {
-			reloadFavorite(m_viewModel.favList(), 20);
+			reloadFavorite(m_viewModel.getFavList(), 20);
 		}
 		else if (changedPropertyName.equals(HomeViewModel.MAILBOX_PROPERTY_NAME)) {
 			loadMail();
@@ -839,7 +839,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 			reloadProfile(profile, step);
 		}
 		else if (changedPropertyName.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			String tab = m_viewModel.currentTab();
+			String tab = m_viewModel.getCurrentTab();
 			
 			//TODO: find a better place to do this...
 			if (!tab.equals("004")) {
@@ -849,13 +849,13 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 			if (tab.equals("001")) {
 	            reloadGuidanceList();
 	        } else if (tab.equals("002")) {
-	            reloadFavorite(m_viewModel.favList(), 20);
+	            reloadFavorite(m_viewModel.getFavList(), 20);
 	        } else if (tab.equals("003")) {
-	            reloadCategory(m_viewModel.categoryList(), 30);
+	            reloadCategory(m_viewModel.getCategoryList(), 30);
 	        } else if (tab.equals("004")) {
 	            reloadMail();
 	        } else {
-	            reloadProfile(m_viewModel.currentProfile(), 50);
+	            reloadProfile(m_viewModel.getCurrentProfile(), 50);
 	        }
 		}
 		

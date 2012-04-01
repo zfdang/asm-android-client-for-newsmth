@@ -74,8 +74,8 @@ public class PostListActivity extends Activity implements OnClickListener,
 		smthSupport = SmthSupport.getInstance();
 		
 		aSMApplication application = (aSMApplication) getApplication();
-		m_viewModel = application.postListViewModel();
-		m_viewModel.RegisterViewModelChangeObserver(this);
+		m_viewModel = application.getPostListViewModel();
+		m_viewModel.registerViewModelChangeObserver(this);
 
 		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		
@@ -92,7 +92,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
-		pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 
 		firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setOnClickListener(this);
@@ -113,7 +113,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 		mGestureDetector = new GestureDetector(this);
 
 		if (isNewSubject) {
-			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.currentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.getCurrentSubject(),
 					0, false, false);
 			loadPostTask.execute();
 		}
@@ -131,13 +131,13 @@ public class PostListActivity extends Activity implements OnClickListener,
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.UnregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver();
 		
 		super.onDestroy();
 	}
 
 	public void reloadPostList() {
-		if (m_viewModel.postList() == null) {
+		if (m_viewModel.getPostList() == null) {
 			
 			m_viewModel.ensurePostExists();
 			
@@ -147,16 +147,16 @@ public class PostListActivity extends Activity implements OnClickListener,
 			lastButton.setEnabled(false);
 		}
 
-		listView.setAdapter(new PostListAdapter(this, inflater, m_viewModel.postList()));
+		listView.setAdapter(new PostListAdapter(this, inflater, m_viewModel.getPostList()));
 
 		m_viewModel.updateCurrentPageNumberFromSubject();
-		pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 		listView.requestFocus();
 
 		m_viewModel.setIsPreloadFinished(false);
 		m_viewModel.updatePreloadSubjectFromCurrentSubject();
 
-		if (m_viewModel.boardType() == 0) {
+		if (m_viewModel.getBoardType() == 0) {
 			goButton.setVisibility(View.VISIBLE);
 			pageNoEditText.setVisibility(View.VISIBLE);
 			firstButton.setText(R.string.first_page);
@@ -164,7 +164,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 			preButton.setText(R.string.pre_page);
 			nextButton.setText(R.string.next_page);
 
-			titleTextView.setText(m_viewModel.subjectTitle());
+			titleTextView.setText(m_viewModel.getSubjectTitle());
 
 		} else {
 			goButton.setVisibility(View.GONE);
@@ -174,20 +174,20 @@ public class PostListActivity extends Activity implements OnClickListener,
 			preButton.setText(R.string.topic_pre_page);
 			nextButton.setText(R.string.topic_next_page);
 
-			titleTextView.setText(m_viewModel.subjectTitle());
+			titleTextView.setText(m_viewModel.getSubjectTitle());
 
 		}
 
-		if (m_viewModel.boardType() == 0) {
-			int nextPage = m_viewModel.nextPageNumber();
+		if (m_viewModel.getBoardType() == 0) {
+			int nextPage = m_viewModel.getNextPageNumber();
 			if (nextPage > 0) {
-				m_viewModel.preloadSubject().setCurrentPageNo(nextPage);
+				m_viewModel.getPreloadSubject().setCurrentPageNo(nextPage);
 				LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel,
-						m_viewModel.preloadSubject(), 0, true, false);
+						m_viewModel.getPreloadSubject(), 0, true, false);
 				loadPostTask.execute();
 			}
 		} else {
-			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.preloadSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.getPreloadSubject(),
 					3, true, false);
 			loadPostTask.execute();
 		}
@@ -226,7 +226,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 	@Override
 	public void onClick(View view) {
 		boolean isNext = false;
-		if (m_viewModel.boardType() == 0) { // 同主题导航
+		if (m_viewModel.getBoardType() == 0) { // 同主题导航
 
 			if (view.getId() == R.id.btn_first_page) {
 				m_viewModel.gotoFirstPage();
@@ -244,12 +244,12 @@ public class PostListActivity extends Activity implements OnClickListener,
 			}
 
 			m_viewModel.updateSubjectCurrentPageNumberFromCurrentPageNumber();
-			pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			if (view.getParent() != null) {
 				((View) view.getParent()).requestFocus();
 			}
 
-			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.currentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.getCurrentSubject(),
 					0, false, isNext);
 			loadPostTask.execute();
 		} else {
@@ -269,7 +269,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 				m_viewModel.updateSubjectIDFromTopicSubjectID();
 				m_viewModel.setSubjectCurrentPageNumber(1);
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.currentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.getCurrentSubject(),
 					action, false, isNext);
 			loadPostTask.execute();
 		}
@@ -461,7 +461,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void OnViewModelChange(BaseViewModel viewModel,
+	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
 		
 		if (changedPropertyName.equals(PostListViewModel.POSTLIST_PROPERTY_NAME)) {

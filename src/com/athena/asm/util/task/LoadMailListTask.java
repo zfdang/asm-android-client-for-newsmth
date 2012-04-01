@@ -37,7 +37,7 @@ public class LoadMailListTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		pdialog.cancel();
-		m_viewModel.NotifyMailListChanged();
+		m_viewModel.notifyMailListChanged();
 	}
 
 }

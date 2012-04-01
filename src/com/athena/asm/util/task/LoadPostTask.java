@@ -25,7 +25,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	public LoadPostTask(PostListActivity activity, PostListViewModel viewModel, Subject subject, int action, 
 			boolean isSilent, boolean isUsePreload) {
 		this.postListActivity = activity;
-		this.boardType = viewModel.boardType();
+		this.boardType = viewModel.getBoardType();
 		this.action = action;
 		this.isSilent = isSilent;
 		this.isUsePreload = isUsePreload;
@@ -68,7 +68,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 			m_viewModel.setIsPreloadFinished(true);
 		}
 		else {
-			if (isUsePreload && m_viewModel.isPreloadFinished() && m_viewModel.preloadPostList() != null) {
+			if (isUsePreload && m_viewModel.isPreloadFinished() && m_viewModel.getPreloadPostList() != null) {
 				m_viewModel.setIsPreloadFinished(false);
 				m_viewModel.updatePostListFromPreloadPostList();
 				m_viewModel.updateCurrentSubjectFromPreloadSubject();
@@ -85,7 +85,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		if (!isSilent) {
 			pdialog.cancel();
-			m_viewModel.NotifyPostListChanged();
+			m_viewModel.notifyPostListChanged();
 		}
 	}
 

@@ -39,7 +39,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getMailViewModel();
-	    m_viewModel.RegisterViewModelChangeObserver(this);
+	    m_viewModel.registerViewModelChangeObserver(this);
 
 		boolean isToUpdate = m_viewModel.tryUpdateMailboxType((getIntent().getIntExtra(StringUtility.MAIL_BOX_TYPE, 0)));
 		
@@ -83,7 +83,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.UnregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver();
 		
 		super.onDestroy();
 	}
@@ -123,7 +123,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 	}
 
 	@Override
-	public void OnViewModelChange(BaseViewModel viewModel,
+	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
 		
 		if (changedPropertyName.equals(MailViewModel.MAILLIST_PROPERTY_NAME)) {

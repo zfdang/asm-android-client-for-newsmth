@@ -32,6 +32,6 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		m_viewModel.NotifyMailboxChanged();
+		m_viewModel.notifyMailboxChanged();
 	}
 }

@@ -56,7 +56,7 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		step++;
 		if (type == 0) {
-			m_viewModel.NotifyProfileChanged(profile, step);
+			m_viewModel.notifyProfileChanged(profile, step);
 		}
 		else {
 			viewProfileActivity.reloadProfile(profile);

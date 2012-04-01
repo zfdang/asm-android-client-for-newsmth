@@ -60,7 +60,7 @@ public class HomeViewModel extends BaseViewModel {
 		m_isGuestLoggedin = isGuestLoggedin;
 	}
 	
-	public String loginUserID() {
+	public String getLoginUserID() {
 		return m_loginUserID;
 	}
 	
@@ -71,7 +71,7 @@ public class HomeViewModel extends BaseViewModel {
 		}
 	}
 	
-	public List<String> guidanceSectionNames() {
+	public List<String> getGuidanceSectionNames() {
 		return m_guidanceSectionNames;
 	}
 	
@@ -79,7 +79,7 @@ public class HomeViewModel extends BaseViewModel {
 		m_guidanceSectionNames = guidanceSectionNames;
 	}
 	
-	public List<List<Subject>> guidanceSectionDetails() {
+	public List<List<Subject>> getGuidanceSectionDetails() {
 		return m_guidanceSectionDetails;
 	}
 	
@@ -87,7 +87,7 @@ public class HomeViewModel extends BaseViewModel {
 		m_guidanceSectionDetails = guidanceSectionDetails;
 	}
 	
-	public List<Board> favList() {
+	public List<Board> getFavList() {
 		return m_favList;
 	}
 	
@@ -95,7 +95,7 @@ public class HomeViewModel extends BaseViewModel {
 		m_favList = favList;
 	}
 	
-	public MailBox mailBox() {
+	public MailBox getMailBox() {
 		return m_mailBox;
 	}
 	
@@ -103,7 +103,7 @@ public class HomeViewModel extends BaseViewModel {
 		m_mailBox = mailbox;
 	}
 	
-	public List<Board> categoryList() {
+	public List<Board> getCategoryList() {
 		return m_categoryList;
 	}
 	
@@ -111,15 +111,15 @@ public class HomeViewModel extends BaseViewModel {
 		m_categoryList = categoryList;
 	}
 	
-	public List<String> boardFullStrings() {
+	public List<String> getBoardFullStrings() {
 		return m_boardFullStrings;
 	}
 	
-	public HashMap<String, Board> boardHashMap() {
+	public HashMap<String, Board> getBoardHashMap() {
 		return m_boardHashMap;
 	}
 	
-	public Profile currentProfile() {
+	public Profile getCurrentProfile() {
 		return m_currentProfile;
 	}
 	
@@ -127,14 +127,14 @@ public class HomeViewModel extends BaseViewModel {
 		m_currentProfile = currentProfile;
 	}
 	
-	public String currentTab() {
+	public String getCurrentTab() {
 		return m_currentTab;
 	}
 	
 	public void setCurrentTab(String currentTab) {
 		m_currentTab = currentTab;
 		
-		NotifyViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
+		notifyViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
 	}
 	
 	public boolean login(String userName, String password) {
@@ -224,24 +224,24 @@ public class HomeViewModel extends BaseViewModel {
 		}
 	}
 	
-	public void NotifyGuidanceChanged() {
-		NotifyViewModelChange(this, GUIDANCE_PROPERTY_NAME);
+	public void notifyGuidanceChanged() {
+		notifyViewModelChange(this, GUIDANCE_PROPERTY_NAME);
 	}
 	
-	public void NotifyFavListChanged() {
-		NotifyViewModelChange(this, FAVLIST_PROPERTY_NAME);
+	public void notifyFavListChanged() {
+		notifyViewModelChange(this, FAVLIST_PROPERTY_NAME);
 	}
 	
-	public void NotifyCategoryChanged() {
-		NotifyViewModelChange(this, CATEGORYLIST_PROPERTY_NAME);
+	public void notifyCategoryChanged() {
+		notifyViewModelChange(this, CATEGORYLIST_PROPERTY_NAME);
 	}
 	
-	public void NotifyMailboxChanged() {
-		NotifyViewModelChange(this, MAILBOX_PROPERTY_NAME);
+	public void notifyMailboxChanged() {
+		notifyViewModelChange(this, MAILBOX_PROPERTY_NAME);
 	}
 	
-	public void NotifyProfileChanged(Profile profile, int step) {
-		NotifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
+	public void notifyProfileChanged(Profile profile, int step) {
+		notifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
 	}
 	
 }

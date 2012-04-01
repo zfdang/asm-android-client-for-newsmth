@@ -32,6 +32,6 @@ public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		m_viewModel.NotifyGuidanceChanged();
+		m_viewModel.notifyGuidanceChanged();
 	}
 }

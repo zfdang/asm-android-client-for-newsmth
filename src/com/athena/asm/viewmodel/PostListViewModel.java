@@ -22,7 +22,7 @@ public class PostListViewModel extends BaseViewModel {
 	public static final String POSTLIST_PROPERTY_NAME = "PostList";
 	
 	
-	public Subject currentSubject() {
+	public Subject getCurrentSubject() {
 		return m_currentSubject;
 	}
 	
@@ -30,7 +30,7 @@ public class PostListViewModel extends BaseViewModel {
 		m_currentSubject = currentSubject;
 	}
 	
-	public List<Post> postList() {
+	public List<Post> getPostList() {
 		return m_postList;
 	}
 	
@@ -52,7 +52,7 @@ public class PostListViewModel extends BaseViewModel {
 		}
 	}
 	
-	public int currentPageNumber() {
+	public int getCurrentPageNumber() {
 		return m_currentPageNo;
 	}
 	
@@ -80,7 +80,7 @@ public class PostListViewModel extends BaseViewModel {
 		m_currentSubject.setCurrentPageNo(pageNumber);
 	}
 	
-	public int nextPageNumber() {
+	public int getNextPageNumber() {
 		int nextPageNumber = m_currentPageNo + 1;
 		if (nextPageNumber > m_currentSubject.getTotalPageNo()) {
 			return -1;
@@ -111,7 +111,7 @@ public class PostListViewModel extends BaseViewModel {
 		}
 	}
 	
-	public String subjectTitle() {
+	public String getSubjectTitle() {
 		
 		if (m_boardType == 0) {
 			return "[" + m_currentPageNo + "/"
@@ -124,7 +124,7 @@ public class PostListViewModel extends BaseViewModel {
 		
 	}
 	
-	public int boardType() {
+	public int getBoardType() {
 		return m_boardType;
 	}
 	
@@ -132,7 +132,7 @@ public class PostListViewModel extends BaseViewModel {
 		m_boardType = boardType;
 	}
 	
-	public Subject preloadSubject() {
+	public Subject getPreloadSubject() {
 		return m_preloadSubject;
 	}
 	
@@ -144,7 +144,7 @@ public class PostListViewModel extends BaseViewModel {
 		m_currentSubject = m_preloadSubject;
 	}
 	
-	public List<Post> preloadPostList() {
+	public List<Post> getPreloadPostList() {
 		return m_preloadPostList;
 	}
 	
@@ -191,8 +191,8 @@ public class PostListViewModel extends BaseViewModel {
 		return isNewSubject;
 	}
 	
-	public void NotifyPostListChanged() {
-		NotifyViewModelChange(this, POSTLIST_PROPERTY_NAME);
+	public void notifyPostListChanged() {
+		notifyViewModelChange(this, POSTLIST_PROPERTY_NAME);
 	}
 	
 	public void clear() {

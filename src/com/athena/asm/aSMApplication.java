@@ -498,15 +498,15 @@ public class aSMApplication extends Application {
 		this.isNightTheme = isNightTheme;
 	}
 	
-	public HomeViewModel homeViewModel() {
+	public HomeViewModel getHomeViewModel() {
 		return m_homeViewModel;
 	}
 	
-	public SubjectListViewModel subjectListViewModel() {
+	public SubjectListViewModel getSubjectListViewModel() {
 		return m_subjectListViewModel;
 	}
 	
-	public PostListViewModel postListViewModel() {
+	public PostListViewModel getPostListViewModel() {
 		return m_postListViewModel;
 	}
 	

@@ -56,8 +56,8 @@ public class SubjectListActivity extends Activity
 		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		
 		aSMApplication application = (aSMApplication) getApplication();
-		m_viewModel = application.subjectListViewModel();
-		m_viewModel.RegisterViewModelChangeObserver(this);
+		m_viewModel = application.getSubjectListViewModel();
+		m_viewModel.registerViewModelChangeObserver(this);
 		m_viewModel.setIsInRotation(false);
 		
 		smthSupport = SmthSupport.getInstance();
@@ -73,7 +73,7 @@ public class SubjectListActivity extends Activity
 		}
 
 		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
-		pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 
 		Button firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setOnClickListener(this);
@@ -108,13 +108,13 @@ public class SubjectListActivity extends Activity
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.UnregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver();
 		
 		//If we do exit(not called due to rotation here),
 		//clear the cache of post list
 		if (!m_viewModel.isInRotation()) {
 			aSMApplication application = (aSMApplication) getApplication();
-			application.postListViewModel().clear();
+			application.getPostListViewModel().clear();
 		}
 		
 		super.onDestroy();
@@ -129,13 +129,13 @@ public class SubjectListActivity extends Activity
 	public void reloadPostList() {
 		if (isFirstIn) {
 			m_viewModel.gotoLastPage();
-			pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			isFirstIn = false;
 		}
 
 		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
 		listView.onRefreshComplete();
-		listView.setAdapter(new SubjectListAdapter(inflater, m_viewModel.subjectList()));
+		listView.setAdapter(new SubjectListAdapter(inflater, m_viewModel.getSubjectList()));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -144,7 +144,7 @@ public class SubjectListActivity extends Activity
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
 				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
-				bundle.putInt(StringUtility.BOARD_TYPE, m_viewModel.boardType());
+				bundle.putInt(StringUtility.BOARD_TYPE, m_viewModel.getBoardType());
 				intent.putExtras(bundle);
 				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
 				//activity.startActivity(intent);
@@ -160,7 +160,7 @@ public class SubjectListActivity extends Activity
                     }
                 });
 		
-		titleTextView.setText(m_viewModel.titleText());
+		titleTextView.setText(m_viewModel.getTitleText());
 		
 		listView.requestFocus();
 
@@ -194,7 +194,7 @@ public class SubjectListActivity extends Activity
 			intent.putExtra(
 					StringUtility.URL,
 					"http://www.newsmth.net/bbspst.php?board="
-							+ m_viewModel.currentBoard().getEngName());
+							+ m_viewModel.getCurrentBoard().getEngName());
 			intent.putExtra(StringUtility.WRITE_TYPE, 0);
 			intent.putExtra(StringUtility.IS_REPLY, false);
 			startActivityForResult(intent, 0);
@@ -202,7 +202,7 @@ public class SubjectListActivity extends Activity
 		
 		if (isToRefresh) {
 			m_viewModel.updateBoardCurrentPage();
-			pageNoEditText.setText(m_viewModel.currentPageNumber() + "");
+			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
 			loadSubjectTask.execute();
 		}
@@ -267,7 +267,7 @@ public class SubjectListActivity extends Activity
 					this);
 			builder.setTitle(R.string.post_alert_title);
 			//builder.setItems(items,this);
-			builder.setAdapter(new BoardTypeListAdapter(m_viewModel.boardType(), inflater), this);
+			builder.setAdapter(new BoardTypeListAdapter(m_viewModel.getBoardType(), inflater), this);
 			AlertDialog alert = builder.create();
 			alert.show();
 			break;
@@ -279,8 +279,8 @@ public class SubjectListActivity extends Activity
 			Intent postIntent = new Intent();
 			postIntent.setClassName("com.athena.asm",
 					"com.athena.asm.SearchPostActivity");
-			postIntent.putExtra(StringUtility.BOARD, m_viewModel.currentBoard().getEngName());
-			postIntent.putExtra(StringUtility.BID, m_viewModel.currentBoard().getBoardID());
+			postIntent.putExtra(StringUtility.BOARD, m_viewModel.getCurrentBoard().getEngName());
+			postIntent.putExtra(StringUtility.BID, m_viewModel.getCurrentBoard().getBoardID());
 			startActivity(postIntent);
 			break;
 		case CREATE_ID:
@@ -290,7 +290,7 @@ public class SubjectListActivity extends Activity
 			intent.putExtra(
 					StringUtility.URL,
 					"http://www.newsmth.net/bbspst.php?board="
-							+ m_viewModel.currentBoard().getEngName());
+							+ m_viewModel.getCurrentBoard().getEngName());
 			intent.putExtra(StringUtility.WRITE_TYPE, 0);
 			intent.putExtra(StringUtility.IS_REPLY, false);
 			//startActivity(intent);
@@ -312,7 +312,7 @@ public class SubjectListActivity extends Activity
 	}
 
 	@Override
-	public void OnViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
+	public void onViewModelChange(BaseViewModel viewModel, String changedPropertyName, Object ... params) {
 		if (changedPropertyName.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
 			reloadPostList();
 		}

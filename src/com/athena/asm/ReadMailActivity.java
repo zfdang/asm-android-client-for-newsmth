@@ -40,7 +40,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 		
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getMailViewModel();
-	    m_viewModel.RegisterViewModelChangeObserver(this);
+	    m_viewModel.registerViewModelChangeObserver(this);
 
 		boolean isNewMail = m_viewModel.tryUpdateCurrentMail((Mail) getIntent().getSerializableExtra(
 				StringUtility.MAIL));
@@ -84,7 +84,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.UnregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver();
 		
 		super.onDestroy();
 	}
@@ -95,7 +95,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 	}
 
 	@Override
-	public void OnViewModelChange(BaseViewModel viewModel,
+	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
 		if (changedPropertyName.equals(MailViewModel.CURRENT_MAIL_CONTENT_PROPERTY_NAME)) {
 			loadMailContent();
