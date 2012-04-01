@@ -75,15 +75,15 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	public void gotoNextPage() {
 		m_currentPageNo++;
-		if (m_currentPageNo < 1) {
-			m_currentPageNo = 1;
+		if (m_currentPageNo > m_currentBoard.getTotalPageNo()) {
+			m_currentPageNo = m_currentBoard.getTotalPageNo();
 		}
 	}
 	
 	public void gotoPrevPage() {
 		m_currentPageNo--;
-		if (m_currentPageNo > m_currentBoard.getTotalPageNo()) {
-			m_currentPageNo = m_currentBoard.getTotalPageNo();
+		if (m_currentPageNo < 1) {
+			m_currentPageNo = 1;
 		}
 	}
 	

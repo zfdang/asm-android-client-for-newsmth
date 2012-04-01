@@ -98,15 +98,15 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public void gotoNextPage() {
 		m_currentPageNo++;
-		if (m_currentPageNo < 1) {
-			m_currentPageNo = 1;
+		if (m_currentPageNo > m_currentSubject.getTotalPageNo()) {
+			m_currentPageNo = m_currentSubject.getTotalPageNo();
 		}
 	}
 	
 	public void gotoPrevPage() {
 		m_currentPageNo--;
-		if (m_currentPageNo > m_currentSubject.getTotalPageNo()) {
-			m_currentPageNo = m_currentSubject.getTotalPageNo();
+		if (m_currentPageNo < 1) {
+			m_currentPageNo = 1;
 		}
 	}
 	
