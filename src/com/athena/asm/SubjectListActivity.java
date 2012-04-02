@@ -44,8 +44,6 @@ public class SubjectListActivity extends Activity
 
 	EditText pageNoEditText;
 	TextView titleTextView;
-
-	private boolean isFirstIn = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +56,17 @@ public class SubjectListActivity extends Activity
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getSubjectListViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
+		boolean isNewBoard = false;
+		if (!m_viewModel.isInRotation()) {
+			String defaultBoardType = HomeActivity.application.getDefaultBoardType();
+			Board currentBoard = (Board) getIntent().getSerializableExtra(StringUtility.BOARD);
+			isNewBoard = m_viewModel.updateCurrentBoard(currentBoard, defaultBoardType);
+			m_viewModel.setIsFirstIn(true);
+		}
+		
 		m_viewModel.setIsInRotation(false);
 		
 		smthSupport = SmthSupport.getInstance();
-		
-		String defaultBoardType = HomeActivity.application.getDefaultBoardType();
-		Board currentBoard = (Board) getIntent().getSerializableExtra(StringUtility.BOARD);
-		boolean isNewBoard = m_viewModel.updateCurrentBoard(currentBoard, defaultBoardType);
 		
 		titleTextView = (TextView) findViewById(R.id.boardTitle);
 		
@@ -92,7 +94,7 @@ public class SubjectListActivity extends Activity
 		switchModeImageButton.setOnClickListener(this);
 		
 		if (isNewBoard) {
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 			loadSubjectTask.execute();
 		}
 		else {
@@ -127,10 +129,10 @@ public class SubjectListActivity extends Activity
 	}
 
 	public void reloadPostList() {
-		if (isFirstIn) {
+		if (m_viewModel.isFirstIn()) {
 			m_viewModel.gotoLastPage();
 			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-			isFirstIn = false;
+			m_viewModel.setIsFirstIn(false);
 		}
 
 		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
@@ -183,8 +185,8 @@ public class SubjectListActivity extends Activity
 		} else if (view.getId() == R.id.switchBoardMode) {
 			isToRefresh = false;
 			m_viewModel.toggleBoardType();
-			isFirstIn = true;
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+			m_viewModel.setIsFirstIn(true);
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 			loadSubjectTask.execute();
 		} else if (view.getId() == R.id.writePost) {
 			isToRefresh = false;
@@ -203,14 +205,14 @@ public class SubjectListActivity extends Activity
 		if (isToRefresh) {
 			m_viewModel.updateBoardCurrentPage();
 			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 			loadSubjectTask.execute();
 		}
 		
 	}
 	
 	private void refreshSubjectList() {
-	    LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+	    LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
             loadSubjectTask.execute();
         }
 
@@ -226,7 +228,7 @@ public class SubjectListActivity extends Activity
 			Bundle b = data.getExtras();
 			boolean isToRefreshBoard = b.getBoolean(StringUtility.REFRESH_BOARD);
 			if (isToRefreshBoard) {
-				LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+				LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 				loadSubjectTask.execute();
 			}
 			break;
@@ -272,7 +274,7 @@ public class SubjectListActivity extends Activity
 			alert.show();
 			break;
 		case REFRESH_SUBJECTLIST:
-			loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+			loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 			loadSubjectTask.execute();
 			break;
 		case SEARCH_POST:
@@ -304,9 +306,9 @@ public class SubjectListActivity extends Activity
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		isFirstIn = true;
+		m_viewModel.setIsFirstIn(true);
 		m_viewModel.setBoardType(which);
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel, isFirstIn);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 		loadSubjectTask.execute();
 		dialog.dismiss();
 	}

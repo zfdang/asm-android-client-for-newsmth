@@ -17,10 +17,10 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	private SubjectListViewModel m_viewModel;
 	
-	public LoadSubjectTask(SubjectListActivity activity, SubjectListViewModel viewModel, boolean isReloadPageNo) {
+	public LoadSubjectTask(SubjectListActivity activity, SubjectListViewModel viewModel) {
 		this.subjectListActivity = activity;
 		m_viewModel = viewModel;
-		this.isReloadPageNo = isReloadPageNo;
+		this.isReloadPageNo = viewModel.isFirstIn();
 	}
 	
 	@Override

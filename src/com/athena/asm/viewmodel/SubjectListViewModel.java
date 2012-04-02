@@ -13,6 +13,8 @@ public class SubjectListViewModel extends BaseViewModel {
 	private int m_currentPageNo = 1;
 	private int m_boardType = 0;
 	
+	private boolean m_isFirstIn = true;
+	
 	private boolean m_isInRotation = false;
 	
 	public static final String SUBJECTLIST_PROPERTY_NAME = "SubjectList";
@@ -49,6 +51,14 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	public void setSubjectList(List<Subject> subjectList) {
 		m_subjectList = subjectList;
+	}
+	
+	public boolean isFirstIn() {
+		return m_isFirstIn;
+	}
+	
+	public void setIsFirstIn(boolean isFirstIn) {
+		m_isFirstIn = isFirstIn;
 	}
 	
 	public int getCurrentPageNumber() {

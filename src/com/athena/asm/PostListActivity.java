@@ -73,15 +73,19 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 		smthSupport = SmthSupport.getInstance();
 		
-		aSMApplication application = (aSMApplication) getApplication();
-		m_viewModel = application.getPostListViewModel();
+		m_viewModel = (PostListViewModel)getLastNonConfigurationInstance();
+		boolean isNewSubject = false;
+		if (m_viewModel == null) {
+			aSMApplication application = (aSMApplication) getApplication();
+			m_viewModel = application.getPostListViewModel();
+			
+			Subject newSubject = (Subject) getIntent().getSerializableExtra(
+					StringUtility.SUBJECT);
+			isNewSubject = m_viewModel.updateSubject(newSubject);
+		}
 		m_viewModel.registerViewModelChangeObserver(this);
-
-		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		
-		Subject newSubject = (Subject) getIntent().getSerializableExtra(
-				StringUtility.SUBJECT);
-		boolean isNewSubject = m_viewModel.updateSubject(newSubject);
+		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		
 		titleTextView = (TextView) findViewById(R.id.title);
 
@@ -127,6 +131,11 @@ public class PostListActivity extends Activity implements OnClickListener,
 	public void onConfigurationChanged(Configuration newConfig) {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return m_viewModel;
 	}
 	
 	@Override
