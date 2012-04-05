@@ -3,16 +3,19 @@ package com.athena.asm.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +24,7 @@ import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
+import com.athena.asm.util.StringUtility;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class PostListAdapter extends BaseAdapter {
@@ -63,7 +67,7 @@ public class PostListAdapter extends BaseAdapter {
 			holder.post = post;
 			
 			holder.contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					HomeActivity.application.getPostFontSize());
+					HomeActivity.m_application.getPostFontSize());
 			
 			layout.setTag(holder);
 		}
@@ -102,10 +106,25 @@ public class PostListAdapter extends BaseAdapter {
 					LayoutParams layoutParams = new LayoutParams(
 							LayoutParams.WRAP_CONTENT,
 							LayoutParams.WRAP_CONTENT);
+					layoutParams.setMargins(2, 2, 2, 2);
 					imageView.setLayoutParams(layoutParams);
+					imageView.setTag(attachments.get(i));
 					holder.imageLayout.addView(imageView);
 					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl,
-							R.drawable.loading, 60000);
+							R.drawable.loading, 60000, true);
+					imageView.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent();
+							intent.setClassName("com.athena.asm",
+									"com.athena.asm.FullImageActivity");
+							Attachment attachment = (Attachment) v.getTag();
+							intent.putExtra(StringUtility.IMAGE_URL, attachment.getAttachUrl());
+							intent.putExtra(StringUtility.IMAGE_NAME, attachment.getName());
+							activity.startActivity(intent);
+						}
+					});
 				}
 			}
 			holder.attachTextView.setText(Html.fromHtml(contentBuilder.toString()));
@@ -119,7 +138,7 @@ public class PostListAdapter extends BaseAdapter {
 		holder.contentTextView.setOnTouchListener(activity);
 		layout.setOnTouchListener(activity);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

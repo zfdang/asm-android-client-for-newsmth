@@ -54,14 +54,14 @@ public class MailListAdapter extends BaseAdapter {
 			//tp.setFakeBoldText(false);
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.MailSendDate);
 		dateTextView.setText(mail.getDateString());
 		
 		layout.setTag(mail);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

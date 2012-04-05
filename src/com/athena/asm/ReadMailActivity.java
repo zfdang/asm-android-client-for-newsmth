@@ -22,9 +22,9 @@ import com.athena.asm.viewmodel.MailViewModel;
 
 public class ReadMailActivity extends Activity implements BaseViewModel.OnViewModelChangObserver {
 
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 
 	private MailViewModel m_viewModel;
 
@@ -34,9 +34,9 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_list);
 
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getMailViewModel();
@@ -48,7 +48,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(m_viewModel.getCurrentMailTitle());
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 
@@ -91,7 +91,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 
 	public void loadMailContent() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new ReadMailAdapter(this, m_viewModel.getCurrentMail(), inflater));
+		listView.setAdapter(new ReadMailAdapter(this, m_viewModel.getCurrentMail(), m_inflater));
 	}
 
 	@Override

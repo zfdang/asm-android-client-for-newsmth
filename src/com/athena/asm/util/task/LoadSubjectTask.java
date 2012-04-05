@@ -32,8 +32,8 @@ public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected String doInBackground(String... params) {
-		List<Subject> subjectList = subjectListActivity.smthSupport.getSubjectList(m_viewModel.getCurrentBoard(), 
-				m_viewModel.getBoardType(), isReloadPageNo, HomeActivity.application.getBlackList());
+		List<Subject> subjectList = subjectListActivity.m_smthSupport.getSubjectList(m_viewModel.getCurrentBoard(), 
+				m_viewModel.getBoardType(), isReloadPageNo, HomeActivity.m_application.getBlackList());
 		m_viewModel.setSubjectList(subjectList);
 		pdialog.cancel();
 		return null;

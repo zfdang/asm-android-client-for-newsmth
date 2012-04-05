@@ -51,7 +51,7 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 			
 			m_viewModel.setPostUrl(postUrl);
 
-			contentString = writePostActivity.smthSupport
+			contentString = writePostActivity.m_smthSupport
 					.getUrlContent(m_viewModel.getToHandlerUrl());
 		} else if (type == WritePostActivity.TYPE_MAIL) {
 			postUrl = "http://www.newsmth.net/bbssendmail.php";
@@ -93,7 +93,7 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 			
 			m_viewModel.setPostUrl(postUrl);
 
-			contentString = writePostActivity.smthSupport
+			contentString = writePostActivity.m_smthSupport
 					.getUrlContent(m_viewModel.getToHandlerUrl());
 		} else if (type == WritePostActivity.TYPE_POST_EDIT) {
 			postUrl = "http://www.newsmth.net/bbsedit.php";
@@ -108,7 +108,7 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 			postUrl += "&ftype=0";
 			m_viewModel.setPostUrl(postUrl);
 			
-			contentString = writePostActivity.smthSupport
+			contentString = writePostActivity.m_smthSupport
 					.getUrlContent(m_viewModel.getToHandlerUrl());
 		}
 		return null;

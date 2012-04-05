@@ -14,21 +14,21 @@ import android.view.KeyEvent;
 
 public class SettingActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
-	private CheckBoxPreference rememberUser;
-	private CheckBoxPreference autoLogin;
-	private ListPreference defaultTab;
+	private CheckBoxPreference m_rememberUser;
+	private CheckBoxPreference m_autoLogin;
+	private ListPreference m_defaultTab;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preference);
-		rememberUser = (CheckBoxPreference) findPreference(Preferences.REMEMBER_USER);
-		autoLogin = (CheckBoxPreference) findPreference(Preferences.AUTO_LOGIN);
-		defaultTab = (ListPreference) findPreference(Preferences.DEFAULT_TAB);
-		rememberUser.setOnPreferenceChangeListener(this);
-		rememberUser.setOnPreferenceClickListener(this);
-		defaultTab.setOnPreferenceChangeListener(this);
-		defaultTab.setOnPreferenceClickListener(this);
+		m_rememberUser = (CheckBoxPreference) findPreference(Preferences.REMEMBER_USER);
+		m_autoLogin = (CheckBoxPreference) findPreference(Preferences.AUTO_LOGIN);
+		m_defaultTab = (ListPreference) findPreference(Preferences.DEFAULT_TAB);
+		m_rememberUser.setOnPreferenceChangeListener(this);
+		m_rememberUser.setOnPreferenceClickListener(this);
+		m_defaultTab.setOnPreferenceChangeListener(this);
+		m_defaultTab.setOnPreferenceClickListener(this);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class SettingActivity extends PreferenceActivity implements
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		if(preference.getKey().equals(Preferences.REMEMBER_USER)) {
 			if (!(Boolean)newValue) {
-				autoLogin.setChecked(false);
+				m_autoLogin.setChecked(false);
 			}
 		}
 		return true;
@@ -55,7 +55,7 @@ public class SettingActivity extends PreferenceActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			HomeActivity.application.initPreferences();
+			HomeActivity.m_application.initPreferences();
 			return super.onKeyDown(keyCode, event);
 		} else {
 			return super.onKeyDown(keyCode, event);

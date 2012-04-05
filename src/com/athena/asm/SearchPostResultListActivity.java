@@ -22,13 +22,13 @@ import com.athena.asm.util.StringUtility;
 
 public class SearchPostResultListActivity extends Activity {
 
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 
-	public List<Subject> subjectList;
+	public List<Subject> m_subjectList;
 
-	public int boardType = 1;
+	public int m_boardType = 1;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -37,18 +37,18 @@ public class SearchPostResultListActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_post_result_list);
 
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
-		subjectList = (List<Subject>) getIntent().getSerializableExtra(StringUtility.SUBJECT_LIST);
+		m_subjectList = (List<Subject>) getIntent().getSerializableExtra(StringUtility.SUBJECT_LIST);
 
 		TextView titleTextView = (TextView) findViewById(R.id.title);
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 		
-		if (subjectList.size() > 0) {
+		if (m_subjectList.size() > 0) {
 			titleTextView.setText("搜索结果");
 		}
 		else {
@@ -56,7 +56,7 @@ public class SearchPostResultListActivity extends Activity {
 		}
 		
 		ListView listView = (ListView) findViewById(R.id.search_result_subject_list);
-		listView.setAdapter(new SearchPostResultListAdapter(inflater, subjectList));
+		listView.setAdapter(new SearchPostResultListAdapter(m_inflater, m_subjectList));
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -64,7 +64,7 @@ public class SearchPostResultListActivity extends Activity {
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
 				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
-				bundle.putInt(StringUtility.BOARD_TYPE, boardType);
+				bundle.putInt(StringUtility.BOARD_TYPE, m_boardType);
 				intent.putExtras(bundle);
 				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
 				startActivity(intent);

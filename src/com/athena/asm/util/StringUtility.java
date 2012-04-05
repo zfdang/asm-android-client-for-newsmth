@@ -39,6 +39,8 @@ public class StringUtility {
     public static final String IS_REPLY = "is_reply";
     public static final String REFRESH_BOARD = "refreshBoard";
     public static final String SELECTED_FILE = "selectedFile";
+    public static final String IMAGE_URL = "imageUrl";
+    public static final String IMAGE_NAME = "imageName";
     
     public static final String STATUS_OK = "statusOK";
 

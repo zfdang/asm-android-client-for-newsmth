@@ -18,7 +18,7 @@ import com.athena.asm.util.task.LoadProfileTask;
 
 public class ViewProfileActivity extends Activity {
 	
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class ViewProfileActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.profile);
 		
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
 		String userID = getIntent().getStringExtra(StringUtility.USERID);
 		
@@ -86,7 +86,7 @@ public class ViewProfileActivity extends Activity {
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(R.string.title_profile);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 	}

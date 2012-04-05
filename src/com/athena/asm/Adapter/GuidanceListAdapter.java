@@ -32,18 +32,18 @@ public class GuidanceListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
 		if (itemType == 0) {
-			layout = activity.inflater.inflate(
+			layout = activity.m_inflater.inflate(
 					R.layout.guidance_list_section_header, null);
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.SectionName);
 			boardNameTextView.setText(sections.get(position));
-			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
-			if (HomeActivity.application.isNightTheme()) {
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
+			if (HomeActivity.m_application.isNightTheme()) {
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			}
 		} else {
 			Subject subject = subjects.get(dataIndex).get(position);
-			layout = activity.inflater.inflate(R.layout.guidance_list_item,
+			layout = activity.m_inflater.inflate(R.layout.guidance_list_item,
 					null);
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.BoardName);
@@ -54,10 +54,10 @@ public class GuidanceListAdapter extends BaseAdapter {
 			TextView titleTextView = (TextView) layout
 					.findViewById(R.id.SubjectTitle);
 			titleTextView.setText(subject.getTitle());
-			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
+			titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
 			layout.setTag(subject);
 			
-			if (HomeActivity.application.isNightTheme()) {
+			if (HomeActivity.m_application.isNightTheme()) {
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 				titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 				authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));

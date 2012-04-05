@@ -26,9 +26,9 @@ public class UploadAttachFilesTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		for (Iterator<File> iterator = activity.attachArrayList.iterator(); iterator.hasNext();) {
+		for (Iterator<File> iterator = activity.m_attachArrayList.iterator(); iterator.hasNext();) {
 			File file = (File) iterator.next();
-			if (!activity.smthSupport.uploadAttachFile(file)) {
+			if (!activity.m_smthSupport.uploadAttachFile(file)) {
 				break;
 			}
 		}

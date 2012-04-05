@@ -58,31 +58,24 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 
     private HomeViewModel m_viewModel;
 
-    public LayoutInflater inflater;
-    private LinearLayout bodyContainer;
-    private TextView titleTextView;
+    public LayoutInflater m_inflater;
+    private LinearLayout m_bodyContainer;
+    private TextView m_titleTextView;
 
-    private TextView btnGuidance;
-    private TextView btnFavorite;
-    private TextView btnMail;
-    private TextView btnCategory;
-    private TextView btnProfile;
+    private TextView m_btnGuidance;
+    private TextView m_btnFavorite;
+    private TextView m_btnMail;
+    private TextView m_btnCategory;
+    private TextView m_btnProfile;
 
-    /*
-     * private LoadGuidanceTask loadGuidanceTask; private LoadFavoriteTask
-     * loadFavoriteTask; private LoadMailTask loadMailTask; private
-     * LoadCategoryTask loadCategoryTask; private LoadProfileTask
-     * loadProfileTask;
-     */
+    private ArrayList<View> m_cacheViewStack = new ArrayList<View>();
+    private double m_currentTabIndex = 0;
 
-    private ArrayList<View> cacheViewStack = new ArrayList<View>();
-    private double currentTabIndex = 0;
+    private boolean m_isIntoSettings = false;
 
-    private boolean isIntoSettings = false;
+    private Handler m_handler = new Handler();
 
-    private Handler handler = new Handler();
-
-    public static aSMApplication application;
+    public static aSMApplication m_application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +83,18 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.home);
 
-        inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-        bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
-        titleTextView = (TextView) findViewById(R.id.title);
+        m_bodyContainer = (LinearLayout) findViewById(R.id.bodyContainer);
+        m_titleTextView = (TextView) findViewById(R.id.title);
 
-        application = (aSMApplication) getApplication();
-        application.initPreferences();
+        m_application = (aSMApplication) getApplication();
+        m_application.initPreferences();
         
-        m_viewModel = application.getHomeViewModel();
+        m_viewModel = m_application.getHomeViewModel();
         m_viewModel.registerViewModelChangeObserver(this);
         
-        boolean isAutoLogin = application.isAutoLogin();
+        boolean isAutoLogin = m_application.isAutoLogin();
         
         m_viewModel.updateLoginStatus();
         if (this.getIntent().getExtras() != null) {
@@ -123,8 +116,8 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
         else if (isAutoLogin) {
             m_viewModel.restorSmthSupport();
 
-            String userName = application.getAutoUserName();
-            String password = application.getAutoPassword();
+            String userName = m_application.getAutoUserName();
+            String password = m_application.getAutoPassword();
 
             LoginTask loginTask = new LoginTask(this, m_viewModel, userName, password);
             loginTask.execute();
@@ -142,19 +135,19 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     @Override
     protected void onResume() {
         super.onResume();
-        if (HomeActivity.application.isNightTheme()) {
-            ((LinearLayout) titleTextView.getParent().getParent())
+        if (HomeActivity.m_application.isNightTheme()) {
+            ((LinearLayout) m_titleTextView.getParent().getParent())
                     .setBackgroundColor(getResources().getColor(
                             R.color.body_background_night));
         } else {
-            ((LinearLayout) titleTextView.getParent().getParent())
+            ((LinearLayout) m_titleTextView.getParent().getParent())
                     .setBackgroundColor(getResources().getColor(
                             R.color.body_background));
         }
 
-        if (isIntoSettings) {
-            isIntoSettings = false;
-            int index = (int) (currentTabIndex / 10);
+        if (m_isIntoSettings) {
+            m_isIntoSettings = false;
+            int index = (int) (m_currentTabIndex / 10);
             if (index == 1) {
                 reloadFavorite(m_viewModel.getFavList(), 20);
             } else {
@@ -177,7 +170,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 	}
 
     public void showFailedToast() {
-        handler.post(new Runnable() {
+        m_handler.post(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), "用户名或密码错.",
@@ -204,7 +197,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     private void init() {
         initTabListeners();
         // initTasks();
-        if (application.isFirstLaunchAfterUpdate()) {
+        if (m_application.isFirstLaunchAfterUpdate()) {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle(R.string.update_title);
             alertBuilder.setMessage(R.string.update_info);
@@ -218,46 +211,46 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             alertBuilder.show();
         }
 
-        String tab = m_viewModel.getCurrentTab() == null ? application.getDefaultTab() : m_viewModel.getCurrentTab();
+        String tab = m_viewModel.getCurrentTab() == null ? m_application.getDefaultTab() : m_viewModel.getCurrentTab();
         m_viewModel.setCurrentTab(tab);
     }
 
     private void initTabListeners() {
-        btnGuidance = (TextView) findViewById(R.id.footer_btn_guidance);
-        btnFavorite = (TextView) findViewById(R.id.footer_btn_favorite);
-        btnMail = (TextView) findViewById(R.id.footer_btn_mail);
-        btnCategory = (TextView) findViewById(R.id.footer_btn_category);
-        btnProfile = (TextView) findViewById(R.id.footer_btn_profile);
+        m_btnGuidance = (TextView) findViewById(R.id.footer_btn_guidance);
+        m_btnFavorite = (TextView) findViewById(R.id.footer_btn_favorite);
+        m_btnMail = (TextView) findViewById(R.id.footer_btn_mail);
+        m_btnCategory = (TextView) findViewById(R.id.footer_btn_category);
+        m_btnProfile = (TextView) findViewById(R.id.footer_btn_profile);
 
-        btnGuidance.setOnClickListener(new View.OnClickListener() {
+        m_btnGuidance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("001");
             }
         });
 
-        btnFavorite.setOnClickListener(new View.OnClickListener() {
+        m_btnFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("002");
             }
         });
 
-        btnCategory.setOnClickListener(new View.OnClickListener() {
+        m_btnCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("003");
             }
         });
 
-        btnMail.setOnClickListener(new View.OnClickListener() {
+        m_btnMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             	m_viewModel.setCurrentTab("004");
             }
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
+        m_btnProfile.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -267,7 +260,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     }
 
     private void switchToView(View targetView, double targetIndex) {
-        if (currentTabIndex == targetIndex) {
+        if (m_currentTabIndex == targetIndex) {
             return;
         }
         /*
@@ -287,21 +280,21 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
          */
 
         // cache标准：同tab下层级cache，切tab清空cache重置为首页
-        int currentTabNumber = (int) (currentTabIndex / 10);
+        int currentTabNumber = (int) (m_currentTabIndex / 10);
         int targetTabNumber = (int) (targetIndex / 10);
         if (currentTabNumber == targetTabNumber) {
-            if (targetIndex > currentTabIndex
-                    && bodyContainer.getChildCount() > 0) {
-                cacheViewStack.add(bodyContainer.getChildAt(0));
+            if (targetIndex > m_currentTabIndex
+                    && m_bodyContainer.getChildCount() > 0) {
+                m_cacheViewStack.add(m_bodyContainer.getChildAt(0));
             }
         } else {
-            cacheViewStack.clear();
+            m_cacheViewStack.clear();
         }
 
-        currentTabIndex = targetIndex;
+        m_currentTabIndex = targetIndex;
 
-        bodyContainer.removeAllViews();
-        bodyContainer.addView(targetView);
+        m_bodyContainer.removeAllViews();
+        m_bodyContainer.addView(targetView);
     }
 
     public void reloadGuidanceList() {
@@ -309,7 +302,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(this, m_viewModel);
             loadGuidanceTask.execute();
         } else {
-            View layout = inflater.inflate(R.layout.guidance, null);
+            View layout = m_inflater.inflate(R.layout.guidance, null);
             ListView listView = (ListView) layout
                     .findViewById(R.id.guidance_list);
             listView.setAdapter(new GuidanceListAdapter(this, 0, 0,
@@ -342,7 +335,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                     switchToView(listView, 11);
                 }
             });
-            titleTextView.setText(R.string.title_guidance);
+            m_titleTextView.setText(R.string.title_guidance);
             switchToView(listView, 10);
         }
     }
@@ -352,7 +345,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(this, m_viewModel);
             loadFavoriteTask.execute();
         } else {
-            View layout = inflater.inflate(R.layout.favorite, null);
+            View layout = m_inflater.inflate(R.layout.favorite, null);
             ListView listView = (ListView) layout
                     .findViewById(R.id.favorite_list);
             final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
@@ -369,7 +362,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                         if (board.getDirectoryName().equals("最近访问版面")) {
                             reloadFavorite(
                                     new ArrayList<Board>(
-                                            HomeActivity.application
+                                            HomeActivity.m_application
                                                     .getRecentBoards()),
                                     ++favoriteListAdapter.step);
                         } else {
@@ -381,7 +374,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(StringUtility.BOARD,
                                 (Board) view.getTag());
-                        HomeActivity.application.addRecentBoard((Board) view
+                        HomeActivity.m_application.addRecentBoard((Board) view
                                 .getTag());
                         intent.putExtras(bundle);
                         intent.setClassName("com.athena.asm",
@@ -391,7 +384,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                 }
             });
 
-            titleTextView.setText(R.string.title_favorite);
+            m_titleTextView.setText(R.string.title_favorite);
             switchToView(listView, step);
         }
     }
@@ -401,7 +394,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             LoadCategoryTask loadCategoryTask = new LoadCategoryTask(this, m_viewModel);
             loadCategoryTask.execute();
         } else {
-            View layout = inflater.inflate(R.layout.category, null);
+            View layout = m_inflater.inflate(R.layout.category, null);
             ListView listView = (ListView) layout
                     .findViewById(R.id.category_list);
             final CategoryListAdapter categoryListAdapter = new CategoryListAdapter(
@@ -446,13 +439,13 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                     m_viewModel.getBoardFullStrings());
             textView.setAdapter(adapter);
 
-            titleTextView.setText(R.string.title_category);
+            m_titleTextView.setText(R.string.title_category);
             switchToView(layout, step);
         }
     }
 
     public void loadMail() {
-        View layout = inflater.inflate(R.layout.mail, null);
+        View layout = m_inflater.inflate(R.layout.mail, null);
         ListView listView = (ListView) layout.findViewById(R.id.mail_list);
         listView.setAdapter(new MailAdapter(this, m_viewModel.getMailBox()));
 
@@ -480,7 +473,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
             }
         });
 
-        titleTextView.setText(R.string.title_mail);
+        m_titleTextView.setText(R.string.title_mail);
         switchToView(listView, 40);
     }
 
@@ -500,7 +493,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                     m_viewModel.getLoginUserID(), 50);
             loadProfileTask.execute();
         } else {
-            View layout = inflater.inflate(R.layout.profile, null);
+            View layout = m_inflater.inflate(R.layout.profile, null);
 
             RelativeLayout relativeLayout = (RelativeLayout) layout
                     .findViewById(R.id.headerLinearLayout);
@@ -576,7 +569,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                 break;
             }
 
-            if (HomeActivity.application.isNightTheme()) {
+            if (HomeActivity.m_application.isNightTheme()) {
                 userIDTextView.setTextColor(layout.getResources().getColor(
                         R.color.blue_text_night));
                 userScoreTextView.setTextColor(layout.getResources().getColor(
@@ -585,7 +578,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                         .getColor(R.color.blue_text_night));
             }
 
-            titleTextView.setText(R.string.title_profile);
+            m_titleTextView.setText(R.string.title_profile);
             switchToView(layout, step);
         }
     }
@@ -596,16 +589,16 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     	m_viewModel.setFavList(null);
     	m_viewModel.setCategoryList(null);
         m_viewModel.setCurrentProfile(null);
-        inflater = null;
-        cacheViewStack.clear();
+        m_inflater = null;
+        m_cacheViewStack.clear();
     }
 
     private void exit() {
-        Boolean rememberUser = application.isRememberUser();
+        Boolean rememberUser = m_application.isRememberUser();
         if (!rememberUser) {
-            application.updateAutoUserNameAndPassword("", "");
+            m_application.updateAutoUserNameAndPassword("", "");
         }
-        application.syncPreferences();
+        m_application.syncPreferences();
 
         finish();
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -640,7 +633,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (cacheViewStack.size() == 0) {
+            if (m_cacheViewStack.size() == 0) {
                 if (m_viewModel.isLogined()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("确认要注销退出吗？");
@@ -660,10 +653,10 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                     android.os.Process.killProcess(android.os.Process.myPid());
                     // return super.onKeyDown(keyCode, event);
                 }
-            } else if (cacheViewStack.size() > 0) {
-                View lastView = cacheViewStack.get(cacheViewStack.size() - 1);
-                cacheViewStack.remove(cacheViewStack.size() - 1);
-                switchToView(lastView, currentTabIndex - 1);
+            } else if (m_cacheViewStack.size() > 0) {
+                View lastView = m_cacheViewStack.get(m_cacheViewStack.size() - 1);
+                m_cacheViewStack.remove(m_cacheViewStack.size() - 1);
+                switchToView(lastView, m_currentTabIndex - 1);
             }
             return true;
         } else {
@@ -696,14 +689,14 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
         case SETTING:
-            isIntoSettings = true;
+            m_isIntoSettings = true;
             Intent intent = new Intent();
             intent.setClassName("com.athena.asm",
                     "com.athena.asm.SettingActivity");
             startActivity(intent);
             break;
         case REFRESH:
-            int index = (int) (currentTabIndex / 10);
+            int index = (int) (m_currentTabIndex / 10);
             switch (index) {
             case 1:
             	m_viewModel.setGuidanceSectionNames(null);
@@ -794,7 +787,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
                     .toLowerCase());
 
             if (board == null) {
-                handler.post(new Runnable() {
+                m_handler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "版面不存在.",
@@ -843,7 +836,7 @@ public class HomeActivity extends Activity implements OnClickListener, BaseViewM
 			
 			//TODO: find a better place to do this...
 			if (!tab.equals("004")) {
-				application.getMailViewModel().clear();
+				m_application.getMailViewModel().clear();
 			}
 			
 			if (tab.equals("001")) {

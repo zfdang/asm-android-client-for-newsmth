@@ -36,14 +36,14 @@ public class SubjectListActivity extends Activity
 								implements OnClickListener, android.content.DialogInterface.OnClickListener,
 								BaseViewModel.OnViewModelChangObserver {
 
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 
 	private SubjectListViewModel m_viewModel;
 
-	EditText pageNoEditText;
-	TextView titleTextView;
+	EditText m_pageNoEditText;
+	TextView m_titleTextView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +51,14 @@ public class SubjectListActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.subject_list);
 
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getSubjectListViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
 		boolean isNewBoard = false;
 		if (!m_viewModel.isInRotation()) {
-			String defaultBoardType = HomeActivity.application.getDefaultBoardType();
+			String defaultBoardType = HomeActivity.m_application.getDefaultBoardType();
 			Board currentBoard = (Board) getIntent().getSerializableExtra(StringUtility.BOARD);
 			isNewBoard = m_viewModel.updateCurrentBoard(currentBoard, defaultBoardType);
 			m_viewModel.setIsFirstIn(true);
@@ -66,16 +66,16 @@ public class SubjectListActivity extends Activity
 		
 		m_viewModel.setIsInRotation(false);
 		
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
-		titleTextView = (TextView) findViewById(R.id.boardTitle);
+		m_titleTextView = (TextView) findViewById(R.id.boardTitle);
 		
-		if (HomeActivity.application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
+		if (HomeActivity.m_application.isNightTheme()) {
+			((LinearLayout)m_titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 
-		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
-		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+		m_pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
+		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 
 		Button firstButton = (Button) findViewById(R.id.btn_first_page);
 		firstButton.setOnClickListener(this);
@@ -131,13 +131,13 @@ public class SubjectListActivity extends Activity
 	public void reloadPostList() {
 		if (m_viewModel.isFirstIn()) {
 			m_viewModel.gotoLastPage();
-			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			m_viewModel.setIsFirstIn(false);
 		}
 
 		PullToRefreshListView listView = (PullToRefreshListView) findViewById(R.id.subject_list);
 		listView.onRefreshComplete();
-		listView.setAdapter(new SubjectListAdapter(inflater, m_viewModel.getSubjectList()));
+		listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel.getSubjectList()));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -162,7 +162,7 @@ public class SubjectListActivity extends Activity
                     }
                 });
 		
-		titleTextView.setText(m_viewModel.getTitleText());
+		m_titleTextView.setText(m_viewModel.getTitleText());
 		
 		listView.requestFocus();
 
@@ -178,7 +178,7 @@ public class SubjectListActivity extends Activity
 		} else if (view.getId() == R.id.btn_pre_page) {
 			m_viewModel.gotoPrevPage();
 		} else if (view.getId() == R.id.btn_go_page) {
-			int pageSet = Integer.parseInt(pageNoEditText.getText().toString());
+			int pageSet = Integer.parseInt(m_pageNoEditText.getText().toString());
 			m_viewModel.setCurrentPageNumber(pageSet);
 		} else if (view.getId() == R.id.btn_next_page) {
 			m_viewModel.gotoNextPage();
@@ -204,7 +204,7 @@ public class SubjectListActivity extends Activity
 		
 		if (isToRefresh) {
 			m_viewModel.updateBoardCurrentPage();
-			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(this, m_viewModel);
 			loadSubjectTask.execute();
 		}
@@ -244,7 +244,7 @@ public class SubjectListActivity extends Activity
 		menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...");
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新");
 		menu.add(0, SEARCH_POST, Menu.NONE, "搜索");
-		if (smthSupport.getLoginStatus()) {
+		if (m_smthSupport.getLoginStatus()) {
 			menu.add(0, CREATE_ID, Menu.NONE, "发新贴");
 		}
 		
@@ -269,7 +269,7 @@ public class SubjectListActivity extends Activity
 					this);
 			builder.setTitle(R.string.post_alert_title);
 			//builder.setItems(items,this);
-			builder.setAdapter(new BoardTypeListAdapter(m_viewModel.getBoardType(), inflater), this);
+			builder.setAdapter(new BoardTypeListAdapter(m_viewModel.getBoardType(), m_inflater), this);
 			AlertDialog alert = builder.create();
 			alert.show();
 			break;

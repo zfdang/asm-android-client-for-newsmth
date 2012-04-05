@@ -20,12 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity implements OnClickListener {
-	private EditText userNameEditText;
-	private EditText passwordEditText;
+	private EditText m_userNameEditText;
+	private EditText m_passwordEditText;
 
-	private SmthSupport smthSupport;
+	private SmthSupport m_smthSupport;
 
-	private Handler handler = new Handler();
+	private Handler m_handler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,15 +36,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText("aSM");
 
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 
-		String userName = HomeActivity.application.getAutoUserName();
-		String password = HomeActivity.application.getAutoPassword();
+		String userName = HomeActivity.m_application.getAutoUserName();
+		String password = HomeActivity.m_application.getAutoPassword();
 
-		userNameEditText = (EditText) findViewById(R.id.username_edit);
-		userNameEditText.setText(userName);
-		passwordEditText = (EditText) findViewById(R.id.password_edit);
-		passwordEditText.setText(password);
+		m_userNameEditText = (EditText) findViewById(R.id.username_edit);
+		m_userNameEditText.setText(userName);
+		m_passwordEditText = (EditText) findViewById(R.id.password_edit);
+		m_passwordEditText.setText(password);
 
 		TextView registerLink = (TextView) findViewById(R.id.register_link);
 		registerLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -63,7 +63,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	public void showSuccessToast() {
-		handler.post(new Runnable() {
+		m_handler.post(new Runnable() {
 			public void run() {
 				Toast.makeText(getApplicationContext(), "登录成功.",
 						Toast.LENGTH_SHORT).show();
@@ -72,7 +72,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	public void showFailedToast() {
-		handler.post(new Runnable() {
+		m_handler.post(new Runnable() {
 			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), "用户名或密码错.",
@@ -84,11 +84,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 
-		smthSupport.restore();
+		m_smthSupport.restore();
 
 		if (view.getId() == R.id.signin_button) {
-			final String newUserName = userNameEditText.getText().toString();
-			final String newPassword = passwordEditText.getText().toString();
+			final String newUserName = m_userNameEditText.getText().toString();
+			final String newPassword = m_passwordEditText.getText().toString();
 
 			// login
 			final ProgressDialog pdialog = new ProgressDialog(this);
@@ -100,14 +100,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 			Thread th = new Thread() {
 				@Override
 				public void run() {
-					smthSupport.setUserid(newUserName);
-					smthSupport.setPasswd(newPassword);
-					boolean result = smthSupport.login();
+					m_smthSupport.setUserid(newUserName);
+					m_smthSupport.setPasswd(newPassword);
+					boolean result = m_smthSupport.login();
 					if (!result) {
 						showFailedToast();
 					} else {
 						// showSuccessToast();
-						HomeActivity.application.updateAutoUserNameAndPassword(newUserName, newPassword);
+						HomeActivity.m_application.updateAutoUserNameAndPassword(newUserName, newPassword);
 						
 						Intent intent = new Intent();
 						intent.setClassName("com.athena.asm",
@@ -135,11 +135,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Boolean rememberUser = HomeActivity.application.isRememberUser();
+			Boolean rememberUser = HomeActivity.m_application.isRememberUser();
 			if (!rememberUser) {
-				HomeActivity.application.updateAutoUserNameAndPassword("", "");
+				HomeActivity.m_application.updateAutoUserNameAndPassword("", "");
 			}
-			HomeActivity.application.syncPreferences();
+			HomeActivity.m_application.syncPreferences();
 
 			finish();
 			android.os.Process.killProcess(android.os.Process.myPid());

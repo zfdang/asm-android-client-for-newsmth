@@ -29,7 +29,7 @@ public class CategoryListAdapter extends BaseAdapter {
 		Board board = boards.get(position);
 
 		if (board.isDirectory()) {
-			layout = activity.inflater.inflate(
+			layout = activity.m_inflater.inflate(
 					R.layout.category_list_section_header, null);
 			String[] strings = board.getDirectoryName().split(" ");
 			TextView boardNameTextView = (TextView) layout
@@ -43,13 +43,13 @@ public class CategoryListAdapter extends BaseAdapter {
 			}
 			boardDesTextView.setText(desString);
 			layout.setTag(board);
-			if (HomeActivity.application.isNightTheme()) {
+			if (HomeActivity.m_application.isNightTheme()) {
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 				boardDesTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			}
 			
 		} else {
-			layout = activity.inflater.inflate(R.layout.category_list_item,
+			layout = activity.m_inflater.inflate(R.layout.category_list_item,
 					null);
 			TextView categoryNameTextView = (TextView) layout
 					.findViewById(R.id.CategoryName);
@@ -63,7 +63,7 @@ public class CategoryListAdapter extends BaseAdapter {
 					+ board.getChsName());
 			layout.setTag(board);
 			
-			if (HomeActivity.application.isNightTheme()) {
+			if (HomeActivity.m_application.isNightTheme()) {
 				categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 				moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

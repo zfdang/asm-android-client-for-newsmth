@@ -23,13 +23,13 @@ public class MailAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View layout = null;
-		layout = activity.inflater.inflate(R.layout.mail_list_section_header,
+		layout = activity.m_inflater.inflate(R.layout.mail_list_section_header,
 				null);
 		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
 		TextView numberTextView = (TextView) layout
 				.findViewById(R.id.mailNumber);
-		boxNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
-		numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
+		boxNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
+		numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
 		switch (position) {
 		case 0:
 			boxNameTextView.setText(R.string.mail_inbox);
@@ -55,7 +55,7 @@ public class MailAdapter extends BaseAdapter {
 			break;
 		}
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			boxNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			numberTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

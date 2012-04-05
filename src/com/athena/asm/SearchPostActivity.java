@@ -22,19 +22,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SearchPostActivity extends Activity implements OnClickListener {
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 	
-	EditText titleEditText;
-	EditText title2EditText;
-	EditText title3EditText;
-	EditText useridEditText;
-	EditText dtEditText;
+	EditText m_titleEditText;
+	EditText m_title2EditText;
+	EditText m_title3EditText;
+	EditText m_useridEditText;
+	EditText m_dtEditText;
 	
-	CheckBox mgCheckBox;
-	CheckBox agCheckBox;
-	CheckBox ogCheckBox;
+	CheckBox m_mgCheckBox;
+	CheckBox m_agCheckBox;
+	CheckBox m_ogCheckBox;
 	
-	Button startSearchButton;
+	Button m_startSearchButton;
 	
 	private SearchPostViewModel m_viewModel;
 	
@@ -44,7 +44,7 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_post);
 		
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
 		m_viewModel = (SearchPostViewModel)getLastNonConfigurationInstance();
 		if (m_viewModel == null) {
@@ -58,22 +58,22 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText(m_viewModel.getTitleText());
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 		
-		titleEditText = (EditText) findViewById(R.id.edittext_title);
-		title2EditText = (EditText) findViewById(R.id.edittext_title2);
-		title3EditText = (EditText) findViewById(R.id.edittext_title3);
-		useridEditText = (EditText) findViewById(R.id.edittext_userid);
-		dtEditText = (EditText) findViewById(R.id.edittext_dt);
+		m_titleEditText = (EditText) findViewById(R.id.edittext_title);
+		m_title2EditText = (EditText) findViewById(R.id.edittext_title2);
+		m_title3EditText = (EditText) findViewById(R.id.edittext_title3);
+		m_useridEditText = (EditText) findViewById(R.id.edittext_userid);
+		m_dtEditText = (EditText) findViewById(R.id.edittext_dt);
 		
-		mgCheckBox = (CheckBox) findViewById(R.id.checkbox_mg);
-		agCheckBox = (CheckBox) findViewById(R.id.checkbox_ag);
-		ogCheckBox = (CheckBox) findViewById(R.id.checkbox_og);
+		m_mgCheckBox = (CheckBox) findViewById(R.id.checkbox_mg);
+		m_agCheckBox = (CheckBox) findViewById(R.id.checkbox_ag);
+		m_ogCheckBox = (CheckBox) findViewById(R.id.checkbox_og);
 		
-		startSearchButton = (Button) findViewById(R.id.btn_start_post_search);
-		startSearchButton.setOnClickListener(this);
+		m_startSearchButton = (Button) findViewById(R.id.btn_start_post_search);
+		m_startSearchButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -106,13 +106,13 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 	}
 	
 	private void updateViewModel() {
-		m_viewModel.setTitle(titleEditText.getText().toString().trim());
-		m_viewModel.setTitle2(title2EditText.getText().toString().trim());
-		m_viewModel.setTitle3(title3EditText.getText().toString().trim());
-		m_viewModel.setUserId(useridEditText.getText().toString().trim());
-		m_viewModel.setDays(dtEditText.getText().toString().trim());
-		m_viewModel.setMgFlag(mgCheckBox.isChecked());
-		m_viewModel.setAgFlag(agCheckBox.isChecked());
-		m_viewModel.setOgFlag(ogCheckBox.isChecked());
+		m_viewModel.setTitle(m_titleEditText.getText().toString().trim());
+		m_viewModel.setTitle2(m_title2EditText.getText().toString().trim());
+		m_viewModel.setTitle3(m_title3EditText.getText().toString().trim());
+		m_viewModel.setUserId(m_useridEditText.getText().toString().trim());
+		m_viewModel.setDays(m_dtEditText.getText().toString().trim());
+		m_viewModel.setMgFlag(m_mgCheckBox.isChecked());
+		m_viewModel.setAgFlag(m_agCheckBox.isChecked());
+		m_viewModel.setOgFlag(m_ogCheckBox.isChecked());
 	}
 }

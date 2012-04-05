@@ -31,7 +31,7 @@ public class AttachListAdapter extends BaseAdapter implements OnClickListener {
 		}
 		
 		TextView titleTextView = (TextView) layout.findViewById(R.id.attach_title);
-		titleTextView.setText(activity.attachArrayList.get(position).getName());
+		titleTextView.setText(activity.m_attachArrayList.get(position).getName());
 		Button deleteButton = (Button) layout.findViewById(R.id.btn_delete_attach);
 		deleteButton.setOnClickListener(this);
 		deleteButton.setTag(position);
@@ -41,12 +41,12 @@ public class AttachListAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public int getCount() {
-		return activity.attachArrayList.size();
+		return activity.m_attachArrayList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return activity.attachArrayList.get(position);
+		return activity.m_attachArrayList.get(position);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class AttachListAdapter extends BaseAdapter implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int position = (Integer) v.getTag();
-		activity.attachArrayList.remove(position);
+		activity.m_attachArrayList.remove(position);
 		
 		this.notifyDataSetChanged();
 	}

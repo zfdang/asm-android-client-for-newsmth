@@ -46,15 +46,15 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private List<Post> getPostList() {
 		List<Post> postList = null;
 		if (boardType == 0) {
-			postList = postListActivity.smthSupport.getPostListFromMobile(subject, HomeActivity.application.getBlackList());
+			postList = postListActivity.m_smthSupport.getPostListFromMobile(subject, HomeActivity.m_application.getBlackList());
 			//postListActivity.postList = postListActivity.smthSupport.getPostList(subject, HomeActivity.application.getBlackList(), startNumber);
 		}
 		else {
 			if (action == 0) {
-				postList = postListActivity.smthSupport.getSinglePostList(subject);
+				postList = postListActivity.m_smthSupport.getSinglePostList(subject);
 			}
 			else {
-				postList = postListActivity.smthSupport.getTopicPostList(subject, action);
+				postList = postListActivity.m_smthSupport.getTopicPostList(subject, action);
 			}
 		}
 		return postList;

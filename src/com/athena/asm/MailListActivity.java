@@ -25,7 +25,7 @@ import com.athena.asm.viewmodel.MailViewModel;
 
 public class MailListActivity extends Activity implements OnClickListener, BaseViewModel.OnViewModelChangObserver {
 
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 
 	private MailViewModel m_viewModel;
 
@@ -35,7 +35,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_list);
 
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getMailViewModel();
@@ -45,7 +45,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 		
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
 		}
 		
@@ -90,7 +90,7 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 
 	public void reloadMailList() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new MailListAdapter(inflater, m_viewModel.getMailList()));
+		listView.setAdapter(new MailListAdapter(m_inflater, m_viewModel.getMailList()));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

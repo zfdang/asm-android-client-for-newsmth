@@ -68,7 +68,7 @@ public final class UrlImageViewHelper {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		BitmapFactory.decodeStream(stream, null, opts);
-		opts.inSampleSize = computeSampleSize(opts, -1, 480 * 800);
+		opts.inSampleSize = computeSampleSize(opts, -1, 240 * 400);
 		opts.inJustDecodeBounds = false;
 
 		return opts.inSampleSize;
@@ -140,51 +140,51 @@ public final class UrlImageViewHelper {
 	public static final int CACHE_DURATION_ONE_WEEK = CACHE_DURATION_ONE_DAY * 7;
 
 	public static void setUrlDrawable(final ImageView imageView,
-			final String url, int defaultResource) {
+			final String url, int defaultResource, final boolean isToScale) {
 		setUrlDrawable(imageView.getContext(), imageView, url, defaultResource,
-				CACHE_DURATION_THREE_DAYS);
+				CACHE_DURATION_THREE_DAYS, isToScale);
 	}
 
 	public static void setUrlDrawable(final ImageView imageView,
-			final String url) {
+			final String url, final boolean isToScale) {
 		setUrlDrawable(imageView.getContext(), imageView, url, null,
-				CACHE_DURATION_THREE_DAYS);
+				CACHE_DURATION_THREE_DAYS, isToScale);
 	}
 
-	public static void loadUrlDrawable(final Context context, final String url) {
-		setUrlDrawable(context, null, url, null, CACHE_DURATION_THREE_DAYS);
+	public static void loadUrlDrawable(final Context context, final String url, final boolean isToScale) {
+		setUrlDrawable(context, null, url, null, CACHE_DURATION_THREE_DAYS, isToScale);
 	}
 
 	public static void setUrlDrawable(final ImageView imageView,
-			final String url, Drawable defaultDrawable) {
+			final String url, Drawable defaultDrawable, final boolean isToScale) {
 		setUrlDrawable(imageView.getContext(), imageView, url, defaultDrawable,
-				CACHE_DURATION_THREE_DAYS);
+				CACHE_DURATION_THREE_DAYS, isToScale);
 	}
 
 	public static void setUrlDrawable(final ImageView imageView,
-			final String url, int defaultResource, long cacheDurationMs) {
+			final String url, int defaultResource, long cacheDurationMs, final boolean isToScale) {
 		setUrlDrawable(imageView.getContext(), imageView, url, defaultResource,
-				cacheDurationMs);
+				cacheDurationMs, isToScale);
 	}
 
 	public static void loadUrlDrawable(final Context context, final String url,
-			long cacheDurationMs) {
-		setUrlDrawable(context, null, url, null, cacheDurationMs);
+			long cacheDurationMs, final boolean isToScale) {
+		setUrlDrawable(context, null, url, null, cacheDurationMs, isToScale);
 	}
 
 	public static void setUrlDrawable(final ImageView imageView,
-			final String url, Drawable defaultDrawable, long cacheDurationMs) {
+			final String url, Drawable defaultDrawable, long cacheDurationMs, final boolean isToScale) {
 		setUrlDrawable(imageView.getContext(), imageView, url, defaultDrawable,
-				cacheDurationMs);
+				cacheDurationMs, isToScale);
 	}
 
 	private static void setUrlDrawable(final Context context,
 			final ImageView imageView, final String url, int defaultResource,
-			long cacheDurationMs) {
+			long cacheDurationMs, final boolean isToScale) {
 		Drawable d = null;
 		if (defaultResource != 0)
 			d = imageView.getResources().getDrawable(defaultResource);
-		setUrlDrawable(context, imageView, url, d, cacheDurationMs);
+		setUrlDrawable(context, imageView, url, d, cacheDurationMs, isToScale);
 	}
 
 	private static boolean isNullOrEmpty(CharSequence s) {
@@ -224,7 +224,7 @@ public final class UrlImageViewHelper {
 	
 	private static void setUrlDrawable(final Context context,
 			final ImageView imageView, final String url,
-			final Drawable defaultDrawable, long cacheDurationMs) {
+			final Drawable defaultDrawable, long cacheDurationMs, final boolean isToScale) {
 		cleanup(context);
 		// disassociate this ImageView from any pending downloads
 		if (imageView != null)
@@ -238,7 +238,7 @@ public final class UrlImageViewHelper {
 
 		final UrlImageCache cache = UrlImageCache.getInstance();
 		Drawable d = cache.get(url);
-		if (d != null) {
+		if (d != null && isToScale) {
 			// Log.i(LOGTAG, "Cache hit on: " + url);
 			if (imageView != null)
 				imageView.setImageDrawable(d);
@@ -257,7 +257,10 @@ public final class UrlImageViewHelper {
 					// (System.currentTimeMillis() - file.lastModified()) +
 					// "ms old.");
 					FileInputStream fis = context.openFileInput(filename);
-					int sampleSize = calculateSampleNumber(fis);
+					int sampleSize = 1;
+					if (isToScale) {
+						sampleSize = calculateSampleNumber(fis);
+					}
 					fis.close();
 					fis = context.openFileInput(filename);
 					BitmapDrawable drawable = loadDrawableFromStream(context,
@@ -337,7 +340,10 @@ public final class UrlImageViewHelper {
 							is.close();
 							FileInputStream fis = context
 									.openFileInput(filename);
-							int sampleSize = calculateSampleNumber(fis);
+							int sampleSize = 1;
+							if (isToScale) {
+								sampleSize = calculateSampleNumber(fis);
+							}
 							fis.close();
 							fis = context.openFileInput(filename);
 							return loadDrawableFromStream(context, fis,
@@ -385,7 +391,7 @@ public final class UrlImageViewHelper {
 	}
 
 	private static boolean checkIsToLoadImage(Context context, float imageSize) {
-		boolean isAutoOptimize = HomeActivity.application.isAutoOptimize();
+		boolean isAutoOptimize = HomeActivity.m_application.isAutoOptimize();
 		// 自动优化
 		if (isAutoOptimize) {
 			ConnectivityManager connectionManager = (ConnectivityManager) context
@@ -397,7 +403,7 @@ public final class UrlImageViewHelper {
 				return true;
 			}
 		}
-		float threshold = HomeActivity.application.getImageSizeThreshold();
+		float threshold = HomeActivity.m_application.getImageSizeThreshold();
 		// 非自动优化或者自动优化但在移动网络中，需阈值判断
 		if (threshold == 0 || imageSize < threshold * 1024) {
 			return true;

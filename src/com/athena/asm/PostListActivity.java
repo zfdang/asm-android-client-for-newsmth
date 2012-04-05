@@ -43,25 +43,25 @@ import com.athena.asm.viewmodel.BaseViewModel;
 public class PostListActivity extends Activity implements OnClickListener,
 		OnTouchListener, OnLongClickListener, OnGestureListener, BaseViewModel.OnViewModelChangObserver {
 
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 	
 	private PostListViewModel m_viewModel;
 
-	EditText pageNoEditText;
-	Button firstButton;
-	Button lastButton;
-	Button preButton;
-	Button goButton;
-	Button nextButton;
+	EditText m_pageNoEditText;
+	Button m_firstButton;
+	Button m_lastButton;
+	Button m_preButton;
+	Button m_goButton;
+	Button m_nextButton;
 
-	TextView titleTextView;
+	TextView m_titleTextView;
 
-	private int screenHeight;
-	private ListView listView;
+	private int m_screenHeight;
+	private ListView m_listView;
 
-	private GestureDetector mGestureDetector;
+	private GestureDetector m_GestureDetector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,9 @@ public class PostListActivity extends Activity implements OnClickListener,
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_list);
 
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
 		m_viewModel = (PostListViewModel)getLastNonConfigurationInstance();
 		boolean isNewSubject = false;
@@ -85,36 +85,36 @@ public class PostListActivity extends Activity implements OnClickListener,
 		}
 		m_viewModel.registerViewModelChangeObserver(this);
 		
-		this.screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+		this.m_screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		
-		titleTextView = (TextView) findViewById(R.id.title);
+		m_titleTextView = (TextView) findViewById(R.id.title);
 
-		if (HomeActivity.application.isNightTheme()) {
-			((LinearLayout) titleTextView.getParent().getParent())
+		if (HomeActivity.m_application.isNightTheme()) {
+			((LinearLayout) m_titleTextView.getParent().getParent())
 					.setBackgroundColor(getResources().getColor(
 							R.color.body_background_night));
 		}
 
-		pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
-		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+		m_pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
+		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 
-		firstButton = (Button) findViewById(R.id.btn_first_page);
-		firstButton.setOnClickListener(this);
-		lastButton = (Button) findViewById(R.id.btn_last_page);
-		lastButton.setOnClickListener(this);
-		preButton = (Button) findViewById(R.id.btn_pre_page);
-		preButton.setOnClickListener(this);
-		goButton = (Button) findViewById(R.id.btn_go_page);
-		goButton.setOnClickListener(this);
-		nextButton = (Button) findViewById(R.id.btn_next_page);
-		nextButton.setOnClickListener(this);
+		m_firstButton = (Button) findViewById(R.id.btn_first_page);
+		m_firstButton.setOnClickListener(this);
+		m_lastButton = (Button) findViewById(R.id.btn_last_page);
+		m_lastButton.setOnClickListener(this);
+		m_preButton = (Button) findViewById(R.id.btn_pre_page);
+		m_preButton.setOnClickListener(this);
+		m_goButton = (Button) findViewById(R.id.btn_go_page);
+		m_goButton.setOnClickListener(this);
+		m_nextButton = (Button) findViewById(R.id.btn_next_page);
+		m_nextButton.setOnClickListener(this);
 
-		listView = (ListView) findViewById(R.id.post_list);
+		m_listView = (ListView) findViewById(R.id.post_list);
 
 		m_viewModel.setBoardType(getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0));
 		m_viewModel.setIsToRefreshBoard(false);
 
-		mGestureDetector = new GestureDetector(this);
+		m_GestureDetector = new GestureDetector(this);
 
 		if (isNewSubject) {
 			LoadPostTask loadPostTask = new LoadPostTask(this, m_viewModel, m_viewModel.getCurrentSubject(),
@@ -150,40 +150,40 @@ public class PostListActivity extends Activity implements OnClickListener,
 			
 			m_viewModel.ensurePostExists();
 			
-			firstButton.setEnabled(false);
-			preButton.setEnabled(false);
-			nextButton.setEnabled(false);
-			lastButton.setEnabled(false);
+			m_firstButton.setEnabled(false);
+			m_preButton.setEnabled(false);
+			m_nextButton.setEnabled(false);
+			m_lastButton.setEnabled(false);
 		}
 
-		listView.setAdapter(new PostListAdapter(this, inflater, m_viewModel.getPostList()));
+		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel.getPostList()));
 
 		m_viewModel.updateCurrentPageNumberFromSubject();
-		pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-		listView.requestFocus();
+		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+		m_listView.requestFocus();
 
 		m_viewModel.setIsPreloadFinished(false);
 		m_viewModel.updatePreloadSubjectFromCurrentSubject();
 
 		if (m_viewModel.getBoardType() == 0) {
-			goButton.setVisibility(View.VISIBLE);
-			pageNoEditText.setVisibility(View.VISIBLE);
-			firstButton.setText(R.string.first_page);
-			lastButton.setText(R.string.last_page);
-			preButton.setText(R.string.pre_page);
-			nextButton.setText(R.string.next_page);
+			m_goButton.setVisibility(View.VISIBLE);
+			m_pageNoEditText.setVisibility(View.VISIBLE);
+			m_firstButton.setText(R.string.first_page);
+			m_lastButton.setText(R.string.last_page);
+			m_preButton.setText(R.string.pre_page);
+			m_nextButton.setText(R.string.next_page);
 
-			titleTextView.setText(m_viewModel.getSubjectTitle());
+			m_titleTextView.setText(m_viewModel.getSubjectTitle());
 
 		} else {
-			goButton.setVisibility(View.GONE);
-			pageNoEditText.setVisibility(View.GONE);
-			firstButton.setText(R.string.topic_first_page);
-			lastButton.setText(R.string.topic_all_page);
-			preButton.setText(R.string.topic_pre_page);
-			nextButton.setText(R.string.topic_next_page);
+			m_goButton.setVisibility(View.GONE);
+			m_pageNoEditText.setVisibility(View.GONE);
+			m_firstButton.setText(R.string.topic_first_page);
+			m_lastButton.setText(R.string.topic_all_page);
+			m_preButton.setText(R.string.topic_pre_page);
+			m_nextButton.setText(R.string.topic_next_page);
 
-			titleTextView.setText(m_viewModel.getSubjectTitle());
+			m_titleTextView.setText(m_viewModel.getSubjectTitle());
 
 		}
 
@@ -244,7 +244,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 			} else if (view.getId() == R.id.btn_pre_page) {
 				m_viewModel.gotoPrevPage();
 			} else if (view.getId() == R.id.btn_go_page) {
-				int pageSet = Integer.parseInt(pageNoEditText.getText()
+				int pageSet = Integer.parseInt(m_pageNoEditText.getText()
 						.toString());
 				m_viewModel.setCurrentPageNumber(pageSet);
 			} else if (view.getId() == R.id.btn_next_page) {
@@ -253,7 +253,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 			}
 
 			m_viewModel.updateSubjectCurrentPageNumberFromCurrentPageNumber();
-			pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			if (view.getParent() != null) {
 				((View) view.getParent()).requestFocus();
 			}
@@ -285,27 +285,27 @@ public class PostListActivity extends Activity implements OnClickListener,
 	}
 
 	private void setListOffset(int jump) {
-		int index = listView.getFirstVisiblePosition();
+		int index = m_listView.getFirstVisiblePosition();
 		Log.d("move", String.valueOf(index));
 		int newIndex = index + jump;
 		if (newIndex == -1) {
 			newIndex = 0;
-		} else if (listView.getItemAtPosition(newIndex) == null) {
+		} else if (m_listView.getItemAtPosition(newIndex) == null) {
 			newIndex = index;
 		}
-		listView.setSelectionFromTop(newIndex, 0);
+		m_listView.setSelectionFromTop(newIndex, 0);
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		mGestureDetector.onTouchEvent(event);
+		m_GestureDetector.onTouchEvent(event);
 		return false;
 
 	}
 
 	@Override
 	public boolean onLongClick(View v) {
-		if (smthSupport.getLoginStatus()) {
+		if (m_smthSupport.getLoginStatus()) {
 			RelativeLayout relativeLayout = null;
 			if (v.getId() == R.id.PostContent) {
 				relativeLayout = (RelativeLayout) v.getParent();
@@ -322,7 +322,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 			itemList.add(getString(R.string.post_copy_author));
 			itemList.add(getString(R.string.post_copy_content));
 			itemList.add(getString(R.string.post_foward_self));
-			if (post.getAuthor().equals(smthSupport.userid)) {
+			if (post.getAuthor().equals(m_smthSupport.userid)) {
 				itemList.add(getString(R.string.post_edit_post));
 			}
 			final String[] items = new String[itemList.size()];
@@ -383,7 +383,7 @@ public class PostListActivity extends Activity implements OnClickListener,
 								Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
-						boolean result = smthSupport.forwardPostToMailBox(post);
+						boolean result = m_smthSupport.forwardPostToMailBox(post);
 						if (result) {
 							Toast.makeText(getApplicationContext(),
 									"已转寄到自己信箱中", Toast.LENGTH_SHORT).show();
@@ -420,9 +420,9 @@ public class PostListActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		if (HomeActivity.application.isTouchScroll()) {
+		if (HomeActivity.m_application.isTouchScroll()) {
 			int touchY = (int) e.getRawY();
-			float scale = (float) (screenHeight / 800.0);
+			float scale = (float) (m_screenHeight / 800.0);
 			if (touchY > 60 * scale && touchY < 390 * scale) {
 				setListOffset(-1);
 			} else if (touchY > 410 * scale && touchY < 740 * scale) {
@@ -436,16 +436,16 @@ public class PostListActivity extends Activity implements OnClickListener,
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		final int flingMinXDistance = 100, flingMaxYDistance = 100;
-		if (e1.getX() - e2.getX() > flingMinXDistance
-				&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
+		if (e1.getX() - e2.getX() > flingMinXDistance) {
+				//&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
 			// Fling left
 			Toast.makeText(this, "下一页", Toast.LENGTH_SHORT).show();
-			nextButton.performClick();
-		} else if (e2.getX() - e1.getX() > flingMinXDistance
-				&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
+			m_nextButton.performClick();
+		} else if (e2.getX() - e1.getX() > flingMinXDistance) {
+				//&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
 			// Fling right
 			Toast.makeText(this, "上一页", Toast.LENGTH_SHORT).show();
-			preButton.performClick();
+			m_preButton.performClick();
 		}
 		return false;
 	}

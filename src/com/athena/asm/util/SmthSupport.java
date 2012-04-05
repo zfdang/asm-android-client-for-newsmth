@@ -593,7 +593,7 @@ public class SmthSupport {
 			}
 			String type = matcher.group(3).trim();
 			// 隐藏置底
-			if (HomeActivity.application.isHidePinSubject()
+			if (HomeActivity.m_application.isHidePinSubject()
 			        && type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
                             continue;
                         }

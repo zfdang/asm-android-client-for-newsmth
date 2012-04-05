@@ -46,7 +46,7 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 			profile = m_viewModel.getProfile(userID);
 		}
 		else {
-			profile = viewProfileActivity.smthSupport.getProfile(userID);
+			profile = viewProfileActivity.m_smthSupport.getProfile(userID);
 		}
 		pdialog.cancel();
 		return null;

@@ -46,7 +46,7 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		Date date = subject.getDate();
 		if (date.getYear() == 70) {
@@ -59,7 +59,7 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 		
 		layout.setTag(subject);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

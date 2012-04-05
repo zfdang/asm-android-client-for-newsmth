@@ -25,15 +25,15 @@ public class AttachUploadActivity extends Activity implements OnClickListener {
 	
 	static final int SELECT_FILE_REQUEST = 0;
 	
-	public SmthSupport smthSupport;
+	public SmthSupport m_smthSupport;
 	
-	private LayoutInflater inflater;
+	private LayoutInflater m_inflater;
 
-	public ArrayList<File> attachArrayList;
-	private AttachListAdapter attachListAdapter;
+	public ArrayList<File> m_attachArrayList;
+	private AttachListAdapter m_attachListAdapter;
 	
-	private Button addAttachButton;
-	private Button uploadButton;
+	private Button m_addAttachButton;
+	private Button m_uploadButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +41,27 @@ public class AttachUploadActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.attach_list);
 
-		smthSupport = SmthSupport.getInstance();
+		m_smthSupport = SmthSupport.getInstance();
 		
-		inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		
-		attachArrayList = new ArrayList<File>();		
+		m_attachArrayList = new ArrayList<File>();		
 		
 		TextView titleTextView = (TextView) findViewById(R.id.title);
 		titleTextView.setText("上传附件");
 		
-		String uploadString = smthSupport.getUrlContent("http://www.newsmth.net/bbsupload.php");
+		String uploadString = m_smthSupport.getUrlContent("http://www.newsmth.net/bbsupload.php");
 		if (uploadString.contains("选择需要上传的文件后点上传")) {
-			addAttachButton = (Button) findViewById(R.id.btn_select_file);
-			addAttachButton.setOnClickListener(this);
+			m_addAttachButton = (Button) findViewById(R.id.btn_select_file);
+			m_addAttachButton.setOnClickListener(this);
 			
-			uploadButton = (Button) findViewById(R.id.btn_start_upload_attach);
-			uploadButton.setOnClickListener(this);
+			m_uploadButton = (Button) findViewById(R.id.btn_start_upload_attach);
+			m_uploadButton.setOnClickListener(this);
 			
-			attachListAdapter = new AttachListAdapter(this, inflater);
+			m_attachListAdapter = new AttachListAdapter(this, m_inflater);
 			
 			ListView listView = (ListView) findViewById(R.id.attach_list);
-			listView.setAdapter(attachListAdapter);
+			listView.setAdapter(m_attachListAdapter);
 		}
 	}
 
@@ -102,9 +102,9 @@ public class AttachUploadActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SELECT_FILE_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				attachArrayList.add((File) data
+				m_attachArrayList.add((File) data
 						.getSerializableExtra(StringUtility.SELECTED_FILE));
-				attachListAdapter.notifyDataSetChanged();
+				m_attachListAdapter.notifyDataSetChanged();
 			}
 		}
 	}

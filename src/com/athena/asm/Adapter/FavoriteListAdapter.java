@@ -30,18 +30,18 @@ public class FavoriteListAdapter extends BaseAdapter {
 		Board board = boards.get(position);
 
 		if (board.isDirectory()) {
-			layout = activity.inflater.inflate(
+			layout = activity.m_inflater.inflate(
 					R.layout.favorite_list_section_header, null);
 			TextView boardNameTextView = (TextView) layout
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText(board.getDirectoryName());
-			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceFontSize());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
 			layout.setTag(board);
-			if (HomeActivity.application.isNightTheme()) {
+			if (HomeActivity.m_application.isNightTheme()) {
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			}
 		} else {
-			layout = activity.inflater.inflate(R.layout.favorite_list_item,
+			layout = activity.m_inflater.inflate(R.layout.favorite_list_item,
 					null);
 			TextView categoryNameTextView = (TextView) layout
 					.findViewById(R.id.CategoryName);
@@ -53,9 +53,9 @@ public class FavoriteListAdapter extends BaseAdapter {
 					.findViewById(R.id.BoardName);
 			boardNameTextView.setText("[" + board.getEngName() + "]"
 					+ board.getChsName());
-			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getGuidanceSecondFontSize());
+			boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
 			layout.setTag(board);
-			if (HomeActivity.application.isNightTheme()) {
+			if (HomeActivity.m_application.isNightTheme()) {
 				categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 				moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 				boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

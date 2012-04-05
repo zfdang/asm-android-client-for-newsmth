@@ -43,14 +43,14 @@ public class SubjectListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDate().toLocaleString());
 		
 		layout.setTag(subject);
 		
-		if (HomeActivity.application.isNightTheme()) {
+		if (HomeActivity.m_application.isNightTheme()) {
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 		}
