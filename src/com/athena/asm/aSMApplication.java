@@ -63,6 +63,8 @@ public class aSMApplication extends Application {
     private boolean isForceScreenPortrait = false;
     private boolean isPromotionShow = true;
     private ArrayList<String> blackList = new ArrayList<String>();
+	
+	private String forwardEmailAddr = "";
     
     //View models for Activities
     private HomeViewModel m_homeViewModel = new HomeViewModel();
@@ -232,6 +234,11 @@ public class aSMApplication extends Application {
                     blackList.add(ids[i]);
                 }
             }
+        }
+        if (!settings.contains(Preferences.FORWARD_EMAIL)) {
+            editor.putString(Preferences.FORWARD_EMAIL, "");
+        } else {
+        	setForwardEmailAddr(settings.getString(Preferences.FORWARD_EMAIL,""));;
         }
 
         PackageManager pm = getPackageManager();
@@ -513,4 +520,23 @@ public class aSMApplication extends Application {
 	public MailViewModel getMailViewModel() {
 		return m_mailViewModel;
 	}
+
+	public String getForwardEmailAddr() {
+		return forwardEmailAddr;
+	}
+
+	public void setForwardEmailAddr(String forwardEmailAddr) {
+		this.forwardEmailAddr = forwardEmailAddr;
+	}
+
+	public void updateForwardEmailAddr(String email) {
+		this.forwardEmailAddr = email;
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Preferences.FORWARD_EMAIL, email);
+        editor.commit();
+		
+	}
+	
 }

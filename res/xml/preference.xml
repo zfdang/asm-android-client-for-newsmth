@@ -53,6 +53,9 @@
 	        android:summary="@string/setting_force_screen_portrait_details" android:title="@string/setting_force_screen_portrait"/> -->
 		<CheckBoxPreference android:key="promotion_show"
 			android:summary="@string/setting_promotion_show_details" android:title="@string/setting_promotion_show" />
+		<EditTextPreference  android:key="forward_email" 
+			android:title="@string/setting_forward_email" android:summary="@string/setting_forward_email_details"
+			android:dialogTitle="请输入Email" android:defaultValue=""  />
 		<EditTextPreference  android:key="black_list" 
 			android:title="@string/setting_black_list" android:summary="@string/setting_black_list_details"
 			android:dialogTitle="请输入ID" android:defaultValue=""  />

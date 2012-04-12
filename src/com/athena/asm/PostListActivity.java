@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.Editable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -313,8 +314,9 @@ public class PostListActivity extends Activity implements OnClickListener,
 				relativeLayout = (RelativeLayout) v;
 			}
 			final String authorID = (String) ((TextView) relativeLayout
-					.findViewById(R.id.AuthorID)).getText();
-			final Post post = ((PostListAdapter.ViewHolder)relativeLayout.getTag()).post;
+  					.findViewById(R.id.AuthorID)).getText();
+  			final Post post = ((PostListAdapter.ViewHolder)relativeLayout.getTag()).post;
+ 			final Post firstPost = m_viewModel.getPostList().get(0);
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.post_reply_post));
 			itemList.add(getString(R.string.post_reply_mail));
@@ -322,6 +324,8 @@ public class PostListActivity extends Activity implements OnClickListener,
 			itemList.add(getString(R.string.post_copy_author));
 			itemList.add(getString(R.string.post_copy_content));
 			itemList.add(getString(R.string.post_foward_self));
+ 			itemList.add(getString(R.string.post_foward_external));
+ 			itemList.add(getString(R.string.post_group_foward_external));
 			if (post.getAuthor().equals(m_smthSupport.userid)) {
 				itemList.add(getString(R.string.post_edit_post));
 			}
@@ -390,6 +394,12 @@ public class PostListActivity extends Activity implements OnClickListener,
 						}
 						break;
 					case 6:
+						forwardToEmail(post, false);
+						break;
+					case 7:
+						forwardToEmail(firstPost, true);
+						break;
+					case 8:
 						intent = new Intent();
 						intent.setClassName("com.athena.asm",
 								"com.athena.asm.WritePostActivity");
@@ -413,6 +423,61 @@ public class PostListActivity extends Activity implements OnClickListener,
 		return true;
 	}
 
+	private void forwardToEmail(final Post post, final boolean group)
+	{
+		String email = HomeActivity.m_application.getForwardEmailAddr();
+		
+		if (email == "") {
+			final EditText input = new EditText(this);
+
+			new AlertDialog.Builder(this)
+			.setTitle("设置转寄邮箱")
+			.setMessage("您还没有设置转寄邮箱，请先设置。如需更改，请至设置页面")
+			.setView(input)
+			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					Editable value = input.getText(); 
+					HomeActivity.m_application.updateForwardEmailAddr(value.toString());
+					
+					String msg = null;
+					boolean result;
+
+					if (group)
+						result = m_smthSupport.forwardGroupPostToExternalMail(post, value.toString()) ;
+					else 
+						result = m_smthSupport.forwardPostToExternalMail(post, value.toString()) ;
+					if ( result ) 
+						msg = "已转寄往信箱"+value.toString();
+					else
+						msg = "可耻滴失败鸟";
+					Toast.makeText(getApplicationContext(),
+							msg, Toast.LENGTH_SHORT).show();
+				}
+			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Do nothing.
+				}
+			}).show();
+		} else {
+			String msg = null;
+			boolean result;
+
+			if (group)
+				result = m_smthSupport.forwardGroupPostToExternalMail(post, email) ;
+			else 
+				result = m_smthSupport.forwardPostToExternalMail(post, email) ;
+			if ( result ) 
+				msg = "已转寄往信箱"+email;
+			else
+				msg = "可耻滴失败鸟";
+			Toast.makeText(getApplicationContext(),
+					msg, Toast.LENGTH_SHORT).show();
+
+		}
+		
+		return ;
+	}
+	
 	@Override
 	public boolean onDown(MotionEvent e) {
 		return false;

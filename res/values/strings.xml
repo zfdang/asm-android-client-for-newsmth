@@ -54,6 +54,8 @@
 	<string name="post_query_author">查看作者信息</string>
 	<string name="post_copy_content">复制帖子内容</string>
 	<string name="post_foward_self">转寄到自己信箱</string>
+	<string name="post_foward_external">转寄到外部邮箱</string>
+	<string name="post_group_foward_external">合集转寄到外部邮箱</string>
 	<string name="post_edit_post">修改文章</string>
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
@@ -109,6 +111,8 @@
 	<string name="setting_force_screen_portrait_details">选中后不显示横屏界面</string>
 	<string name="setting_black_list">黑名单</string>
 	<string name="setting_black_list_details">请以空格隔开ID</string>
+	<string name="setting_forward_email">外部邮箱地址</string>
+	<string name="setting_forward_email_details">请输入转寄的外部邮箱地址</string>
 	<string name="setting_promotion_show">发帖显示宣传语</string>
 	<string name="setting_promotion_show_details">选中后发帖时结尾添加宣传语</string>
 	<!-- 下拉刷新 -->

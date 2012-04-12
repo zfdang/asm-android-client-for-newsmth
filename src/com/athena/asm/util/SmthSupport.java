@@ -954,13 +954,14 @@ public class SmthSupport {
 		return postList;
 	}
 
-	public Boolean forwardPostToMailBox(Post post) {
-		String url = "http://www.newsmth.net/bbsfwd.php?do";
+	private Boolean forwardGroupPostTo(Post post, String to) {
+		String url = "http://www.newsmth.net/bbstfwd.php?do";
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("board", post.getBoard()));
-		params.add(new BasicNameValuePair("id", post.getSubjectID()));
+		params.add(new BasicNameValuePair("gid", post.getSubjectID()));
+		params.add(new BasicNameValuePair("start", post.getSubjectID()));
 		params.add(new BasicNameValuePair("noansi", "1"));
-		params.add(new BasicNameValuePair("target", userid));
+		params.add(new BasicNameValuePair("target", to));
 		String content = crawler.getPostRequestResult(url, params);
 		if (content.contains("操作成功")) {
 			return true;
@@ -968,6 +969,36 @@ public class SmthSupport {
 		else {
 			return false;
 		}
+	}
+	private Boolean forwardPostTo(Post post, String to) {
+		String url = "http://www.newsmth.net/bbsfwd.php?do";
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("board", post.getBoard()));
+		params.add(new BasicNameValuePair("id", post.getSubjectID()));
+		params.add(new BasicNameValuePair("noansi", "1"));
+		params.add(new BasicNameValuePair("target", to));
+		String content = crawler.getPostRequestResult(url, params);
+		if (content.contains("操作成功")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	public Boolean forwardGroupPostToExternalMail(Post post, String emailAddress) {
+		return forwardGroupPostTo(post, emailAddress);
+	}
+	
+	public Boolean forwardGroupPostToMailBox(Post post) {
+		return forwardPostTo(post, userid);
+	}
+	
+	public Boolean forwardPostToExternalMail(Post post, String emailAddress) {
+		return forwardPostTo(post, emailAddress);
+	}
+	
+	public Boolean forwardPostToMailBox(Post post) {
+		return forwardPostTo(post, userid);
 	}
 
 	/**
