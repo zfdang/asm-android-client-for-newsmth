@@ -36,7 +36,9 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public void setPostList(List<Post> postList) {
 		m_postList = postList;
-		m_currentSubject.setTitle(m_postList.get(0).getTitle());
+		if (m_postList != null && m_postList.size() > 0) {
+			m_currentSubject.setTitle(m_postList.get(0).getTitle());
+		}
 	}
 	
 	public void ensurePostExists() {
