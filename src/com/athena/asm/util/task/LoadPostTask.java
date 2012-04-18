@@ -3,6 +3,7 @@ package com.athena.asm.util.task;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
@@ -12,49 +13,50 @@ import com.athena.asm.data.Subject;
 import com.athena.asm.viewmodel.PostListViewModel;
 
 public class LoadPostTask extends AsyncTask<String, Integer, String> {
-	private PostListActivity postListActivity;
-	private ProgressDialog pdialog;
-	private int boardType;
-	private int action;
-	private boolean isSilent;
-	private boolean isUsePreload;
-	private Subject subject;
+	private ProgressDialog m_pdialog;
+	private int m_boardType;
+	private int m_action;
+	private boolean m_isSilent;
+	private boolean m_isUsePreload;
+	private Subject m_subject;
 	
 	private PostListViewModel m_viewModel;
 
-	public LoadPostTask(PostListActivity activity, PostListViewModel viewModel, Subject subject, int action, 
+	public LoadPostTask(Context context, PostListViewModel viewModel, Subject subject, int action, 
 			boolean isSilent, boolean isUsePreload) {
-		this.postListActivity = activity;
-		this.boardType = viewModel.getBoardType();
-		this.action = action;
-		this.isSilent = isSilent;
-		this.isUsePreload = isUsePreload;
-		this.subject = subject;
+		m_boardType = viewModel.getBoardType();
+		m_action = action;
+		m_isSilent = isSilent;
+		m_isUsePreload = isUsePreload;
+		m_subject = subject;
 		
 		m_viewModel = viewModel;
+		
+		if (!m_isSilent) {
+			m_pdialog = new ProgressDialog(context);
+		}
 	}
 
 	@Override
 	protected void onPreExecute() {
-		if (!isSilent) {
-			pdialog = new ProgressDialog(postListActivity);
-			pdialog.setMessage("努力加载中...");
-			pdialog.show();
+		if (!m_isSilent) {
+			m_pdialog.setMessage("努力加载中...");
+			m_pdialog.show();
 		}
 	}
 	
 	private List<Post> getPostList() {
 		List<Post> postList = null;
-		if (boardType == 0) {
-			postList = postListActivity.m_smthSupport.getPostListFromMobile(subject, HomeActivity.m_application.getBlackList());
+		if (m_boardType == 0) {
+			postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, HomeActivity.m_application.getBlackList());
 			//postListActivity.postList = postListActivity.smthSupport.getPostList(subject, HomeActivity.application.getBlackList(), startNumber);
 		}
 		else {
-			if (action == 0) {
-				postList = postListActivity.m_smthSupport.getSinglePostList(subject);
+			if (m_action == 0) {
+				postList = m_viewModel.getSmthSupport().getSinglePostList(m_subject);
 			}
 			else {
-				postList = postListActivity.m_smthSupport.getTopicPostList(subject, action);
+				postList = m_viewModel.getSmthSupport().getTopicPostList(m_subject, m_action);
 			}
 		}
 		return postList;
@@ -63,12 +65,12 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		
-		if (isSilent) {
+		if (m_isSilent) {
 			m_viewModel.setPreloadPostList(getPostList());
 			m_viewModel.setIsPreloadFinished(true);
 		}
 		else {
-			if (isUsePreload && m_viewModel.isPreloadFinished() && m_viewModel.getPreloadPostList() != null) {
+			if (m_isUsePreload && m_viewModel.isPreloadFinished() && m_viewModel.getPreloadPostList() != null) {
 				m_viewModel.setIsPreloadFinished(false);
 				m_viewModel.updatePostListFromPreloadPostList();
 				m_viewModel.updateCurrentSubjectFromPreloadSubject();
@@ -83,8 +85,8 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		if (!isSilent) {
-			pdialog.cancel();
+		if (!m_isSilent) {
+			m_pdialog.cancel();
 			m_viewModel.notifyPostListChanged();
 		}
 	}

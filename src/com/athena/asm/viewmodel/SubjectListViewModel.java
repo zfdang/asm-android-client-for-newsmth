@@ -2,8 +2,10 @@ package com.athena.asm.viewmodel;
 
 import java.util.List;
 
+import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
+import com.athena.asm.util.SmthSupport;
 
 public class SubjectListViewModel extends BaseViewModel {
 	
@@ -17,7 +19,13 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	private boolean m_isInRotation = false;
 	
+	private SmthSupport m_smthSupport;
+	
 	public static final String SUBJECTLIST_PROPERTY_NAME = "SubjectList";
+	
+	public SubjectListViewModel() {
+		m_smthSupport = SmthSupport.getInstance();
+	}
 	
 	public Board getCurrentBoard() {
 		return m_currentBoard;
@@ -131,6 +139,10 @@ public class SubjectListViewModel extends BaseViewModel {
 	
 	public void setIsInRotation(boolean isInRotation) {
 		m_isInRotation = isInRotation;
+	}
+	
+	public List<Subject> getSubjectListFromSmth(boolean isReloadPageNo) {
+		return m_smthSupport.getSubjectList(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
 	}
 
 }

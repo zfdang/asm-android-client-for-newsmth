@@ -3,6 +3,7 @@ package com.athena.asm.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
+import com.athena.asm.PostListFragment;
 import com.athena.asm.R;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
@@ -29,7 +31,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class PostListAdapter extends BaseAdapter {
 
-	private PostListActivity activity;
+	private PostListFragment m_fragment;
 	private LayoutInflater inflater;
 	private List<Post> postList;
 	
@@ -43,9 +45,9 @@ public class PostListAdapter extends BaseAdapter {
 		public Post post;
 	}
 
-	public PostListAdapter(PostListActivity activity, LayoutInflater inflater,
+	public PostListAdapter(PostListFragment fragment, LayoutInflater inflater,
 			List<Post> postList) {
-		this.activity = activity;
+		this.m_fragment = fragment;
 		this.inflater = inflater;
 		this.postList = postList;
 	}
@@ -102,7 +104,7 @@ public class PostListAdapter extends BaseAdapter {
 						|| fileType.endsWith("png") || fileType.endsWith("bmp")
 						|| fileType.endsWith("gif")) {
 					// Log.d("image", attachUrl);
-					ImageView imageView = new ImageView(activity);
+					ImageView imageView = new ImageView(m_fragment.getActivity());
 					LayoutParams layoutParams = new LayoutParams(
 							LayoutParams.WRAP_CONTENT,
 							LayoutParams.WRAP_CONTENT);
@@ -122,7 +124,7 @@ public class PostListAdapter extends BaseAdapter {
 							Attachment attachment = (Attachment) v.getTag();
 							intent.putExtra(StringUtility.IMAGE_URL, attachment.getAttachUrl());
 							intent.putExtra(StringUtility.IMAGE_NAME, attachment.getName());
-							activity.startActivity(intent);
+							m_fragment.startActivity(intent);
 						}
 					});
 				}
@@ -132,11 +134,11 @@ public class PostListAdapter extends BaseAdapter {
 
 		holder.dateTextView.setText(post.getDate().toLocaleString());
 
-		holder.contentTextView.setOnLongClickListener(activity);
-		layout.setOnLongClickListener(activity);
+		holder.contentTextView.setOnLongClickListener(m_fragment);
+		layout.setOnLongClickListener(m_fragment);
 		
-		holder.contentTextView.setOnTouchListener(activity);
-		layout.setOnTouchListener(activity);
+		holder.contentTextView.setOnTouchListener(m_fragment);
+		layout.setOnTouchListener(m_fragment);
 		
 		if (HomeActivity.m_application.isNightTheme()) {
 			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
