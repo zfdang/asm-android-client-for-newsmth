@@ -2,36 +2,29 @@ package com.athena.asm.util.task;
 
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.athena.asm.data.Subject;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 
 public class LoadSubjectTask extends AsyncTask<String, Integer, String> {
-	private ProgressDialog pdialog;
 	private boolean isReloadPageNo;
 	
 	private SubjectListViewModel m_viewModel;
 	
-	public LoadSubjectTask(Context context, SubjectListViewModel viewModel) {
+	public LoadSubjectTask(SubjectListViewModel viewModel) {
 		m_viewModel = viewModel;
 		this.isReloadPageNo = viewModel.isFirstIn();
-		pdialog = new ProgressDialog(context);
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		pdialog.setMessage("加载版面列表中...");
-		pdialog.show();
 	}
 	
 	@Override
 	protected String doInBackground(String... params) {
 		List<Subject> subjectList = m_viewModel.getSubjectListFromSmth(isReloadPageNo);
 		m_viewModel.setSubjectList(subjectList);
-		pdialog.cancel();
 		return null;
 	}
 	

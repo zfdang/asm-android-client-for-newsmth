@@ -132,9 +132,10 @@ public class PostListFragment extends Fragment
 		}
 		
 		if (isNewSubject) {
-			LoadPostTask loadPostTask = new LoadPostTask(getActivity(), m_viewModel, m_viewModel.getCurrentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
 					0, false, false);
 			loadPostTask.execute();
+			((PostListActivity)getActivity()).showProgressDialog();
 		}
 		else {
 			reloadPostList();
@@ -194,12 +195,12 @@ public class PostListFragment extends Fragment
 			int nextPage = m_viewModel.getNextPageNumber();
 			if (nextPage > 0) {
 				m_viewModel.getPreloadSubject().setCurrentPageNo(nextPage);
-				LoadPostTask loadPostTask = new LoadPostTask(getActivity(), m_viewModel,
+				LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 						m_viewModel.getPreloadSubject(), 0, true, false);
 				loadPostTask.execute();
 			}
 		} else {
-			LoadPostTask loadPostTask = new LoadPostTask(getActivity(), m_viewModel, m_viewModel.getPreloadSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getPreloadSubject(),
 					3, true, false);
 			loadPostTask.execute();
 		}
@@ -244,9 +245,10 @@ public class PostListFragment extends Fragment
 				((View) view.getParent()).requestFocus();
 			}
 
-			LoadPostTask loadPostTask = new LoadPostTask(getActivity(), m_viewModel, m_viewModel.getCurrentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
 					0, false, isNext);
 			loadPostTask.execute();
+			((PostListActivity)getActivity()).showProgressDialog();
 		} else {
 			int action = 0;
 			// int startNumber = 0;
@@ -264,9 +266,10 @@ public class PostListFragment extends Fragment
 				m_viewModel.updateSubjectIDFromTopicSubjectID();
 				m_viewModel.setSubjectCurrentPageNumber(1);
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(getActivity(), m_viewModel, m_viewModel.getCurrentSubject(),
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
 					action, false, isNext);
 			loadPostTask.execute();
+			((PostListActivity)getActivity()).showProgressDialog();
 		}
 	}
 	
@@ -276,6 +279,7 @@ public class PostListFragment extends Fragment
 		
 		if (changedPropertyName.equals(PostListViewModel.POSTLIST_PROPERTY_NAME)) {
 			reloadPostList();
+			((PostListActivity)getActivity()).dismissProgressDialog();
 		}
 		
 	}
@@ -463,6 +467,13 @@ public class PostListFragment extends Fragment
 	public boolean onTouch(View v, MotionEvent event) {
 		m_GestureDetector.onTouchEvent(event);
 		return false;
+	}
+	
+	private void refreshPostList() {
+		LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
+				0, false, false);
+		loadPostTask.execute();
+		((PostListActivity)getActivity()).showProgressDialog();
 	}
 
 	

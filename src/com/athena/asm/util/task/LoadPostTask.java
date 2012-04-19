@@ -2,18 +2,14 @@ package com.athena.asm.util.task;
 
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.athena.asm.HomeActivity;
-import com.athena.asm.PostListActivity;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
 import com.athena.asm.viewmodel.PostListViewModel;
 
 public class LoadPostTask extends AsyncTask<String, Integer, String> {
-	private ProgressDialog m_pdialog;
 	private int m_boardType;
 	private int m_action;
 	private boolean m_isSilent;
@@ -22,7 +18,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	
 	private PostListViewModel m_viewModel;
 
-	public LoadPostTask(Context context, PostListViewModel viewModel, Subject subject, int action, 
+	public LoadPostTask(PostListViewModel viewModel, Subject subject, int action, 
 			boolean isSilent, boolean isUsePreload) {
 		m_boardType = viewModel.getBoardType();
 		m_action = action;
@@ -32,17 +28,10 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 		
 		m_viewModel = viewModel;
 		
-		if (!m_isSilent) {
-			m_pdialog = new ProgressDialog(context);
-		}
 	}
 
 	@Override
 	protected void onPreExecute() {
-		if (!m_isSilent) {
-			m_pdialog.setMessage("努力加载中...");
-			m_pdialog.show();
-		}
 	}
 	
 	private List<Post> getPostList() {
@@ -86,7 +75,6 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		if (!m_isSilent) {
-			m_pdialog.cancel();
 			m_viewModel.notifyPostListChanged();
 		}
 	}

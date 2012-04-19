@@ -107,8 +107,7 @@ public class SubjectListFragment extends Fragment
 		m_isNewInstance = false;
 		
 		if (isNewBoard) {
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
-			loadSubjectTask.execute();
+			refreshSubjectList();
 		}
 		else {
 			reloadPostList();
@@ -139,8 +138,7 @@ public class SubjectListFragment extends Fragment
 			isToRefresh = false;
 			m_viewModel.toggleBoardType();
 			m_viewModel.setIsFirstIn(true);
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
-			loadSubjectTask.execute();
+			refreshSubjectList();
 		} else if (view.getId() == R.id.writePost) {
 			isToRefresh = false;
 			Intent intent = new Intent();
@@ -158,8 +156,7 @@ public class SubjectListFragment extends Fragment
 		if (isToRefresh) {
 			m_viewModel.updateBoardCurrentPage();
 			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-			LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
-			loadSubjectTask.execute();
+			refreshSubjectList();
 		}
 		
 	}
@@ -171,8 +168,7 @@ public class SubjectListFragment extends Fragment
 			Bundle b = data.getExtras();
 			boolean isToRefreshBoard = b.getBoolean(StringUtility.REFRESH_BOARD);
 			if (isToRefreshBoard) {
-				LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
-				loadSubjectTask.execute();
+				refreshSubjectList();
 			}
 			break;
 
@@ -221,9 +217,9 @@ public class SubjectListFragment extends Fragment
 	}
 	
 	private void refreshSubjectList() {
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(),
-				m_viewModel);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(m_viewModel);
 		loadSubjectTask.execute();
+		((SubjectListActivity)getActivity()).showProgressDialog();
 	}
 	
 	public static final int SWITCH_BOARD_TYPE = Menu.FIRST;
@@ -265,8 +261,7 @@ public class SubjectListFragment extends Fragment
 			alert.show();
 			break;
 		case REFRESH_SUBJECTLIST:
-			loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
-			loadSubjectTask.execute();
+			refreshSubjectList();
 			break;
 		case SEARCH_POST:
 			Intent postIntent = new Intent();
@@ -300,9 +295,10 @@ public class SubjectListFragment extends Fragment
 	public void onClick(DialogInterface dialog, int which) {
 		m_viewModel.setIsFirstIn(true);
 		m_viewModel.setBoardType(which);
-		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(getActivity(), m_viewModel);
+		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(m_viewModel);
 		loadSubjectTask.execute();
 		dialog.dismiss();
+		((SubjectListActivity)getActivity()).showProgressDialog();
 	}
 	
 	@Override
@@ -310,6 +306,7 @@ public class SubjectListFragment extends Fragment
 			String changedPropertyName, Object... params) {
 		if (changedPropertyName.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
 			reloadPostList();
+			((SubjectListActivity)getActivity()).dismissProgressDialog();
 		}
 	}
 	
