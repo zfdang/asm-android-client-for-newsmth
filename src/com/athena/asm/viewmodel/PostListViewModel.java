@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
+import com.athena.asm.util.SmthSupport;
 
 public class PostListViewModel extends BaseViewModel {
 	
@@ -19,8 +20,17 @@ public class PostListViewModel extends BaseViewModel {
 	private List<Post> m_preloadPostList;
 	private Subject m_preloadSubject;
 	
+	private SmthSupport m_smthSupport;
+	
 	public static final String POSTLIST_PROPERTY_NAME = "PostList";
 	
+	public PostListViewModel() {
+		m_smthSupport = SmthSupport.getInstance();
+	}
+	
+	public SmthSupport getSmthSupport() {
+		return m_smthSupport;
+	}
 	
 	public Subject getCurrentSubject() {
 		return m_currentSubject;
