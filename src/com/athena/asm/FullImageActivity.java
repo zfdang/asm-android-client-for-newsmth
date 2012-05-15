@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,9 +48,8 @@ public class FullImageActivity extends Activity implements OnClickListener {
 		ImageButton saveImageButton = (ImageButton) findViewById(R.id.save_image);
 		saveImageButton.setOnClickListener(this);
 
-		LinearLayout container = (LinearLayout) findViewById(R.id.full_image_container);
-		m_image = new TouchImageView(this);
-		container.addView(m_image);
+		m_image = (TouchImageView) findViewById(R.id.image_view);
+		
 		UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl,
 				R.drawable.loading, 60000, false);
 
