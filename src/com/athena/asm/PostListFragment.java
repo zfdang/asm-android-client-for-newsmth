@@ -3,6 +3,32 @@ package com.athena.asm;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.ClipboardManager;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.athena.asm.Adapter.PostListAdapter;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
@@ -10,33 +36,6 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadPostTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.ClipboardManager;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class PostListFragment extends Fragment
 							  implements OnClickListener,
@@ -63,6 +62,13 @@ public class PostListFragment extends Fragment
 	private GestureDetector m_GestureDetector;
 	
 	private boolean m_isNewInstance = false;
+	
+	private boolean m_isNewTouchStart = false;
+	private float m_touchStartX = 0;
+	private float m_touchStartY = 0;
+	
+	private float m_touchCurrentX = 0;
+	private float m_touchCurrentY = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -286,44 +292,35 @@ public class PostListFragment extends Fragment
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
+		m_isNewTouchStart = true;
+		m_touchStartX = e.getX();
+		m_touchStartY = e.getY();
+		m_touchCurrentX = m_touchStartX;
+		m_touchCurrentY = m_touchStartY;
 		return false;
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		final int flingMinXDistance = 100, flingMaxYDistance = 100;
-		if (e1.getX() - e2.getX() > flingMinXDistance) {
-				//&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
-			// Fling left
-			Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
-			m_nextButton.performClick();
-		} else if (e2.getX() - e1.getX() > flingMinXDistance) {
-				//&& Math.abs(e1.getY() - e2.getY()) < flingMaxYDistance) {
-			// Fling right
-			Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
-			m_preButton.performClick();
-		}
 		return false;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
-		// TODO Auto-generated method stub
-		return false;
+		m_touchCurrentX += distanceX;
+		m_touchCurrentY += distanceY;
+		return true;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -379,9 +376,7 @@ public class PostListFragment extends Fragment
 			itemList.toArray(items);
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(R.string.post_alert_title);
-			builder.setAdapter(new ArrayAdapter(getActivity(),
-                    R.layout.alert_narrow_item, items), new DialogInterface.OnClickListener() {
-			//builder.setItems(items, new DialogInterface.OnClickListener() {
+			builder.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Intent intent;
 					switch (item) {
@@ -465,8 +460,27 @@ public class PostListFragment extends Fragment
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		m_GestureDetector.onTouchEvent(event);
-		return false;
+		boolean isConsumed = m_GestureDetector.onTouchEvent(event);
+		if (event.getAction() == MotionEvent.ACTION_CANCEL ||
+				event.getAction() == MotionEvent.ACTION_UP) {
+			if (m_isNewTouchStart) {
+				m_isNewTouchStart = false;
+				final int flingMinXDistance = 100, flingMaxYDistance = 100;
+				if (m_touchCurrentX - m_touchStartX > flingMinXDistance 
+						&& Math.abs(m_touchCurrentY - m_touchStartY) < flingMaxYDistance) {
+					// Fling left
+					Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+					m_nextButton.performClick();
+				} else if (m_touchStartX - m_touchCurrentX > flingMinXDistance 
+						&& Math.abs(m_touchStartY - m_touchCurrentY) < flingMaxYDistance) {
+					// Fling right
+					Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+					m_preButton.performClick();
+				}
+			}
+			
+		}
+		return isConsumed;
 	}
 	
 	private void refreshPostList() {
