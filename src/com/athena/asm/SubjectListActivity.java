@@ -1,12 +1,10 @@
 package com.athena.asm;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.Window;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class SubjectListActivity extends SherlockFragmentActivity {
 	

@@ -1,6 +1,7 @@
 package com.athena.asm.Adapter;
 
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,18 +13,17 @@ import com.athena.asm.data.MailBox;
 
 public class MailAdapter extends BaseAdapter {
 
-	private HomeActivity activity;
-	private MailBox mailBox;
+	private LayoutInflater m_inflater;
+	private MailBox m_mailBox;
 
-	public MailAdapter(HomeActivity activity, MailBox mailBox) {
-		this.activity = activity;
-		this.mailBox = mailBox;
+	public MailAdapter(LayoutInflater inflater, MailBox mailBox) {
+		this.m_inflater = inflater;
+		this.m_mailBox = mailBox;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View layout = null;
-		layout = activity.m_inflater.inflate(R.layout.mail_list_section_header,
+		View layout = m_inflater.inflate(R.layout.mail_list_section_header,
 				null);
 		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
 		TextView numberTextView = (TextView) layout
@@ -33,15 +33,15 @@ public class MailAdapter extends BaseAdapter {
 		switch (position) {
 		case 0:
 			boxNameTextView.setText(R.string.mail_inbox);
-			numberTextView.setText(mailBox.getInboxNumber()+"封 ");
+			numberTextView.setText(m_mailBox.getInboxNumber()+"封 ");
 			break;
 		case 1:
 			boxNameTextView.setText(R.string.mail_outbox);
-			numberTextView.setText(mailBox.getOutboxNumber()+"封 ");
+			numberTextView.setText(m_mailBox.getOutboxNumber()+"封 ");
 			break;
 		case 2:
 			boxNameTextView.setText(R.string.mail_trash);
-			numberTextView.setText(mailBox.getTrashboxNumber()+"封 ");
+			numberTextView.setText(m_mailBox.getTrashboxNumber()+"封 ");
 			break;
 		case 3:
 			boxNameTextView.setText(R.string.mail_write_mail);

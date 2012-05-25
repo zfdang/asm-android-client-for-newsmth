@@ -2,25 +2,22 @@ package com.athena.asm;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.Adapter.SearchPostResultListAdapter;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 
-public class SearchPostResultListActivity extends Activity {
+public class SearchPostResultListActivity extends SherlockActivity {
 
 	public SmthSupport m_smthSupport;
 
@@ -33,8 +30,8 @@ public class SearchPostResultListActivity extends Activity {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_post_result_list);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -42,17 +39,12 @@ public class SearchPostResultListActivity extends Activity {
 		m_smthSupport = SmthSupport.getInstance();
 		
 		m_subjectList = (List<Subject>) getIntent().getSerializableExtra(StringUtility.SUBJECT_LIST);
-
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		if (HomeActivity.m_application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
-		}
 		
 		if (m_subjectList.size() > 0) {
-			titleTextView.setText("搜索结果");
+			setTitle("搜索结果");
 		}
 		else {
-			titleTextView.setText("没有搜到符合的结果");
+			setTitle("没有搜到符合的结果");
 		}
 		
 		ListView listView = (ListView) findViewById(R.id.search_result_subject_list);

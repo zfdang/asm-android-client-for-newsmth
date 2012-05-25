@@ -39,7 +39,7 @@ public class aSMApplication extends Application {
     private String autoPassword = "";
 
     private String currentUserID = "";
-    private String defaultTab = "001";
+    private String defaultTab = StringUtility.TAB_GUIDANCE;
     private String defaultBoardType = "001";
 
     private int lastLaunchVersionCode = 4;
@@ -116,9 +116,9 @@ public class aSMApplication extends Application {
         }
 
         if (!settings.contains(Preferences.DEFAULT_TAB)) {
-            editor.putString(Preferences.DEFAULT_TAB, "001");
+            editor.putString(Preferences.DEFAULT_TAB, StringUtility.TAB_GUIDANCE);
         } else {
-            defaultTab = settings.getString(Preferences.DEFAULT_TAB, "001");
+            defaultTab = settings.getString(Preferences.DEFAULT_TAB, StringUtility.TAB_GUIDANCE);
         }
 
         if (!settings.contains(Preferences.DEFAULT_BOARD_TYPE)) {

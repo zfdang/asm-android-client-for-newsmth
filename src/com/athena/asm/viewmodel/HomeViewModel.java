@@ -249,8 +249,8 @@ public class HomeViewModel extends BaseViewModel {
 		notifyViewModelChange(this, MAILBOX_PROPERTY_NAME);
 	}
 	
-	public void notifyProfileChanged(Profile profile, int step) {
-		notifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile, step);
+	public void notifyProfileChanged(Profile profile) {
+		notifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile);
 	}
 	
 }

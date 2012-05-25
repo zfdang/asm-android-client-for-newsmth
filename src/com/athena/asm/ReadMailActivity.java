@@ -1,17 +1,14 @@
 package com.athena.asm;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.Adapter.ReadMailAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.SmthSupport;
@@ -20,7 +17,7 @@ import com.athena.asm.util.task.LoadMailContentTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.MailViewModel;
 
-public class ReadMailActivity extends Activity implements BaseViewModel.OnViewModelChangObserver {
+public class ReadMailActivity extends SherlockActivity implements BaseViewModel.OnViewModelChangObserver {
 
 	public SmthSupport m_smthSupport;
 
@@ -30,8 +27,8 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_list);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -45,12 +42,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 		boolean isNewMail = m_viewModel.tryUpdateCurrentMail((Mail) getIntent().getSerializableExtra(
 				StringUtility.MAIL));
 
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText(m_viewModel.getCurrentMailTitle());
-		
-		if (HomeActivity.m_application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
-		}
+		setTitle(m_viewModel.getCurrentMailTitle());
 
 		EditText pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setVisibility(View.GONE);

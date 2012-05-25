@@ -3,12 +3,14 @@
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#e7e7e7"
     android:orientation="vertical" >
 
-    <!-- Header -->
+    <!--
+    Header
 
     <include layout="@layout/header" />
+    -->
+
 
     <!-- 工具栏 -->
 
@@ -25,8 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="标    题"
-            android:textColor="@color/status_text" />
+            android:text="标    题" />
 
         <EditText
             android:id="@+id/post_title"
@@ -40,12 +41,10 @@
 
         <Button
             android:id="@+id/btn_attach"
-            style="@style/blue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="@string/post_attach" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -61,8 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="签名档"
-            android:textColor="@color/status_text" />
+            android:text="签名档" />
 
         <Spinner
             android:id="@+id/sig_spinner"
@@ -85,8 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="收信ID"
-            android:textColor="@color/status_text" />
+            android:text="收信ID" />
 
         <EditText
             android:id="@+id/post_userid"
@@ -101,7 +98,6 @@
 
         <Button
             android:id="@+id/btn_send_post"
-            style="@style/blue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -111,10 +107,17 @@
 
     <!-- main text input -->
 
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_marginTop="5dip"
+        android:paddingLeft="10dp"
+        android:text="内容" />
+
     <EditText
         android:id="@+id/post_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:hint="请输入内容"
         android:layout_weight="1"
         android:gravity="top"
         android:imeOptions="actionSend|flagNoEnterAction"

@@ -3,75 +3,69 @@ package com.athena.asm;
 import java.io.Serializable;
 import java.util.List;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.SearchPostViewModel;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-public class SearchPostActivity extends Activity implements OnClickListener {
+public class SearchPostActivity extends SherlockActivity implements
+		OnClickListener {
 	public SmthSupport m_smthSupport;
-	
+
 	EditText m_titleEditText;
 	EditText m_title2EditText;
 	EditText m_title3EditText;
 	EditText m_useridEditText;
 	EditText m_dtEditText;
-	
+
 	CheckBox m_mgCheckBox;
 	CheckBox m_agCheckBox;
 	CheckBox m_ogCheckBox;
-	
+
 	Button m_startSearchButton;
-	
+
 	private SearchPostViewModel m_viewModel;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_post);
-		
+
 		m_smthSupport = SmthSupport.getInstance();
-		
-		m_viewModel = (SearchPostViewModel)getLastNonConfigurationInstance();
+
+		m_viewModel = (SearchPostViewModel) getLastNonConfigurationInstance();
 		if (m_viewModel == null) {
 			m_viewModel = new SearchPostViewModel();
 		}
-		
-		
-		m_viewModel.setBoardName(getIntent().getStringExtra(StringUtility.BOARD));
+
+		m_viewModel.setBoardName(getIntent()
+				.getStringExtra(StringUtility.BOARD));
 		m_viewModel.setBoardID(getIntent().getStringExtra(StringUtility.BID));
-		
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText(m_viewModel.getTitleText());
-		
-		if (HomeActivity.m_application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
-		}
-		
+
+		setTitle(m_viewModel.getTitleText());
+
 		m_titleEditText = (EditText) findViewById(R.id.edittext_title);
 		m_title2EditText = (EditText) findViewById(R.id.edittext_title2);
 		m_title3EditText = (EditText) findViewById(R.id.edittext_title3);
 		m_useridEditText = (EditText) findViewById(R.id.edittext_userid);
 		m_dtEditText = (EditText) findViewById(R.id.edittext_dt);
-		
+
 		m_mgCheckBox = (CheckBox) findViewById(R.id.checkbox_mg);
 		m_agCheckBox = (CheckBox) findViewById(R.id.checkbox_ag);
 		m_ogCheckBox = (CheckBox) findViewById(R.id.checkbox_og);
-		
+
 		m_startSearchButton = (Button) findViewById(R.id.btn_start_post_search);
 		m_startSearchButton.setOnClickListener(this);
 	}
@@ -81,7 +75,7 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		updateViewModel();
@@ -91,20 +85,38 @@ public class SearchPostActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.btn_start_post_search) {
-			
 			updateViewModel();
-			List<Subject> subjects = m_viewModel.searchSubject();
-			
-			Intent intent = new Intent();
-			intent.setClassName("com.athena.asm",
-					"com.athena.asm.SearchPostResultListActivity");
-			Bundle bundle = new Bundle();
-			bundle.putSerializable(StringUtility.SUBJECT_LIST, (Serializable)subjects);
-			intent.putExtras(bundle);
-			startActivity(intent);
+			new SearchTask().execute();
 		}
 	}
 	
+	public void parseSearchResult(List<Subject> subjects) {
+		Intent intent = new Intent();
+		intent.setClassName("com.athena.asm",
+				"com.athena.asm.SearchPostResultListActivity");
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(StringUtility.SUBJECT_LIST,
+				(Serializable) subjects);
+		intent.putExtras(bundle);
+		startActivity(intent);
+	}
+
+	class SearchTask extends AsyncTask<String, Integer, String> {
+
+		private List<Subject> m_subjects;
+		
+		@Override
+		protected String doInBackground(String... arg0) {
+			m_subjects = m_viewModel.searchSubject();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			parseSearchResult(m_subjects);
+		}
+	}
+
 	private void updateViewModel() {
 		m_viewModel.setTitle(m_titleEditText.getText().toString().trim());
 		m_viewModel.setTitle2(m_title2EditText.getText().toString().trim());

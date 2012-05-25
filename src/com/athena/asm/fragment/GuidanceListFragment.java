@@ -25,7 +25,9 @@ public class GuidanceListFragment extends SherlockFragment implements
 
 	private LayoutInflater m_inflater;
 
-	private ExpandableListView listView;
+	private ExpandableListView m_listView;
+
+	private boolean m_isLoaded;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,22 +41,25 @@ public class GuidanceListFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		View layout = m_inflater.inflate(R.layout.guidance, null);
-		listView = (ExpandableListView) layout.findViewById(R.id.guidance_list);
+		m_listView = (ExpandableListView) layout.findViewById(R.id.guidance_list);
 
 		aSMApplication application = (aSMApplication) getActivity()
 				.getApplication();
 		m_viewModel = application.getHomeViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
 
-		return listView;
+		m_isLoaded = false;
+		
+		return m_listView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		if (m_viewModel.getCurrentTab() != null &&
-				m_viewModel.getCurrentTab().equals("001")) {
+
+		if (m_viewModel.getCurrentTab() != null
+				&& m_viewModel.getCurrentTab().equals(
+						StringUtility.TAB_GUIDANCE)) {
 			reloadGuidanceList();
 		}
 	}
@@ -72,11 +77,11 @@ public class GuidanceListFragment extends SherlockFragment implements
 					getActivity(), m_viewModel);
 			loadGuidanceTask.execute();
 		} else {
-
-			listView.setAdapter(new GuidanceListAdapter(m_inflater, m_viewModel
+			m_isLoaded = true;
+			m_listView.setAdapter(new GuidanceListAdapter(m_inflater, m_viewModel
 					.getGuidanceSectionNames(), m_viewModel
 					.getGuidanceSectionDetails()));
-			listView.setOnChildClickListener(new OnChildClickListener() {
+			m_listView.setOnChildClickListener(new OnChildClickListener() {
 
 				@Override
 				public boolean onChildClick(ExpandableListView parent, View v,
@@ -98,13 +103,14 @@ public class GuidanceListFragment extends SherlockFragment implements
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		if (changedPropertyName.equals(HomeViewModel.GUIDANCE_PROPERTY_NAME)
-				) {
+		if (changedPropertyName.equals(HomeViewModel.GUIDANCE_PROPERTY_NAME)) {
 			reloadGuidanceList();
 		} else if (changedPropertyName
-						.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			if (m_viewModel.getCurrentTab() != null &&
-					m_viewModel.getCurrentTab().equals("001")) {
+				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+			if (!m_isLoaded
+					&& m_viewModel.getCurrentTab() != null
+					&& m_viewModel.getCurrentTab().equals(
+							StringUtility.TAB_GUIDANCE)) {
 				reloadGuidanceList();
 			}
 		}

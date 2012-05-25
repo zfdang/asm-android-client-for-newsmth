@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -24,15 +22,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadWritePostTask;
 import com.athena.asm.viewmodel.WritePostViewModel;
 
-public class WritePostActivity extends Activity implements OnClickListener,
+public class WritePostActivity extends SherlockActivity implements OnClickListener,
 		OnItemSelectedListener {
 	static final int ATTACH_REQUST = 0;
 
@@ -54,8 +52,8 @@ public class WritePostActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_reply);
 
 		m_smthSupport = SmthSupport.getInstance();
@@ -74,8 +72,6 @@ public class WritePostActivity extends Activity implements OnClickListener,
 		m_contentEditText = (EditText) findViewById(R.id.post_content);
 		m_sigSpinner = (Spinner) findViewById(R.id.sig_spinner);
 
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-
 		Button sendButton = (Button) findViewById(R.id.btn_send_post);
 		sendButton.setOnClickListener(this);
 
@@ -91,7 +87,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			((LinearLayout) m_useridEditText.getParent()).removeView(sendButton);
 			LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
 			layout.addView(sendButton);
-			titleTextView.setText("写帖子");
+			setTitle("写帖子");
 			if (isNewActivity) {
 				new LoadWritePostTask(this, m_viewModel).execute();
 			}
@@ -101,7 +97,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			
 		} else if (m_viewModel.getWriteType() == TYPE_MAIL) {
 			m_attachButton.setVisibility(View.GONE);
-			titleTextView.setText("写  信");
+			setTitle("写  信");
 			if (isNewActivity) {
 				new LoadWritePostTask(this, m_viewModel).execute();
 			}
@@ -115,7 +111,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			((LinearLayout) m_useridEditText.getParent()).removeView(sendButton);
 			LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
 			layout.addView(sendButton);
-			titleTextView.setText("修改帖子");
+			setTitle("修改帖子");
 			
 			m_viewModel.setPostTitile(getIntent().getStringExtra(StringUtility.TITLE));
 			m_titleEditText.setText(m_viewModel.getPostTitle());
@@ -209,7 +205,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			if (HomeActivity.m_application.isPromotionShow()) {
 				postContent += "--<br/>发送自aSM水木客户端\n<br/>";
 			}
-			m_contentEditText.setText(Html.fromHtml("<br/>" + postContent));
+			m_contentEditText.setText(Html.fromHtml(postContent));
 			m_viewModel.setPostContent(postContent);
 		}
 
@@ -258,7 +254,7 @@ public class WritePostActivity extends Activity implements OnClickListener,
 			String postContent;
 			postContent = matcher.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
-			m_contentEditText.setText(Html.fromHtml("<br />" + postContent));
+			m_contentEditText.setText(Html.fromHtml(postContent));
 			m_viewModel.setPostContent(postContent);
 		}
 

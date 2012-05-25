@@ -298,7 +298,7 @@ public class SmthCrawler {
 			} else {
 				content = EntityUtils.toString(entity, encoding);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.d("com.athena.asm", "get url failed,", e);
 			content = null;
 		}

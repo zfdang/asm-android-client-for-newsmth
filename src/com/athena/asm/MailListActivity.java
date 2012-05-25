@@ -1,21 +1,18 @@
 package com.athena.asm;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
@@ -23,7 +20,8 @@ import com.athena.asm.util.task.LoadMailListTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.MailViewModel;
 
-public class MailListActivity extends Activity implements OnClickListener, BaseViewModel.OnViewModelChangObserver {
+public class MailListActivity extends SherlockActivity implements
+		OnClickListener, BaseViewModel.OnViewModelChangObserver {
 
 	private LayoutInflater m_inflater;
 
@@ -31,26 +29,21 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.post_list);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getMailViewModel();
-	    m_viewModel.registerViewModelChangeObserver(this);
+		m_viewModel.registerViewModelChangeObserver(this);
 
-		boolean isToUpdate = m_viewModel.tryUpdateMailboxType((getIntent().getIntExtra(StringUtility.MAIL_BOX_TYPE, 0)));
-		
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		
-		if (HomeActivity.m_application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
-		}
-		
-		titleTextView.setText(m_viewModel.getTitleText());
-		
+		boolean isToUpdate = m_viewModel.tryUpdateMailboxType((getIntent()
+				.getIntExtra(StringUtility.MAIL_BOX_TYPE, 0)));
+
+		setTitle(m_viewModel.getTitleText());
+
 		EditText pageNoEditText = (EditText) findViewById(R.id.edittext_page_no);
 		pageNoEditText.setVisibility(View.GONE);
 
@@ -66,13 +59,13 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 		nextButton.setOnClickListener(this);
 
 		if (isToUpdate) {
-			LoadMailListTask loadMailListTask = new LoadMailListTask(this, m_viewModel, -1);
+			LoadMailListTask loadMailListTask = new LoadMailListTask(this,
+					m_viewModel, -1);
 			loadMailListTask.execute();
-		}
-		else {
+		} else {
 			reloadMailList();
 		}
-		
+
 	}
 
 	@Override
@@ -80,27 +73,29 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 		// do nothing to stop onCreated
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		m_viewModel.unregisterViewModelChangeObserver(this);
-		
+
 		super.onDestroy();
 	}
 
 	public void reloadMailList() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new MailListAdapter(m_inflater, m_viewModel.getMailList()));
-		
+		listView.setAdapter(new MailListAdapter(m_inflater, m_viewModel
+				.getMailList()));
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					final int position, long id) {
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.MAIL, (Mail)view.getTag());
+				bundle.putSerializable(StringUtility.MAIL, (Mail) view.getTag());
 				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm", "com.athena.asm.ReadMailActivity");
+				intent.setClassName("com.athena.asm",
+						"com.athena.asm.ReadMailActivity");
 				startActivity(intent);
 			}
 		});
@@ -118,14 +113,15 @@ public class MailListActivity extends Activity implements OnClickListener, BaseV
 		} else if (view.getId() == R.id.btn_next_page) {
 			startNumber = m_viewModel.getNextPageStartNumber();
 		}
-		LoadMailListTask loadMailListTask = new LoadMailListTask(this, m_viewModel, startNumber);
+		LoadMailListTask loadMailListTask = new LoadMailListTask(this,
+				m_viewModel, startNumber);
 		loadMailListTask.execute();
 	}
 
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		
+
 		if (changedPropertyName.equals(MailViewModel.MAILLIST_PROPERTY_NAME)) {
 			reloadMailList();
 		}

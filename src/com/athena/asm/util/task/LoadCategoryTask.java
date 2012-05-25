@@ -17,12 +17,12 @@ import com.athena.asm.data.Board;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
-	private HomeActivity homeActivity;
+	private Context m_context;
 	
 	private HomeViewModel m_viewModel;
 
-	public LoadCategoryTask(HomeActivity activity, HomeViewModel viewModel) {
-		this.homeActivity = activity;
+	public LoadCategoryTask(Context context, HomeViewModel viewModel) {
+		this.m_context = context;
 		m_viewModel = viewModel;
 	}
 
@@ -30,7 +30,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
-		pdialog = new ProgressDialog(homeActivity);
+		pdialog = new ProgressDialog(m_context);
 		pdialog.setMessage("加载分类讨论区中...");
 		pdialog.show();
 	}
@@ -39,7 +39,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			FileInputStream fis = homeActivity.openFileInput("CategoryList");
+			FileInputStream fis = m_context.openFileInput("CategoryList");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			m_viewModel.setCategoryList((List<Board>) ois.readObject());
 			Log.d("com.athena.asm", "loading from file");
@@ -52,7 +52,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		}
 		
 		try {
-			FileOutputStream fos = homeActivity.openFileOutput("CategoryList",
+			FileOutputStream fos = m_context.openFileOutput("CategoryList",
 					Context.MODE_PRIVATE);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(m_viewModel.getCategoryList());

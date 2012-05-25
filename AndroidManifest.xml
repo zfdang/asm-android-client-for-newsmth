@@ -39,52 +39,42 @@
         </activity>
         <activity
             android:name="com.athena.asm.WritePostActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.SettingActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.SearchPostActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.SearchPostResultListActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.MailListActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.ReadMailActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.ViewProfileActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.AttachUploadActivity"
-            
             android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
             android:name="com.athena.asm.FileChooserActivity"
             android:configChanges="orientation|keyboard|keyboardHidden"
-            
             android:theme="@android:style/Theme.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
 

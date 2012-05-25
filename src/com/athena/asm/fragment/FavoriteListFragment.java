@@ -30,7 +30,9 @@ public class FavoriteListFragment extends SherlockFragment implements
 
 	private LayoutInflater m_inflater;
 
-	private ExpandableListView listView;
+	private ExpandableListView m_listView;
+
+	private boolean m_isLoaded;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,22 +46,25 @@ public class FavoriteListFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		View layout = m_inflater.inflate(R.layout.favorite, null);
-		listView = (ExpandableListView) layout.findViewById(R.id.favorite_list);
+		m_listView = (ExpandableListView) layout.findViewById(R.id.favorite_list);
 
 		aSMApplication application = (aSMApplication) getActivity()
 				.getApplication();
 		m_viewModel = application.getHomeViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
+		
+		m_isLoaded = false;
 
-		return listView;
+		return m_listView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		if (m_viewModel.getCurrentTab() != null &&
-				m_viewModel.getCurrentTab().equals("002")) {
+		if (m_viewModel.getCurrentTab() != null
+				&& m_viewModel.getCurrentTab().equals(
+						StringUtility.TAB_FAVORITE)) {
 			reloadFavorite();
 		}
 	}
@@ -88,6 +93,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 					getActivity(), m_viewModel);
 			loadFavoriteTask.execute();
 		} else {
+			m_isLoaded = true;
 			List<String> directoryList = new ArrayList<String>();
 			List<List<Board>> realBoardList = new ArrayList<List<Board>>();
 			List<Board> rootBoardList = new ArrayList<Board>();
@@ -119,9 +125,9 @@ public class FavoriteListFragment extends SherlockFragment implements
 
 			final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
 					m_inflater, directoryList, realBoardList);
-			listView.setAdapter(favoriteListAdapter);
+			m_listView.setAdapter(favoriteListAdapter);
 
-			listView.setOnChildClickListener(new OnChildClickListener() {
+			m_listView.setOnChildClickListener(new OnChildClickListener() {
 
 				@Override
 				public boolean onChildClick(ExpandableListView parent,
@@ -148,9 +154,11 @@ public class FavoriteListFragment extends SherlockFragment implements
 		if (changedPropertyName.equals(HomeViewModel.FAVLIST_PROPERTY_NAME)) {
 			reloadFavorite();
 		} else if (changedPropertyName
-						.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			if (m_viewModel.getCurrentTab() != null &&
-					m_viewModel.getCurrentTab().equals("002")) {
+				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+			if (!m_isLoaded
+					&& m_viewModel.getCurrentTab() != null
+					&& m_viewModel.getCurrentTab().equals(
+							StringUtility.TAB_FAVORITE)) {
 				reloadFavorite();
 			}
 		}

@@ -43,6 +43,12 @@ public class StringUtility {
     public static final String IMAGE_NAME = "imageName";
     
     public static final String STATUS_OK = "statusOK";
+    
+    public static final String TAB_GUIDANCE = "001";
+    public static final String TAB_FAVORITE = "002";
+    public static final String TAB_CATEGORY = "003";
+    public static final String TAB_MAIL = "004";
+    public static final String TAB_PROFILE = "005";
 
     /**
      * 从链接中提取相关参数

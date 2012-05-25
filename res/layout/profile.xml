@@ -4,8 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/header" />
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -278,7 +276,6 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="47dp"
-                android:background="@drawable/bg_header_light"
                 android:gravity="center_vertical" >
 
                 <!-- 搜索按钮 -->
@@ -302,7 +299,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dip"
                     android:layout_toLeftOf="@+id/btn_search"
-                    android:background="@drawable/textfield_search_empty"
                     android:hint="查询网友" />
             </RelativeLayout>
         </LinearLayout>

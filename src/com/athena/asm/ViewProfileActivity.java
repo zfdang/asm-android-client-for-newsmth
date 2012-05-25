@@ -1,36 +1,34 @@
 package com.athena.asm;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.data.Profile;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadProfileTask;
 
-public class ViewProfileActivity extends Activity {
+public class ViewProfileActivity extends SherlockActivity {
 	
 	public SmthSupport m_smthSupport;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.profile);
 		
 		m_smthSupport = SmthSupport.getInstance();
 		
 		String userID = getIntent().getStringExtra(StringUtility.USERID);
 		
-		LoadProfileTask loadProfileTask = new LoadProfileTask(this,	userID, 50);
+		LoadProfileTask loadProfileTask = new LoadProfileTask(this,	userID);
 		loadProfileTask.execute();
 	}
 
@@ -83,11 +81,6 @@ public class ViewProfileActivity extends Activity {
 			break;
 		}
 
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText(R.string.title_profile);
-		
-		if (HomeActivity.m_application.isNightTheme()) {
-			((LinearLayout)titleTextView.getParent().getParent()).setBackgroundColor(getResources().getColor(R.color.body_background_night));
-		}
+		setTitle(R.string.title_profile);
 	}
 }

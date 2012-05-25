@@ -12,24 +12,21 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 	private ViewProfileActivity viewProfileActivity = null;
 	private String userID;
 	private Profile profile;
-	private int step;
 	private int type;
 	private ProgressDialog pdialog;
 	
 	private HomeViewModel m_viewModel;
 
-	public LoadProfileTask(Context ctx, HomeViewModel viewModel, String userID, int step) {
+	public LoadProfileTask(Context ctx, HomeViewModel viewModel, String userID) {
 		this.userID = userID;
-		this.step = step;
 		type = 0;
 		m_viewModel = viewModel;
 		pdialog = new ProgressDialog(ctx);
 	}
 	
-	public LoadProfileTask(ViewProfileActivity activity, String userID, int step) {
+	public LoadProfileTask(ViewProfileActivity activity, String userID) {
 		this.viewProfileActivity = activity;
 		this.userID = userID;
-		this.step = step;
 		type = 1;
 		pdialog = new ProgressDialog(activity);
 	}
@@ -54,9 +51,8 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		step++;
 		if (type == 0) {
-			m_viewModel.notifyProfileChanged(profile, step);
+			m_viewModel.notifyProfileChanged(profile);
 		}
 		else {
 			viewProfileActivity.reloadProfile(profile);

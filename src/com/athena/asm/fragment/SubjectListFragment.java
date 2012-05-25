@@ -126,7 +126,6 @@ public class SubjectListFragment extends SherlockFragment implements
 
 	@Override
 	public void onClick(View view) {
-		boolean isToRefresh = true;
 		if (view.getId() == R.id.btn_first_page) {
 			m_viewModel.gotoFirstPage();
 		} else if (view.getId() == R.id.btn_last_page) {
@@ -139,29 +138,11 @@ public class SubjectListFragment extends SherlockFragment implements
 			m_viewModel.setCurrentPageNumber(pageSet);
 		} else if (view.getId() == R.id.btn_next_page) {
 			m_viewModel.gotoNextPage();
-		} else if (view.getId() == R.id.switchBoardMode) {
-			isToRefresh = false;
-			m_viewModel.toggleBoardType();
-			m_viewModel.setIsFirstIn(true);
-			refreshSubjectList();
-		} else if (view.getId() == R.id.writePost) {
-			isToRefresh = false;
-			Intent intent = new Intent();
-			intent.setClassName("com.athena.asm",
-					"com.athena.asm.WritePostActivity");
-			intent.putExtra(StringUtility.URL,
-					"http://www.newsmth.net/bbspst.php?board="
-							+ m_viewModel.getCurrentBoard().getEngName());
-			intent.putExtra(StringUtility.WRITE_TYPE, 0);
-			intent.putExtra(StringUtility.IS_REPLY, false);
-			startActivityForResult(intent, 0);
 		}
 
-		if (isToRefresh) {
-			m_viewModel.updateBoardCurrentPage();
-			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-			refreshSubjectList();
-		}
+		m_viewModel.updateBoardCurrentPage();
+		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+		refreshSubjectList();
 
 	}
 
@@ -220,7 +201,7 @@ public class SubjectListFragment extends SherlockFragment implements
 				refreshSubjectList();
 			}
 		});
-		
+
 		getActivity().setTitle(m_viewModel.getTitleText());
 
 		listView.requestFocus();
@@ -236,6 +217,7 @@ public class SubjectListFragment extends SherlockFragment implements
 	public static final int REFRESH_SUBJECTLIST = Menu.FIRST + 1;
 	public static final int SEARCH_POST = Menu.FIRST + 2;
 	public static final int CREATE_ID = Menu.FIRST + 3;
+	public static final int QUICK_SWITCH_BOARD_TYPE = Menu.FIRST + 4;
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -249,11 +231,11 @@ public class SubjectListFragment extends SherlockFragment implements
 									: R.drawable.write)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
-		menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...")
-		.setIcon(
-				isLight ? R.drawable.switcher_inverse
-						: R.drawable.switcher)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		menu.add(0, QUICK_SWITCH_BOARD_TYPE, Menu.NONE, "模式切换")
+				.setIcon(
+						isLight ? R.drawable.switcher_inverse
+								: R.drawable.switcher)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
@@ -261,9 +243,11 @@ public class SubjectListFragment extends SherlockFragment implements
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		menu.add(0, SEARCH_POST, Menu.NONE, "搜索")
 				.setIcon(
-						isLight ? R.drawable.search_inverse 
-								: R.drawable.search)
+						isLight ? R.drawable.search_inverse : R.drawable.search)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...").setShowAsAction(
+				MenuItem.SHOW_AS_ACTION_NEVER
+						| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 	}
 
 	@Override
@@ -274,6 +258,11 @@ public class SubjectListFragment extends SherlockFragment implements
 			Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
 			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(homeIntent);
+			break;
+		case QUICK_SWITCH_BOARD_TYPE:
+			m_viewModel.toggleBoardType();
+			m_viewModel.setIsFirstIn(true);
+			refreshSubjectList();
 			break;
 		case SWITCH_BOARD_TYPE:
 			// String[] items = { "同主题", "普通模式", "文摘区", "保留区" };
