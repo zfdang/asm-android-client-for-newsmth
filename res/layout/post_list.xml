@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="@color/body_background">
+	android:orientation="vertical">
 
-	<!-- Header -->
-	<include layout="@layout/header_post_list" />
+	<!-- Header 
+	<include layout="@layout/header_post_list" />-->
 
 	<!-- Body -->
-	<!-- <LinearLayout android:orientation="vertical" android:id="@+id/bodyContainer" 
-		android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0" 
-		/> -->
-
 	<ListView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_weight="1"
-		android:cacheColorHint="#00000000" android:scrollingCache="false" 
+		android:layout_height="0dp" android:layout_weight="1"
 		android:id="@+id/post_list" android:fastScrollEnabled="true" 
 		 />
 

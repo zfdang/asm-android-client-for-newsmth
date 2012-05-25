@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
-import com.athena.asm.PostListFragment;
 import com.athena.asm.R;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
+import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 

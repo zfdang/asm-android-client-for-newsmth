@@ -4,14 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.GuidanceListViewModel;
 
 public class LoadGuidanceTask extends AsyncTask<String, Integer, String> {
 	private ProgressDialog pdialog;
 	
-	private HomeViewModel m_viewModel;
+	private GuidanceListViewModel m_viewModel;
 
-	public LoadGuidanceTask(Context ctx, HomeViewModel viewModel) {
+	public LoadGuidanceTask(Context ctx, GuidanceListViewModel viewModel) {
 		pdialog = new ProgressDialog(ctx);
 		m_viewModel = viewModel;
 	}

@@ -12,16 +12,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-import com.athena.asm.data.Board;
-import com.athena.asm.data.Preferences;
-import com.athena.asm.util.CrashHandler;
-import com.athena.asm.util.SimpleCrypto;
-import com.athena.asm.util.StringUtility;
-import com.athena.asm.viewmodel.HomeViewModel;
-import com.athena.asm.viewmodel.MailViewModel;
-import com.athena.asm.viewmodel.PostListViewModel;
-import com.athena.asm.viewmodel.SubjectListViewModel;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -30,6 +20,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.athena.asm.data.Board;
+import com.athena.asm.data.Preferences;
+import com.athena.asm.util.CrashHandler;
+import com.athena.asm.util.SimpleCrypto;
+import com.athena.asm.util.StringUtility;
+import com.athena.asm.viewmodel.FavListViewModel;
+import com.athena.asm.viewmodel.GuidanceListViewModel;
+import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.MailViewModel;
+import com.athena.asm.viewmodel.PostListViewModel;
+import com.athena.asm.viewmodel.SubjectListViewModel;
 
 public class aSMApplication extends Application {
     private boolean isRememberUser = true;
@@ -68,6 +70,8 @@ public class aSMApplication extends Application {
     
     //View models for Activities
     private HomeViewModel m_homeViewModel = new HomeViewModel();
+    private GuidanceListViewModel m_guidanceListViewModel = new GuidanceListViewModel();
+    private FavListViewModel m_favListViewModel = new FavListViewModel();
     private SubjectListViewModel m_subjectListViewModel = new SubjectListViewModel();
     private PostListViewModel m_postListViewModel = new PostListViewModel();
     private MailViewModel m_mailViewModel = new MailViewModel();
@@ -507,6 +511,14 @@ public class aSMApplication extends Application {
 	
 	public HomeViewModel getHomeViewModel() {
 		return m_homeViewModel;
+	}
+	
+	public GuidanceListViewModel getGuidanceListViewModel() {
+		return m_guidanceListViewModel;
+	}
+	
+	public FavListViewModel getFavListViewModel() {
+		return m_favListViewModel;
 	}
 	
 	public SubjectListViewModel getSubjectListViewModel() {

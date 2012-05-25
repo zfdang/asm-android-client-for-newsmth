@@ -11,18 +11,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Board;
-import com.athena.asm.viewmodel.HomeViewModel;
+import com.athena.asm.viewmodel.FavListViewModel;
 
 public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
-	private HomeActivity homeActivity;
+	private Context context;
 	private ArrayList<Board> realFavList;
 	
-	private HomeViewModel m_viewModel;
+	private FavListViewModel m_viewModel;
 
-	public LoadFavoriteTask(HomeActivity activity, HomeViewModel viewModel) {
-		this.homeActivity = activity;
+	public LoadFavoriteTask(Context context, FavListViewModel viewModel) {
+		this.context = context;
 		this.realFavList = null;
 		m_viewModel = viewModel;
 	}
@@ -31,7 +30,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
-		pdialog = new ProgressDialog(homeActivity);
+		pdialog = new ProgressDialog(context);
 		pdialog.setMessage("加载收藏中...");
 		pdialog.show();
 	}
@@ -40,7 +39,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			FileInputStream fis = homeActivity.openFileInput("FavList");
+			FileInputStream fis = context.openFileInput("FavList");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			realFavList = (ArrayList<Board>) ois.readObject();
 			fis.close();
@@ -51,7 +50,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 		realFavList = m_viewModel.updateFavList(realFavList);
 		
 		try {
-			FileOutputStream fos = homeActivity.openFileOutput("FavList",
+			FileOutputStream fos = context.openFileOutput("FavList",
 					Context.MODE_PRIVATE);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(realFavList);

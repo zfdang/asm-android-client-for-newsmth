@@ -1,5 +1,6 @@
 package com.athena.asm;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 
@@ -19,7 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends SherlockFragmentActivity implements
+		OnClickListener {
 	private EditText m_userNameEditText;
 	private EditText m_passwordEditText;
 
@@ -29,12 +31,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
-
-		TextView titleTextView = (TextView) findViewById(R.id.title);
-		titleTextView.setText("aSM");
 
 		m_smthSupport = SmthSupport.getInstance();
 
@@ -53,9 +53,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		button.setOnClickListener(this);
 
 		Button gbutton = (Button) findViewById(R.id.guest_button);
-		gbutton.setOnClickListener(this);		
+		gbutton.setOnClickListener(this);
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// do nothing to stop onCreated
@@ -107,8 +107,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 						showFailedToast();
 					} else {
 						// showSuccessToast();
-						HomeActivity.m_application.updateAutoUserNameAndPassword(newUserName, newPassword);
-						
+						HomeActivity.m_application
+								.updateAutoUserNameAndPassword(newUserName,
+										newPassword);
+
 						Intent intent = new Intent();
 						intent.setClassName("com.athena.asm",
 								"com.athena.asm.HomeActivity");
@@ -137,7 +139,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Boolean rememberUser = HomeActivity.m_application.isRememberUser();
 			if (!rememberUser) {
-				HomeActivity.m_application.updateAutoUserNameAndPassword("", "");
+				HomeActivity.m_application
+						.updateAutoUserNameAndPassword("", "");
 			}
 			HomeActivity.m_application.syncPreferences();
 

@@ -1,7 +1,6 @@
 package com.athena.asm;
 
-import com.athena.asm.data.Preferences;
-
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -11,6 +10,8 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.KeyEvent;
+
+import com.athena.asm.data.Preferences;
 
 public class SettingActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
@@ -43,6 +44,12 @@ public class SettingActivity extends PreferenceActivity implements
 			if (!(Boolean)newValue) {
 				m_autoLogin.setChecked(false);
 			}
+		} else if (preference.getKey().equals(Preferences.NIGHT_THEME)) {
+			if ((Boolean)newValue) {
+				HomeActivity.THEME = R.style.Theme_Sherlock;
+			} else {
+				HomeActivity.THEME = R.style.Theme_Sherlock_Light;
+			}
 		}
 		return true;
 	}
@@ -56,7 +63,10 @@ public class SettingActivity extends PreferenceActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			HomeActivity.m_application.initPreferences();
-			return super.onKeyDown(keyCode, event);
+			Intent intent = new Intent(this, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;//super.onKeyDown(keyCode, event);
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}

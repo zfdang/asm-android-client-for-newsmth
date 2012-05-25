@@ -1,20 +1,25 @@
 package com.athena.asm;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
-public class SubjectListActivity extends FragmentActivity {
+public class SubjectListActivity extends SherlockFragmentActivity {
 	
 	private ProgressDialog m_pdialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(HomeActivity.THEME);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.subject_list_activity);	
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
