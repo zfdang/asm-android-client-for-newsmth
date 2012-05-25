@@ -8,12 +8,16 @@ import java.util.List;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Profile;
+import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 
 public class HomeViewModel extends BaseViewModel {
 	
 	private static final String GUEST_ID = "guest";
 
+	private List<String> m_guidanceSectionNames = null;
+	private List<List<Subject>> m_guidanceSectionDetails = null;
+	private List<Board> m_favList = null;
 	private MailBox m_mailBox = null;
 	private List<Board> m_categoryList = null;
 	private List<String> m_boardFullStrings = null;
@@ -25,12 +29,14 @@ public class HomeViewModel extends BaseViewModel {
     private boolean m_isGuestLoggedin = false;
     private String m_loginUserID = GUEST_ID;
     
-    private String m_currentTab;
+    private String m_currentTab = null;
 
 	private SmthSupport m_smthSupport;
 	
 	public static final String CURRENTTAB_PROPERTY_NAME = "CurrentTab";
+	public static final String GUIDANCE_PROPERTY_NAME = "Guidance";
 	public static final String CATEGORYLIST_PROPERTY_NAME = "CategoryList";
+	public static final String FAVLIST_PROPERTY_NAME = "FavList";
 	public static final String MAILBOX_PROPERTY_NAME = "Mailbox";
 	public static final String PROFILE_PROPERTY_NAME = "Profile";
 	
@@ -63,6 +69,30 @@ public class HomeViewModel extends BaseViewModel {
 		if (m_isLogined) {
 			m_loginUserID = m_smthSupport.getUserid();
 		}
+	}
+	
+	public List<String> getGuidanceSectionNames() {
+		return m_guidanceSectionNames;
+	}
+	
+	public void setGuidanceSectionNames(List<String> guidanceSectionNames) {
+		m_guidanceSectionNames = guidanceSectionNames;
+	}
+	
+	public List<List<Subject>> getGuidanceSectionDetails() {
+		return m_guidanceSectionDetails;
+	}
+	
+	public void setGuidanceSectionDetails(List<List<Subject>> guidanceSectionDetails) {
+		m_guidanceSectionDetails = guidanceSectionDetails;
+	}
+	
+	public List<Board> getFavList() {
+		return m_favList;
+	}
+	
+	public void setFavList(List<Board> favList) {
+		m_favList = favList;
 	}
 	
 	public MailBox getMailBox() {
@@ -121,11 +151,39 @@ public class HomeViewModel extends BaseViewModel {
 		m_isLogined = false;
 		m_isGuestLoggedin = false;
 		m_currentProfile = null;
+		m_favList = null;
 		m_mailBox = null;
 	}
 	
 	public void restorSmthSupport() {
 		m_smthSupport.restore();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateGuidance() {
+		Object[] guidance = m_smthSupport.getGuidance();
+		setGuidanceSectionNames((List<String>) guidance[0]);
+		setGuidanceSectionDetails((List<List<Subject>>) guidance[1]);
+	}
+	
+	
+	public ArrayList<Board> updateFavList(ArrayList<Board> realFavList) {
+		if (realFavList == null) {
+			realFavList = new ArrayList<Board>();
+			m_smthSupport.getFavorite("0", realFavList, 0);
+		}
+		
+		ArrayList<Board> favList = new ArrayList<Board>();
+		Board board = new Board();
+		board.setDirectory(true);
+		board.setDirectoryName("最近访问版面");
+		board.setCategoryName("目录");
+		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
+		favList.add(board);
+		favList.addAll(realFavList);
+		setFavList(favList);
+		
+		return realFavList;
 	}
 	
 	public void updateCategoryList() {
@@ -164,6 +222,23 @@ public class HomeViewModel extends BaseViewModel {
 			}
 			readBoadInfo(board.getChildBoards());
 		}
+	}
+	
+	public void clear() {
+		m_guidanceSectionNames = null;
+		m_guidanceSectionDetails = null;
+		m_favList = null;
+		m_mailBox = null;
+		m_categoryList = null;
+		m_currentProfile = null;
+	}
+	
+	public void notifyGuidanceChanged() {
+		notifyViewModelChange(this, GUIDANCE_PROPERTY_NAME);
+	}
+	
+	public void notifyFavListChanged() {
+		notifyViewModelChange(this, FAVLIST_PROPERTY_NAME);
 	}
 	
 	public void notifyCategoryChanged() {

@@ -58,10 +58,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 	public LayoutInflater m_inflater;
 
-	private ArrayList<View> m_cacheViewStack = new ArrayList<View>();
 	private double m_currentTabIndex = 0;
-
-	private boolean m_isIntoSettings = false;
 
 	private Handler m_handler = new Handler();
 
@@ -104,23 +101,31 @@ public class HomeActivity extends SherlockFragmentActivity implements
 				actionBar.newTab().setIcon(
 						isLight ? R.drawable.home_inverse : R.drawable.home),
 				GuidanceListFragment.class, null);
-		m_tabsAdapter.addTab(actionBar.newTab().setIcon(
-				isLight ? R.drawable.favorite_inverse : R.drawable.favorite),
+		m_tabsAdapter.addTab(
+				actionBar.newTab().setIcon(
+						isLight ? R.drawable.favorite_inverse
+								: R.drawable.favorite),
 				FavoriteListFragment.class, null);
-		m_tabsAdapter.addTab(actionBar.newTab().setIcon(
-				isLight ? R.drawable.category_inverse : R.drawable.category),
+		m_tabsAdapter.addTab(
+				actionBar.newTab().setIcon(
+						isLight ? R.drawable.category_inverse
+								: R.drawable.category), TestListFragment.class,
+				null);
+		m_tabsAdapter.addTab(
+				actionBar.newTab().setIcon(
+						isLight ? R.drawable.mail_inverse : R.drawable.mail),
 				TestListFragment.class, null);
-		m_tabsAdapter.addTab(actionBar.newTab().setIcon(
-				isLight ? R.drawable.mail_inverse : R.drawable.mail),
-				TestListFragment.class, null);
-		m_tabsAdapter.addTab(actionBar.newTab().setIcon(
-				isLight ? R.drawable.profile_inverse : R.drawable.profile),
-				TestListFragment.class, null);
+		m_tabsAdapter.addTab(
+				actionBar.newTab().setIcon(
+						isLight ? R.drawable.profile_inverse
+								: R.drawable.profile), TestListFragment.class,
+				null);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		m_viewModel = m_application.getHomeViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
+		m_viewModel.setCurrentTab(null); // since m_tabsAdapter.addTab will set current tab
 
 		boolean isAutoLogin = m_application.isAutoLogin();
 
@@ -174,7 +179,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onDestroy() {
-		m_viewModel.unregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver(this);
 
 		super.onDestroy();
 	}
@@ -204,27 +209,6 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	private void setTab() {
-		String tab = m_viewModel.getCurrentTab() == null ? m_application
-				.getDefaultTab() : m_viewModel.getCurrentTab();
-		m_viewModel.setCurrentTab(tab);
-
-		int item = 0;
-		if (tab.equals("001")) {
-			item = 0;
-		} else if (tab.equals("002")) {
-			item = 1;
-		} else if (tab.equals("003")) {
-			item = 2;
-		} else if (tab.equals("004")) {
-			item = 3;
-		} else {
-			item = 4;
-		}
-		m_viewPager.setCurrentItem(item);
-		m_tabsAdapter.notifyDataChanged(item);
-	}
-
 	private void init() {
 		// initTasks();
 		if (m_application.isFirstLaunchAfterUpdate()) {
@@ -241,30 +225,24 @@ public class HomeActivity extends SherlockFragmentActivity implements
 			alertBuilder.show();
 		}
 
-		setTab();
-	}
-
-	private void switchToView(View targetView, double targetIndex) {
-		if (m_currentTabIndex == targetIndex) {
-			return;
-		}
-
-		// cache标准：同tab下层级cache，切tab清空cache重置为首页
-		int currentTabNumber = (int) (m_currentTabIndex / 10);
-		int targetTabNumber = (int) (targetIndex / 10);
-		if (currentTabNumber == targetTabNumber) {
-			// if (targetIndex > m_currentTabIndex
-			// && m_bodyContainer.getChildCount() > 0) {
-			// m_cacheViewStack.add(m_bodyContainer.getChildAt(0));
-			// }
+		String tab = m_viewModel.getCurrentTab() == null ? m_application
+				.getDefaultTab() : m_viewModel.getCurrentTab();
+		m_viewModel.setCurrentTab(tab);
+		
+		int item = 0;
+		if (tab.equals("001")) {
+			item = 0;
+		} else if (tab.equals("002")) {
+			item = 1;
+		} else if (tab.equals("003")) {
+			item = 2;
+		} else if (tab.equals("004")) {
+			item = 3;
 		} else {
-			m_cacheViewStack.clear();
+			item = 4;
 		}
 
-		m_currentTabIndex = targetIndex;
-
-		// m_bodyContainer.removeAllViews();
-		// m_bodyContainer.addView(targetView);
+		m_viewPager.setCurrentItem(item);
 	}
 
 	public void reloadCategory(final List<Board> boardList, int step) {
@@ -317,8 +295,6 @@ public class HomeActivity extends SherlockFragmentActivity implements
 					android.R.layout.simple_dropdown_item_1line,
 					m_viewModel.getBoardFullStrings());
 			textView.setAdapter(adapter);
-
-			switchToView(layout, step);
 		}
 	}
 
@@ -351,7 +327,6 @@ public class HomeActivity extends SherlockFragmentActivity implements
 			}
 		});
 
-		switchToView(listView, 40);
 	}
 
 	public void reloadMail() {
@@ -455,17 +430,12 @@ public class HomeActivity extends SherlockFragmentActivity implements
 						.getColor(R.color.blue_text_night));
 			}
 
-			switchToView(layout, step);
 		}
 	}
 
 	private void clearData() {
-		m_application.getGuidanceListViewModel().clear();
-		m_application.getFavListViewModel().clear();
-		m_viewModel.setCategoryList(null);
-		m_viewModel.setCurrentProfile(null);
+		m_viewModel.clear();
 		m_inflater = null;
-		m_cacheViewStack.clear();
 	}
 
 	private void exit() {
@@ -508,31 +478,23 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (m_cacheViewStack.size() == 0) {
-				if (m_viewModel.isLogined()) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setTitle("确认要注销退出吗？");
-					builder.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									logout(true);
-								}
-							});
-					builder.setNegativeButton("取消", null);
-					builder.create().show();
-					// logout();
-				} else {
-					finish();
-					android.os.Process.killProcess(android.os.Process.myPid());
-					// return super.onKeyDown(keyCode, event);
-				}
-			} else if (m_cacheViewStack.size() > 0) {
-				View lastView = m_cacheViewStack
-						.get(m_cacheViewStack.size() - 1);
-				m_cacheViewStack.remove(m_cacheViewStack.size() - 1);
-				switchToView(lastView, m_currentTabIndex - 1);
+			if (m_viewModel.isLogined()) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("确认要注销退出吗？");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								logout(true);
+							}
+						});
+				builder.setNegativeButton("取消", null);
+				builder.create().show();
+				// logout();
+			} else {
+				finish();
+				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 			return true;
 		} else {
@@ -583,7 +545,6 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		// super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
 		case SETTING:
-			m_isIntoSettings = true;
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm",
 					"com.athena.asm.SettingActivity");
@@ -710,27 +671,28 @@ public class HomeActivity extends SherlockFragmentActivity implements
 			int step = (Integer) params[1];
 
 			reloadProfile(profile, step);
-		} else if (changedPropertyName
-				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			String tab = m_viewModel.getCurrentTab();
-
-			// TODO: find a better place to do this...
-			if (!tab.equals("004")) {
-				m_application.getMailViewModel().clear();
-			}
-
-			if (tab.equals("001")) {
-				// reloadGuidanceList();
-			} else if (tab.equals("002")) {
-				// reloadFavorite(m_viewModel.getFavList(), 20);
-			} else if (tab.equals("003")) {
-				reloadCategory(m_viewModel.getCategoryList(), 30);
-			} else if (tab.equals("004")) {
-				reloadMail();
-			} else {
-				reloadProfile(m_viewModel.getCurrentProfile(), 50);
-			}
 		}
+//		} else if (changedPropertyName
+//				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+//			String tab = m_viewModel.getCurrentTab();
+//
+//			// TODO: find a better place to do this...
+//			if (!tab.equals("004")) {
+//				m_application.getMailViewModel().clear();
+//			}
+//
+//			if (tab.equals("001")) {
+//				// reloadGuidanceList();
+//			} else if (tab.equals("002")) {
+//				// reloadFavorite(m_viewModel.getFavList(), 20);
+//			} else if (tab.equals("003")) {
+//				reloadCategory(m_viewModel.getCategoryList(), 30);
+//			} else if (tab.equals("004")) {
+//				reloadMail();
+//			} else {
+//				reloadProfile(m_viewModel.getCurrentProfile(), 50);
+//			}
+//		}
 
 	}
 }

@@ -12,6 +12,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class TabsAdapter extends FragmentPagerAdapter implements
 		ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -19,6 +20,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final ActionBar m_actionBar;
 	private final ViewPager m_viewPager;
 	private final ArrayList<TabInfo> m_tabs = new ArrayList<TabInfo>();
+	private HomeViewModel m_viewModel;
 
 	static final class TabInfo {
 		private final Class<?> clss;
@@ -33,6 +35,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	public TabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
 		super(activity.getSupportFragmentManager());
 		m_activity = activity;
+		m_viewModel = ((aSMApplication)activity.getApplication()).getHomeViewModel();
 		m_actionBar = activity.getSupportActionBar();
 		m_viewPager = pager;
 		m_viewPager.setAdapter(this);
@@ -67,7 +70,8 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	@Override
 	public void onPageSelected(int position) {
 		m_actionBar.setSelectedNavigationItem(position);
-		notifyDataChanged(position);
+		int tab = position + 1;
+		m_viewModel.setCurrentTab("00" + tab);
 	}
 
 	@Override
@@ -80,7 +84,8 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		for (int i = 0; i < m_tabs.size(); i++) {
 			if (m_tabs.get(i) == tag) {
 				m_viewPager.setCurrentItem(i);
-				notifyDataChanged(i);
+				int index = i + 1;
+				m_viewModel.setCurrentTab("00" + index);
 				break;
 			}
 		}
@@ -92,18 +97,5 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-	}
-	
-	public void notifyDataChanged(int position) {
-		aSMApplication application = (aSMApplication)m_activity.getApplication();
-		switch (position) {
-		case 0:
-			application.getGuidanceListViewModel().notifyGuidanceChanged();
-			break;
-		case 1:
-			application.getFavListViewModel().notifyFavListChanged();
-		default:
-			break;
-		}
 	}
 }

@@ -9,7 +9,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.GuidanceListAdapter;
@@ -17,17 +16,17 @@ import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadGuidanceTask;
 import com.athena.asm.viewmodel.BaseViewModel;
-import com.athena.asm.viewmodel.GuidanceListViewModel;
+import com.athena.asm.viewmodel.HomeViewModel;
 
-public class GuidanceListFragment extends SherlockFragment
-								 implements BaseViewModel.OnViewModelChangObserver {
-	
-	private GuidanceListViewModel m_viewModel;
-	
+public class GuidanceListFragment extends SherlockFragment implements
+		BaseViewModel.OnViewModelChangObserver {
+
+	private HomeViewModel m_viewModel;
+
 	private LayoutInflater m_inflater;
-	
+
 	private ExpandableListView listView;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,45 +35,49 @@ public class GuidanceListFragment extends SherlockFragment
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		View layout = m_inflater.inflate(R.layout.guidance, null);
-		listView = (ExpandableListView) layout
-				.findViewById(R.id.guidance_list);
-		
-		aSMApplication application = (aSMApplication) getActivity().getApplication();
-		m_viewModel = application.getGuidanceListViewModel();
+		listView = (ExpandableListView) layout.findViewById(R.id.guidance_list);
+
+		aSMApplication application = (aSMApplication) getActivity()
+				.getApplication();
+		m_viewModel = application.getHomeViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
-		
+
 		return listView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		//reloadGuidanceList();
+		
+		if (m_viewModel.getCurrentTab() != null &&
+				m_viewModel.getCurrentTab().equals("001")) {
+			reloadGuidanceList();
+		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
-		m_viewModel.unregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver(this);
 		super.onDestroy();
 	}
-	
+
 	public void reloadGuidanceList() {
 		if (m_viewModel.getGuidanceSectionNames() == null
 				|| m_viewModel.getGuidanceSectionDetails() == null) {
-			LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(getActivity(),
-					m_viewModel);
+			LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(
+					getActivity(), m_viewModel);
 			loadGuidanceTask.execute();
 		} else {
-			
+
 			listView.setAdapter(new GuidanceListAdapter(m_inflater, m_viewModel
 					.getGuidanceSectionNames(), m_viewModel
 					.getGuidanceSectionDetails()));
 			listView.setOnChildClickListener(new OnChildClickListener() {
-				
+
 				@Override
 				public boolean onChildClick(ExpandableListView parent, View v,
 						int groupPosition, int childPosition, long id) {
@@ -91,12 +94,19 @@ public class GuidanceListFragment extends SherlockFragment
 			});
 		}
 	}
-	
+
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		if (changedPropertyName.equals(GuidanceListViewModel.GUIDANCE_PROPERTY_NAME)) {
+		if (changedPropertyName.equals(HomeViewModel.GUIDANCE_PROPERTY_NAME)
+				) {
 			reloadGuidanceList();
+		} else if (changedPropertyName
+						.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+			if (m_viewModel.getCurrentTab() != null &&
+					m_viewModel.getCurrentTab().equals("001")) {
+				reloadGuidanceList();
+			}
 		}
-	}	
+	}
 }

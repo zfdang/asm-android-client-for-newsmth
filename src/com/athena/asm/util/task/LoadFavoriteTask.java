@@ -12,15 +12,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.athena.asm.data.Board;
-import com.athena.asm.viewmodel.FavListViewModel;
+import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	private Context context;
 	private ArrayList<Board> realFavList;
 	
-	private FavListViewModel m_viewModel;
+	private HomeViewModel m_viewModel;
 
-	public LoadFavoriteTask(Context context, FavListViewModel viewModel) {
+	public LoadFavoriteTask(Context context, HomeViewModel viewModel) {
 		this.context = context;
 		this.realFavList = null;
 		m_viewModel = viewModel;

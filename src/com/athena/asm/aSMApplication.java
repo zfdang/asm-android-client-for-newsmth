@@ -26,8 +26,6 @@ import com.athena.asm.data.Preferences;
 import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
-import com.athena.asm.viewmodel.FavListViewModel;
-import com.athena.asm.viewmodel.GuidanceListViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.athena.asm.viewmodel.MailViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
@@ -70,8 +68,6 @@ public class aSMApplication extends Application {
     
     //View models for Activities
     private HomeViewModel m_homeViewModel = new HomeViewModel();
-    private GuidanceListViewModel m_guidanceListViewModel = new GuidanceListViewModel();
-    private FavListViewModel m_favListViewModel = new FavListViewModel();
     private SubjectListViewModel m_subjectListViewModel = new SubjectListViewModel();
     private PostListViewModel m_postListViewModel = new PostListViewModel();
     private MailViewModel m_mailViewModel = new MailViewModel();
@@ -511,14 +507,6 @@ public class aSMApplication extends Application {
 	
 	public HomeViewModel getHomeViewModel() {
 		return m_homeViewModel;
-	}
-	
-	public GuidanceListViewModel getGuidanceListViewModel() {
-		return m_guidanceListViewModel;
-	}
-	
-	public FavListViewModel getFavListViewModel() {
-		return m_favListViewModel;
 	}
 	
 	public SubjectListViewModel getSubjectListViewModel() {

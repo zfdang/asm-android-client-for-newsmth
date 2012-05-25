@@ -145,7 +145,7 @@ public class PostListFragment extends SherlockFragment
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.unregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver(this);
 		
 		super.onDestroy();
 	}

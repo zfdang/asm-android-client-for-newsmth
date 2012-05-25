@@ -84,7 +84,7 @@ public class ReadMailActivity extends Activity implements BaseViewModel.OnViewMo
 	
 	@Override
 	public void onDestroy() {
-		m_viewModel.unregisterViewModelChangeObserver();
+		m_viewModel.unregisterViewModelChangeObserver(this);
 		
 		super.onDestroy();
 	}

@@ -3,11 +3,9 @@ package com.athena.asm.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.athena.asm.HomeActivity;
-import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
