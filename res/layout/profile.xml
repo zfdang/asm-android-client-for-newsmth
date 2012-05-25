@@ -60,7 +60,6 @@
 
                     <Button
                         android:id="@+id/btn_send_mail"
-                        style="@style/Button"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10.0dip"
