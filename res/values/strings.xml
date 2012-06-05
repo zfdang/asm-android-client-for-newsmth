@@ -23,11 +23,11 @@
     <!-- 分区 -->
     <string name="board_autocomplete_tip">请输入分区名</string>
     <!-- 同主题下导航 -->
-    <string name="first_page">首页</string>
-    <string name="last_page">末页</string>
-	<string name="pre_page">\u0020上页\u0020</string>
-	<string name="next_page">\u0020下页\u0020</string>
-	<string name="go_page">GO\u0020</string>
+    <string name="first_page">\u0020\u0020首页\u0020</string>
+    <string name="last_page">\u0020\u0020末页\u0020</string>
+	<string name="pre_page">\u0020\u0020上页\u0020\u0020</string>
+	<string name="next_page">\u0020\u0020下页\u0020\u0020</string>
+	<string name="go_page">\u0020GO\u0020</string>
 	<!-- 普通模式下导航 -->
 	<string name="topic_first_page">主题首篇</string>
 	<string name="topic_pre_page">主题上篇</string>
@@ -78,12 +78,11 @@
 	<string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
-	<string name="about_content">aSM 1.6.2\naSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：
-\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴或者回信给作者。\n3. 帖子附件显示于每个帖子的结尾处。\n4. 在版面的主题列表页面中按MENU键可以发表新贴及搜索版面。(回贴发帖均需要登录后才能使用)\n5. 因为水木版面设置的特殊性，分类讨论区第一次加载时间较长，之后会在本地保存直接加载。
-\n在实现过程中利用参考了fanfoudroid和 muwanqing2两个开源项目。\nBY leo18@SMTH</string>
+	<string name="about_content">aSM 2.0\naSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：
+\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴或者回信给作者。\nBY leo18, r7000@SMTH</string>
 	<!-- 更新 -->
 	<string name="update_title">更新说明</string>
-	<string name="update_info">1.6.2更新内容：\n1. 新增：夜间模式\n2. 新增：阅读帖子手势翻页\n3. 新增：编辑帖子\n4. 修正：普通模式下主题展开再下一页预读出错的bug\n5. 修正：不同分辨率下触屏翻帖功能的bug\n5. 其他：一些外观与bug调整\n</string>
+	<string name="update_info">2.0更新内容：\n1. 新增：夜间模式\n2. 新增：阅读帖子手势翻页\n3. 新增：编辑帖子\n4. 修正：普通模式下主题展开再下一页预读出错的bug\n5. 修正：不同分辨率下触屏翻帖功能的bug\n5. 其他：一些外观与bug调整\n</string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
 	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>
@@ -115,6 +114,9 @@
 	<string name="setting_forward_email_details">请输入转寄的外部邮箱地址</string>
 	<string name="setting_promotion_show">发帖显示宣传语</string>
 	<string name="setting_promotion_show_details">选中后发帖时结尾添加宣传语</string>
+	<string name="setting_promotion_content">自定义宣传语</string>
+	<string name="setting_promotion_content_details">将显示为"发送自aSM@自定义宣传语“</string>
+	<string name="setting_promotion_content_title">请输入自定义内容，例如"三儿子"</string>
 	<!-- 下拉刷新 -->
 	<string name="pull_to_refresh_pull_label">下拉刷新</string>
 	<string name="pull_to_refresh_release_label">松开刷新</string>
@@ -122,3 +124,5 @@
 	<string name="pull_to_refresh_tap_label">点击刷新</string>
 	
 </resources>
+
+

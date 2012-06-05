@@ -1,63 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="登陆相关">  
-		<CheckBoxPreference android:key="remember_user"
-			android:summary="@string/setting_remember_user_details" android:title="@string/setting_remember_user"></CheckBoxPreference>
-		<CheckBoxPreference android:key="auto_login"
-			android:summary="@string/setting_auto_login_details" 
-			android:title="@string/setting_auto_login"
-			android:dependency="remember_user"></CheckBoxPreference>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="默认风格">  
-		<ListPreference android:key="default_tab"
-			android:dialogTitle="选择" android:summary="@string/setting_default_tab_details"
-			android:title="@string/setting_default_tab" android:entryValues="@array/tab_value"
-			android:entries="@array/tab_name"></ListPreference>
-		<ListPreference android:key="default_board_type"
-			android:dialogTitle="选择" android:summary="@string/setting_default_board_type_details"
-			android:title="@string/setting_default_board_type" android:entryValues="@array/board_type_value"
-			android:entries="@array/board_type_name"></ListPreference>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="界面调整">
-		<EditTextPreference  android:key="guidance_font_size" 
-			android:title="@string/setting_guidance_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="25"  />
-		<EditTextPreference  android:key="guidance_second_font_size" 
-			android:title="@string/setting_guidance_second_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="20"  />
-		<EditTextPreference  android:key="subject_font_size" 
-			android:title="@string/setting_subject_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="18"  />
-		<EditTextPreference  android:key="post_font_size" 
-			android:title="@string/setting_post_font_size"
-			android:dialogTitle="请输入数字" android:defaultValue="17"  />
-	</PreferenceCategory>
-	<PreferenceCategory android:title="图片加载">
-		<CheckBoxPreference android:key="auto_optimize"
-			android:summary="@string/setting_auto_optimize_details" android:title="@string/setting_auto_optimize" />
-		
-		<EditTextPreference  android:key="image_size_threshold" 
-			android:title="@string/setting_image_size_threshold" android:summary="@string/setting_image_size_threshold_details"
-			android:dialogTitle="请输入过滤大小，以KB为单位" android:defaultValue="50"  />
-	</PreferenceCategory>
-	<PreferenceCategory android:title="版面阅读">
-		<CheckBoxPreference android:key="touch_scroll"
-			android:summary="@string/setting_touch_scroll_details" android:title="@string/setting_touch_scroll" />
-		<CheckBoxPreference android:key="hide_pin_subject"
-			android:summary="@string/setting_hide_pin_subject_details" android:title="@string/setting_hide_pin_subject" />
-		<CheckBoxPreference android:key="night_theme"
-			android:summary="@string/setting_night_theme_details" android:title="@string/setting_night_theme" />
-	</PreferenceCategory>
-	<PreferenceCategory android:title="其他">
-	    <!-- <CheckBoxPreference android:key="force_screen_portrait"
-	        android:summary="@string/setting_force_screen_portrait_details" android:title="@string/setting_force_screen_portrait"/> -->
-		<CheckBoxPreference android:key="promotion_show"
-			android:summary="@string/setting_promotion_show_details" android:title="@string/setting_promotion_show" />
-		<EditTextPreference  android:key="forward_email" 
-			android:title="@string/setting_forward_email" android:summary="@string/setting_forward_email_details"
-			android:dialogTitle="请输入Email" android:defaultValue=""  />
-		<EditTextPreference  android:key="black_list" 
-			android:title="@string/setting_black_list" android:summary="@string/setting_black_list_details"
-			android:dialogTitle="请输入ID" android:defaultValue=""  />
-	</PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="登陆相关" >
+        <CheckBoxPreference
+            android:key="remember_user"
+            android:summary="@string/setting_remember_user_details"
+            android:title="@string/setting_remember_user" >
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            android:dependency="remember_user"
+            android:key="auto_login"
+            android:summary="@string/setting_auto_login_details"
+            android:title="@string/setting_auto_login" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="默认风格" >
+        <ListPreference
+            android:dialogTitle="选择"
+            android:entries="@array/tab_name"
+            android:entryValues="@array/tab_value"
+            android:key="default_tab"
+            android:summary="@string/setting_default_tab_details"
+            android:title="@string/setting_default_tab" >
+        </ListPreference>
+        <ListPreference
+            android:dialogTitle="选择"
+            android:entries="@array/board_type_name"
+            android:entryValues="@array/board_type_value"
+            android:key="default_board_type"
+            android:summary="@string/setting_default_board_type_details"
+            android:title="@string/setting_default_board_type" >
+        </ListPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="界面调整" >
+        <EditTextPreference
+            android:defaultValue="25"
+            android:dialogTitle="请输入数字"
+            android:key="guidance_font_size"
+            android:title="@string/setting_guidance_font_size" />
+        <EditTextPreference
+            android:defaultValue="20"
+            android:dialogTitle="请输入数字"
+            android:key="guidance_second_font_size"
+            android:title="@string/setting_guidance_second_font_size" />
+        <EditTextPreference
+            android:defaultValue="18"
+            android:dialogTitle="请输入数字"
+            android:key="subject_font_size"
+            android:title="@string/setting_subject_font_size" />
+        <EditTextPreference
+            android:defaultValue="17"
+            android:dialogTitle="请输入数字"
+            android:key="post_font_size"
+            android:title="@string/setting_post_font_size" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="图片加载" >
+        <CheckBoxPreference
+            android:key="auto_optimize"
+            android:summary="@string/setting_auto_optimize_details"
+            android:title="@string/setting_auto_optimize" />
+
+        <EditTextPreference
+            android:defaultValue="50"
+            android:dialogTitle="请输入过滤大小，以KB为单位"
+            android:key="image_size_threshold"
+            android:summary="@string/setting_image_size_threshold_details"
+            android:title="@string/setting_image_size_threshold" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="版面阅读" >
+        <CheckBoxPreference
+            android:key="touch_scroll"
+            android:summary="@string/setting_touch_scroll_details"
+            android:title="@string/setting_touch_scroll" />
+        <CheckBoxPreference
+            android:key="hide_pin_subject"
+            android:summary="@string/setting_hide_pin_subject_details"
+            android:title="@string/setting_hide_pin_subject" />
+        <CheckBoxPreference
+            android:key="night_theme"
+            android:summary="@string/setting_night_theme_details"
+            android:title="@string/setting_night_theme" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="其他" >
+
+        <!--
+             <CheckBoxPreference android:key="force_screen_portrait"
+	        android:summary="@string/setting_force_screen_portrait_details" android:title="@string/setting_force_screen_portrait"/>
+        -->
+        <CheckBoxPreference
+            android:key="promotion_show"
+            android:summary="@string/setting_promotion_show_details"
+            android:title="@string/setting_promotion_show" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/setting_promotion_content_title"
+            android:key="promotion_content"
+            android:summary="@string/setting_promotion_content_details"
+            android:title="@string/setting_promotion_content" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="请输入Email"
+            android:key="forward_email"
+            android:summary="@string/setting_forward_email_details"
+            android:title="@string/setting_forward_email" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="请输入ID"
+            android:key="black_list"
+            android:summary="@string/setting_black_list_details"
+            android:title="@string/setting_black_list" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -203,7 +203,11 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 			postContent = m.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
 			if (HomeActivity.m_application.isPromotionShow()) {
-				postContent += "--<br/>发送自aSM水木客户端\n<br/>";
+				String promotion = "--<br/>发送自aSM";
+				if (HomeActivity.m_application.getPromotionContent().length() > 0) {
+					promotion += "@" + HomeActivity.m_application.getPromotionContent();
+				}
+				postContent += promotion + "\n<br/>";
 			}
 			m_contentEditText.setText(Html.fromHtml(postContent));
 			m_viewModel.setPostContent(postContent);

@@ -23,6 +23,7 @@ public class Preferences {
 	public static final String NIGHT_THEME = "night_theme";
 	
 	public static final String PROMOTION_SHOW = "promotion_show";
+	public static final String PROMOTION_CONTENT = "promotion_content";
 	public static final String FORWARD_EMAIL= "forward_email";
 	public static final String BLACK_LIST = "black_list";
 	
