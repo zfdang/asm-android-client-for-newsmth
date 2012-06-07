@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.ClipboardManager;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -304,10 +305,12 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 	}
 
 	public void showFailedToast() {
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(m_viewModel.getPostContent());
 		m_handler.post(new Runnable() {
 			@Override
 			public void run() {
-				Toast.makeText(getApplicationContext(), "发表失败.",
+				Toast.makeText(getApplicationContext(), "发表失败.内容已保留到剪贴板",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
