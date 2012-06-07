@@ -1,7 +1,6 @@
 package com.athena.asm.data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Subject implements Serializable {
 	private static final long serialVersionUID = 7351647738651826553L;
@@ -13,14 +12,15 @@ public class Subject implements Serializable {
 	private String boardID;
 	private String boardEngName;
 	private String boardChsName;
-	private Date date;
+	//private Date date;
+	private String dateString;
 	private String type;
 
 	private int totalPageNo;
 	private int currentPageNo;
 	
 	public Subject() {
-		date = new Date();
+		
 	}
 	
 	public Subject(Subject subject) {
@@ -31,7 +31,7 @@ public class Subject implements Serializable {
 		this.boardID = subject.boardID;
 		this.boardEngName = subject.boardEngName;
 		this.boardChsName = subject.boardChsName;
-		this.date = subject.date;
+		this.dateString = subject.dateString;
 		this.type = subject.type;
 		this.totalPageNo = subject.totalPageNo;
 		this.currentPageNo = subject.currentPageNo;
@@ -93,14 +93,6 @@ public class Subject implements Serializable {
 		this.boardChsName = boardName;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -123,5 +115,13 @@ public class Subject implements Serializable {
 
 	public int getCurrentPageNo() {
 		return currentPageNo;
+	}
+
+	public String getDateString() {
+		return dateString;
+	}
+
+	public void setDateString(String dateString) {
+		this.dateString = dateString;
 	}
 }

@@ -143,7 +143,8 @@ public class SubjectListViewModel extends BaseViewModel {
 	}
 	
 	public List<Subject> getSubjectListFromSmth(boolean isReloadPageNo) {
-		return m_smthSupport.getSubjectList(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
+		return m_smthSupport.getSubjectListFromMobile(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
+		//return m_smthSupport.getSubjectList(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
 	}
 
 }

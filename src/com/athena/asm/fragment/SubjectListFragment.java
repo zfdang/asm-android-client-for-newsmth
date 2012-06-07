@@ -76,11 +76,11 @@ public class SubjectListFragment extends SherlockFragment implements
 
 		Button firstButton = (Button) subjectListView
 				.findViewById(R.id.btn_first_page);
-		firstButton.setVisibility(View.GONE);
-		//firstButton.setOnClickListener(this);
+		firstButton.setOnClickListener(this);
 		Button lastButton = (Button) subjectListView
 				.findViewById(R.id.btn_last_page);
-		lastButton.setOnClickListener(this);
+		lastButton.setVisibility(View.GONE);
+		//lastButton.setOnClickListener(this);
 		Button preButton = (Button) subjectListView
 				.findViewById(R.id.btn_pre_page);
 		preButton.setOnClickListener(this);
@@ -113,14 +113,14 @@ public class SubjectListFragment extends SherlockFragment implements
 					.getSerializableExtra(StringUtility.BOARD);
 			isNewBoard = m_viewModel.updateCurrentBoard(currentBoard,
 					defaultBoardType);
-			m_viewModel.setIsFirstIn(true);
+			m_viewModel.setIsFirstIn(isNewBoard);
 		}
 		m_isNewInstance = false;
 
 		if (isNewBoard) {
 			refreshSubjectList();
 		} else {
-			reloadPostList();
+			reloadSubjectList();
 		}
 	}
 
@@ -169,9 +169,9 @@ public class SubjectListFragment extends SherlockFragment implements
 		}
 	}
 
-	public void reloadPostList() {
+	public void reloadSubjectList() {
 		if (m_viewModel.isFirstIn()) {
-			m_viewModel.gotoLastPage();
+			m_viewModel.gotoFirstPage();
 			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
 			m_viewModel.setIsFirstIn(false);
 		}
@@ -327,7 +327,7 @@ public class SubjectListFragment extends SherlockFragment implements
 			String changedPropertyName, Object... params) {
 		if (changedPropertyName
 				.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
-			reloadPostList();
+			reloadSubjectList();
 			((SubjectListActivity) getActivity()).dismissProgressDialog();
 		}
 	}

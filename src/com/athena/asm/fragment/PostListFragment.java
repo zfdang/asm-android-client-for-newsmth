@@ -175,7 +175,7 @@ public class PostListFragment extends SherlockFragment implements
 		m_viewModel.setIsPreloadFinished(false);
 		m_viewModel.updatePreloadSubjectFromCurrentSubject();
 
-		if (m_viewModel.getBoardType() == 0) {
+		if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			m_goButton.setVisibility(View.VISIBLE);
 			m_pageNoEditText.setVisibility(View.VISIBLE);
 			m_lastButton.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class PostListFragment extends SherlockFragment implements
 			m_lastButton.setText(R.string.last_page);
 			m_preButton.setText(R.string.pre_page);
 			m_nextButton.setText(R.string.next_page);
-		} else {
+		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL) {
 			m_goButton.setVisibility(View.GONE);
 			m_pageNoEditText.setVisibility(View.GONE);
 			m_lastButton.setVisibility(View.VISIBLE);
@@ -191,6 +191,13 @@ public class PostListFragment extends SherlockFragment implements
 			m_lastButton.setText(R.string.topic_all_page);
 			m_preButton.setText(R.string.topic_pre_page);
 			m_nextButton.setText(R.string.topic_next_page);
+		} else {
+			m_goButton.setVisibility(View.GONE);
+			m_pageNoEditText.setVisibility(View.GONE);
+			m_firstButton.setVisibility(View.GONE);
+			m_lastButton.setVisibility(View.GONE);
+			m_preButton.setVisibility(View.GONE);
+			m_nextButton.setVisibility(View.GONE);
 		}
 		getActivity().setTitle(m_viewModel.getSubjectTitle());
 

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,24 +80,28 @@ public class SmthSupport {
 		logout();
 		crawler.destroy();
 	}
-	
+
 	public boolean uploadAttachFile(File file) {
 		return crawler.uploadAttachFile(file);
 	}
-	
-	public boolean sendMail(String mailUrl, String mailTitle, String userid, String num, String dir, 
-	        String file, String signature, String mailContent) {
-		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file, signature, mailContent);
+
+	public boolean sendMail(String mailUrl, String mailTitle, String userid,
+			String num, String dir, String file, String signature,
+			String mailContent) {
+		return crawler.sendMail(mailUrl, mailTitle, userid, num, dir, file,
+				signature, mailContent);
 	}
 
-	public boolean sendPost(String postUrl, String postTitle, String postContent, String signature, boolean isEdit) {
-		return crawler.sendPost(postUrl, postTitle, postContent, signature, isEdit);
+	public boolean sendPost(String postUrl, String postTitle,
+			String postContent, String signature, boolean isEdit) {
+		return crawler.sendPost(postUrl, postTitle, postContent, signature,
+				isEdit);
 	}
 
 	public String getUrlContent(String urlString) {
 		return crawler.getUrlContent(urlString);
 	}
-	
+
 	/**
 	 * 获得首页导读.
 	 * 
@@ -127,7 +130,8 @@ public class SmthSupport {
 			Pattern hip = Pattern
 					.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
 			Matcher him = hip.matcher(hc);
-			Pattern hIdPattern = Pattern.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
+			Pattern hIdPattern = Pattern
+					.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
 			Matcher hIdMatcher = hIdPattern.matcher(hc);
 			List<Subject> list = new ArrayList<Subject>();
 			while (him.find() && hIdMatcher.find()) {
@@ -153,7 +157,7 @@ public class SmthSupport {
 			String sectionName = sm.group(1);
 			sectionList.add(sectionName);
 			String sc = sm.group(2);
-			//System.out.println(sectionName);
+			// System.out.println(sectionName);
 
 			Pattern boardNamePattern = Pattern
 					.compile("\"SectionItem\">.<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
@@ -188,8 +192,7 @@ public class SmthSupport {
 		String url;
 		if (type == 0) {
 			url = "http://www.newsmth.net/bbsfav.php?select=" + id;
-		}
-		else {
+		} else {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + id;
 		}
 
@@ -216,7 +219,7 @@ public class SmthSupport {
 			getFavorite(list.get(i), boardList.get(i).getChildBoards(), 0);
 		}
 
-		//o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
+		// o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
 		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
@@ -245,35 +248,41 @@ public class SmthSupport {
 		}
 
 	}
-	
+
 	/**
 	 * 获取邮箱信息
+	 * 
 	 * @return
 	 */
 	public MailBox getMailBoxInfo() {
 		MailBox mailBox = new MailBox();
-		String content = crawler.getUrlContent("http://www.newsmth.net/bbsmail.php");
-		Pattern inboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DIR&title=%CA%D5%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		String content = crawler
+				.getUrlContent("http://www.newsmth.net/bbsmail.php");
+		Pattern inboxPattern = Pattern
+				.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DIR&title=%CA%D5%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
 		Matcher inboxMatcher = inboxPattern.matcher(content);
 		while (inboxMatcher.find()) {
 			mailBox.setInboxNumber(Integer.parseInt(inboxMatcher.group(1)));
 		}
-		Pattern outboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.SENT&title=%B7%A2%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		Pattern outboxPattern = Pattern
+				.compile("<td><a href=\"bbsmailbox.php\\?path=\\.SENT&title=%B7%A2%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
 		Matcher outboxMatcher = outboxPattern.matcher(content);
 		while (outboxMatcher.find()) {
 			mailBox.setOutboxNumber(Integer.parseInt(outboxMatcher.group(1)));
 		}
-		Pattern trashboxPattern = Pattern.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DELETED&title=%C0%AC%BB%F8%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
+		Pattern trashboxPattern = Pattern
+				.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DELETED&title=%C0%AC%BB%F8%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
 		Matcher trashboxMatcher = trashboxPattern.matcher(content);
 		while (trashboxMatcher.find()) {
 			mailBox.setTrashboxNumber(Integer.parseInt(trashboxMatcher.group(1)));
-		}	
-		
+		}
+
 		return mailBox;
 	}
-	
+
 	/**
 	 * 取得邮件标题列表
+	 * 
 	 * @param boxType
 	 * @param startNumber
 	 * @return
@@ -288,38 +297,42 @@ public class SmthSupport {
 		}
 		switch (boxType) {
 		case 0:
-			urlString += "path=.DIR" + startString + "&title=%CA%D5%BC%FE%CF%E4";
+			urlString += "path=.DIR" + startString
+					+ "&title=%CA%D5%BC%FE%CF%E4";
 			boxString = "%CA%D5%BC%FE%CF%E4";
 			boxDirString = ".DIR";
 			break;
 		case 1:
-			urlString += "path=.SENT" + startString + "&title=%B7%A2%BC%FE%CF%E4";
+			urlString += "path=.SENT" + startString
+					+ "&title=%B7%A2%BC%FE%CF%E4";
 			boxString = "%B7%A2%BC%FE%CF%E4";
 			boxDirString = ".SENT";
 			break;
 		case 2:
-			urlString += "path=.DELETED" + startString + "&title=%C0%AC%BB%F8%CF%E4";
+			urlString += "path=.DELETED" + startString
+					+ "&title=%C0%AC%BB%F8%CF%E4";
 			boxString = "%C0%AC%BB%F8%CF%E4";
 			boxDirString = ".DELETED";
 			break;
 		default:
 			break;
 		}
-		
+
 		List<Mail> mailList = new ArrayList<Mail>();
 		String result = crawler.getUrlContent(urlString);
 		int counter = 0;
 		String matchString = "";
-		
+
 		String numberAndDatePatternString = "<td class=\"mt3\">([^<>]+)</td>";
-		Pattern numberAndDatePattern = Pattern.compile(numberAndDatePatternString);
+		Pattern numberAndDatePattern = Pattern
+				.compile(numberAndDatePatternString);
 		Matcher numberAndDateMatcher = numberAndDatePattern.matcher(result);
 		while (numberAndDateMatcher.find()) {
 			matchString = numberAndDateMatcher.group(1);
 			int number = Integer.parseInt(matchString) - 1;
 			numberAndDateMatcher.find();
 			matchString = numberAndDateMatcher.group(1);
-			
+
 			Mail mail = new Mail();
 			mail.setBoxString(boxString);
 			mail.setBoxType(boxType);
@@ -328,7 +341,7 @@ public class SmthSupport {
 			mail.setDateString(matchString.replaceAll("&nbsp;", " ").trim());
 			mailList.add(mail);
 		}
-		
+
 		String isUnreadPatternString = "<img src='images/(\\w+).gif'[^<>]+>";
 		Pattern isUnreadPattern = Pattern.compile(isUnreadPatternString);
 		Matcher isUnreadMatcher = isUnreadPattern.matcher(result);
@@ -337,13 +350,12 @@ public class SmthSupport {
 			Mail mail = mailList.get(counter);
 			if (matchString.contains("omail")) {
 				mail.setUnread(false);
-			}
-			else {
+			} else {
 				mail.setUnread(true);
 			}
 			counter++;
 		}
-		
+
 		counter = 0;
 		String valuePatternString = "<input type=\"checkbox\"[^<>]+value=\"([^<>]+)\">";
 		Pattern valuePattern = Pattern.compile(valuePatternString);
@@ -354,7 +366,7 @@ public class SmthSupport {
 			mail.setValueString(matchString);
 			counter++;
 		}
-		
+
 		counter = 0;
 		String statusPatternString = "<td class=\"mt4\"><nobr>([^<>]+)</nobr></td>";
 		Pattern statusPattern = Pattern.compile(statusPatternString);
@@ -365,7 +377,7 @@ public class SmthSupport {
 			mail.setStatus(matchString.replaceAll("&nbsp;", "").trim());
 			counter++;
 		}
-		
+
 		counter = 0;
 		String senderPatternString = "<td class=\"mt3\"><a href=\"bbsqry.php\\?userid=([^<>]+)\">[^<>]+</a></td>";
 		Pattern senderPattern = Pattern.compile(senderPatternString);
@@ -376,7 +388,7 @@ public class SmthSupport {
 			mail.setSenderID(matchString);
 			counter++;
 		}
-		
+
 		counter = 0;
 		String titlePatternString = "<td class=\"mt5\">&nbsp;<a[^<>]+>([^<>]+)</a></td>";
 		Pattern titlePattern = Pattern.compile(titlePatternString);
@@ -387,7 +399,7 @@ public class SmthSupport {
 			mail.setTitle(matchString.trim());
 			counter++;
 		}
-		
+
 		counter = 0;
 		String sizePatternString = "<td class=\"mt3\" style=[^<>]+>(\\d+)</td>";
 		Pattern sizePattern = Pattern.compile(sizePatternString);
@@ -398,7 +410,7 @@ public class SmthSupport {
 			mail.setSizeString(matchString);
 			counter++;
 		}
-		
+
 		return mailList;
 	}
 
@@ -417,20 +429,21 @@ public class SmthSupport {
 		default:
 			break;
 		}
-		String url = "http://www.newsmth.net/bbsmailcon.php?dir=" + boxTypeString + "&num=" + mail.getNumber() + "&title=" + mail.getBoxString();
+		String url = "http://www.newsmth.net/bbsmailcon.php?dir="
+				+ boxTypeString + "&num=" + mail.getNumber() + "&title="
+				+ mail.getBoxString();
 		String result = crawler.getUrlContent(url);
 		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
 				Pattern.DOTALL);
 		Matcher contentMatcher = contentPattern.matcher(result);
 		if (contentMatcher.find()) {
 			String contentString = contentMatcher.group(1);
-			Object[] objects = StringUtility
-					.parsePostContent(contentString);
+			Object[] objects = StringUtility.parsePostContent(contentString);
 			mail.setContent((String) objects[0]);
 			mail.setDate((java.util.Date) objects[1]);
 		}
 	}
-	
+
 	/**
 	 * 获取分类讨论区列表
 	 * 
@@ -464,18 +477,16 @@ public class SmthSupport {
 			board.setCategoryName("目录");
 			boardList.add(board);
 		}
-		
-		/*patternStr = "o\\.o\\(true,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)";
-		pattern = Pattern.compile(patternStr);
-		matcher = pattern.matcher(content);
-		while (matcher.find()) {
-			//list.add(matcher.group(1));
-			Board board = new Board();
-			board.setDirectory(true);
-			board.setDirectoryName(matcher.group(2));
-			board.setCategoryName("目录");
-			//boardList.add(board);
-		}*/
+
+		/*
+		 * patternStr =
+		 * "o\\.o\\(true,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)"
+		 * ; pattern = Pattern.compile(patternStr); matcher =
+		 * pattern.matcher(content); while (matcher.find()) {
+		 * //list.add(matcher.group(1)); Board board = new Board();
+		 * board.setDirectory(true); board.setDirectoryName(matcher.group(2));
+		 * board.setCategoryName("目录"); //boardList.add(board); }
+		 */
 
 		for (int i = 0; i < list.size(); i++) {
 			getCategory(list.get(i), boardList.get(i).getChildBoards(), false);
@@ -501,27 +512,27 @@ public class SmthSupport {
 			board.setEngName(engName);
 			board.setChsName(chsName);
 			board.setModerator(moderator);
-			
+
 			if (isDirString.equals("true")) {
 				board.setDirectory(true);
 				board.setDirectoryName(category + "  " + chsName);
 				dirList.add(board);
-			}
-			else {
+			} else {
 				board.setDirectory(false);
 			}
-			
+
 			boardList.add(board);
 		}
-		
+
 		for (Iterator<Board> iterator = dirList.iterator(); iterator.hasNext();) {
 			Board board = (Board) iterator.next();
 			getCategory(board.getEngName(), board.getChildBoards(), true);
 		}
 
 	}
-	
-	public List<Subject> getSearchSubjectList(String boardName, String boardID, String queryString) {
+
+	public List<Subject> getSearchSubjectList(String boardName, String boardID,
+			String queryString) {
 		String url = "http://www.newsmth.net/bbsbfind.php?q=1&" + queryString;
 		String result = crawler.getUrlContent(url);
 		String patternStr = "ta\\.r\\('[^']+','([^']+)','<a href=\"bbsqry.php\\?userid=(\\w+)\">\\w+</a>','([^']+)','<a href=\"bbscon.php\\?bid=\\d+&id=(\\d+)\">([^<>]+)</a>'\\);";
@@ -530,18 +541,19 @@ public class SmthSupport {
 		List<Subject> subjectList = new ArrayList<Subject>();
 		while (matcher.find()) {
 			String type = matcher.group(1).trim();
-			String author = matcher.group(2);			
+			String author = matcher.group(2);
 			String dateStr = matcher.group(3).replace("&nbsp;", " ");
-			SimpleDateFormat formatter = new SimpleDateFormat("MMM dd", Locale.US);  
-			Date date;
-			try {
-				date = formatter.parse(dateStr);
-			} catch (ParseException e) {
-				date = new Date();
-			}
+//			SimpleDateFormat formatter = new SimpleDateFormat("MMM dd",
+//					Locale.US);
+//			Date date;
+//			try {
+//				date = formatter.parse(dateStr);
+//			} catch (ParseException e) {
+//				date = new Date();
+//			}
 			String subjectid = matcher.group(4);
 			String title = matcher.group(5);
-			
+
 			Subject subject = new Subject();
 			subject.setAuthor(author);
 			subject.setBoardID(boardID);
@@ -549,7 +561,7 @@ public class SmthSupport {
 			subject.setSubjectID(subjectid);
 			subject.setTitle(title);
 			subject.setType(type);
-			subject.setDate(date);
+			subject.setDateString(dateStr);
 			subjectList.add(subject);
 		}
 
@@ -561,7 +573,8 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public List<Subject> getSubjectList(Board board, int boardType, boolean isReloadPageNo, ArrayList<String> blackList) {		
+	public List<Subject> getSubjectList(Board board, int boardType,
+			boolean isReloadPageNo, ArrayList<String> blackList) {
 		String boardname = board.getEngName();
 		int pageno = board.getCurrentPageNo();
 		if (isReloadPageNo) {
@@ -577,7 +590,8 @@ public class SmthSupport {
 		if (m.find()) {
 			board.setBoardID(m.group(1));
 			board.setCurrentPageNo(Integer.parseInt(m.group(2)));
-			if (board.getCurrentPageNo() > board.getTotalPageNo() || isReloadPageNo) {
+			if (board.getCurrentPageNo() > board.getTotalPageNo()
+					|| isReloadPageNo) {
 				board.setTotalPageNo(board.getCurrentPageNo());
 			}
 		}
@@ -595,9 +609,9 @@ public class SmthSupport {
 			String type = matcher.group(3).trim();
 			// 隐藏置底
 			if (HomeActivity.m_application.isHidePinSubject()
-			        && type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
-                            continue;
-                        }
+					&& type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
+				continue;
+			}
 			String dateStr = matcher.group(4);
 			Date date = StringUtility.toDate(dateStr);
 			String title = matcher.group(5);
@@ -608,14 +622,110 @@ public class SmthSupport {
 			subject.setSubjectID(subjectid);
 			subject.setTitle(title);
 			subject.setType(type);
-			subject.setDate(date);
+			subject.setDateString(date.toLocaleString());
 			subject.setCurrentPageNo(1);
 			subjectList.add(subject);
 		}
 
 		return subjectList;
 	}
-	
+
+	public List<Subject> getSubjectListFromMobile(Board board, int boardType,
+			boolean isReloadPageNo, ArrayList<String> blackList) {
+		String boardname = board.getEngName();
+		int pageno = board.getCurrentPageNo();
+		if (isReloadPageNo) {
+			pageno = 0;
+		}
+		String result = getMainSubjectListFromMobile(boardname, pageno,
+				boardType);
+		if (result == null) {
+			return Collections.emptyList();
+		}
+
+		List<Subject> subjectList = new ArrayList<Subject>();
+
+		// <a class="plant">1/1272</a>
+		Pattern pagePattern = Pattern
+				.compile("<a class=\"plant\">(\\d+)/(\\d+)");
+		Matcher pageMatcher = pagePattern.matcher(result);
+		if (pageMatcher.find()) {
+			board.setCurrentPageNo(Integer.parseInt(pageMatcher.group(1)));
+			board.setTotalPageNo(Integer.parseInt(pageMatcher.group(2)));
+		}
+
+		// 2012-05-28<a userid href="/user/query/
+		Pattern userIDPattern = Pattern
+				.compile("([^<>]+)<a href=\"/user/query/([^<>]+)\"");
+		Matcher userIDMatcher = userIDPattern.matcher(result);
+		int index = 1;
+		while (userIDMatcher.find()) {
+			// subject mode has two author info per subject
+			index = 1 - index;
+			if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT
+					&& index == 1)
+				continue;
+
+			Subject subject = new Subject();
+			String dateString = userIDMatcher.group(1).trim();
+			subject.setDateString(dateString.replace("&nbsp;", ""));
+			subject.setAuthor(userIDMatcher.group(2));
+			subject.setBoardID(board.getBoardID());
+			subject.setBoardEngName(boardname);
+			subject.setCurrentPageNo(1);
+			subject.setType(" ");
+			subjectList.add(subject);
+		}
+
+		// <a href="/article/PocketLife/1047054" class="top">title
+		String subPattern = "\"";
+		if (boardType != SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			boardname = boardname + "/single";
+		}
+		if (boardType == SubjectListFragment.BOARD_TYPE_NORMAL) {
+			subPattern = "/0\"";
+		} else if (boardType == SubjectListFragment.BOARD_TYPE_DIGEST) {
+			subPattern = "/1\"";
+		} else if (boardType == SubjectListFragment.BOARD_TYPE_MARK) {
+			subPattern = "/3\" class=\"m\"";
+		}
+		Pattern topPattern = Pattern.compile("<a href=\"/article/" + boardname
+				+ "/(\\d+)" + subPattern + " class=\"top\">([^<>]+)");
+		Matcher topMatcher = topPattern.matcher(result);
+		index = 0;
+		while (topMatcher.find()) {
+			subjectList.get(index).setSubjectID(topMatcher.group(1));
+			subjectList.get(index).setTitle(topMatcher.group(2));
+			subjectList.get(index).setType(Subject.TYPE_BOTTOM);
+			index++;
+		}
+
+		// <a href="/article/PocketLife/1059521">title
+		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
+				+ boardname + "/(\\d+)" + subPattern + ">([^<>]+)");
+		Matcher subjectMatcher = subjectPattern.matcher(result);
+		while (subjectMatcher.find()) {
+			subjectList.get(index).setSubjectID(subjectMatcher.group(1));
+			subjectList.get(index).setTitle(subjectMatcher.group(2));
+			index++;
+			if (index > subjectList.size()) {
+				break;
+			}
+		}
+
+		if (HomeActivity.m_application.isHidePinSubject()) {
+			for (Iterator<Subject> iterator = subjectList.iterator(); iterator
+					.hasNext();) {
+				Subject subject = (Subject) iterator.next();
+				if (subject.getType().equals(Subject.TYPE_BOTTOM)) {
+					iterator.remove();
+				}
+			}
+		}
+
+		return subjectList;
+	}
+
 	/**
 	 * 获取单贴内容
 	 * 
@@ -623,7 +733,8 @@ public class SmthSupport {
 	 * @return
 	 */
 	public List<Post> getSinglePostList(Subject subject) {
-		//String result = getPostContent(subject.getBoardID(), subject.getSubjectID());
+		// String result = getPostContent(subject.getBoardID(),
+		// subject.getSubjectID());
 		List<Post> postList = new ArrayList<Post>();
 		Post post = new Post();
 		post.setAuthor(subject.getAuthor());
@@ -632,37 +743,36 @@ public class SmthSupport {
 		post.setBoard(subject.getBoardEngName());
 		postList.add(post);
 		crawler.getPostList(postList);
-		
+
 		subject.setTopicSubjectID(post.getTopicSubjectID());
-		
+
 		return postList;
 	}
-	
+
 	public List<Post> getTopicPostList(Subject subject, int action) {
 		List<Post> postList = new ArrayList<Post>();
-		String url = "http://www.newsmth.net/bbscon.php?bid="+subject.getBoardID()+"&id=";
+		String url = "http://www.newsmth.net/bbscon.php?bid="
+				+ subject.getBoardID() + "&id=";
 		if (action == 1) {
 			url += subject.getTopicSubjectID();
-		}
-		else {
+		} else {
 			url += subject.getSubjectID();
 			if (action == 2) {
 				url += "&p=tp";
-			}
-			else {
+			} else {
 				url += "&p=tn";
 			}
 		}
 		String content = crawler.getUrlContent(url);
 		if (content == null) {
-                    return null;
-                }
-		
+			return null;
+		}
+
 		Post post = new Post();
-		
+
 		post.setBoardID(subject.getBoardID());
 		post.setBoard(subject.getBoardEngName());
-		
+
 		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
 				Pattern.DOTALL);
 		Pattern infoPattern = Pattern
@@ -670,13 +780,13 @@ public class SmthSupport {
 		Matcher contentMatcher = contentPattern.matcher(content);
 		if (contentMatcher.find()) {
 			String contentString = contentMatcher.group(1);
-			Object[] objects = StringUtility
-					.parsePostContent(contentString);
+			Object[] objects = StringUtility.parsePostContent(contentString);
 			post.setContent((String) objects[0]);
 			post.setDate((java.util.Date) objects[1]);
 			int index1 = contentString.indexOf("发信人:");
 			int index2 = contentString.indexOf("(");
-			String authorString = contentString.substring(index1 + 4, index2 - 1).trim();
+			String authorString = contentString.substring(index1 + 4,
+					index2 - 1).trim();
 			post.setAuthor(authorString);
 		}
 
@@ -719,12 +829,12 @@ public class SmthSupport {
 		}
 		post.setAttachFiles(attachFiles);
 		postList.add(post);
-		
+
 		subject.setSubjectID(post.getSubjectID());
 		subject.setTopicSubjectID(post.getTopicSubjectID());
 		subject.setAuthor(post.getAuthor());
-		subject.setDate(post.getDate());
-		
+		subject.setDateString(post.getDate().toLocaleString());
+
 		return postList;
 	}
 
@@ -736,18 +846,19 @@ public class SmthSupport {
 	 * @param pageno
 	 * @return
 	 */
-	public List<Post> getPostList(Subject subject, ArrayList<String> blackList, int startNumber) {
-//		String result = getPostListContent(subject.getBoardEngName(),
-//				subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
-		String url = "http://www.newsmth.net/bbstcon.php?board=" + subject.getBoardEngName()
-				+ "&gid=" + subject.getSubjectID();
+	public List<Post> getPostList(Subject subject, ArrayList<String> blackList,
+			int startNumber) {
+		// String result = getPostListContent(subject.getBoardEngName(),
+		// subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
+		String url = "http://www.newsmth.net/bbstcon.php?board="
+				+ subject.getBoardEngName() + "&gid=" + subject.getSubjectID();
 		if (subject.getCurrentPageNo() > 0) {
 			url += "&pno=" + subject.getCurrentPageNo();
 		}
 		if (startNumber > 0) {
 			url += "&start=" + startNumber;
 		}
-		String result =  crawler.getUrlContent(url);
+		String result = crawler.getUrlContent(url);
 		if (result == null) {
 			return Collections.emptyList();
 		}
@@ -797,7 +908,7 @@ public class SmthSupport {
 		crawler.getPostList(postList);
 		return postList;
 	}
-	
+
 	/**
 	 * 获取移动版水木帖子列表.
 	 * 
@@ -807,26 +918,41 @@ public class SmthSupport {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Post> getPostListFromMobile(Subject subject, ArrayList<String> blackList) {
-		String url = "http://m.newsmth.net/article/" + subject.getBoardEngName()
-				+ "/" + subject.getSubjectID();
+	public List<Post> getPostListFromMobile(Subject subject,
+			ArrayList<String> blackList, int boardType) {
+		String url = "";
 		int currentPageNo = subject.getCurrentPageNo();
-		if (currentPageNo > 0) {
-			url += "?p=" + currentPageNo;
+		boolean isInSubject = false;
+		if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			url = "http://m.newsmth.net/article/"
+					+ subject.getBoardEngName() + "/" + subject.getSubjectID();
+			
+			if (currentPageNo > 0) {
+				url += "?p=" + currentPageNo;
+			}
+			isInSubject = true;
+		} else if (boardType == SubjectListFragment.BOARD_TYPE_DIGEST) {
+			url = "http://m.newsmth.net/article/"
+					+ subject.getBoardEngName() + "/single/" + subject.getSubjectID() + "/1";
+		} else if (boardType == SubjectListFragment.BOARD_TYPE_MARK) {
+			url = "http://m.newsmth.net/article/"
+					+ subject.getBoardEngName() + "/single/" + subject.getSubjectID() + "/3";
 		}
-		String result =  crawler.getUrlContentFromMobile(url);
-		if (result == null || result.contains("指定的文章不存在或链接错误") || result.contains("您无权阅读此版面")) {
+		
+		String result = crawler.getUrlContentFromMobile(url);
+		if (result == null || result.contains("指定的文章不存在或链接错误")
+				|| result.contains("您无权阅读此版面")) {
 			return null;
 		}
-		
+
 		List<Post> postList = new ArrayList<Post>();
-		
+
 		boolean flag = true;
 		// <a userid href="/user/query/
 		Pattern userIDPattern = Pattern
 				.compile("<a href=\"/user/query/([^<>]+)\"");
 		Matcher userIDMatcher = userIDPattern.matcher(result);
-		
+
 		while (userIDMatcher.find()) {
 			Post post = new Post();
 			post.setTopicSubjectID(subject.getTopicSubjectID());
@@ -834,7 +960,7 @@ public class SmthSupport {
 			post.setBoard(subject.getBoardEngName());
 			String author = userIDMatcher.group(1);
 			post.setAuthor(author);
-			
+
 			if (flag) {
 				flag = false;
 				if (!StringUtility.isEmpty(author)
@@ -842,25 +968,27 @@ public class SmthSupport {
 					subject.setAuthor(author);
 				}
 			}
-			
+
 			postList.add(post);
 		}
-		
+
 		// <a href="/article/NewExpress/post/11111">回复
-		Pattern subjectPattern = Pattern.compile("<a href=\"/article/" + subject.getBoardEngName() + "/post/(\\d+)\"");
+		Pattern subjectPattern = Pattern.compile("<a href=\"/article/"
+				+ subject.getBoardEngName() + "/post/(\\d+)\"");
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		int index = 0;
 		while (subjectMatcher.find()) {
 			postList.get(index).setSubjectID(subjectMatcher.group(1));
-			
+
 			++index;
 		}
-		
+
 		// <a class="plant">2012-02-23 00:16:41</a>
-		Pattern datePattern = Pattern.compile("<a class=\"plant\">(\\d)([^<>]+)</a>");
+		Pattern datePattern = Pattern
+				.compile("<a class=\"plant\">(\\d)([^<>]+)</a>");
 		Matcher dateMatcher = datePattern.matcher(result);
 		index = 0;
-		boolean isOdd = false;
+		boolean isOdd = !isInSubject;
 		flag = true;
 		while (dateMatcher.find()) {
 			if (isOdd) {
@@ -869,35 +997,42 @@ public class SmthSupport {
 					currentPageNo = 0;
 					continue;
 				}
-				
+
 				isOdd = false;
-				
+
 				SimpleDateFormat sdf = new SimpleDateFormat(
-	                    "yyyy-MM-dd HH:mm:ss");
+						"yyyy-MM-dd HH:mm:ss");
 				try {
-					postList.get(index).setDate((java.util.Date) sdf.parse(dateMatcher.group(1)+dateMatcher.group(2)));
+					postList.get(index).setDate(
+							(java.util.Date) sdf.parse(dateMatcher.group(1)
+									+ dateMatcher.group(2)));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				if (!isInSubject) {
+					break;
+				}
 				++index;
-			}
-			else {
+			} else {
 				if (flag) {
 					flag = false;
-					String pageString = dateMatcher.group(1)+dateMatcher.group(2);
-					int splitIndex = pageString.indexOf("/"); 
-					int totalPage = Integer.parseInt(pageString.substring(splitIndex+1));
+					String pageString = dateMatcher.group(1)
+							+ dateMatcher.group(2);
+					int splitIndex = pageString.indexOf("/");
+					int totalPage = Integer.parseInt(pageString
+							.substring(splitIndex + 1));
 					subject.setTotalPageNo(totalPage);
-					int page = Integer.parseInt(pageString.substring(0, splitIndex));
+					int page = Integer.parseInt(pageString.substring(0,
+							splitIndex));
 					subject.setCurrentPageNo(page);
 				}
-				
+
 				isOdd = true;
 				continue;
 			}
 		}
-		
-		//<li class="f">title</li>
+
+		// <li class="f">title</li>
 		index = 0;
 		Pattern titlePattern = Pattern.compile("<li class=\"f\">([^<>]+)</li>");
 		Matcher titleMatcher = titlePattern.matcher(result);
@@ -910,10 +1045,11 @@ public class SmthSupport {
 		for (int i = 1; i < postList.size(); i++) {
 			postList.get(i).setTitle(titleString);
 		}
-		
+
 		// post content
-		index = 0; 
-		Pattern contentPattern = Pattern.compile("<div class=\"sp\">(.*?)</div>");		
+		index = 0;
+		Pattern contentPattern = Pattern
+				.compile("<div class=\"sp\">(.*?)</div>");
 		Matcher contentMatcher = contentPattern.matcher(result);
 		while (contentMatcher.find()) {
 			String contentString = contentMatcher.group(1);
@@ -922,36 +1058,39 @@ public class SmthSupport {
 			postList.get(index).setContent((String) objects[0]);
 			ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
 			ArrayList<String> attachList = (ArrayList<String>) objects[1];
-			for (Iterator<String> iterator = attachList.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = attachList.iterator(); iterator
+					.hasNext();) {
 				String attach = (String) iterator.next();
 				Attachment innerAtt = new Attachment();
-				
+
 				if (attach.contains("<img")) {
-					Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
+					Pattern urlPattern = Pattern
+							.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						String urlString = urlMatcher.group(1);
 						innerAtt.setMobileUrlString(urlString);
-						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/")+1) + ".jpg");
+						innerAtt.setName(urlString.substring(urlString
+								.lastIndexOf("/") + 1) + ".jpg");
 					}
-				}
-				else {
-					Pattern urlPattern = Pattern.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
+				} else {
+					Pattern urlPattern = Pattern
+							.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						innerAtt.setMobileUrlString(urlMatcher.group(1));
 						innerAtt.setName(urlMatcher.group(2));
 					}
 				}
-				
+
 				innerAtt.setMobileType(true);
-				
+
 				attachFiles.add(innerAtt);
 			}
 			postList.get(index).setAttachFiles(attachFiles);
 			++index;
-		}	
-		
+		}
+
 		return postList;
 	}
 
@@ -966,11 +1105,11 @@ public class SmthSupport {
 		String content = crawler.getPostRequestResult(url, params);
 		if (content.contains("操作成功")) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
+
 	private Boolean forwardPostTo(Post post, String to) {
 		String url = "http://www.newsmth.net/bbsfwd.php?do";
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -981,23 +1120,23 @@ public class SmthSupport {
 		String content = crawler.getPostRequestResult(url, params);
 		if (content.contains("操作成功")) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
+
 	public Boolean forwardGroupPostToExternalMail(Post post, String emailAddress) {
 		return forwardGroupPostTo(post, emailAddress);
 	}
-	
+
 	public Boolean forwardGroupPostToMailBox(Post post) {
 		return forwardPostTo(post, userid);
 	}
-	
+
 	public Boolean forwardPostToExternalMail(Post post, String emailAddress) {
 		return forwardPostTo(post, emailAddress);
 	}
-	
+
 	public Boolean forwardPostToMailBox(Post post) {
 		return forwardPostTo(post, userid);
 	}
@@ -1028,7 +1167,8 @@ public class SmthSupport {
 		Matcher desMatcher = desPattern.matcher(content);
 		if (desMatcher.find()) {
 			String descriptionString = desMatcher.group(1);
-			descriptionString = descriptionString.replaceAll("[\\\\n]", "<br/>");
+			descriptionString = descriptionString
+					.replaceAll("[\\\\n]", "<br/>");
 			profile.setDescription(descriptionString);
 		} else {
 			profile.setDescription("这家伙很懒，啥也没留下");
@@ -1043,36 +1183,56 @@ public class SmthSupport {
 		return crawler.getUrlContent(url);
 	}
 
-//	private String getPostListContent(String board, String subjectid, int pageno, int startNumber) {
-//		String url = "http://www.newsmth.net/bbstcon.php?board=" + board
-//				+ "&gid=" + subjectid;
-//		if (pageno > 0) {
-//			url += "&pno=" + pageno;
-//		}
-//		if (startNumber > 0) {
-//			url += "&start=" + startNumber;
-//		}
-//		return crawler.getUrlContent(url);
-//	}
+	// private String getPostListContent(String board, String subjectid, int
+	// pageno, int startNumber) {
+	// String url = "http://www.newsmth.net/bbstcon.php?board=" + board
+	// + "&gid=" + subjectid;
+	// if (pageno > 0) {
+	// url += "&pno=" + pageno;
+	// }
+	// if (startNumber > 0) {
+	// url += "&start=" + startNumber;
+	// }
+	// return crawler.getUrlContent(url);
+	// }
 
 	public String getMainSubjectList(String board, int pageno, int type) {
 		String url = "";
 		if (type == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=6";
-		}
-		else if (type == SubjectListFragment.BOARD_TYPE_NORMAL) {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=0";
-		}
-		else if (type == SubjectListFragment.BOARD_TYPE_DIGEST) {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=1";
-		}
-		else {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=3";
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board
+					+ "&ftype=6";
+		} else if (type == SubjectListFragment.BOARD_TYPE_NORMAL) {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board
+					+ "&ftype=0";
+		} else if (type == SubjectListFragment.BOARD_TYPE_DIGEST) {
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board
+					+ "&ftype=1";
+		} else {// mark
+			url = "http://www.newsmth.net/bbsdoc.php?board=" + board
+					+ "&ftype=3";
 		}
 		if (pageno > 0) {
 			url = url + "&page=" + pageno;
 		}
 		return crawler.getUrlContent(url);
+	}
+
+	public String getMainSubjectListFromMobile(String board, int pageno,
+			int type) {
+		String url = "";
+		if (type == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			url = "http://m.newsmth.net/board/" + board;
+		} else if (type == SubjectListFragment.BOARD_TYPE_NORMAL) {
+			url = "http://m.newsmth.net/board/" + board + "/0";
+		} else if (type == SubjectListFragment.BOARD_TYPE_DIGEST) {
+			url = "http://m.newsmth.net/board/" + board + "/1";
+		} else {// mark
+			url = "http://m.newsmth.net/board/" + board + "/3";
+		}
+		if (pageno > 0) {
+			url = url + "?p=" + pageno;
+		}
+		return crawler.getUrlContentFromMobile(url);
 	}
 
 	public String getUserid() {

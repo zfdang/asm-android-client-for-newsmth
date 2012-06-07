@@ -33,20 +33,26 @@ public class SubjectListAdapter extends BaseAdapter {
 			layout = inflater.inflate(R.layout.subject_list_item, null);
 		}
 		
-		Subject subject = subjectList.get(subjectList.size() - position - 1);
+		Subject subject = subjectList.get(position);
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		authorTextView.setText(subject.getAuthor());
 		TextView titleTextView = (TextView) layout.findViewById(R.id.SubjectTitle);
 		String titleString = subject.getTitle();
 		if (subject.getType().toLowerCase().contains(Subject.TYPE_BOTTOM)) {
-			titleString = "<font color='red'>" + titleString + "</font>";
+			boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+			if (isLight) {
+				titleString = "<font color='#f00000'>" + titleString + "</font>";
+			} else {
+				titleString = "<font color='#e9f7fe'>" + titleString + "</font>";
+			}
+			
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
 		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
-		dateTextView.setText(subject.getDate().toLocaleString());
+		dateTextView.setText(subject.getDateString());
 		
 		layout.setTag(subject);
 		

@@ -48,14 +48,7 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 		titleTextView.setText(Html.fromHtml(titleString));
 		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
-		Date date = subject.getDate();
-		if (date.getYear() == 70) {
-			SimpleDateFormat formatter = new SimpleDateFormat("MMM ddd", Locale.CHINA);  
-			dateTextView.setText(formatter.format(date));
-		}
-		else {
-			dateTextView.setText(subject.getDate().toLocaleString());
-		}
+		dateTextView.setText(subject.getDateString());
 		
 		layout.setTag(subject);
 		
