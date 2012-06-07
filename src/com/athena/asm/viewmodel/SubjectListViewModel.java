@@ -5,6 +5,7 @@ import java.util.List;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
+import com.athena.asm.fragment.SubjectListFragment;
 import com.athena.asm.util.SmthSupport;
 
 public class SubjectListViewModel extends BaseViewModel {
@@ -13,7 +14,7 @@ public class SubjectListViewModel extends BaseViewModel {
 	private List<Subject> m_subjectList;
 	
 	private int m_currentPageNo = 1;
-	private int m_boardType = 0;
+	private int m_boardType = SubjectListFragment.BOARD_TYPE_SUBJECT;
 	
 	private boolean m_isFirstIn = true;
 	
@@ -121,11 +122,11 @@ public class SubjectListViewModel extends BaseViewModel {
 	}
 	
 	public void toggleBoardType() {
-		if (m_boardType == 0) {
-			m_boardType = 1;
+		if (m_boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			m_boardType = SubjectListFragment.BOARD_TYPE_NORMAL;
 		}
 		else {
-			m_boardType = 0;
+			m_boardType = SubjectListFragment.BOARD_TYPE_SUBJECT;
 		}
 	}
 	

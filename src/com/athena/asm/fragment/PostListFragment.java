@@ -28,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
@@ -41,14 +44,12 @@ import com.athena.asm.util.task.LoadPostTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
 
-public class PostListFragment extends SherlockFragment
-							  implements OnClickListener,
-							  			 OnTouchListener,
-										 OnLongClickListener, OnGestureListener,
-										 BaseViewModel.OnViewModelChangObserver {
+public class PostListFragment extends SherlockFragment implements
+		OnClickListener, OnTouchListener, OnLongClickListener,
+		OnGestureListener, BaseViewModel.OnViewModelChangObserver {
 
 	private LayoutInflater m_inflater;
-	
+
 	private PostListViewModel m_viewModel;
 
 	EditText m_pageNoEditText;
@@ -57,33 +58,35 @@ public class PostListFragment extends SherlockFragment
 	Button m_preButton;
 	Button m_goButton;
 	Button m_nextButton;
-	
+
 	private int m_screenHeight;
 	private ListView m_listView;
 
 	private GestureDetector m_GestureDetector;
-	
+
 	private boolean m_isNewInstance = false;
-	
+
 	private boolean m_isNewTouchStart = false;
 	private float m_touchStartX = 0;
 	private float m_touchStartY = 0;
-	
+
 	private float m_touchCurrentX = 0;
 	private float m_touchCurrentY = 0;
-	
+
+	private int m_startNumber = 0;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		
+
 		setRetainInstance(true);
 		m_isNewInstance = true;
 	}
-	
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		View postListView = inflater.inflate(R.layout.post_list, null);
 
@@ -112,18 +115,19 @@ public class PostListFragment extends SherlockFragment
 
 		m_listView = (ListView) postListView.findViewById(R.id.post_list);
 
-		m_viewModel.setBoardType(getActivity().getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0));
+		m_viewModel.setBoardType(getActivity().getIntent().getIntExtra(
+				StringUtility.BOARD_TYPE, 0));
 		m_viewModel.setIsToRefreshBoard(false);
 
 		m_GestureDetector = new GestureDetector(this);
 
 		return postListView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		boolean isNewSubject = false;
 		if (m_isNewInstance) {
 			Subject newSubject = (Subject) getActivity().getIntent()
@@ -131,37 +135,38 @@ public class PostListFragment extends SherlockFragment
 			isNewSubject = m_viewModel.updateSubject(newSubject);
 			m_isNewInstance = false;
 		}
-		
+
 		if (isNewSubject) {
-			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
-					0, false, false);
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+					m_viewModel.getCurrentSubject(), 0, false, false,
+					m_startNumber);
 			loadPostTask.execute();
-			((PostListActivity)getActivity()).showProgressDialog();
-		}
-		else {
+			((PostListActivity) getActivity()).showProgressDialog();
+		} else {
 			reloadPostList();
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		m_viewModel.unregisterViewModelChangeObserver(this);
-		
+
 		super.onDestroy();
 	}
-	
+
 	public void reloadPostList() {
 		if (m_viewModel.getPostList() == null) {
-			
+
 			m_viewModel.ensurePostExists();
-			
+
 			m_firstButton.setEnabled(false);
 			m_preButton.setEnabled(false);
 			m_nextButton.setEnabled(false);
 			m_lastButton.setEnabled(false);
 		}
 
-		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel.getPostList()));
+		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel
+				.getPostList()));
 
 		m_viewModel.updateCurrentPageNumberFromSubject();
 		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
@@ -173,6 +178,7 @@ public class PostListFragment extends SherlockFragment
 		if (m_viewModel.getBoardType() == 0) {
 			m_goButton.setVisibility(View.VISIBLE);
 			m_pageNoEditText.setVisibility(View.VISIBLE);
+			m_lastButton.setVisibility(View.GONE);
 			m_firstButton.setText(R.string.first_page);
 			m_lastButton.setText(R.string.last_page);
 			m_preButton.setText(R.string.pre_page);
@@ -180,6 +186,7 @@ public class PostListFragment extends SherlockFragment
 		} else {
 			m_goButton.setVisibility(View.GONE);
 			m_pageNoEditText.setVisibility(View.GONE);
+			m_lastButton.setVisibility(View.VISIBLE);
 			m_firstButton.setText(R.string.topic_first_page);
 			m_lastButton.setText(R.string.topic_all_page);
 			m_preButton.setText(R.string.topic_pre_page);
@@ -192,29 +199,32 @@ public class PostListFragment extends SherlockFragment
 			if (nextPage > 0) {
 				m_viewModel.getPreloadSubject().setCurrentPageNo(nextPage);
 				LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
-						m_viewModel.getPreloadSubject(), 0, true, false);
+						m_viewModel.getPreloadSubject(), 0, true, false,
+						m_startNumber);
 				loadPostTask.execute();
 			}
 		} else {
-			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getPreloadSubject(),
-					3, true, false);
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+					m_viewModel.getPreloadSubject(), 3, true, false,
+					m_startNumber);
 			loadPostTask.execute();
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {
 		case Activity.RESULT_OK:
 			Bundle b = data.getExtras();
-			m_viewModel.setIsToRefreshBoard(b.getBoolean(StringUtility.REFRESH_BOARD));
+			m_viewModel.setIsToRefreshBoard(b
+					.getBoolean(StringUtility.REFRESH_BOARD));
 			break;
 
 		default:
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		boolean isNext = false;
@@ -241,13 +251,13 @@ public class PostListFragment extends SherlockFragment
 				((View) view.getParent()).requestFocus();
 			}
 
-			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
-					0, false, isNext);
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+					m_viewModel.getCurrentSubject(), 0, false, isNext,
+					m_startNumber);
 			loadPostTask.execute();
-			((PostListActivity)getActivity()).showProgressDialog();
+			((PostListActivity) getActivity()).showProgressDialog();
 		} else {
 			int action = 0;
-			// int startNumber = 0;
 			if (view.getId() == R.id.btn_first_page) {
 				action = 1;
 			} else if (view.getId() == R.id.btn_pre_page) {
@@ -257,27 +267,29 @@ public class PostListFragment extends SherlockFragment
 				isNext = true;
 			} else if (view.getId() == R.id.btn_last_page) {
 				m_viewModel.setBoardType(0);
-				// startNumber =
-				// Integer.parseInt(currentSubject.getSubjectID());
+				m_startNumber = Integer.parseInt(m_viewModel
+						.getCurrentSubject().getSubjectID());
 				m_viewModel.updateSubjectIDFromTopicSubjectID();
 				m_viewModel.setSubjectCurrentPageNumber(1);
 			}
-			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
-					action, false, isNext);
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+					m_viewModel.getCurrentSubject(), action, false, isNext,
+					m_startNumber);
 			loadPostTask.execute();
-			((PostListActivity)getActivity()).showProgressDialog();
+			((PostListActivity) getActivity()).showProgressDialog();
 		}
 	}
-	
+
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		
-		if (changedPropertyName.equals(PostListViewModel.POSTLIST_PROPERTY_NAME)) {
+
+		if (changedPropertyName
+				.equals(PostListViewModel.POSTLIST_PROPERTY_NAME)) {
 			reloadPostList();
-			((PostListActivity)getActivity()).dismissProgressDialog();
+			((PostListActivity) getActivity()).dismissProgressDialog();
 		}
-		
+
 	}
 
 	@Override
@@ -298,7 +310,7 @@ public class PostListFragment extends SherlockFragment
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		
+
 	}
 
 	@Override
@@ -311,9 +323,9 @@ public class PostListFragment extends SherlockFragment
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		
+
 	}
-	
+
 	private void setListOffset(int jump) {
 		int index = m_listView.getFirstVisiblePosition();
 		Log.d("move", String.valueOf(index));
@@ -351,7 +363,8 @@ public class PostListFragment extends SherlockFragment
 			}
 			final String authorID = (String) ((TextView) relativeLayout
 					.findViewById(R.id.AuthorID)).getText();
-			final Post post = ((PostListAdapter.ViewHolder)relativeLayout.getTag()).post;
+			final Post post = ((PostListAdapter.ViewHolder) relativeLayout
+					.getTag()).post;
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.post_reply_post));
 			itemList.add(getString(R.string.post_reply_mail));
@@ -379,7 +392,8 @@ public class PostListFragment extends SherlockFragment
 								"http://www.newsmth.net/bbspst.php?board="
 										+ post.getBoard() + "&reid="
 										+ post.getSubjectID());
-						intent.putExtra(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST);
+						intent.putExtra(StringUtility.WRITE_TYPE,
+								WritePostActivity.TYPE_POST);
 						intent.putExtra(StringUtility.IS_REPLY, true);
 						// activity.startActivity(intent);
 						startActivityForResult(intent, 0);
@@ -405,23 +419,26 @@ public class PostListFragment extends SherlockFragment
 						startActivity(intent);
 						break;
 					case 3:
-						ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+						ClipboardManager clip = (ClipboardManager) getActivity()
+								.getSystemService(Context.CLIPBOARD_SERVICE);
 						clip.setText(authorID);
 						Toast.makeText(getActivity(),
 								"ID ： " + authorID + "已复制到剪贴板",
 								Toast.LENGTH_SHORT).show();
 						break;
 					case 4:
-						ClipboardManager clip2 = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+						ClipboardManager clip2 = (ClipboardManager) getActivity()
+								.getSystemService(Context.CLIPBOARD_SERVICE);
 						clip2.setText(post.getTextContent());
 						Toast.makeText(getActivity(), "帖子内容已复制到剪贴板",
 								Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
-						boolean result = m_viewModel.getSmthSupport().forwardPostToMailBox(post);
+						boolean result = m_viewModel.getSmthSupport()
+								.forwardPostToMailBox(post);
 						if (result) {
-							Toast.makeText(getActivity(),
-									"已转寄到自己信箱中", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getActivity(), "已转寄到自己信箱中",
+									Toast.LENGTH_SHORT).show();
 						}
 						break;
 					case 6:
@@ -433,8 +450,10 @@ public class PostListFragment extends SherlockFragment
 								"http://www.newsmth.net/bbsedit.php?board="
 										+ post.getBoard() + "&id="
 										+ post.getSubjectID() + "&ftype=");
-						intent.putExtra(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST_EDIT);
-						intent.putExtra(StringUtility.TITLE, post.getTitle().replace("主题:", ""));
+						intent.putExtra(StringUtility.WRITE_TYPE,
+								WritePostActivity.TYPE_POST_EDIT);
+						intent.putExtra(StringUtility.TITLE, post.getTitle()
+								.replace("主题:", ""));
 						startActivityForResult(intent, 0);
 					default:
 						break;
@@ -451,34 +470,57 @@ public class PostListFragment extends SherlockFragment
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		boolean isConsumed = m_GestureDetector.onTouchEvent(event);
-		if (event.getAction() == MotionEvent.ACTION_CANCEL ||
-				event.getAction() == MotionEvent.ACTION_UP) {
+		if (event.getAction() == MotionEvent.ACTION_CANCEL
+				|| event.getAction() == MotionEvent.ACTION_UP) {
 			if (m_isNewTouchStart) {
 				m_isNewTouchStart = false;
 				final int flingMinXDistance = 100, flingMaxYDistance = 100;
-				if (m_touchCurrentX - m_touchStartX > flingMinXDistance 
+				if (m_touchCurrentX - m_touchStartX > flingMinXDistance
 						&& Math.abs(m_touchCurrentY - m_touchStartY) < flingMaxYDistance) {
 					// Fling left
-					Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT)
+							.show();
 					m_nextButton.performClick();
-				} else if (m_touchStartX - m_touchCurrentX > flingMinXDistance 
+				} else if (m_touchStartX - m_touchCurrentX > flingMinXDistance
 						&& Math.abs(m_touchStartY - m_touchCurrentY) < flingMaxYDistance) {
 					// Fling right
-					Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT)
+							.show();
 					m_preButton.performClick();
 				}
 			}
-			
+
 		}
 		return isConsumed;
 	}
-	
+
 	private void refreshPostList() {
-		LoadPostTask loadPostTask = new LoadPostTask(m_viewModel, m_viewModel.getCurrentSubject(),
-				0, false, false);
+		LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+				m_viewModel.getCurrentSubject(), 0, false, false, m_startNumber);
 		loadPostTask.execute();
-		((PostListActivity)getActivity()).showProgressDialog();
+		((PostListActivity) getActivity()).showProgressDialog();
 	}
 
-	
+	public static final int REFRESH_SUBJECTLIST = Menu.FIRST;
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
+				.setIcon(
+						isLight ? R.drawable.refresh_inverse
+								: R.drawable.refresh)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case REFRESH_SUBJECTLIST:
+			refreshPostList();
+			break;
+		}
+		return true;
+	}
 }

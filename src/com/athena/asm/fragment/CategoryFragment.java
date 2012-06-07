@@ -8,16 +8,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.data.Board;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadCategoryTask;
@@ -76,7 +81,7 @@ public class CategoryFragment extends SherlockFragment implements
 	}
 
 	public void reloadCategory() {
-		if (m_viewModel.getBoardFullStrings() == null) {
+		if (m_viewModel.getCategoryList() == null) {
 			LoadCategoryTask loadCategoryTask = new LoadCategoryTask(
 					getActivity(), m_viewModel);
 			loadCategoryTask.execute();
@@ -91,11 +96,35 @@ public class CategoryFragment extends SherlockFragment implements
 
 			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout
 					.findViewById(R.id.search_board);
-			textView.setCompletionHint("请输入版面英文名");
+			textView.setCompletionHint("请输入版面英文或中文名");
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 					getActivity(), android.R.layout.simple_dropdown_item_1line,
 					m_viewModel.getBoardFullStrings());
 			textView.setAdapter(adapter);
+
+			ListView categoryList = (ListView) layout
+					.findViewById(R.id.category_list);
+			categoryList.setAdapter(new CategoryListAdapter(getActivity()
+					.getLayoutInflater(), m_viewModel.getCategoryList()));
+			categoryList.setFastScrollEnabled(true);
+			categoryList.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View view,
+						int arg2, long arg3) {
+					Intent intent = new Intent();
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(StringUtility.BOARD,
+							(Board) view.getTag());
+					HomeActivity.m_application.addRecentBoard((Board) view
+							.getTag());
+					intent.putExtras(bundle);
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.SubjectListActivity");
+					startActivity(intent);
+				}
+				
+			});
 		}
 	}
 
@@ -139,6 +168,8 @@ public class CategoryFragment extends SherlockFragment implements
 			InputMethodManager inputManager = (InputMethodManager) getActivity()
 					.getSystemService(SherlockActivity.INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+
+			HomeActivity.m_application.addRecentBoard(board);
 
 			Intent intent = new Intent();
 			Bundle bundle = new Bundle();

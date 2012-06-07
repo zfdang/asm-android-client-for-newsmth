@@ -214,13 +214,23 @@ public class HomeViewModel extends BaseViewModel {
 	private void readBoadInfo(List<Board> boards) {
 		for (Iterator<Board> iterator = boards.iterator(); iterator.hasNext();) {
 			Board board = (Board) iterator.next();
-			if (board != null && board.getEngName() != null) {
-				if (!m_boardFullStrings.contains(board.getEngName())) {
-					m_boardFullStrings.add(board.getEngName());
+			if (board != null) {
+				if (board.getEngName() != null) {
+					if (!m_boardFullStrings.contains(board.getEngName())) {
+						m_boardFullStrings.add(board.getEngName());
+					}
+					m_boardHashMap.put(board.getEngName().toLowerCase(), board);
 				}
-				m_boardHashMap.put(board.getEngName().toLowerCase(), board);
+				if (board.getChsName() != null) {
+					if (!m_boardFullStrings.contains(board.getChsName())) {
+						m_boardFullStrings.add(board.getChsName());
+					}
+					m_boardHashMap.put(board.getChsName(), board);
+				}
 			}
-			readBoadInfo(board.getChildBoards());
+			if (board.getChildBoards() != null) {
+				readBoadInfo(board.getChildBoards());
+			}
 		}
 	}
 	

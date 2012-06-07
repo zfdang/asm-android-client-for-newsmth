@@ -14,7 +14,6 @@
 	    android:layout_height="fill_parent"
 	    android:gravity="center_vertical"
 	    android:paddingTop="1dp"
-	    android:textColor="@color/status_text"
 	    android:layout_marginRight="50dp"
 	    android:textSize="25dp" />
 

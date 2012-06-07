@@ -1,10 +1,12 @@
 package com.athena.asm.data;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 
-public class Board implements Serializable {
-	private static final long serialVersionUID = -4618388540751724812L;
+public class Board implements Externalizable {
 	private String boardID;
 	private String boardEngName;
 	private String boardChsName;
@@ -99,5 +101,34 @@ public class Board implements Serializable {
 
 	public ArrayList<Board> getChildBoards() {
 		return childBoards;
+	}
+
+	@Override
+	public void readExternal(ObjectInput input) throws IOException,
+			ClassNotFoundException {
+		boardID = (String) input.readObject();
+		boardEngName = (String) input.readObject();
+		boardChsName = (String) input.readObject();
+		categoryName = (String) input.readObject();
+		moderator = (String) input.readObject();
+		isDirectory = input.readBoolean();
+		directoryName = (String) input.readObject();
+		currentPageNo = input.readInt();
+		totalPageNo = input.readInt();
+		childBoards = (ArrayList<Board>) input.readObject();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput output) throws IOException {
+		output.writeObject(boardID);
+		output.writeObject(boardEngName);
+		output.writeObject(boardChsName);
+		output.writeObject(categoryName);
+		output.writeObject(moderator);
+		output.writeBoolean(isDirectory);
+		output.writeObject(directoryName);
+		output.writeInt(currentPageNo);
+		output.writeInt(totalPageNo);
+		output.writeObject(childBoards);
 	}
 }

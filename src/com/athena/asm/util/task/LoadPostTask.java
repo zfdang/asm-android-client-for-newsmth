@@ -15,19 +15,19 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private boolean m_isSilent;
 	private boolean m_isUsePreload;
 	private Subject m_subject;
+	private int m_startNumber;
 	
 	private PostListViewModel m_viewModel;
 
 	public LoadPostTask(PostListViewModel viewModel, Subject subject, int action, 
-			boolean isSilent, boolean isUsePreload) {
+			boolean isSilent, boolean isUsePreload, int startNumber) {
 		m_boardType = viewModel.getBoardType();
 		m_action = action;
 		m_isSilent = isSilent;
 		m_isUsePreload = isUsePreload;
 		m_subject = subject;
-		
 		m_viewModel = viewModel;
-		
+		m_startNumber = startNumber;
 	}
 
 	@Override
@@ -37,8 +37,11 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private List<Post> getPostList() {
 		List<Post> postList = null;
 		if (m_boardType == 0) {
-			postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, HomeActivity.m_application.getBlackList());
-			//postListActivity.postList = postListActivity.smthSupport.getPostList(subject, HomeActivity.application.getBlackList(), startNumber);
+			if (m_startNumber == 0) {
+				postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, HomeActivity.m_application.getBlackList());
+			} else {
+				postList = m_viewModel.getSmthSupport().getPostList(m_subject, HomeActivity.m_application.getBlackList(), m_startNumber);
+			}
 		}
 		else {
 			if (m_action == 0) {

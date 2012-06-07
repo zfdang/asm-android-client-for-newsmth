@@ -26,6 +26,7 @@ import com.athena.asm.data.MailBox;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
+import com.athena.asm.fragment.SubjectListFragment;
 
 public class SmthSupport {
 	public String userid;
@@ -1056,13 +1057,13 @@ public class SmthSupport {
 
 	public String getMainSubjectList(String board, int pageno, int type) {
 		String url = "";
-		if (type == 0) {
+		if (type == SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=6";
 		}
-		else if (type == 1) {
+		else if (type == SubjectListFragment.BOARD_TYPE_NORMAL) {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=0";
 		}
-		else if (type == 2) {
+		else if (type == SubjectListFragment.BOARD_TYPE_DIGEST) {
 			url = "http://www.newsmth.net/bbsdoc.php?board=" + board + "&ftype=1";
 		}
 		else {

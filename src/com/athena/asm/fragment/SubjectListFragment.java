@@ -45,6 +45,11 @@ public class SubjectListFragment extends SherlockFragment implements
 	private EditText m_pageNoEditText;
 
 	private boolean m_isNewInstance = false;
+	
+	public static int BOARD_TYPE_SUBJECT = 0;
+	public static int BOARD_TYPE_NORMAL = 1;
+	public static int BOARD_TYPE_DIGEST = 2;
+	public static int BOARD_TYPE_MARK = 3;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,8 @@ public class SubjectListFragment extends SherlockFragment implements
 
 		Button firstButton = (Button) subjectListView
 				.findViewById(R.id.btn_first_page);
-		firstButton.setOnClickListener(this);
+		firstButton.setVisibility(View.GONE);
+		//firstButton.setOnClickListener(this);
 		Button lastButton = (Button) subjectListView
 				.findViewById(R.id.btn_last_page);
 		lastButton.setOnClickListener(this);

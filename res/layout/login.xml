@@ -33,7 +33,6 @@
 
         <TextView
             android:id="@+id/login_user_input"
-            style="@style/normalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -52,7 +51,6 @@
 
         <TextView
             android:id="@+id/login_password_input"
-            style="@style/normalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/username_edit"
