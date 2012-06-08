@@ -543,14 +543,14 @@ public class SmthSupport {
 			String type = matcher.group(1).trim();
 			String author = matcher.group(2);
 			String dateStr = matcher.group(3).replace("&nbsp;", " ");
-//			SimpleDateFormat formatter = new SimpleDateFormat("MMM dd",
-//					Locale.US);
-//			Date date;
-//			try {
-//				date = formatter.parse(dateStr);
-//			} catch (ParseException e) {
-//				date = new Date();
-//			}
+			// SimpleDateFormat formatter = new SimpleDateFormat("MMM dd",
+			// Locale.US);
+			// Date date;
+			// try {
+			// date = formatter.parse(dateStr);
+			// } catch (ParseException e) {
+			// date = new Date();
+			// }
 			String subjectid = matcher.group(4);
 			String title = matcher.group(5);
 
@@ -687,26 +687,24 @@ public class SmthSupport {
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_DIGEST) {
 			subPattern = "/1\"";
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_MARK) {
-			subPattern = "/3\" class=\"m\"";
+			subPattern = "/3\"";
 		}
-		Pattern topPattern = Pattern.compile("<a href=\"/article/" + boardname
-				+ "/(\\d+)" + subPattern + " class=\"top\">([^<>]+)");
-		Matcher topMatcher = topPattern.matcher(result);
-		index = 0;
-		while (topMatcher.find()) {
-			subjectList.get(index).setSubjectID(topMatcher.group(1));
-			subjectList.get(index).setTitle(topMatcher.group(2));
-			subjectList.get(index).setType(Subject.TYPE_BOTTOM);
-			index++;
-		}
-
-		// <a href="/article/PocketLife/1059521">title
 		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
-				+ boardname + "/(\\d+)" + subPattern + ">([^<>]+)");
+				+ boardname + "/(\\d+)" + subPattern + "([^<>]*)>([^<>]+)");
 		Matcher subjectMatcher = subjectPattern.matcher(result);
+		index = 0;
 		while (subjectMatcher.find()) {
-			subjectList.get(index).setSubjectID(subjectMatcher.group(1));
-			subjectList.get(index).setTitle(subjectMatcher.group(2));
+			if (subjectMatcher.groupCount() == 2) {
+				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
+				subjectList.get(index).setTitle(subjectMatcher.group(2));
+			} else {
+				String type = subjectMatcher.group(2);
+				if (type.contains("top")) {
+					subjectList.get(index).setType(Subject.TYPE_BOTTOM);
+				}
+				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
+				subjectList.get(index).setTitle(subjectMatcher.group(3));
+			}
 			index++;
 			if (index > subjectList.size()) {
 				break;
@@ -924,21 +922,21 @@ public class SmthSupport {
 		int currentPageNo = subject.getCurrentPageNo();
 		boolean isInSubject = false;
 		if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-			url = "http://m.newsmth.net/article/"
-					+ subject.getBoardEngName() + "/" + subject.getSubjectID();
-			
+			url = "http://m.newsmth.net/article/" + subject.getBoardEngName()
+					+ "/" + subject.getSubjectID();
+
 			if (currentPageNo > 0) {
 				url += "?p=" + currentPageNo;
 			}
 			isInSubject = true;
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_DIGEST) {
-			url = "http://m.newsmth.net/article/"
-					+ subject.getBoardEngName() + "/single/" + subject.getSubjectID() + "/1";
+			url = "http://m.newsmth.net/article/" + subject.getBoardEngName()
+					+ "/single/" + subject.getSubjectID() + "/1";
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_MARK) {
-			url = "http://m.newsmth.net/article/"
-					+ subject.getBoardEngName() + "/single/" + subject.getSubjectID() + "/3";
+			url = "http://m.newsmth.net/article/" + subject.getBoardEngName()
+					+ "/single/" + subject.getSubjectID() + "/3";
 		}
-		
+
 		String result = crawler.getUrlContentFromMobile(url);
 		if (result == null || result.contains("指定的文章不存在或链接错误")
 				|| result.contains("您无权阅读此版面")) {
