@@ -60,7 +60,7 @@ public class MailViewModel extends BaseViewModel {
 		case 2:
 			return "垃圾箱";
 		case 4:
-			return "AT我";
+			return "＠我";
 		case 5:
 			return "回我";
 		default:

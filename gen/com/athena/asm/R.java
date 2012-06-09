@@ -974,6 +974,7 @@ containing a value of this type.
         public static final int login_user_input=0x7f060041;
         public static final int mailNumber=0x7f06004f;
         public static final int mail_list=0x7f06004a;
+        public static final int menu_item_share_action_provider_action_bar=0x7f06009a;
         public static final int normal=0x7f060001;
         public static final int onlineStatusLayout=0x7f060079;
         public static final int password_edit=0x7f060044;
@@ -1090,6 +1091,9 @@ containing a value of this type.
         public static final int subject_list_activity=0x7f030032;
         public static final int subject_list_item=0x7f030033;
     }
+    public static final class menu {
+        public static final int share_action_provider=0x7f0e0000;
+    }
     public static final class raw {
         public static final int categories=0x7f050000;
     }
@@ -1128,6 +1132,7 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0009;
+        public static final int action_bar_share_with=0x7f0b007d;
         public static final int app_name=0x7f0b000a;
         public static final int attach_add=0x7f0b004b;
         public static final int attach_delete=0x7f0b004d;

@@ -131,6 +131,8 @@
 	<string name="pull_to_refresh_refreshing_label">读取中</string>
 	<string name="pull_to_refresh_tap_label">点击刷新</string>
 	
+	<string name="action_bar_share_with">分享</string>
+	
 </resources>
 
 

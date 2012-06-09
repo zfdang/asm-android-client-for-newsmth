@@ -28,9 +28,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
@@ -76,6 +78,8 @@ public class PostListFragment extends SherlockFragment implements
 	private float m_touchCurrentY = 0;
 
 	private int m_startNumber = 0;
+	
+	private ShareActionProvider actionProvider;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +135,7 @@ public class PostListFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 
 		boolean isNewSubject = false;
-		
+
 		String url = "";
 		if (m_isNewInstance) {
 			Subject newSubject = (Subject) getActivity().getIntent()
@@ -140,14 +144,17 @@ public class PostListFragment extends SherlockFragment implements
 				isNewSubject = m_viewModel.updateSubject(newSubject);
 			} else {
 				m_isFromReplyOrAt = true;
-				Mail mail = (Mail)getActivity().getIntent().getSerializableExtra(StringUtility.MAIL);
+				Mail mail = (Mail) getActivity().getIntent()
+						.getSerializableExtra(StringUtility.MAIL);
 				if (mail.getBoxType() == 4) {
-					url = "http://m.newsmth.net/refer/at/read?index=" + mail.getNumber();
+					url = "http://m.newsmth.net/refer/at/read?index="
+							+ mail.getNumber();
 				} else {
-					url = "http://m.newsmth.net/refer/reply/read?index=" + mail.getNumber();
+					url = "http://m.newsmth.net/refer/reply/read?index="
+							+ mail.getNumber();
 				}
 			}
-		
+
 			m_isNewInstance = false;
 		}
 
@@ -185,6 +192,8 @@ public class PostListFragment extends SherlockFragment implements
 			m_nextButton.setEnabled(false);
 			m_lastButton.setEnabled(false);
 		}
+		
+		actionProvider.setShareIntent(createShareIntent());
 
 		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel
 				.getPostList()));
@@ -204,7 +213,8 @@ public class PostListFragment extends SherlockFragment implements
 			m_lastButton.setText(R.string.last_page);
 			m_preButton.setText(R.string.pre_page);
 			m_nextButton.setText(R.string.next_page);
-		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt) {
+		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL
+				&& !m_isFromReplyOrAt) {
 			m_goButton.setVisibility(View.GONE);
 			m_pageNoEditText.setVisibility(View.GONE);
 			m_lastButton.setVisibility(View.VISIBLE);
@@ -524,7 +534,8 @@ public class PostListFragment extends SherlockFragment implements
 
 	private void refreshPostList() {
 		LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
-				m_viewModel.getCurrentSubject(), 0, false, false, m_startNumber, null);
+				m_viewModel.getCurrentSubject(), 0, false, false,
+				m_startNumber, null);
 		loadPostTask.execute();
 		((PostListActivity) getActivity()).showProgressDialog();
 	}
@@ -534,21 +545,48 @@ public class PostListFragment extends SherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+		((SherlockFragmentActivity) getActivity()).getSupportMenuInflater().inflate(R.menu.share_action_provider, menu);
+		
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);
+		actionProvider = (ShareActionProvider) actionItem.getActionProvider();
+        actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// super.onOptionsItemSelected(item);
-		switch (item.getItemId()) {
-		case REFRESH_SUBJECTLIST:
-			refreshPostList();
-			break;
+		if (!m_isFromReplyOrAt) {
+			switch (item.getItemId()) {
+			case REFRESH_SUBJECTLIST:
+				refreshPostList();
+				break;
+			}
 		}
+
 		return true;
 	}
+	
+	/**
+     * Creates a sharing {@link Intent}.
+     *
+     * @return The sharing intent.
+     */
+    private Intent createShareIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        if (m_viewModel.getCurrentSubject() != null) {
+        	Subject subject = m_viewModel.getCurrentSubject();
+        	shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject.getTitle());
+        	shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
+        			" http://m.newsmth.net/article/" + subject.getBoardEngName()
+					+ "/" + subject.getSubjectID());
+		}
+        return shareIntent;
+    }
 }
