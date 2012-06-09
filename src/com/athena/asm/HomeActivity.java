@@ -140,7 +140,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 			intent.setClassName("com.athena.asm",
 					"com.athena.asm.LoginActivity");
 			startActivity(intent);
-			finishAndClean();
+			finish();
 		}
 	}
 
@@ -179,7 +179,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 			intent.setClassName("com.athena.asm",
 					"com.athena.asm.LoginActivity");
 			startActivity(intent);
-			finishAndClean();
+			finish();
 		} else {
 			m_viewModel.updateLoginStatus();
 			init();
@@ -261,7 +261,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 					intent.setClassName("com.athena.asm",
 							"com.athena.asm.LoginActivity");
 					startActivity(intent);
-					finishAndClean();
+					finish();
 				} else {
 //					Intent intent = new Intent(context, LogoutService.class);
 //					PendingIntent pending = PendingIntent.getService(context,
@@ -300,7 +300,6 @@ public class HomeActivity extends SherlockFragmentActivity {
 				// logout();
 			} else {
 				finishAndClean();
-				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 			return true;
 		} else {
