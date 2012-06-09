@@ -18,10 +18,12 @@ public class MailListAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
 	private List<Mail> mailList;
+	private int boxType;
 
-	public MailListAdapter(LayoutInflater inflater, List<Mail> mailList) {
+	public MailListAdapter(LayoutInflater inflater, List<Mail> mailList, int boxType) {
 		this.inflater = inflater;
 		this.mailList = mailList;
+		this.boxType = boxType;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -33,7 +35,12 @@ public class MailListAdapter extends BaseAdapter {
 			layout = inflater.inflate(R.layout.mail_list_item, null);
 		}
 		
-		Mail mail = mailList.get(mailList.size() - position - 1);
+		Mail mail;
+		if (boxType < 3) {
+			mail = mailList.get(mailList.size() - position - 1);
+		} else {
+			mail = mailList.get(position);
+		}
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.SenderID);
 		if (mail.getStatus().length() > 0) {
@@ -76,7 +83,11 @@ public class MailListAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return mailList.get(position);
+		if (boxType < 3) {
+			return mailList.get(position);
+		} else {
+			return mailList.get(mailList.size() - position - 1);
+		}
 	}
 
 	@Override

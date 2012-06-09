@@ -26,6 +26,7 @@ import com.athena.asm.data.Post;
 import com.athena.asm.data.Profile;
 import com.athena.asm.data.Subject;
 import com.athena.asm.fragment.SubjectListFragment;
+import com.athena.asm.viewmodel.MailViewModel;
 
 public class SmthSupport {
 	public String userid;
@@ -249,6 +250,28 @@ public class SmthSupport {
 
 	}
 
+	public String checkNewReplyOrAt() {
+		String result = null;
+		String content = crawler
+				.getUrlContentFromMobile("http://m.newsmth.net/");
+		if (content.contains(">@我(")) {
+			result = "新@";
+		} else if (content.contains(">回我(")) {
+			result = "新回复";
+		}
+		return result;
+	}
+
+	public boolean checkNewMail() {
+		String content = crawler
+				.getUrlContentFromMobile("http://m.newsmth.net/");
+		if (content.contains("邮箱(新)")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * 获取邮箱信息
 	 * 
@@ -258,6 +281,12 @@ public class SmthSupport {
 		MailBox mailBox = new MailBox();
 		String content = crawler
 				.getUrlContent("http://www.newsmth.net/bbsmail.php");
+		if (content.contains("您有未读邮件")) {
+			mailBox.setHavingNewMail(true);
+		} else {
+			mailBox.setHavingNewMail(false);
+		}
+
 		Pattern inboxPattern = Pattern
 				.compile("<td><a href=\"bbsmailbox.php\\?path=\\.DIR&title=%CA%D5%BC%FE%CF%E4\" class=\"ts2\">[^<>]+</a></td>\\s<td>(\\d+)</td>");
 		Matcher inboxMatcher = inboxPattern.matcher(content);
@@ -275,6 +304,14 @@ public class SmthSupport {
 		Matcher trashboxMatcher = trashboxPattern.matcher(content);
 		while (trashboxMatcher.find()) {
 			mailBox.setTrashboxNumber(Integer.parseInt(trashboxMatcher.group(1)));
+		}
+
+		content = crawler
+				.getUrlContentFromMobile("http://m.newsmth.net/refer/at");
+		if (content.contains(">@我(")) {
+			mailBox.setHavingNewAt(true);
+		} else if (content.contains(">回我(")) {
+			mailBox.setHavingNewReply(true);
 		}
 
 		return mailBox;
@@ -409,6 +446,86 @@ public class SmthSupport {
 			Mail mail = mailList.get(counter);
 			mail.setSizeString(matchString);
 			counter++;
+		}
+
+		return mailList;
+	}
+
+	public List<Mail> getReplyOrAtList(MailViewModel mailViewModel,
+			int boxType, int startNumber) {
+		String urlString = "";
+		switch (boxType) {
+		case 4:
+			urlString = "http://m.newsmth.net/refer/at";
+			break;
+		case 5:
+			urlString = "http://m.newsmth.net/refer/reply";
+			break;
+		default:
+			break;
+		}
+
+		if (startNumber != -1) {
+			urlString += "?p=" + startNumber;
+		}
+
+		List<Mail> mailList = new ArrayList<Mail>();
+		String result = crawler.getUrlContentFromMobile(urlString);
+		int counter = 0;
+
+		// <div><a href="/refer/reply/read?index=
+		Pattern itemPattern;
+		if (boxType == 4) {
+			itemPattern = Pattern
+					.compile("<div><a href=\"/refer/at/read\\?index=(\\d+)\"([^<>]*)>([^<>]+)");
+		} else {
+			itemPattern = Pattern
+					.compile("<div><a href=\"/refer/reply/read\\?index=(\\d+)\"([^<>]*)>([^<>]+)");
+		}
+		Matcher itemMatcher = itemPattern.matcher(result);
+		while (itemMatcher.find()) {
+			Mail mail = new Mail();
+			mail.setBoxType(boxType);
+			int number = Integer.parseInt(itemMatcher.group(1));
+			mail.setNumber(number);
+			if (itemMatcher.groupCount() == 2) {
+				mail.setUnread(false);
+				mail.setTitle(itemMatcher.group(2));
+			} else {
+				String type = itemMatcher.group(2);
+				if (type.contains("top")) {
+					mail.setUnread(true);
+				} else {
+					mail.setUnread(false);
+				}
+
+				mail.setTitle(itemMatcher.group(3));
+			}
+
+			mailList.add(mail);
+		}
+
+		// 2012-05-28<a href="/user/query/
+		Pattern userIDPattern = Pattern
+				.compile("([^<>]+)<a href=\"/user/query/([^<>]+)\"");
+		Matcher userIDMatcher = userIDPattern.matcher(result);
+		int index = 0;
+		while (userIDMatcher.find()) {
+			String dateString = userIDMatcher.group(1).trim();
+			mailList.get(index).setDateString(dateString.replace("&nbsp;", ""));
+			mailList.get(index).setSenderID(userIDMatcher.group(2));
+			index++;
+		}
+
+		// / <a class="plant">1/1272</a>
+		Pattern pagePattern = Pattern
+				.compile("<a class=\"plant\">(\\d+)/(\\d+)");
+		Matcher pageMatcher = pagePattern.matcher(result);
+		if (pageMatcher.find()) {
+			mailViewModel.setCurrentPageNo(Integer.parseInt(pageMatcher
+					.group(1)));
+			mailViewModel
+					.setTotalPageNo(Integer.parseInt(pageMatcher.group(2)));
 		}
 
 		return mailList;
@@ -654,7 +771,7 @@ public class SmthSupport {
 			board.setTotalPageNo(Integer.parseInt(pageMatcher.group(2)));
 		}
 
-		// 2012-05-28<a userid href="/user/query/
+		// 2012-05-28<a href="/user/query/
 		Pattern userIDPattern = Pattern
 				.compile("([^<>]+)<a href=\"/user/query/([^<>]+)\"");
 		Matcher userIDMatcher = userIDPattern.matcher(result);
@@ -722,6 +839,125 @@ public class SmthSupport {
 		}
 
 		return subjectList;
+	}
+
+	public List<Post> getSinglePostListFromMobileUrl(Subject subject, String url) {
+		String result = crawler.getUrlContentFromMobile(url);
+		if (result == null || result.contains("指定的文章不存在或链接错误")
+				|| result.contains("您无权阅读此版面")) {
+			return null;
+		}
+
+		List<Post> postList = new ArrayList<Post>();
+		Post post = new Post();
+
+		// <a href="/article/NewSoftware/single/68557">楼主
+		Pattern infoPattern = Pattern
+				.compile("<a href=\"/article/([^<>]+)/single/(\\d+)\">楼主");
+		Matcher infoMatcher = infoPattern.matcher(result);
+		if (infoMatcher.find()) {
+			subject.setBoardEngName(infoMatcher.group(1));
+			subject.setTopicSubjectID(infoMatcher.group(2));
+			subject.setCurrentPageNo(1);
+			subject.setType(" ");
+		}
+		// subject.setBoardID(board.getBoardID());
+
+		// <a userid href="/user/query/
+		Pattern userIDPattern = Pattern
+				.compile("<a href=\"/user/query/([^<>]+)\"");
+		Matcher userIDMatcher = userIDPattern.matcher(result);
+
+		if (userIDMatcher.find()) {
+			post.setTopicSubjectID(subject.getTopicSubjectID());
+			post.setBoardID(subject.getBoardID());
+			post.setBoard(subject.getBoardEngName());
+			String author = userIDMatcher.group(1);
+			post.setAuthor(author);
+			subject.setAuthor(author);
+		}
+
+		// <a href="/article/NewExpress/post/11111">回复
+		Pattern subjectPattern = Pattern.compile("<a href=\"/article/"
+				+ subject.getBoardEngName() + "/post/(\\d+)\\?s=1\"");
+		Matcher subjectMatcher = subjectPattern.matcher(result);
+		if (subjectMatcher.find()) {
+			post.setSubjectID(subjectMatcher.group(1));
+			subject.setSubjectID(post.getSubjectID());
+		}
+
+		// <a class="plant">2012-02-23 00:16:41</a>
+		Pattern datePattern = Pattern
+				.compile("<a class=\"plant\">(\\d)([^<>]+)</a>");
+		Matcher dateMatcher = datePattern.matcher(result);
+		if (dateMatcher.find()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				post.setDate((java.util.Date) sdf.parse(dateMatcher.group(1)
+						+ dateMatcher.group(2)));
+				subject.setDateString(dateMatcher.group(1)
+						+ dateMatcher.group(2));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// <li class="f">title</li>
+		Pattern titlePattern = Pattern.compile("<li class=\"f\">([^<>]+)</li>");
+		Matcher titleMatcher = titlePattern.matcher(result);
+		String titleString = "";
+		if (titleMatcher.find()) {
+			titleString = Html.fromHtml(titleMatcher.group(1)).toString();
+			post.setTitle(titleString);
+			subject.setTitle(titleString);
+		}
+
+		// post content
+		Pattern contentPattern = Pattern
+				.compile("<div class=\"sp\">(.*?)</div>");
+		Matcher contentMatcher = contentPattern.matcher(result);
+		if (contentMatcher.find()) {
+			String contentString = contentMatcher.group(1);
+			Object[] objects = StringUtility
+					.parseMobilePostContent(contentString);
+			post.setContent((String) objects[0]);
+			ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
+			ArrayList<String> attachList = (ArrayList<String>) objects[1];
+			for (Iterator<String> iterator = attachList.iterator(); iterator
+					.hasNext();) {
+				String attach = (String) iterator.next();
+				Attachment innerAtt = new Attachment();
+
+				if (attach.contains("<img")) {
+					Pattern urlPattern = Pattern
+							.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
+					Matcher urlMatcher = urlPattern.matcher(attach);
+					if (urlMatcher.find()) {
+						String urlString = urlMatcher.group(1);
+						innerAtt.setMobileUrlString(urlString);
+						innerAtt.setName(urlString.substring(urlString
+								.lastIndexOf("/") + 1) + ".jpg");
+					}
+				} else {
+					Pattern urlPattern = Pattern
+							.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
+					Matcher urlMatcher = urlPattern.matcher(attach);
+					if (urlMatcher.find()) {
+						innerAtt.setMobileUrlString(urlMatcher.group(1));
+						innerAtt.setName(urlMatcher.group(2));
+					}
+				}
+
+				innerAtt.setMobileType(true);
+
+				attachFiles.add(innerAtt);
+			}
+			post.setAttachFiles(attachFiles);
+		}
+
+		postList.add(post);
+
+		return postList;
 	}
 
 	/**

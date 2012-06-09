@@ -41,6 +41,10 @@ public class aSMApplication extends Application {
 	private String currentUserID = "";
 	private String defaultTab = StringUtility.TAB_GUIDANCE;
 	private String defaultBoardType = "001";
+	
+	private boolean isShowCheck = true;
+	private boolean isUseVibrate = true;
+	private String checkInterval = "3";
 
 	private int lastLaunchVersionCode = 4;
 	private int currentVersionCode = 5;
@@ -131,6 +135,24 @@ public class aSMApplication extends Application {
 		} else {
 			defaultBoardType = settings.getString(
 					Preferences.DEFAULT_BOARD_TYPE, "001");
+		}
+		
+		if (!settings.contains(Preferences.SHOW_CHECK)) {
+			editor.putBoolean(Preferences.SHOW_CHECK, true);
+		} else {
+			setShowCheck(settings.getBoolean(Preferences.SHOW_CHECK, true));
+		}
+		
+		if (!settings.contains(Preferences.USE_VIBRATE)) {
+			editor.putBoolean(Preferences.USE_VIBRATE, true);
+		} else {
+			setUseVibrate(settings.getBoolean(Preferences.USE_VIBRATE, true));
+		}
+		
+		if (!settings.contains(Preferences.CHECK_INTERVAL)) {
+			editor.putString(Preferences.CHECK_INTERVAL, "3");
+		} else {
+			setCheckInterval(settings.getString(Preferences.CHECK_INTERVAL, "3"));
 		}
 
 		if (!settings.contains(Preferences.GUIDANCE_FONT_SIZE)) {
@@ -558,6 +580,30 @@ public class aSMApplication extends Application {
 
 	public void setPromotionContent(String promotionContent) {
 		this.promotionContent = promotionContent;
+	}
+
+	public boolean isShowCheck() {
+		return isShowCheck;
+	}
+
+	public void setShowCheck(boolean isShowCheck) {
+		this.isShowCheck = isShowCheck;
+	}
+
+	public String getCheckInterval() {
+		return checkInterval;
+	}
+
+	public void setCheckInterval(String checkInterval) {
+		this.checkInterval = checkInterval;
+	}
+
+	public boolean isUseVibrate() {
+		return isUseVibrate;
+	}
+
+	public void setUseVibrate(boolean isUseVibrate) {
+		this.isUseVibrate = isUseVibrate;
 	}
 
 }

@@ -9,6 +9,10 @@ public class Preferences {
 	public static final String DEFAULT_TAB = "default_tab";
 	public static final String DEFAULT_BOARD_TYPE = "default_board_type";
 	
+	public static final String SHOW_CHECK = "show_check";
+	public static final String USE_VIBRATE = "use_vibrate";
+	public static final String CHECK_INTERVAL = "check_interval";
+	
 	public static final String GUIDANCE_FONT_SIZE = "guidance_font_size";
 	public static final String GUIDANCE_SECOND_FONT_SIZE = "guidance_second_font_size";
 	public static final String SUBJECT_FONT_SIZE = "subject_font_size";

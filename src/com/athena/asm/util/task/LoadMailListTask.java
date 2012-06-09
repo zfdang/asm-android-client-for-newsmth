@@ -24,7 +24,7 @@ public class LoadMailListTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected void onPreExecute() {
-		pdialog.setMessage("加载邮件中...");
+		pdialog.setMessage("加载消息中...");
 		pdialog.show();
 	}
 	

@@ -1,11 +1,7 @@
 package com.athena.asm;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +24,7 @@ import com.athena.asm.fragment.FavoriteListFragment;
 import com.athena.asm.fragment.GuidanceListFragment;
 import com.athena.asm.fragment.MailFragment;
 import com.athena.asm.fragment.ProfileFragment;
-import com.athena.asm.service.LogoutService;
+import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -100,7 +96,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 						isLight ? R.drawable.profile_inverse
 								: R.drawable.profile), ProfileFragment.class,
 				null);
-
+		m_tabsAdapter.finishInit();
+		
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		m_viewModel = m_application.getHomeViewModel();
@@ -143,7 +140,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 			intent.setClassName("com.athena.asm",
 					"com.athena.asm.LoginActivity");
 			startActivity(intent);
-			finish();
+			finishAndClean();
 		}
 	}
 
@@ -182,7 +179,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 			intent.setClassName("com.athena.asm",
 					"com.athena.asm.LoginActivity");
 			startActivity(intent);
-			finish();
+			finishAndClean();
 		} else {
 			m_viewModel.updateLoginStatus();
 			init();
@@ -223,11 +220,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 		}
 
 		m_viewPager.setCurrentItem(item);
-	}
 
-	private void clearData() {
-		m_viewModel.clear();
-		m_inflater = null;
+		CheckMessageService.schedule(this);
 	}
 
 	private void exit() {
@@ -237,41 +231,49 @@ public class HomeActivity extends SherlockFragmentActivity {
 		}
 		m_application.syncPreferences();
 
+		finishAndClean();
+	}
+	
+	private void finishAndClean() {
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(CheckMessageService.MESSAGE_NOTIFICATION_ID);
 		finish();
-		//android.os.Process.killProcess(android.os.Process.myPid());
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	private void logout(final boolean isToExit) {
 		final ProgressDialog pdialog = new ProgressDialog(this);
 		pdialog.setMessage("正在注销...");
 		pdialog.show();
-		clearData();
-		final Context context = this;
+		CheckMessageService.unschedule(this);
+		m_viewModel.clear();
+//		final Context context = this;
 		Thread th = new Thread() {
 			@Override
 			public void run() {
-				
+				m_viewModel.logout();
 				pdialog.cancel();
 				if (!isToExit) {
-					m_viewModel.logout();
+					
 					Intent intent = new Intent();
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra(StringUtility.LOGOUT, true);
 					intent.setClassName("com.athena.asm",
 							"com.athena.asm.LoginActivity");
 					startActivity(intent);
-					finish();
+					finishAndClean();
 				} else {
-					Intent intent = new Intent(context, LogoutService.class);
-					PendingIntent pending = PendingIntent.getService(context, 0, intent,
-							PendingIntent.FLAG_CANCEL_CURRENT);
-					Calendar c = new GregorianCalendar();
-					c.add(Calendar.SECOND, 2);
-
-					AlarmManager alarm = (AlarmManager) context
-							.getSystemService(Context.ALARM_SERVICE);
-					alarm.cancel(pending);
-					alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pending);
+//					Intent intent = new Intent(context, LogoutService.class);
+//					PendingIntent pending = PendingIntent.getService(context,
+//							0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//					Calendar c = new GregorianCalendar();
+//					c.add(Calendar.SECOND, 2);
+//
+//					AlarmManager alarm = (AlarmManager) context
+//							.getSystemService(Context.ALARM_SERVICE);
+//					alarm.cancel(pending);
+//					alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+//							pending);
 					exit();
 				}
 			}
@@ -297,7 +299,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 				builder.create().show();
 				// logout();
 			} else {
-				finish();
+				finishAndClean();
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 			return true;
@@ -363,8 +365,11 @@ public class HomeActivity extends SherlockFragmentActivity {
 				m_viewModel.notifyGuidanceChanged();
 				break;
 			case 1:
-				m_viewModel.setFavList(null);
-				m_viewModel.notifyFavListChanged();
+				boolean isDeleted = deleteFile("FavList");
+				if (isDeleted) {
+					m_viewModel.setFavList(null);
+					m_viewModel.notifyFavListChanged();
+				}
 				break;
 			case 2:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);

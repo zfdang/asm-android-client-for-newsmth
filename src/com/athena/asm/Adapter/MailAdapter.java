@@ -33,7 +33,11 @@ public class MailAdapter extends BaseAdapter {
 		switch (position) {
 		case 0:
 			boxNameTextView.setText(R.string.mail_inbox);
-			numberTextView.setText(m_mailBox.getInboxNumber()+"封 ");
+			String numberString = m_mailBox.getInboxNumber()+"封 ";
+			if (m_mailBox.isHavingNewMail()) {
+				numberString += "（新）";
+			}
+			numberTextView.setText(numberString);
 			break;
 		case 1:
 			boxNameTextView.setText(R.string.mail_outbox);
@@ -48,8 +52,20 @@ public class MailAdapter extends BaseAdapter {
 			numberTextView.setText("");
 			break;
 		case 4:
-			boxNameTextView.setText(R.string.mail_clear_trash);
-			numberTextView.setText("");
+			boxNameTextView.setText(R.string.new_at);
+			if (m_mailBox.isHavingNewAt()) {
+				numberTextView.setText("新");
+			} else {
+				numberTextView.setText("");
+			}
+			break;
+		case 5:
+			boxNameTextView.setText(R.string.new_reply);
+			if (m_mailBox.isHavingNewReply()) {
+				numberTextView.setText("新");
+			} else {
+				numberTextView.setText("");
+			}
 			break;
 		default:
 			break;
@@ -65,7 +81,7 @@ public class MailAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return 4;
+		return 6;
 	}
 
 	@Override

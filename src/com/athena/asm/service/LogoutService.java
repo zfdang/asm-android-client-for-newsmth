@@ -15,7 +15,11 @@ public class LogoutService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d("asm", "start logout");
-		HomeActivity.m_application.getHomeViewModel().logout();
+		if (HomeActivity.m_application != null) {
+			if (HomeActivity.m_application.getHomeViewModel() != null) {
+				HomeActivity.m_application.getHomeViewModel().logout();
+			}
+		}
 		Log.d("asm", "logout finish");
 	}
 

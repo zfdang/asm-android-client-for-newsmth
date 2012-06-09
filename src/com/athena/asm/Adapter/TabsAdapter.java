@@ -21,6 +21,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final ViewPager m_viewPager;
 	private final ArrayList<TabInfo> m_tabs = new ArrayList<TabInfo>();
 	private HomeViewModel m_viewModel;
+	private boolean m_isInited = false;
 
 	static final class TabInfo {
 		private final Class<?> clss;
@@ -30,6 +31,10 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 			clss = _class;
 			args = _args;
 		}
+	}
+	
+	public void finishInit() {
+		m_isInited = true;
 	}
 
 	public TabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
@@ -69,9 +74,11 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public void onPageSelected(int position) {
-		m_actionBar.setSelectedNavigationItem(position);
-		int tab = position + 1;
-		m_viewModel.setCurrentTab("00" + tab);
+		if (m_isInited) {
+			m_actionBar.setSelectedNavigationItem(position);
+			int tab = position + 1;
+			m_viewModel.setCurrentTab("00" + tab);
+		}
 	}
 
 	@Override
@@ -80,13 +87,15 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		Object tag = tab.getTag();
-		for (int i = 0; i < m_tabs.size(); i++) {
-			if (m_tabs.get(i) == tag) {
-				m_viewPager.setCurrentItem(i);
-				int index = i + 1;
-				m_viewModel.setCurrentTab("00" + index);
-				break;
+		if (m_isInited) {
+			Object tag = tab.getTag();
+			for (int i = 0; i < m_tabs.size(); i++) {
+				if (m_tabs.get(i) == tag) {
+					m_viewPager.setCurrentItem(i);
+					int index = i + 1;
+					m_viewModel.setCurrentTab("00" + index);
+					break;
+				}
 			}
 		}
 	}

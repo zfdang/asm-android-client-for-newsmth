@@ -196,6 +196,24 @@ public class HomeViewModel extends BaseViewModel {
 		setMailbox(m_smthSupport.getMailBoxInfo());
 	}
 	
+	public String checkNewMessage() {
+		String result = null;
+		boolean isNewMail = m_smthSupport.checkNewMail();
+		String replyOrAtResult = m_smthSupport.checkNewReplyOrAt();
+		
+		if (isNewMail) {
+			result = "新信件";
+		} else if (replyOrAtResult != null) {
+			result = replyOrAtResult;
+		}
+		
+		if (m_mailBox != null) {
+			m_mailBox.setHavingNewMail(isNewMail);
+		}
+
+		return result;
+	}
+	
 	public Profile getProfile(String userID) {
 		Profile profile = m_smthSupport.getProfile(userID);
 		if (userID.equals(m_loginUserID)) {

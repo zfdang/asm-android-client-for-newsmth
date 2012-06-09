@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
+import com.athena.asm.fragment.SubjectListFragment;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadMailListTask;
 import com.athena.asm.viewmodel.BaseViewModel;
@@ -84,7 +85,7 @@ public class MailListActivity extends SherlockActivity implements
 	public void reloadMailList() {
 		ListView listView = (ListView) findViewById(R.id.post_list);
 		listView.setAdapter(new MailListAdapter(m_inflater, m_viewModel
-				.getMailList()));
+				.getMailList(), m_viewModel.getMailboxType()));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -92,10 +93,18 @@ public class MailListActivity extends SherlockActivity implements
 					final int position, long id) {
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.MAIL, (Mail) view.getTag());
+				bundle.putSerializable(StringUtility.MAIL,
+						(Mail) view.getTag());
 				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm",
-						"com.athena.asm.ReadMailActivity");
+				if (m_viewModel.getMailboxType() < 3) {
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.ReadMailActivity");
+				} else {
+					intent.putExtra(StringUtility.BOARD_TYPE,
+							SubjectListFragment.BOARD_TYPE_NORMAL);
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.PostListActivity");
+				}
 				startActivity(intent);
 			}
 		});
@@ -105,9 +114,9 @@ public class MailListActivity extends SherlockActivity implements
 	public void onClick(View view) {
 		int startNumber = 0;
 		if (view.getId() == R.id.btn_first_page) {
-			startNumber = 0;
+			startNumber = m_viewModel.getFirstPageStartNumber();
 		} else if (view.getId() == R.id.btn_last_page) {
-			startNumber = -1;
+			startNumber = m_viewModel.getLastPageStartNumber();
 		} else if (view.getId() == R.id.btn_pre_page) {
 			startNumber = m_viewModel.getPrevPageStartNumber();
 		} else if (view.getId() == R.id.btn_next_page) {

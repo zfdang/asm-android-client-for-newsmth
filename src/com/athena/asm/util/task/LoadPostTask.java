@@ -1,5 +1,6 @@
 package com.athena.asm.util.task;
 
+import java.net.URL;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -17,11 +18,12 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private boolean m_isUsePreload;
 	private Subject m_subject;
 	private int m_startNumber;
+	private String m_url;
 	
 	private PostListViewModel m_viewModel;
 
 	public LoadPostTask(PostListViewModel viewModel, Subject subject, int action, 
-			boolean isSilent, boolean isUsePreload, int startNumber) {
+			boolean isSilent, boolean isUsePreload, int startNumber, String url) {
 		m_boardType = viewModel.getBoardType();
 		m_action = action;
 		m_isSilent = isSilent;
@@ -29,6 +31,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 		m_subject = subject;
 		m_viewModel = viewModel;
 		m_startNumber = startNumber;
+		m_url = url;
 	}
 
 	@Override
@@ -46,7 +49,13 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 		}
 		else if (m_boardType == SubjectListFragment.BOARD_TYPE_NORMAL) {
 			if (m_action == 0) {
-				postList = m_viewModel.getSmthSupport().getSinglePostList(m_subject);
+				if (m_url != null && m_url.length() > 0) {
+					Subject newSubject = new Subject();
+					postList = m_viewModel.getSmthSupport().getSinglePostListFromMobileUrl(newSubject, m_url);
+					m_viewModel.updateSubject(newSubject);
+				} else {
+					postList = m_viewModel.getSmthSupport().getSinglePostList(m_subject);
+				}
 			}
 			else {
 				postList = m_viewModel.getSmthSupport().getTopicPostList(m_subject, m_action);

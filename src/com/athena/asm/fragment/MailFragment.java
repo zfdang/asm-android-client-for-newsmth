@@ -1,5 +1,7 @@
 package com.athena.asm.fragment;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.MailAdapter;
+import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadMailTask;
 import com.athena.asm.viewmodel.BaseViewModel;
@@ -85,7 +88,7 @@ public class MailFragment extends SherlockFragment implements
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							final int position, long id) {
-						if (position == 0 || position == 1 || position == 2) {
+						if (position != 3) {
 							final int boxType = position;
 							Intent intent = new Intent();
 							intent.putExtra(StringUtility.MAIL_BOX_TYPE,
@@ -115,6 +118,11 @@ public class MailFragment extends SherlockFragment implements
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
+		if (getActivity() != null) {
+			NotificationManager notificationManager = (NotificationManager) getActivity()
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(CheckMessageService.MESSAGE_NOTIFICATION_ID);
+		}
 		if (changedPropertyName.equals(HomeViewModel.MAILBOX_PROPERTY_NAME)) {
 			reloadMail();
 		} else if (changedPropertyName

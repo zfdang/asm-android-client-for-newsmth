@@ -32,6 +32,24 @@
             android:title="@string/setting_default_board_type" >
         </ListPreference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="消息检查" >
+        <CheckBoxPreference
+            android:key="show_check"
+            android:summary="@string/setting_show_check_details"
+            android:title="@string/setting_show_check" />
+        <CheckBoxPreference
+            android:key="use_vibrate"
+            android:summary="@string/setting_use_vibrate_details"
+            android:title="@string/setting_use_vibrate" />
+        <ListPreference
+            android:dialogTitle="选择"
+            android:entries="@array/check_interval_name"
+            android:entryValues="@array/check_interval_value"
+            android:key="check_interval"
+            android:summary="@string/setting_check_interval_details"
+            android:title="@string/setting_check_interval" >
+        </ListPreference>
+    </PreferenceCategory> 
     <PreferenceCategory android:title="界面调整" >
         <EditTextPreference
             android:defaultValue="25"

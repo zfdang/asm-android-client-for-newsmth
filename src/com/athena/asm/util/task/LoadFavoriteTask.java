@@ -47,16 +47,22 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 			e.printStackTrace();
 		}
 		
+		boolean isToWrite = true;
+		if (realFavList == null) {
+			
+		}
 		realFavList = m_viewModel.updateFavList(realFavList);
 		
-		try {
-			FileOutputStream fos = context.openFileOutput("FavList",
-					Context.MODE_PRIVATE);
-			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(realFavList);
-			fos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (isToWrite) {
+			try {
+				FileOutputStream fos = context.openFileOutput("FavList",
+						Context.MODE_PRIVATE);
+				ObjectOutputStream os = new ObjectOutputStream(fos);
+				os.writeObject(realFavList);
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		pdialog.cancel();

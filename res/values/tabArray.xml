@@ -22,4 +22,16 @@
 		<item>001</item>
 		<item>002</item>
 	</string-array>
+	<string-array name="check_interval_name">
+		<item>1分钟</item>
+		<item>3分钟</item>
+		<item>5分钟</item>
+		<item>9分钟</item>
+	</string-array>
+	<string-array name="check_interval_value">
+		<item>1</item>
+		<item>3</item>
+		<item>5</item>
+		<item>9</item>
+	</string-array>
 </resources>

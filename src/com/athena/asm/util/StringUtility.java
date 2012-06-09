@@ -49,6 +49,8 @@ public class StringUtility {
     public static final String TAB_CATEGORY = "003";
     public static final String TAB_MAIL = "004";
     public static final String TAB_PROFILE = "005";
+    
+    public static final String IS_NEW_MESSAGE = "isNewMessage";
 
     /**
      * 从链接中提取相关参数

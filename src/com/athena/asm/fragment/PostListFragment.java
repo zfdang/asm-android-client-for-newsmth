@@ -37,6 +37,7 @@ import com.athena.asm.R;
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.PostListAdapter;
+import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
@@ -65,6 +66,7 @@ public class PostListFragment extends SherlockFragment implements
 	private GestureDetector m_GestureDetector;
 
 	private boolean m_isNewInstance = false;
+	private boolean m_isFromReplyOrAt = false;
 
 	private boolean m_isNewTouchStart = false;
 	private float m_touchStartX = 0;
@@ -129,17 +131,36 @@ public class PostListFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 
 		boolean isNewSubject = false;
+		
+		String url = "";
 		if (m_isNewInstance) {
 			Subject newSubject = (Subject) getActivity().getIntent()
 					.getSerializableExtra(StringUtility.SUBJECT);
-			isNewSubject = m_viewModel.updateSubject(newSubject);
+			if (newSubject != null) {
+				isNewSubject = m_viewModel.updateSubject(newSubject);
+			} else {
+				m_isFromReplyOrAt = true;
+				Mail mail = (Mail)getActivity().getIntent().getSerializableExtra(StringUtility.MAIL);
+				if (mail.getBoxType() == 4) {
+					url = "http://m.newsmth.net/refer/at/read?index=" + mail.getNumber();
+				} else {
+					url = "http://m.newsmth.net/refer/reply/read?index=" + mail.getNumber();
+				}
+			}
+		
 			m_isNewInstance = false;
 		}
 
 		if (isNewSubject) {
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getCurrentSubject(), 0, false, false,
-					m_startNumber);
+					m_startNumber, null);
+			loadPostTask.execute();
+			((PostListActivity) getActivity()).showProgressDialog();
+		} else if (m_isFromReplyOrAt) {
+			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
+					m_viewModel.getCurrentSubject(), 0, false, false,
+					m_startNumber, url);
 			loadPostTask.execute();
 			((PostListActivity) getActivity()).showProgressDialog();
 		} else {
@@ -183,7 +204,7 @@ public class PostListFragment extends SherlockFragment implements
 			m_lastButton.setText(R.string.last_page);
 			m_preButton.setText(R.string.pre_page);
 			m_nextButton.setText(R.string.next_page);
-		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL) {
+		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt) {
 			m_goButton.setVisibility(View.GONE);
 			m_pageNoEditText.setVisibility(View.GONE);
 			m_lastButton.setVisibility(View.VISIBLE);
@@ -207,13 +228,13 @@ public class PostListFragment extends SherlockFragment implements
 				m_viewModel.getPreloadSubject().setCurrentPageNo(nextPage);
 				LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 						m_viewModel.getPreloadSubject(), 0, true, false,
-						m_startNumber);
+						m_startNumber, null);
 				loadPostTask.execute();
 			}
 		} else {
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getPreloadSubject(), 3, true, false,
-					m_startNumber);
+					m_startNumber, null);
 			loadPostTask.execute();
 		}
 	}
@@ -260,7 +281,7 @@ public class PostListFragment extends SherlockFragment implements
 
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getCurrentSubject(), 0, false, isNext,
-					m_startNumber);
+					m_startNumber, null);
 			loadPostTask.execute();
 			((PostListActivity) getActivity()).showProgressDialog();
 		} else {
@@ -281,7 +302,7 @@ public class PostListFragment extends SherlockFragment implements
 			}
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getCurrentSubject(), action, false, isNext,
-					m_startNumber);
+					m_startNumber, null);
 			loadPostTask.execute();
 			((PostListActivity) getActivity()).showProgressDialog();
 		}
@@ -503,7 +524,7 @@ public class PostListFragment extends SherlockFragment implements
 
 	private void refreshPostList() {
 		LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
-				m_viewModel.getCurrentSubject(), 0, false, false, m_startNumber);
+				m_viewModel.getCurrentSubject(), 0, false, false, m_startNumber, null);
 		loadPostTask.execute();
 		((PostListActivity) getActivity()).showProgressDialog();
 	}
