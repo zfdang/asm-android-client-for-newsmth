@@ -1,7 +1,13 @@
 package com.athena.asm;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,6 +28,7 @@ import com.athena.asm.fragment.FavoriteListFragment;
 import com.athena.asm.fragment.GuidanceListFragment;
 import com.athena.asm.fragment.MailFragment;
 import com.athena.asm.fragment.ProfileFragment;
+import com.athena.asm.service.LogoutService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -231,7 +238,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 		m_application.syncPreferences();
 
 		finish();
-		android.os.Process.killProcess(android.os.Process.myPid());
+		//android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	private void logout(final boolean isToExit) {
@@ -239,12 +246,14 @@ public class HomeActivity extends SherlockFragmentActivity {
 		pdialog.setMessage("正在注销...");
 		pdialog.show();
 		clearData();
+		final Context context = this;
 		Thread th = new Thread() {
 			@Override
 			public void run() {
-				m_viewModel.logout();
+				
 				pdialog.cancel();
 				if (!isToExit) {
+					m_viewModel.logout();
 					Intent intent = new Intent();
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra(StringUtility.LOGOUT, true);
@@ -253,6 +262,16 @@ public class HomeActivity extends SherlockFragmentActivity {
 					startActivity(intent);
 					finish();
 				} else {
+					Intent intent = new Intent(context, LogoutService.class);
+					PendingIntent pending = PendingIntent.getService(context, 0, intent,
+							PendingIntent.FLAG_CANCEL_CURRENT);
+					Calendar c = new GregorianCalendar();
+					c.add(Calendar.SECOND, 2);
+
+					AlarmManager alarm = (AlarmManager) context
+							.getSystemService(Context.ALARM_SERVICE);
+					alarm.cancel(pending);
+					alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pending);
 					exit();
 				}
 			}

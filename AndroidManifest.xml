@@ -84,6 +84,7 @@
         <activity
             android:name=".FullImageActivity">
         </activity>
+        <service android:name=".service.LogoutService" />
     </application>
 
 </manifest>
