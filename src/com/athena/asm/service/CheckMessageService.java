@@ -83,7 +83,7 @@ public class CheckMessageService extends Service {
 		Calendar c = new GregorianCalendar();
 		if (m_isFirstCheck) {
 			m_isFirstCheck = false;
-			c.add(Calendar.SECOND, 5);
+			c.add(Calendar.SECOND, 2);
 		} else {
 			c.add(Calendar.MINUTE, interval);
 		}
