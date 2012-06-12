@@ -57,8 +57,9 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected String doInBackground(String... params) {
-		if (HomeActivity.m_application.isFirstLaunchAfterUpdate()) {
+		if (!HomeActivity.m_application.isLoadDefaultCategoryFile()) {
 			try {
+				Log.d("asm", "Load default category file");
 				InputStream is = m_context.getResources().openRawResource(
 						R.raw.categories);// .openFileInput("CategoryList");
 				FileOutputStream fos = m_context.openFileOutput("CategoryList",
@@ -77,6 +78,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 
 				bufw.close();
 				bufr.close();
+				HomeActivity.m_application.updateDefaultCategoryLoadStatus(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

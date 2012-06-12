@@ -188,7 +188,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 	private void init() {
 		// initTasks();
-		if (m_application.isFirstLaunchAfterUpdate()) {
+		if (m_application.isFirstLaunchApp() || m_application.isFirstLaunchAfterUpdate()) {
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 			alertBuilder.setTitle(R.string.update_title);
 			alertBuilder.setMessage(R.string.update_info);

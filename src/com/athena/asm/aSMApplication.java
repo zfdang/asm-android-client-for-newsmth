@@ -32,6 +32,9 @@ import com.athena.asm.viewmodel.PostListViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 
 public class aSMApplication extends Application {
+	private boolean isFirstLaunch = false;
+	private boolean isLoadDefaultCategoryFile = false;
+	
 	private boolean isRememberUser = true;
 	private boolean isAutoLogin = false;
 
@@ -90,6 +93,10 @@ public class aSMApplication extends Application {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean isFirstLaunchApp() {
+		return isFirstLaunch;
+	}
 
 	public boolean isFirstLaunchAfterUpdate() {
 		if (lastLaunchVersionCode < currentVersionCode) {
@@ -97,6 +104,14 @@ public class aSMApplication extends Application {
 		} else {
 			return false;
 		}
+	}
+	
+	public void updateDefaultCategoryLoadStatus(boolean isLoaded) {
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(Preferences.DEFAULT_CATEGORY_LOADED, isLoaded);
+		editor.commit();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,6 +123,12 @@ public class aSMApplication extends Application {
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
 
+		if (!settings.contains(Preferences.DEFAULT_CATEGORY_LOADED)) {
+			editor.putBoolean(Preferences.DEFAULT_CATEGORY_LOADED, false);
+		} else {
+			setLoadDefaultCategoryFile(settings.getBoolean(Preferences.DEFAULT_CATEGORY_LOADED, true));
+		}
+		
 		if (!settings.contains(Preferences.REMEMBER_USER)) {
 			editor.putBoolean(Preferences.REMEMBER_USER, true);
 		} else {
@@ -288,6 +309,8 @@ public class aSMApplication extends Application {
 			String versionCode = settings.getString(
 					Preferences.LAST_LAUNCH_VERSION, "4");
 			lastLaunchVersionCode = StringUtility.filterUnNumber(versionCode);
+		} else {
+			isFirstLaunch = true;
 		}
 		editor.putString(Preferences.LAST_LAUNCH_VERSION, currentVersionCode
 				+ "");
@@ -604,6 +627,14 @@ public class aSMApplication extends Application {
 
 	public void setUseVibrate(boolean isUseVibrate) {
 		this.isUseVibrate = isUseVibrate;
+	}
+
+	public boolean isLoadDefaultCategoryFile() {
+		return isLoadDefaultCategoryFile;
+	}
+
+	public void setLoadDefaultCategoryFile(boolean isLoadDefaultCategoryFile) {
+		this.isLoadDefaultCategoryFile = isLoadDefaultCategoryFile;
 	}
 
 }

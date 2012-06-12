@@ -80,11 +80,11 @@
 	<string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于</string>
-	<string name="about_content">aSM 2.0\naSM是一个简单的水木社区(newsmth.net)客户端程序，能够查看水木社区的首页导读文章，登录后访问收藏夹版面，查看所有分类讨论区，发贴、回贴，收信、回信，查询网友个人信息等功能。\n操作提示：
-\n1. 用back键返回上一级导航。\n2. 在打开主题的帖子列表的标题上长按可以选择回复该贴或者回信给作者。\nBY leo18, r7000@SMTH</string>
+	<string name="about_content">aSM 2.0\naSM是一个水木社区(newsmth.net)客户端程序，试图结合WEB版的经典功能与移动版的快速便捷。\n操作提示：
+\n1. 在打开主题的帖子列表上长按可以选择对该贴的操作。\n2. 自动登陆、样式自定义等更多功能参见设置中选项。\n3. 非4.0系统用户请多按MENU键查找功能。\nBY leo18, r7000@SMTH\n爱水木，爱生活^_^</string>
 	<!-- 更新 -->
 	<string name="update_title">更新说明</string>
-	<string name="update_info">2.0更新内容：\n1. 新增：夜间模式\n2. 新增：阅读帖子手势翻页\n3. 新增：编辑帖子\n4. 修正：普通模式下主题展开再下一页预读出错的bug\n5. 修正：不同分辨率下触屏翻帖功能的bug\n5. 其他：一些外观与bug调整\n</string>
+	<string name="update_info">2.0更新内容：\n1. 新增：全新界面，全新架构\n2. 新增：回复、@查看，消息自动检查通知\n3. 新增：查看大图与图片保存\n4. 新增：合集转寄 @edifice\n5. 新增：发文失败时保存内容到剪贴板\n6. 修正：所有版面列表导航改为移动版的模式，默认在第一页\n7. 修正：同主题展开改回www2方式，从特定帖子开始展开列表</string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
 	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>

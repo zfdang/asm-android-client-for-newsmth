@@ -1,6 +1,8 @@
 package com.athena.asm.data;
 
 public class Preferences {
+	public static final String DEFAULT_CATEGORY_LOADED = "default_category_loaded";
+	
 	public static final String USERNAME_KEY = "username";
 	public static final String PASSWORD_KEY = "password";
 

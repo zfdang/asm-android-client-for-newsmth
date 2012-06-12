@@ -73,6 +73,8 @@ public class PostListAdapter extends BaseAdapter {
 		else {
 			layout = (RelativeLayout)convertView;
 			holder = (ViewHolder)layout.getTag();
+			holder.post = post;
+			layout.setTag(holder);
 		}		
 		
 		if (post.getAuthor() == null) {
