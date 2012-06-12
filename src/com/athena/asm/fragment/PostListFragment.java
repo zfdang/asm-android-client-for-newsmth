@@ -79,6 +79,8 @@ public class PostListFragment extends SherlockFragment implements
 
 	private int m_startNumber = 0;
 	
+	private String m_url = null;
+	
 	private ShareActionProvider actionProvider;
 
 	@Override
@@ -136,7 +138,6 @@ public class PostListFragment extends SherlockFragment implements
 
 		boolean isNewSubject = false;
 
-		String url = "";
 		if (m_isNewInstance) {
 			Subject newSubject = (Subject) getActivity().getIntent()
 					.getSerializableExtra(StringUtility.SUBJECT);
@@ -147,10 +148,10 @@ public class PostListFragment extends SherlockFragment implements
 				Mail mail = (Mail) getActivity().getIntent()
 						.getSerializableExtra(StringUtility.MAIL);
 				if (mail.getBoxType() == 4) {
-					url = "http://m.newsmth.net/refer/at/read?index="
+					m_url = "http://m.newsmth.net/refer/at/read?index="
 							+ mail.getNumber();
 				} else {
-					url = "http://m.newsmth.net/refer/reply/read?index="
+					m_url = "http://m.newsmth.net/refer/reply/read?index="
 							+ mail.getNumber();
 				}
 			}
@@ -167,7 +168,7 @@ public class PostListFragment extends SherlockFragment implements
 		} else if (m_isFromReplyOrAt) {
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getCurrentSubject(), 0, false, false,
-					m_startNumber, url);
+					m_startNumber, m_url);
 			loadPostTask.execute();
 			((PostListActivity) getActivity()).showProgressDialog();
 		} else {
@@ -583,9 +584,26 @@ public class PostListFragment extends SherlockFragment implements
         if (m_viewModel.getCurrentSubject() != null) {
         	Subject subject = m_viewModel.getCurrentSubject();
         	shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject.getTitle());
-        	shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
-        			" http://m.newsmth.net/article/" + subject.getBoardEngName()
-					+ "/" + subject.getSubjectID());
+        	if (m_isFromReplyOrAt && m_url != null) {
+        		shareIntent.putExtra(Intent.EXTRA_TEXT, m_url);
+        	} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+        		shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
+            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
+    					+ "/" + subject.getSubjectID());
+			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL) {
+				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
+						"http://www.newsmth.net/bbscon.php?bid="
+						+ subject.getBoardID() + "&id=" + subject.getSubjectID());
+			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_DIGEST) {
+				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
+            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
+    					+ "/single/" + subject.getSubjectID() + "/1");
+			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_MARK) {
+				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
+            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
+    					+ "/single/" + subject.getSubjectID() + "/3");
+			}
+        	
 		}
         return shareIntent;
     }

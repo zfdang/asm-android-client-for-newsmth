@@ -785,7 +785,13 @@ public class SmthSupport {
 
 			Subject subject = new Subject();
 			String dateString = userIDMatcher.group(1).trim();
-			subject.setDateString(dateString.replace("&nbsp;", ""));
+			String[] dates = dateString.split("&nbsp;");
+			if (dates.length < 2) {
+				subject.setDateString(dates[0]);
+			} else {
+				subject.setDateString(dates[1]);
+			}
+			//subject.setDateString(dateString.replace("&nbsp;", ""));
 			subject.setAuthor(userIDMatcher.group(2));
 			subject.setBoardID(board.getBoardID());
 			subject.setBoardEngName(boardname);
