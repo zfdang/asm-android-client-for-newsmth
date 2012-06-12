@@ -15,11 +15,11 @@ import com.athena.asm.data.Board;
 public class CategoryListAdapter extends BaseAdapter {
 
 	private LayoutInflater m_inflater;
-	private List<Board> boards;
+	private List<Board> m_boards;
 
 	public CategoryListAdapter(LayoutInflater inflater, List<Board> boardList) {
 		this.m_inflater = inflater;
-		this.boards = boardList;
+		this.m_boards = boardList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -29,7 +29,7 @@ public class CategoryListAdapter extends BaseAdapter {
 		} else {
 			layout = m_inflater.inflate(R.layout.category_list_item, null);
 		}
-		Board board = boards.get(position);
+		Board board = m_boards.get(position);
 
 		TextView categoryNameTextView = (TextView) layout
 				.findViewById(R.id.CategoryName);
@@ -57,12 +57,12 @@ public class CategoryListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return boards.size();
+		return m_boards.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return boards.get(position);
+		return m_boards.get(position);
 	}
 
 	@Override

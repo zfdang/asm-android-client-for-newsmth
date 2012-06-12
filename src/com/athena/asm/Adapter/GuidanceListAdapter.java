@@ -15,19 +15,19 @@ import com.athena.asm.data.Subject;
 
 public class GuidanceListAdapter extends BaseExpandableListAdapter {
 
-	private LayoutInflater inflater;
-	private List<String> sections;
-	private List<List<Subject>> subjects;
+	private LayoutInflater m_inflater;
+	private List<String> m_sections;
+	private List<List<Subject>> m_subjects;
 
 	public GuidanceListAdapter(LayoutInflater inflater,
 			List<String> sectionList, List<List<Subject>> subjectList) {
-		this.inflater = inflater;
-		this.sections = sectionList;
-		this.subjects = subjectList;
+		this.m_inflater = inflater;
+		this.m_sections = sectionList;
+		this.m_subjects = subjectList;
 	}
 	
 	public Object getChild(int groupPosition, int childPosition) {
-        return subjects.get(groupPosition).get(childPosition);
+        return m_subjects.get(groupPosition).get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -37,9 +37,13 @@ public class GuidanceListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
             View convertView, ViewGroup parent) {
-		Subject subject = subjects.get(groupPosition).get(childPosition);
-		View layout = inflater.inflate(R.layout.guidance_list_item,
-				null);
+		Subject subject = m_subjects.get(groupPosition).get(childPosition);
+		View layout = null;
+		if (convertView != null) {
+			layout = convertView;
+		} else {
+			layout = m_inflater.inflate(R.layout.guidance_list_item, null);
+		}
 		TextView boardNameTextView = (TextView) layout
 				.findViewById(R.id.BoardName);
 		boardNameTextView.setText(subject.getBoardChsName());
@@ -62,17 +66,17 @@ public class GuidanceListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return subjects.get(groupPosition).size();
+		return m_subjects.get(groupPosition).size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		return sections.get(groupPosition);
+		return m_sections.get(groupPosition);
 	}
 
 	@Override
 	public int getGroupCount() {
-		return sections.size();
+		return m_sections.size();
 	}
 
 	@Override
@@ -83,11 +87,11 @@ public class GuidanceListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		View layout = inflater.inflate(
+		View layout = m_inflater.inflate(
 				R.layout.guidance_list_section_header, null);
 		TextView boardNameTextView = (TextView) layout
 				.findViewById(R.id.SectionName);
-		boardNameTextView.setText(sections.get(groupPosition));
+		boardNameTextView.setText(m_sections.get(groupPosition));
 		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
 		if (HomeActivity.m_application.isNightTheme()) {
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

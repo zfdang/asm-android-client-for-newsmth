@@ -23,8 +23,12 @@ public class MailAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View layout = m_inflater.inflate(R.layout.mail_list_section_header,
-				null);
+		View layout = null;
+		if (convertView != null) {
+			layout = convertView;
+		} else {
+			layout = m_inflater.inflate(R.layout.mail_list_section_header, null);
+		}
 		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
 		TextView numberTextView = (TextView) layout
 				.findViewById(R.id.mailNumber);

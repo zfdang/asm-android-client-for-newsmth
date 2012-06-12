@@ -16,14 +16,14 @@ import com.athena.asm.data.Mail;
 
 public class MailListAdapter extends BaseAdapter {
 
-	private LayoutInflater inflater;
-	private List<Mail> mailList;
-	private int boxType;
+	private LayoutInflater m_inflater;
+	private List<Mail> m_mailList;
+	private int m_boxType;
 
 	public MailListAdapter(LayoutInflater inflater, List<Mail> mailList, int boxType) {
-		this.inflater = inflater;
-		this.mailList = mailList;
-		this.boxType = boxType;
+		this.m_inflater = inflater;
+		this.m_mailList = mailList;
+		this.m_boxType = boxType;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -32,14 +32,14 @@ public class MailListAdapter extends BaseAdapter {
 			layout = convertView;
 		}
 		else {
-			layout = inflater.inflate(R.layout.mail_list_item, null);
+			layout = m_inflater.inflate(R.layout.mail_list_item, null);
 		}
 		
 		Mail mail;
-		if (boxType < 3) {
-			mail = mailList.get(mailList.size() - position - 1);
+		if (m_boxType < 3) {
+			mail = m_mailList.get(m_mailList.size() - position - 1);
 		} else {
-			mail = mailList.get(position);
+			mail = m_mailList.get(position);
 		}
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.SenderID);
@@ -78,15 +78,15 @@ public class MailListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return mailList.size();
+		return m_mailList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		if (boxType < 3) {
-			return mailList.get(position);
+		if (m_boxType < 3) {
+			return m_mailList.get(position);
 		} else {
-			return mailList.get(mailList.size() - position - 1);
+			return m_mailList.get(m_mailList.size() - position - 1);
 		}
 	}
 

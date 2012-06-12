@@ -15,19 +15,19 @@ import com.athena.asm.data.Board;
 
 public class FavoriteListAdapter extends BaseExpandableListAdapter {
 
-	private LayoutInflater inflater;
-	private List<String> directories;
-	private List<List<Board>> boards;
+	private LayoutInflater m_inflater;
+	private List<String> m_directories;
+	private List<List<Board>> m_boards;
 
 	public FavoriteListAdapter(LayoutInflater inflater, 
 			List<String> directoryList, List<List<Board>> boardList) {
-		this.inflater = inflater;
-		this.directories = directoryList;
-		this.boards = boardList;
+		this.m_inflater = inflater;
+		this.m_directories = directoryList;
+		this.m_boards = boardList;
 	}
 
 	public Object getChild(int groupPosition, int childPosition) {
-        return boards.get(groupPosition).get(childPosition);
+        return m_boards.get(groupPosition).get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -37,9 +37,13 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
             View convertView, ViewGroup parent) {
-		Board board = boards.get(groupPosition).get(childPosition);
-		View layout = inflater.inflate(R.layout.favorite_list_item,
-				null);
+		Board board = m_boards.get(groupPosition).get(childPosition);
+		View layout = null;
+		if (convertView != null) {
+			layout = convertView;
+		} else {
+			layout = m_inflater.inflate(R.layout.favorite_list_item, null);
+		}
 		TextView categoryNameTextView = (TextView) layout
 				.findViewById(R.id.CategoryName);
 		categoryNameTextView.setText(board.getCategoryName());
@@ -62,17 +66,17 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return boards.get(groupPosition).size();
+		return m_boards.get(groupPosition).size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		return directories.get(groupPosition);
+		return m_directories.get(groupPosition);
 	}
 
 	@Override
 	public int getGroupCount() {
-		return directories.size();
+		return m_directories.size();
 	}
 
 	@Override
@@ -83,11 +87,11 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		View layout = inflater.inflate(
+		View layout = m_inflater.inflate(
 				R.layout.favorite_list_section_header, null);
 		TextView boardNameTextView = (TextView) layout
 				.findViewById(R.id.BoardName);
-		boardNameTextView.setText(directories.get(groupPosition));
+		boardNameTextView.setText(m_directories.get(groupPosition));
 		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
 		if (HomeActivity.m_application.isNightTheme()) {
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

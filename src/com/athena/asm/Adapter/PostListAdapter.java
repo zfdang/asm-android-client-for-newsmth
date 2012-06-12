@@ -29,8 +29,8 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 public class PostListAdapter extends BaseAdapter {
 
 	private PostListFragment m_fragment;
-	private LayoutInflater inflater;
-	private List<Post> postList;
+	private LayoutInflater m_inflater;
+	private List<Post> m_postList;
 	
 	public class ViewHolder {
 		public TextView authorTextView;
@@ -45,17 +45,17 @@ public class PostListAdapter extends BaseAdapter {
 	public PostListAdapter(PostListFragment fragment, LayoutInflater inflater,
 			List<Post> postList) {
 		this.m_fragment = fragment;
-		this.inflater = inflater;
-		this.postList = postList;
+		this.m_inflater = inflater;
+		this.m_postList = postList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		RelativeLayout layout = null;
-		Post post = postList.get(position);
+		Post post = m_postList.get(position);
 		
 		if (convertView == null) {
-			layout = (RelativeLayout) inflater.inflate(R.layout.post_list_item, null);
+			layout = (RelativeLayout) m_inflater.inflate(R.layout.post_list_item, null);
 			holder = new ViewHolder();
 			holder.authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
@@ -151,15 +151,15 @@ public class PostListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return postList.size();
+		return m_postList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		if (position >= postList.size()) {
-			position = postList.size() - 1;
+		if (position >= m_postList.size()) {
+			position = m_postList.size() - 1;
 		}
-		return postList.get(position);
+		return m_postList.get(position);
 	}
 
 	@Override

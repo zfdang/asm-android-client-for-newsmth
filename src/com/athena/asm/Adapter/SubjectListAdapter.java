@@ -16,12 +16,12 @@ import com.athena.asm.data.Subject;
 
 public class SubjectListAdapter extends BaseAdapter {
 
-	private LayoutInflater inflater;
-	private List<Subject> subjectList;
+	private LayoutInflater m_inflater;
+	private List<Subject> m_subjectList;
 
 	public SubjectListAdapter(LayoutInflater inflater, List<Subject> subjectList) {
-		this.inflater = inflater;
-		this.subjectList = subjectList;
+		this.m_inflater = inflater;
+		this.m_subjectList = subjectList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -30,10 +30,10 @@ public class SubjectListAdapter extends BaseAdapter {
 			layout = convertView;
 		}
 		else {
-			layout = inflater.inflate(R.layout.subject_list_item, null);
+			layout = m_inflater.inflate(R.layout.subject_list_item, null);
 		}
 		
-		Subject subject = subjectList.get(position);
+		Subject subject = m_subjectList.get(position);
 		
 		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 		authorTextView.setText(subject.getAuthor());
@@ -66,12 +66,12 @@ public class SubjectListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return subjectList.size();
+		return m_subjectList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return subjectList.get(position);
+		return m_subjectList.get(position);
 	}
 
 	@Override
