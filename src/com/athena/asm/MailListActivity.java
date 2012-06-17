@@ -13,6 +13,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.fragment.SubjectListFragment;
@@ -30,9 +34,11 @@ public class MailListActivity extends SherlockActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.post_list);
+		
+		setRequestedOrientation(aSMApplication.ORIENTATION);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
@@ -125,6 +131,20 @@ public class MailListActivity extends SherlockActivity implements
 		LoadMailListTask loadMailListTask = new LoadMailListTask(this,
 				m_viewModel, startNumber);
 		loadMailListTask.execute();
+	}
+	
+	public static final int REFRESH_SUBJECTLIST = Menu.FIRST;
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
+		
+		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
+				.setIcon(
+						isLight ? R.drawable.refresh_inverse
+								: R.drawable.refresh)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		return true;
 	}
 
 	@Override

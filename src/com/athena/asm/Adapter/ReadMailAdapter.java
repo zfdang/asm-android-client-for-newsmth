@@ -20,9 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.ReadMailActivity;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
 
@@ -49,7 +49,7 @@ public class ReadMailAdapter extends BaseAdapter {
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
 		contentTextView.setText(Html.fromHtml(mail.getContent()));
-		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getPostFontSize());
+		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getPostFontSize());
 		
 		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -131,7 +131,7 @@ public class ReadMailAdapter extends BaseAdapter {
 		contentTextView.setOnLongClickListener(listener);
 		layout.setOnLongClickListener(listener);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

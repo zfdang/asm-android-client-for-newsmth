@@ -1,11 +1,10 @@
 package com.athena.asm.util.task;
 
-import java.net.URL;
 import java.util.List;
 
 import android.os.AsyncTask;
 
-import com.athena.asm.HomeActivity;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
 import com.athena.asm.fragment.SubjectListFragment;
@@ -42,9 +41,9 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 		List<Post> postList = null;
 		if (m_boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			if (m_startNumber == 0) {
-				postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, HomeActivity.m_application.getBlackList(), m_boardType);
+				postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_boardType);
 			} else {
-				postList = m_viewModel.getSmthSupport().getPostList(m_subject, HomeActivity.m_application.getBlackList(), m_startNumber);
+				postList = m_viewModel.getSmthSupport().getPostList(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_startNumber);
 			}
 		}
 		else if (m_boardType == SubjectListFragment.BOARD_TYPE_NORMAL) {
@@ -61,7 +60,7 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 				postList = m_viewModel.getSmthSupport().getTopicPostList(m_subject, m_action);
 			}
 		} else {
-			postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, HomeActivity.m_application.getBlackList(), m_boardType);
+			postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_boardType);
 		}
 		return postList;
 	}

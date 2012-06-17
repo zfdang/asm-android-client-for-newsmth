@@ -100,11 +100,14 @@
             android:title="@string/setting_night_theme" />
     </PreferenceCategory>
     <PreferenceCategory android:title="其他" >
-
-        <!--
-             <CheckBoxPreference android:key="force_screen_portrait"
-	        android:summary="@string/setting_force_screen_portrait_details" android:title="@string/setting_force_screen_portrait"/>
-        -->
+        <ListPreference
+            android:dialogTitle="选择"
+            android:entries="@array/orientation_name"
+            android:entryValues="@array/orientation_value"
+            android:key="default_orientation"
+            android:summary="@string/setting_orientation_details"
+            android:title="@string/setting_orientation" >
+        </ListPreference>
         <CheckBoxPreference
             android:key="promotion_show"
             android:summary="@string/setting_promotion_show_details"

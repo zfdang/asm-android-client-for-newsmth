@@ -13,7 +13,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.FavoriteListAdapter;
@@ -106,7 +105,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 					directoryList.add(board.getDirectoryName());
 					if (board.getDirectoryName().equals("最近访问版面")) {
 						realBoardList.add(new ArrayList<Board>(
-								HomeActivity.m_application.getRecentBoards()));
+								aSMApplication.getCurrentApplication().getRecentBoards()));
 					} else {
 						List<Board> currentBoardList = new ArrayList<Board>();
 						extractSubDirectory(board, currentBoardList);
@@ -136,7 +135,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.BOARD,
 							(Board) view.getTag());
-					HomeActivity.m_application.addRecentBoard((Board) view
+					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
 							.getTag());
 					intent.putExtras(bundle);
 					intent.setClassName("com.athena.asm",

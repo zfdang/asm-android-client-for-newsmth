@@ -36,8 +36,8 @@ public class LoginActivity extends SherlockFragmentActivity implements
 
 		m_smthSupport = SmthSupport.getInstance();
 
-		String userName = HomeActivity.m_application.getAutoUserName();
-		String password = HomeActivity.m_application.getAutoPassword();
+		String userName = aSMApplication.getCurrentApplication().getAutoUserName();
+		String password = aSMApplication.getCurrentApplication().getAutoPassword();
 
 		m_userNameEditText = (EditText) findViewById(R.id.username_edit);
 		m_userNameEditText.setText(userName);
@@ -52,6 +52,8 @@ public class LoginActivity extends SherlockFragmentActivity implements
 
 		Button gbutton = (Button) findViewById(R.id.guest_button);
 		gbutton.setOnClickListener(this);
+		
+		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public class LoginActivity extends SherlockFragmentActivity implements
 						showFailedToast();
 					} else {
 						// showSuccessToast();
-						HomeActivity.m_application
+						aSMApplication.getCurrentApplication()
 								.updateAutoUserNameAndPassword(newUserName,
 										newPassword);
 
@@ -135,12 +137,12 @@ public class LoginActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Boolean rememberUser = HomeActivity.m_application.isRememberUser();
+			Boolean rememberUser = aSMApplication.getCurrentApplication().isRememberUser();
 			if (!rememberUser) {
-				HomeActivity.m_application
+				aSMApplication.getCurrentApplication()
 						.updateAutoUserNameAndPassword("", "");
 			}
-			HomeActivity.m_application.syncPreferences();
+			aSMApplication.getCurrentApplication().syncPreferences();
 
 			finish();
 			android.os.Process.killProcess(android.os.Process.myPid());

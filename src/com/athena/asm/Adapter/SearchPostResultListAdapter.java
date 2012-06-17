@@ -1,9 +1,6 @@
 package com.athena.asm.Adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import android.text.Html;
 import android.util.TypedValue;
@@ -13,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 
 public class SearchPostResultListAdapter extends BaseAdapter {
@@ -46,13 +43,13 @@ public class SearchPostResultListAdapter extends BaseAdapter {
 			titleString = "<font color='red'>" + titleString + "</font>";
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getSubjectFontSize());
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDateString());
 		
 		layout.setTag(subject);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

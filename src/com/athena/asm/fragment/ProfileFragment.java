@@ -5,8 +5,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Profile;
@@ -154,7 +153,7 @@ public class ProfileFragment extends SherlockFragment implements
 				break;
 			}
 
-			if (HomeActivity.m_application.isNightTheme()) {
+			if (aSMApplication.getCurrentApplication().isNightTheme()) {
 				userIDTextView.setTextColor(m_layout.getResources().getColor(
 						R.color.blue_text_night));
 				userScoreTextView.setTextColor(m_layout.getResources().getColor(

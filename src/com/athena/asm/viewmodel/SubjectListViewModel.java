@@ -2,7 +2,7 @@ package com.athena.asm.viewmodel;
 
 import java.util.List;
 
-import com.athena.asm.HomeActivity;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
 import com.athena.asm.fragment.SubjectListFragment;
@@ -143,8 +143,8 @@ public class SubjectListViewModel extends BaseViewModel {
 	}
 	
 	public List<Subject> getSubjectListFromSmth(boolean isReloadPageNo) {
-		return m_smthSupport.getSubjectListFromMobile(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
-		//return m_smthSupport.getSubjectList(m_currentBoard, m_boardType, isReloadPageNo, HomeActivity.m_application.getBlackList());
+		return m_smthSupport.getSubjectListFromMobile(m_currentBoard, m_boardType, isReloadPageNo, aSMApplication.getCurrentApplication().getBlackList());
+		//return m_smthSupport.getSubjectList(m_currentBoard, m_boardType, isReloadPageNo, aSMApplication.getCurrentApplication().getBlackList());
 	}
 
 }

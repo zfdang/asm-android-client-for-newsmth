@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -38,24 +37,18 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 	private Handler m_handler = new Handler();
 
-	public static aSMApplication m_application;
+//	public static aSMApplication m_application;
 
-	public static int THEME = R.style.Theme_Sherlock;
+//	public static int THEME = R.style.Theme_Sherlock;
 
 	ViewPager m_viewPager;
 	TabsAdapter m_tabsAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		m_application = (aSMApplication) getApplication();
-		m_application.initPreferences();
+		aSMApplication application = aSMApplication.getCurrentApplication();
 
-		if (HomeActivity.m_application.isNightTheme()) {
-			THEME = R.style.Theme_Sherlock;
-		} else {
-			THEME = R.style.Theme_Sherlock_Light;
-		}
-		setTheme(THEME);
+		setTheme(aSMApplication.THEME);
 
 		super.onCreate(savedInstanceState);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -70,7 +63,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 		actionBar.setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 
-		boolean isLight = THEME == R.style.Theme_Sherlock_Light;
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
 		m_tabsAdapter = new TabsAdapter(this, m_viewPager);
 		m_tabsAdapter.addTab(
@@ -100,12 +93,12 @@ public class HomeActivity extends SherlockFragmentActivity {
 		
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
-		m_viewModel = m_application.getHomeViewModel();
+		m_viewModel = application.getHomeViewModel();
 		// m_viewModel.registerViewModelChangeObserver(this);
 		m_viewModel.setCurrentTab(null); // since m_tabsAdapter.addTab will set
 											// current tab
 
-		boolean isAutoLogin = m_application.isAutoLogin();
+		boolean isAutoLogin = application.isAutoLogin();
 
 		m_viewModel.updateLoginStatus();
 		if (this.getIntent().getExtras() != null) {
@@ -127,8 +120,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 		else if (isAutoLogin) {
 			m_viewModel.restorSmthSupport();
 
-			String userName = m_application.getAutoUserName();
-			String password = m_application.getAutoPassword();
+			String userName = application.getAutoUserName();
+			String password = application.getAutoPassword();
 
 			LoginTask loginTask = new LoginTask(this, m_viewModel, userName,
 					password);
@@ -142,6 +135,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 			startActivity(intent);
 			finish();
 		}
+		
+		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
 	@Override
@@ -149,11 +144,11 @@ public class HomeActivity extends SherlockFragmentActivity {
 		super.onResume();
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// do nothing to stop onCreated
-		super.onConfigurationChanged(newConfig);
-	}
+//	@Override
+//	public void onConfigurationChanged(Configuration newConfig) {
+//		// do nothing to stop onCreated
+//		super.onConfigurationChanged(newConfig);
+//	}
 
 	@Override
 	public void onDestroy() {
@@ -188,7 +183,9 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 	private void init() {
 		// initTasks();
-		if (m_application.isFirstLaunchApp() || m_application.isFirstLaunchAfterUpdate()) {
+		aSMApplication application = aSMApplication.getCurrentApplication();
+		if (application.isFirstLaunchApp() || application.isFirstLaunchAfterUpdate()) {
+			application.markFirstLaunchApp();
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 			alertBuilder.setTitle(R.string.update_title);
 			alertBuilder.setMessage(R.string.update_info);
@@ -202,7 +199,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 			alertBuilder.show();
 		}
 
-		String tab = m_viewModel.getCurrentTab() == null ? m_application
+		String tab = m_viewModel.getCurrentTab() == null ? application
 				.getDefaultTab() : m_viewModel.getCurrentTab();
 		m_viewModel.setCurrentTab(tab);
 
@@ -225,11 +222,12 @@ public class HomeActivity extends SherlockFragmentActivity {
 	}
 
 	private void exit() {
-		Boolean rememberUser = m_application.isRememberUser();
+		aSMApplication application = aSMApplication.getCurrentApplication();
+		Boolean rememberUser = application.isRememberUser();
 		if (!rememberUser) {
-			m_application.updateAutoUserNameAndPassword("", "");
+			application.updateAutoUserNameAndPassword("", "");
 		}
-		m_application.syncPreferences();
+		application.syncPreferences();
 
 		finishAndClean();
 	}
@@ -317,7 +315,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// super.onCreateOptionsMenu(menu);
-		boolean isLight = THEME == R.style.Theme_Sherlock_Light;
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
 		menu.add(0, CLEAN, Menu.NONE, "清除缓存")
 				.setIcon(isLight ? R.drawable.clean_inverse : R.drawable.clean)

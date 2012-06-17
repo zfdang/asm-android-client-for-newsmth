@@ -12,12 +12,13 @@ public class SubjectListActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.subject_list_activity);	
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
 	@Override

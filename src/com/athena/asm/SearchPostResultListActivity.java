@@ -30,7 +30,7 @@ public class SearchPostResultListActivity extends SherlockActivity {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_post_result_list);
 

@@ -1,7 +1,7 @@
 package com.athena.asm.Adapter;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -36,7 +36,7 @@ public class BoardTypeListAdapter extends BaseAdapter {
 			textView.setTextColor(Color.GRAY);
 		}
 		else {
-			boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+			boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 			if (isLight) {
 				textView.setTextColor(Color.BLACK);
 			} else {

@@ -33,7 +33,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.athena.asm.HomeActivity;
 import com.athena.asm.PostListActivity;
 import com.athena.asm.R;
 import com.athena.asm.WritePostActivity;
@@ -379,7 +378,7 @@ public class PostListFragment extends SherlockFragment implements
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		if (HomeActivity.m_application.isTouchScroll()) {
+		if (aSMApplication.getCurrentApplication().isTouchScroll()) {
 			int touchY = (int) e.getRawY();
 			float scale = (float) (m_screenHeight / 800.0);
 			if (touchY > 60 * scale && touchY < 390 * scale) {
@@ -545,7 +544,7 @@ public class PostListFragment extends SherlockFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 		((SherlockFragmentActivity) getActivity()).getSupportMenuInflater().inflate(R.menu.share_action_provider, menu);
 		
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")

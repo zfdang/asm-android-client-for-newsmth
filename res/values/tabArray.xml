@@ -34,4 +34,14 @@
 		<item>5</item>
 		<item>9</item>
 	</string-array>
+	<string-array name="orientation_name">
+		<item>系统默认</item>
+		<item>竖屏锁定</item>
+		<item>横屏锁定</item>
+	</string-array>
+	<string-array name="orientation_value">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
 </resources>

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.MailBox;
 
 public class MailAdapter extends BaseAdapter {
@@ -32,8 +32,8 @@ public class MailAdapter extends BaseAdapter {
 		TextView boxNameTextView = (TextView) layout.findViewById(R.id.BoxName);
 		TextView numberTextView = (TextView) layout
 				.findViewById(R.id.mailNumber);
-		boxNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
-		numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
+		boxNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceFontSize());
+		numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceFontSize());
 		switch (position) {
 		case 0:
 			boxNameTextView.setText(R.string.mail_inbox);
@@ -75,7 +75,7 @@ public class MailAdapter extends BaseAdapter {
 			break;
 		}
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			boxNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			numberTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

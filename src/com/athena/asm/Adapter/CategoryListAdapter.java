@@ -2,14 +2,15 @@ package com.athena.asm.Adapter;
 
 import java.util.List;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 
 public class CategoryListAdapter extends BaseAdapter {
@@ -42,8 +43,10 @@ public class CategoryListAdapter extends BaseAdapter {
 		boardNameTextView.setText("[" + board.getEngName() + "]"
 				+ board.getChsName());
 		layout.setTag(board);
+		
+		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
 
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			categoryNameTextView.setTextColor(layout.getResources().getColor(
 					R.color.status_text_night));
 			moderatorIDTextView.setTextColor(layout.getResources().getColor(

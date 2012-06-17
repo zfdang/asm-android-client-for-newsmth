@@ -15,6 +15,7 @@ import java.util.Set;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,19 +33,24 @@ import com.athena.asm.viewmodel.PostListViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 
 public class aSMApplication extends Application {
-	private boolean isFirstLaunch = false;
-	private boolean isLoadDefaultCategoryFile = false;
-	
-	private boolean isRememberUser = true;
-	private boolean isAutoLogin = false;
 
-	private String autoUserName = "";
-	private String autoPassword = "";
+	private static aSMApplication m_application;
+	public static int THEME = R.style.Theme_Sherlock;
+	public static int ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+
+	private boolean m_isFirstLaunch = false;
+	private boolean m_isLoadDefaultCategoryFile = false;
+
+	private boolean m_isRememberUser = true;
+	private boolean m_isAutoLogin = false;
+
+	private String m_autoUserName = "";
+	private String m_autoPassword = "";
 
 	private String currentUserID = "";
 	private String defaultTab = StringUtility.TAB_GUIDANCE;
 	private String defaultBoardType = "001";
-	
+
 	private boolean isShowCheck = true;
 	private boolean isUseVibrate = true;
 	private String checkInterval = "3";
@@ -67,8 +73,7 @@ public class aSMApplication extends Application {
 	private boolean isHidePinSubject = false;
 	private boolean isNightTheme = false;
 
-	private boolean isForceScreenPortrait = false;
-
+	private int defaultOrientation = 0;
 	private boolean isPromotionShow = true;
 	private String promotionContent = "";
 
@@ -82,6 +87,21 @@ public class aSMApplication extends Application {
 	private PostListViewModel m_postListViewModel = new PostListViewModel();
 	private MailViewModel m_mailViewModel = new MailViewModel();
 
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
+
+		m_application = this;
+		m_application.initPreferences();
+	}
+
+	public static aSMApplication getCurrentApplication() {
+		return m_application;
+	}
+
 	public void syncPreferences() {
 		try {
 			FileOutputStream fos = openFileOutput("RecentFavList",
@@ -93,9 +113,14 @@ public class aSMApplication extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean isFirstLaunchApp() {
-		return isFirstLaunch;
+		return m_isFirstLaunch;
+	}
+	
+	public void markFirstLaunchApp() {
+		m_isFirstLaunch = false;
+		lastLaunchVersionCode = currentVersionCode;
 	}
 
 	public boolean isFirstLaunchAfterUpdate() {
@@ -105,7 +130,7 @@ public class aSMApplication extends Application {
 			return false;
 		}
 	}
-	
+
 	public void updateDefaultCategoryLoadStatus(boolean isLoaded) {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -116,9 +141,6 @@ public class aSMApplication extends Application {
 
 	@SuppressWarnings("unchecked")
 	public void initPreferences() {
-		CrashHandler crashHandler = CrashHandler.getInstance();
-		crashHandler.init(getApplicationContext());
-
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
@@ -126,20 +148,21 @@ public class aSMApplication extends Application {
 		if (!settings.contains(Preferences.DEFAULT_CATEGORY_LOADED)) {
 			editor.putBoolean(Preferences.DEFAULT_CATEGORY_LOADED, false);
 		} else {
-			setLoadDefaultCategoryFile(settings.getBoolean(Preferences.DEFAULT_CATEGORY_LOADED, true));
+			setLoadDefaultCategoryFile(settings.getBoolean(
+					Preferences.DEFAULT_CATEGORY_LOADED, true));
 		}
-		
+
 		if (!settings.contains(Preferences.REMEMBER_USER)) {
 			editor.putBoolean(Preferences.REMEMBER_USER, true);
 		} else {
-			isRememberUser = settings.getBoolean(Preferences.REMEMBER_USER,
+			m_isRememberUser = settings.getBoolean(Preferences.REMEMBER_USER,
 					true);
 		}
 
 		if (!settings.contains(Preferences.AUTO_LOGIN)) {
 			editor.putBoolean(Preferences.AUTO_LOGIN, false);
 		} else {
-			isAutoLogin = settings.getBoolean(Preferences.AUTO_LOGIN, false);
+			m_isAutoLogin = settings.getBoolean(Preferences.AUTO_LOGIN, false);
 			;
 		}
 
@@ -157,23 +180,24 @@ public class aSMApplication extends Application {
 			defaultBoardType = settings.getString(
 					Preferences.DEFAULT_BOARD_TYPE, "001");
 		}
-		
+
 		if (!settings.contains(Preferences.SHOW_CHECK)) {
 			editor.putBoolean(Preferences.SHOW_CHECK, true);
 		} else {
 			setShowCheck(settings.getBoolean(Preferences.SHOW_CHECK, true));
 		}
-		
+
 		if (!settings.contains(Preferences.USE_VIBRATE)) {
 			editor.putBoolean(Preferences.USE_VIBRATE, true);
 		} else {
 			setUseVibrate(settings.getBoolean(Preferences.USE_VIBRATE, true));
 		}
-		
+
 		if (!settings.contains(Preferences.CHECK_INTERVAL)) {
 			editor.putString(Preferences.CHECK_INTERVAL, "3");
 		} else {
-			setCheckInterval(settings.getString(Preferences.CHECK_INTERVAL, "3"));
+			setCheckInterval(settings
+					.getString(Preferences.CHECK_INTERVAL, "3"));
 		}
 
 		if (!settings.contains(Preferences.GUIDANCE_FONT_SIZE)) {
@@ -238,11 +262,11 @@ public class aSMApplication extends Application {
 			setNightTheme(settings.getBoolean(Preferences.NIGHT_THEME, false));
 		}
 
-		if (!settings.contains(Preferences.FORCE_SCREEN_PORTRAIT)) {
-			editor.putBoolean(Preferences.FORCE_SCREEN_PORTRAIT, false);
+		if (!settings.contains(Preferences.DEFAULT_ORIENTATION)) {
+			editor.putString(Preferences.DEFAULT_ORIENTATION, "0");
 		} else {
-			setForceScreenPortrait(settings.getBoolean(
-					Preferences.FORCE_SCREEN_PORTRAIT, false));
+			setDefaultOrientation(StringUtility.filterUnNumber(settings
+					.getString(Preferences.DEFAULT_ORIENTATION, "0")));
 		}
 
 		if (!settings.contains(Preferences.PROMOTION_SHOW)) {
@@ -310,7 +334,7 @@ public class aSMApplication extends Application {
 					Preferences.LAST_LAUNCH_VERSION, "4");
 			lastLaunchVersionCode = StringUtility.filterUnNumber(versionCode);
 		} else {
-			isFirstLaunch = true;
+			m_isFirstLaunch = true;
 		}
 		editor.putString(Preferences.LAST_LAUNCH_VERSION, currentVersionCode
 				+ "");
@@ -320,9 +344,9 @@ public class aSMApplication extends Application {
 
 		if (lastLaunchVersionCode == 4) {
 			try {
-				autoPassword = SimpleCrypto.encrypt("comathenaasm",
-						autoPassword);
-				editor.putString(Preferences.PASSWORD_KEY, autoPassword);
+				m_autoPassword = SimpleCrypto.encrypt("comathenaasm",
+						m_autoPassword);
+				editor.putString(Preferences.PASSWORD_KEY, m_autoPassword);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -331,7 +355,8 @@ public class aSMApplication extends Application {
 		editor.commit();
 
 		try {
-			autoPassword = SimpleCrypto.decrypt("comathenaasm", autoPassword);
+			m_autoPassword = SimpleCrypto.decrypt("comathenaasm",
+					m_autoPassword);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -364,6 +389,26 @@ public class aSMApplication extends Application {
 				e.printStackTrace();
 			}
 		}
+
+		if (isNightTheme()) {
+			THEME = R.style.Theme_Sherlock;
+		} else {
+			THEME = R.style.Theme_Sherlock_Light;
+		}
+
+		switch (defaultOrientation) {
+		case 0:
+			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+			break;
+		case 1:
+			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+			break;
+		case 2:
+			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void updateAutoUserNameAndPassword(String username, String password) {
@@ -381,19 +426,19 @@ public class aSMApplication extends Application {
 	}
 
 	public void setRememberUser(boolean isRememberUser) {
-		this.isRememberUser = isRememberUser;
+		this.m_isRememberUser = isRememberUser;
 	}
 
 	public boolean isRememberUser() {
-		return isRememberUser;
+		return m_isRememberUser;
 	}
 
 	public void setAutoLogin(boolean isAutoLogin) {
-		this.isAutoLogin = isAutoLogin;
+		this.m_isAutoLogin = isAutoLogin;
 	}
 
 	public boolean isAutoLogin() {
-		return isAutoLogin;
+		return m_isAutoLogin;
 	}
 
 	public void setCurrentUserID(String currentUserID) {
@@ -421,19 +466,19 @@ public class aSMApplication extends Application {
 	}
 
 	public void setAutoUserName(String autoUserName) {
-		this.autoUserName = autoUserName;
+		this.m_autoUserName = autoUserName;
 	}
 
 	public String getAutoUserName() {
-		return autoUserName;
+		return m_autoUserName;
 	}
 
 	public void setAutoPassword(String autoPassword) {
-		this.autoPassword = autoPassword;
+		this.m_autoPassword = autoPassword;
 	}
 
 	public String getAutoPassword() {
-		return autoPassword;
+		return m_autoPassword;
 	}
 
 	public void setGuidanceFontSize(int guidanceFontSize) {
@@ -547,14 +592,6 @@ public class aSMApplication extends Application {
 		this.imageSizeThreshold = imageSizeThreshold;
 	}
 
-	public boolean isForceScreenPortrait() {
-		return isForceScreenPortrait;
-	}
-
-	public void setForceScreenPortrait(boolean isForceScreenPortrait) {
-		this.isForceScreenPortrait = isForceScreenPortrait;
-	}
-
 	public boolean isNightTheme() {
 		return isNightTheme;
 	}
@@ -630,11 +667,19 @@ public class aSMApplication extends Application {
 	}
 
 	public boolean isLoadDefaultCategoryFile() {
-		return isLoadDefaultCategoryFile;
+		return m_isLoadDefaultCategoryFile;
 	}
 
 	public void setLoadDefaultCategoryFile(boolean isLoadDefaultCategoryFile) {
-		this.isLoadDefaultCategoryFile = isLoadDefaultCategoryFile;
+		this.m_isLoadDefaultCategoryFile = isLoadDefaultCategoryFile;
+	}
+
+	public int getDefaultOrientation() {
+		return defaultOrientation;
+	}
+
+	public void setDefaultOrientation(int defaultOrientation) {
+		this.defaultOrientation = defaultOrientation;
 	}
 
 }

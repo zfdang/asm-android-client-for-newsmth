@@ -27,7 +27,7 @@ public class ReadMailActivity extends SherlockActivity implements BaseViewModel.
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.post_list);
 

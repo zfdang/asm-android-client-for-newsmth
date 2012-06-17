@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.athena.asm.viewmodel.BaseViewModel.OnViewModelChangObserver;
-
 public abstract class BaseViewModel {
 
 	public interface OnViewModelChangObserver {

@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 
 public class SubjectListAdapter extends BaseAdapter {
@@ -40,7 +40,7 @@ public class SubjectListAdapter extends BaseAdapter {
 		TextView titleTextView = (TextView) layout.findViewById(R.id.SubjectTitle);
 		String titleString = subject.getTitle();
 		if (subject.getType().toLowerCase().contains(Subject.TYPE_BOTTOM)) {
-			boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+			boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 			if (isLight) {
 				titleString = "<font color='#f00000'>" + titleString + "</font>";
 			} else {
@@ -49,14 +49,14 @@ public class SubjectListAdapter extends BaseAdapter {
 			
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getSubjectFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getSubjectFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
 		dateTextView.setText(subject.getDateString());
 		
 		layout.setTag(subject);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 		}

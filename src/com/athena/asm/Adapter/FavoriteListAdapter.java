@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 
 public class FavoriteListAdapter extends BaseExpandableListAdapter {
@@ -54,9 +54,9 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 				.findViewById(R.id.BoardName);
 		boardNameTextView.setText("[" + board.getEngName() + "]"
 				+ board.getChsName());
-		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
+		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
 		layout.setTag(board);
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
@@ -92,8 +92,8 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 		TextView boardNameTextView = (TextView) layout
 				.findViewById(R.id.BoardName);
 		boardNameTextView.setText(m_directories.get(groupPosition));
-		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
-		if (HomeActivity.m_application.isNightTheme()) {
+		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceFontSize());
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}
 		return layout;

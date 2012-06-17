@@ -23,7 +23,7 @@ public class Preferences {
 	public static final String AUTO_OPTIMIZE = "auto_optimize";
 	public static final String IMAGE_SIZE_THRESHOLD = "image_size_threshold";
 	
-	public static final String FORCE_SCREEN_PORTRAIT = "force_screen_portrait";
+	public static final String DEFAULT_ORIENTATION = "default_orientation";
 	public static final String TOUCH_SCROLL = "touch_scroll";
 	public static final String HIDE_PIN_SUBJECT = "hide_pin_subject";
 	public static final String NIGHT_THEME = "night_theme";

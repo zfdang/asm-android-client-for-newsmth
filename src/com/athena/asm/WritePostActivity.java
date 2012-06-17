@@ -53,7 +53,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.post_reply);
 
@@ -203,10 +203,10 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 			String postContent;
 			postContent = m.group(1);
 			postContent = postContent.replace("\n", "\n<br/>");
-			if (HomeActivity.m_application.isPromotionShow()) {
+			if (aSMApplication.getCurrentApplication().isPromotionShow()) {
 				String promotion = "--<br/>发送自aSM";
-				if (HomeActivity.m_application.getPromotionContent().length() > 0) {
-					promotion += "@" + HomeActivity.m_application.getPromotionContent();
+				if (aSMApplication.getCurrentApplication().getPromotionContent().length() > 0) {
+					promotion += "@" + aSMApplication.getCurrentApplication().getPromotionContent();
 				}
 				postContent += promotion + "\n<br/>";
 			}

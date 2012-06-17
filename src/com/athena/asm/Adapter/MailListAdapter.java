@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 
 public class MailListAdapter extends BaseAdapter {
@@ -61,14 +61,14 @@ public class MailListAdapter extends BaseAdapter {
 			//tp.setFakeBoldText(false);
 		}
 		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.MailSendDate);
 		dateTextView.setText(mail.getDateString());
 		
 		layout.setTag(mail);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}

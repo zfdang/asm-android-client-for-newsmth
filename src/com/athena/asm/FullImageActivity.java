@@ -29,7 +29,7 @@ public class FullImageActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(HomeActivity.THEME);
+		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.full_image);
 
@@ -51,7 +51,7 @@ public class FullImageActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// super.onCreateOptionsMenu(menu);
-		boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
 		menu.add(0, Menu.FIRST, Menu.NONE, "保存")
 				.setIcon(isLight ? R.drawable.save_inverse : R.drawable.save)
@@ -81,7 +81,7 @@ public class FullImageActivity extends SherlockActivity {
 
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
-					String path = "/sdcard/aSM/images/";
+					String path = Environment.getExternalStorageDirectory().getPath() + "/aSM/images/";
 					File dir = new File(path);
 					if (!dir.exists()) {
 						dir.mkdirs();

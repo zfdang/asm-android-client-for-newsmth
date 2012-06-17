@@ -33,6 +33,7 @@ import android.widget.ImageView;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.util.SmthCrawler;
 
 public final class UrlImageViewHelper {
@@ -391,7 +392,7 @@ public final class UrlImageViewHelper {
 	}
 
 	private static boolean checkIsToLoadImage(Context context, float imageSize) {
-		boolean isAutoOptimize = HomeActivity.m_application.isAutoOptimize();
+		boolean isAutoOptimize = aSMApplication.getCurrentApplication().isAutoOptimize();
 		// 自动优化
 		if (isAutoOptimize) {
 			ConnectivityManager connectionManager = (ConnectivityManager) context
@@ -403,7 +404,7 @@ public final class UrlImageViewHelper {
 				return true;
 			}
 		}
-		float threshold = HomeActivity.m_application.getImageSizeThreshold();
+		float threshold = aSMApplication.getCurrentApplication().getImageSizeThreshold();
 		// 非自动优化或者自动优化但在移动网络中，需阈值判断
 		if (threshold == 0 || imageSize < threshold * 1024) {
 			return true;

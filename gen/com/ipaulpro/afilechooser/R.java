@@ -13,6 +13,8 @@ public final class R {
         public static final int board_type_value=0x7f0d0003;
         public static final int check_interval_name=0x7f0d0004;
         public static final int check_interval_value=0x7f0d0005;
+        public static final int orientation_name=0x7f0d0006;
+        public static final int orientation_value=0x7f0d0007;
         public static final int tab_name=0x7f0d0000;
         public static final int tab_value=0x7f0d0001;
     }
@@ -1226,8 +1228,6 @@ containing a value of this type.
         public static final int setting_default_board_type_details=0x7f0b0059;
         public static final int setting_default_tab=0x7f0b0056;
         public static final int setting_default_tab_details=0x7f0b0057;
-        public static final int setting_force_screen_portrait=0x7f0b006e;
-        public static final int setting_force_screen_portrait_details=0x7f0b006f;
         public static final int setting_forward_email=0x7f0b0072;
         public static final int setting_forward_email_details=0x7f0b0073;
         public static final int setting_guidance_font_size=0x7f0b0060;
@@ -1238,6 +1238,8 @@ containing a value of this type.
         public static final int setting_image_size_threshold_details=0x7f0b0067;
         public static final int setting_night_theme=0x7f0b006c;
         public static final int setting_night_theme_details=0x7f0b006d;
+        public static final int setting_orientation=0x7f0b006e;
+        public static final int setting_orientation_details=0x7f0b006f;
         public static final int setting_post_font_size=0x7f0b0063;
         public static final int setting_promotion_content=0x7f0b0076;
         public static final int setting_promotion_content_details=0x7f0b0077;

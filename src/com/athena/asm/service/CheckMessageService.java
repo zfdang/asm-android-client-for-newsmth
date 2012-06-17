@@ -13,8 +13,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class CheckMessageService extends Service {
@@ -39,10 +39,10 @@ public class CheckMessageService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		if (HomeActivity.m_application != null) {
-			m_homeViewModel = HomeActivity.m_application.getHomeViewModel();
+		if (aSMApplication.getCurrentApplication() != null) {
+			m_homeViewModel = aSMApplication.getCurrentApplication().getHomeViewModel();
 
-			if (!m_homeViewModel.isLogined() || !HomeActivity.m_application.isShowCheck()) {
+			if (!m_homeViewModel.isLogined() || !aSMApplication.getCurrentApplication().isShowCheck()) {
 				stopSelf();
 				return;
 			}
@@ -76,7 +76,7 @@ public class CheckMessageService extends Service {
 	}
 	
 	public static void schedule(Context context) {
-		int interval = Integer.parseInt(HomeActivity.m_application.getCheckInterval());
+		int interval = Integer.parseInt(aSMApplication.getCurrentApplication().getCheckInterval());
 		Intent intent = new Intent(context, CheckMessageService.class);
 		PendingIntent pending = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
@@ -114,7 +114,7 @@ public class CheckMessageService extends Service {
 		notification.flags = Notification.FLAG_AUTO_CANCEL
 				| Notification.FLAG_ONLY_ALERT_ONCE;
 
-		if (HomeActivity.m_application.isUseVibrate()) {
+		if (aSMApplication.getCurrentApplication().isUseVibrate()) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		}
 
@@ -127,7 +127,7 @@ public class CheckMessageService extends Service {
 		
 		@Override
 		protected String doInBackground(String... arg0) {
-			m_result = HomeActivity.m_application.getHomeViewModel().checkNewMessage();
+			m_result = aSMApplication.getCurrentApplication().getHomeViewModel().checkNewMessage();
 			return null;
 		}
 

@@ -17,7 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.text.Html;
 import android.util.Log;
 
-import com.athena.asm.HomeActivity;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Mail;
@@ -254,17 +254,23 @@ public class SmthSupport {
 		String result = null;
 		String content = crawler
 				.getUrlContentFromMobile("http://m.newsmth.net/");
-		if (content.contains(">@我(")) {
-			result = "新@";
-		} else if (content.contains(">回我(")) {
-			result = "新回复";
+		if (content != null) {
+			if (content.contains(">@我(")) {
+				result = "新@";
+			} else if (content.contains(">回我(")) {
+				result = "新回复";
+			}
 		}
+		
 		return result;
 	}
 
 	public boolean checkNewMail() {
 		String content = crawler
 				.getUrlContentFromMobile("http://m.newsmth.net/");
+		if (content == null) {
+			return false;
+		}
 		if (content.contains("邮箱(新)")) {
 			return true;
 		} else {
@@ -281,6 +287,9 @@ public class SmthSupport {
 		MailBox mailBox = new MailBox();
 		String content = crawler
 				.getUrlContent("http://www.newsmth.net/bbsmail.php");
+		if (content == null) {
+			return null;
+		}
 		if (content.contains("您有未读邮件")) {
 			mailBox.setHavingNewMail(true);
 		} else {
@@ -308,10 +317,12 @@ public class SmthSupport {
 
 		content = crawler
 				.getUrlContentFromMobile("http://m.newsmth.net/refer/at");
-		if (content.contains(">@我(")) {
-			mailBox.setHavingNewAt(true);
-		} else if (content.contains(">回我(")) {
-			mailBox.setHavingNewReply(true);
+		if (content != null) {
+			if (content.contains(">@我(")) {
+				mailBox.setHavingNewAt(true);
+			} else if (content.contains(">回我(")) {
+				mailBox.setHavingNewReply(true);
+			}
 		}
 
 		return mailBox;
@@ -357,6 +368,9 @@ public class SmthSupport {
 
 		List<Mail> mailList = new ArrayList<Mail>();
 		String result = crawler.getUrlContent(urlString);
+		if (result == null) {
+			return Collections.emptyList();
+		}
 		int counter = 0;
 		String matchString = "";
 
@@ -471,7 +485,9 @@ public class SmthSupport {
 
 		List<Mail> mailList = new ArrayList<Mail>();
 		String result = crawler.getUrlContentFromMobile(urlString);
-		int counter = 0;
+		if (result == null) {
+			return Collections.emptyList();
+		}
 
 		// <div><a href="/refer/reply/read?index=
 		Pattern itemPattern;
@@ -550,14 +566,19 @@ public class SmthSupport {
 				+ boxTypeString + "&num=" + mail.getNumber() + "&title="
 				+ mail.getBoxString();
 		String result = crawler.getUrlContent(url);
-		Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
-				Pattern.DOTALL);
-		Matcher contentMatcher = contentPattern.matcher(result);
-		if (contentMatcher.find()) {
-			String contentString = contentMatcher.group(1);
-			Object[] objects = StringUtility.parsePostContent(contentString);
-			mail.setContent((String) objects[0]);
-			mail.setDate((java.util.Date) objects[1]);
+		if (result == null) {
+			mail.setContent("加载失败");
+			mail.setDate(new Date());
+		} else {
+			Pattern contentPattern = Pattern.compile("prints\\('(.*?)'\\);",
+					Pattern.DOTALL);
+			Matcher contentMatcher = contentPattern.matcher(result);
+			if (contentMatcher.find()) {
+				String contentString = contentMatcher.group(1);
+				Object[] objects = StringUtility.parsePostContent(contentString);
+				mail.setContent((String) objects[0]);
+				mail.setDate((java.util.Date) objects[1]);
+			}
 		}
 	}
 
@@ -652,6 +673,9 @@ public class SmthSupport {
 			String queryString) {
 		String url = "http://www.newsmth.net/bbsbfind.php?q=1&" + queryString;
 		String result = crawler.getUrlContent(url);
+		if (result == null) {
+			return Collections.emptyList();
+		}
 		String patternStr = "ta\\.r\\('[^']+','([^']+)','<a href=\"bbsqry.php\\?userid=(\\w+)\">\\w+</a>','([^']+)','<a href=\"bbscon.php\\?bid=\\d+&id=(\\d+)\">([^<>]+)</a>'\\);";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(result);
@@ -725,7 +749,7 @@ public class SmthSupport {
 			}
 			String type = matcher.group(3).trim();
 			// 隐藏置底
-			if (HomeActivity.m_application.isHidePinSubject()
+			if (aSMApplication.getCurrentApplication().isHidePinSubject()
 					&& type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
 				continue;
 			}
@@ -834,7 +858,7 @@ public class SmthSupport {
 			}
 		}
 
-		if (HomeActivity.m_application.isHidePinSubject()) {
+		if (aSMApplication.getCurrentApplication().isHidePinSubject()) {
 			for (Iterator<Subject> iterator = subjectList.iterator(); iterator
 					.hasNext();) {
 				Subject subject = (Subject) iterator.next();
@@ -1343,7 +1367,7 @@ public class SmthSupport {
 		params.add(new BasicNameValuePair("noansi", "1"));
 		params.add(new BasicNameValuePair("target", to));
 		String content = crawler.getPostRequestResult(url, params);
-		if (content.contains("操作成功")) {
+		if (content != null && content.contains("操作成功")) {
 			return true;
 		} else {
 			return false;
@@ -1358,7 +1382,7 @@ public class SmthSupport {
 		params.add(new BasicNameValuePair("noansi", "1"));
 		params.add(new BasicNameValuePair("target", to));
 		String content = crawler.getPostRequestResult(url, params);
-		if (content.contains("操作成功")) {
+		if (content != null && content.contains("操作成功")) {
 			return true;
 		} else {
 			return false;
@@ -1391,6 +1415,9 @@ public class SmthSupport {
 	public Profile getProfile(String userID) {
 		String url = "http://www.newsmth.net/bbsqry.php?userid=" + userID;
 		String content = crawler.getUrlContent(url);
+		if (content == null) {
+			return null;
+		}
 		Pattern profilePattern = Pattern.compile("<pre>(.*?)</pre>",
 				Pattern.DOTALL);
 

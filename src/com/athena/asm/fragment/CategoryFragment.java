@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.CategoryListAdapter;
@@ -116,7 +115,7 @@ public class CategoryFragment extends SherlockFragment implements
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.BOARD,
 							(Board) view.getTag());
-					HomeActivity.m_application.addRecentBoard((Board) view
+					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
 							.getTag());
 					intent.putExtras(bundle);
 					intent.setClassName("com.athena.asm",
@@ -169,7 +168,7 @@ public class CategoryFragment extends SherlockFragment implements
 					.getSystemService(SherlockActivity.INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-			HomeActivity.m_application.addRecentBoard(board);
+			aSMApplication.getCurrentApplication().addRecentBoard(board);
 
 			Intent intent = new Intent();
 			Bundle bundle = new Bundle();

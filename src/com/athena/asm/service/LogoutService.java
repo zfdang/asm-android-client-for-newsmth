@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.athena.asm.HomeActivity;
+import com.athena.asm.aSMApplication;
 
 public class LogoutService extends IntentService {
 
@@ -15,9 +15,9 @@ public class LogoutService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d("asm", "start logout");
-		if (HomeActivity.m_application != null) {
-			if (HomeActivity.m_application.getHomeViewModel() != null) {
-				HomeActivity.m_application.getHomeViewModel().logout();
+		if (aSMApplication.getCurrentApplication() != null) {
+			if (aSMApplication.getCurrentApplication().getHomeViewModel() != null) {
+				aSMApplication.getCurrentApplication().getHomeViewModel().logout();
 			}
 		}
 		Log.d("asm", "logout finish");

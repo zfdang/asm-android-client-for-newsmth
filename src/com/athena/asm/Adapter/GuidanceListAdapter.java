@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Subject;
 
 public class GuidanceListAdapter extends BaseExpandableListAdapter {
@@ -53,10 +53,10 @@ public class GuidanceListAdapter extends BaseExpandableListAdapter {
 		TextView titleTextView = (TextView) layout
 				.findViewById(R.id.SubjectTitle);
 		titleTextView.setText(subject.getTitle());
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceSecondFontSize());
+		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
 		layout.setTag(subject);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
@@ -92,8 +92,8 @@ public class GuidanceListAdapter extends BaseExpandableListAdapter {
 		TextView boardNameTextView = (TextView) layout
 				.findViewById(R.id.SectionName);
 		boardNameTextView.setText(m_sections.get(groupPosition));
-		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, HomeActivity.m_application.getGuidanceFontSize());
-		if (HomeActivity.m_application.isNightTheme()) {
+		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceFontSize());
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 		}
 		return layout;

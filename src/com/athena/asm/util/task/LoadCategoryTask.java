@@ -18,8 +18,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.BoardNameComparator;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -57,7 +57,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected String doInBackground(String... params) {
-		if (!HomeActivity.m_application.isLoadDefaultCategoryFile()) {
+		if (!aSMApplication.getCurrentApplication().isLoadDefaultCategoryFile()) {
 			try {
 				Log.d("asm", "Load default category file");
 				InputStream is = m_context.getResources().openRawResource(
@@ -78,7 +78,7 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 
 				bufw.close();
 				bufr.close();
-				HomeActivity.m_application.updateDefaultCategoryLoadStatus(true);
+				aSMApplication.getCurrentApplication().updateDefaultCategoryLoadStatus(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

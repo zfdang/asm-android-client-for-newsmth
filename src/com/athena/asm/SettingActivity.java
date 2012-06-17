@@ -46,9 +46,9 @@ public class SettingActivity extends PreferenceActivity implements
 			}
 		} else if (preference.getKey().equals(Preferences.NIGHT_THEME)) {
 			if ((Boolean)newValue) {
-				HomeActivity.THEME = R.style.Theme_Sherlock;
+				aSMApplication.THEME = R.style.Theme_Sherlock;
 			} else {
-				HomeActivity.THEME = R.style.Theme_Sherlock_Light;
+				aSMApplication.THEME = R.style.Theme_Sherlock_Light;
 			}
 		}
 		return true;
@@ -62,7 +62,7 @@ public class SettingActivity extends PreferenceActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			HomeActivity.m_application.initPreferences();
+			aSMApplication.getCurrentApplication().initPreferences();
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

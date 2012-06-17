@@ -170,47 +170,49 @@ public class SubjectListFragment extends SherlockFragment implements
 	}
 
 	public void reloadSubjectList() {
-		if (m_viewModel.isFirstIn()) {
-			m_viewModel.gotoFirstPage();
-			m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-			m_viewModel.setIsFirstIn(false);
+		if (m_viewModel.getSubjectList() != null) {
+			if (m_viewModel.isFirstIn()) {
+				m_viewModel.gotoFirstPage();
+				m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+				m_viewModel.setIsFirstIn(false);
+			}
+
+			PullToRefreshListView listView = (PullToRefreshListView) getActivity()
+					.findViewById(R.id.subject_list);
+			listView.onRefreshComplete();
+			listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel
+					.getSubjectList()));
+
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						final int position, long id) {
+					Intent intent = new Intent();
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(StringUtility.SUBJECT,
+							(Subject) view.getTag());
+					bundle.putInt(StringUtility.BOARD_TYPE,
+							m_viewModel.getBoardType());
+					intent.putExtras(bundle);
+					intent.setClassName("com.athena.asm",
+							"com.athena.asm.PostListActivity");
+					// activity.startActivity(intent);
+					startActivityForResult(intent, 0);
+				}
+			});
+
+			listView.setOnRefreshListener(new OnRefreshListener() {
+
+				@Override
+				public void onRefresh() {
+					refreshSubjectList();
+				}
+			});
+
+			getActivity().setTitle(m_viewModel.getTitleText());
+
+			listView.requestFocus();
 		}
-
-		PullToRefreshListView listView = (PullToRefreshListView) getActivity()
-				.findViewById(R.id.subject_list);
-		listView.onRefreshComplete();
-		listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel
-				.getSubjectList()));
-
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					final int position, long id) {
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.SUBJECT,
-						(Subject) view.getTag());
-				bundle.putInt(StringUtility.BOARD_TYPE,
-						m_viewModel.getBoardType());
-				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm",
-						"com.athena.asm.PostListActivity");
-				// activity.startActivity(intent);
-				startActivityForResult(intent, 0);
-			}
-		});
-
-		listView.setOnRefreshListener(new OnRefreshListener() {
-
-			@Override
-			public void onRefresh() {
-				refreshSubjectList();
-			}
-		});
-
-		getActivity().setTitle(m_viewModel.getTitleText());
-
-		listView.requestFocus();
 	}
 
 	private void refreshSubjectList() {
@@ -228,7 +230,7 @@ public class SubjectListFragment extends SherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// super.onCreateOptionsMenu(menu, inflater);
-		boolean isLight = HomeActivity.THEME == R.style.Theme_Sherlock_Light;
+		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
 		if (SmthSupport.getInstance().getLoginStatus()) {
 			menu.add(0, CREATE_ID, Menu.NONE, "发新贴")

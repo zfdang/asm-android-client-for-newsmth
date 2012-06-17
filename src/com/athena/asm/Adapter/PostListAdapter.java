@@ -18,8 +18,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.fragment.PostListFragment;
@@ -66,7 +66,7 @@ public class PostListAdapter extends BaseAdapter {
 			holder.post = post;
 			
 			holder.contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					HomeActivity.m_application.getPostFontSize());
+					aSMApplication.getCurrentApplication().getPostFontSize());
 			
 			layout.setTag(holder);
 		}
@@ -139,7 +139,7 @@ public class PostListAdapter extends BaseAdapter {
 		holder.contentTextView.setOnTouchListener(m_fragment);
 		layout.setOnTouchListener(m_fragment);
 		
-		if (HomeActivity.m_application.isNightTheme()) {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
