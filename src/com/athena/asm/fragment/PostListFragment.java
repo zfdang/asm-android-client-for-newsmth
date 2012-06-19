@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Editable;
@@ -62,6 +63,8 @@ public class PostListFragment extends SherlockFragment implements
 	Button m_preButton;
 	Button m_goButton;
 	Button m_nextButton;
+	
+	private boolean m_isPageNoEditTextTouched = false;
 
 	private int m_screenHeight;
 	private ListView m_listView;
@@ -110,6 +113,9 @@ public class PostListFragment extends SherlockFragment implements
 		m_pageNoEditText = (EditText) postListView
 				.findViewById(R.id.edittext_page_no);
 		m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+		m_pageNoEditText.setOnClickListener(this);
+		m_pageNoEditText.setOnTouchListener(this);
+		m_pageNoEditText.setTextColor(Color.GRAY);
 
 		m_firstButton = (Button) postListView.findViewById(R.id.btn_first_page);
 		m_firstButton.setOnClickListener(this);
@@ -119,6 +125,7 @@ public class PostListFragment extends SherlockFragment implements
 		m_preButton.setOnClickListener(this);
 		m_goButton = (Button) postListView.findViewById(R.id.btn_go_page);
 		m_goButton.setOnClickListener(this);
+		m_goButton.setText(R.string.go_and_last_page);
 		m_nextButton = (Button) postListView.findViewById(R.id.btn_next_page);
 		m_nextButton.setOnClickListener(this);
 
@@ -267,6 +274,11 @@ public class PostListFragment extends SherlockFragment implements
 
 	@Override
 	public void onClick(View view) {
+		if (view.getId() == R.id.edittext_page_no) {
+			changePageNoEditStatus();
+			return;
+		}
+		
 		boolean isNext = false;
 		if (m_viewModel.getBoardType() == 0) { // 同主题导航
 
@@ -277,9 +289,15 @@ public class PostListFragment extends SherlockFragment implements
 			} else if (view.getId() == R.id.btn_pre_page) {
 				m_viewModel.gotoPrevPage();
 			} else if (view.getId() == R.id.btn_go_page) {
-				int pageSet = Integer.parseInt(m_pageNoEditText.getText()
-						.toString());
-				m_viewModel.setCurrentPageNumber(pageSet);
+				// 如果未按过编辑框，GO的功能为末页。否则为GO
+				if (m_isPageNoEditTextTouched) {
+					int pageSet = Integer.parseInt(m_pageNoEditText.getText()
+							.toString());
+					m_viewModel.setCurrentPageNumber(pageSet);
+				} else {
+					m_viewModel.gotoLastPage();
+				}
+				
 			} else if (view.getId() == R.id.btn_next_page) {
 				m_viewModel.gotoNextPage();
 				isNext = true;
@@ -516,6 +534,11 @@ public class PostListFragment extends SherlockFragment implements
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		if (v.getId() == R.id.edittext_page_no) {
+			changePageNoEditStatus();
+			return false;
+		}
+		
 		boolean isConsumed = m_GestureDetector.onTouchEvent(event);
 		if (event.getAction() == MotionEvent.ACTION_CANCEL
 				|| event.getAction() == MotionEvent.ACTION_UP) {
@@ -624,6 +647,16 @@ public class PostListFragment extends SherlockFragment implements
 
 		}
 		return shareIntent;
+	}
+	
+	private void changePageNoEditStatus() {
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
+			m_pageNoEditText.setTextColor(Color.WHITE);
+		} else {
+			m_pageNoEditText.setTextColor(Color.BLACK);
+		}
+		
+		m_isPageNoEditTextTouched = true;
 	}
 
 	private void forwardToEmail(final Post post, final boolean group) {

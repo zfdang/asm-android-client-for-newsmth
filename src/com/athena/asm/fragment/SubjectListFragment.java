@@ -87,6 +87,7 @@ public class SubjectListFragment extends SherlockFragment implements
 		Button goButton = (Button) subjectListView
 				.findViewById(R.id.btn_go_page);
 		goButton.setOnClickListener(this);
+		goButton.setText(R.string.go_page);
 		Button nextButton = (Button) subjectListView
 				.findViewById(R.id.btn_next_page);
 		nextButton.setOnClickListener(this);
