@@ -277,6 +277,16 @@ public class SmthSupport {
 			return false;
 		}
 	}
+	
+	public void markAllMessageRead(int type) {
+		String url = "";
+		if (type == 0) {
+			url = "http://m.newsmth.net/refer/at/read?index=all";
+		} else {
+			url = "http://m.newsmth.net/refer/reply/read?index=all";
+		}
+		crawler.getUrlContentFromMobile(url);
+	}
 
 	/**
 	 * 获取邮箱信息

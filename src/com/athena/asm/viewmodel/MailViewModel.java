@@ -1,5 +1,6 @@
 package com.athena.asm.viewmodel;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.athena.asm.data.Mail;
@@ -26,12 +27,27 @@ public class MailViewModel extends BaseViewModel {
 		m_smthSupport = SmthSupport.getInstance();
 	}
 	
+	public void markAllMessageRead() {
+		if (getMailboxType() == 4) {
+			m_smthSupport.markAllMessageRead(0);
+		} else if (getMailboxType() == 5) {
+			m_smthSupport.markAllMessageRead(1);
+		}
+	}
+	
 	public List<Mail> getMailList() {
 		return m_maillList;
 	}
 	
 	public void setMailList(List<Mail> mailList) {
 		m_maillList = mailList;
+	}
+	
+	public void setAllMailRead() {
+		for (Iterator<Mail> iterator = m_maillList.iterator(); iterator.hasNext();) {
+			Mail mail = iterator.next();
+			mail.setUnread(false);
+		}
 	}
 	
 	public void setMailRead(int position) {

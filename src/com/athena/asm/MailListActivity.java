@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -29,7 +30,7 @@ public class MailListActivity extends SherlockActivity implements
 	private LayoutInflater m_inflater;
 
 	private MailViewModel m_viewModel;
-	
+
 	private MailListAdapter m_listAdapter;
 
 	@Override
@@ -37,7 +38,7 @@ public class MailListActivity extends SherlockActivity implements
 		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.post_list);
-		
+
 		setRequestedOrientation(aSMApplication.ORIENTATION);
 
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -91,8 +92,8 @@ public class MailListActivity extends SherlockActivity implements
 	public void reloadMailList() {
 		if (m_viewModel.getMailList() != null) {
 			ListView listView = (ListView) findViewById(R.id.post_list);
-			m_listAdapter = new MailListAdapter(m_inflater, m_viewModel
-					.getMailList(), m_viewModel.getMailboxType());
+			m_listAdapter = new MailListAdapter(m_inflater,
+					m_viewModel.getMailList(), m_viewModel.getMailboxType());
 			listView.setAdapter(m_listAdapter);
 
 			listView.setOnItemClickListener(new OnItemClickListener() {
@@ -100,11 +101,12 @@ public class MailListActivity extends SherlockActivity implements
 				public void onItemClick(AdapterView<?> parent, View view,
 						final int position, long id) {
 					if (m_viewModel.getMailboxType() < 3) {
-						m_viewModel.setMailRead(m_viewModel.getMailList().size() - position - 1);
+						m_viewModel.setMailRead(m_viewModel.getMailList()
+								.size() - position - 1);
 					} else {
 						m_viewModel.setMailRead(position);
 					}
-					
+
 					Intent intent = new Intent();
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.MAIL,
@@ -124,7 +126,7 @@ public class MailListActivity extends SherlockActivity implements
 			});
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		m_listAdapter.notifyDataSetChanged();
@@ -146,21 +148,27 @@ public class MailListActivity extends SherlockActivity implements
 				m_viewModel, startNumber);
 		loadMailListTask.execute();
 	}
-	
+
 	public static final int REFRESH_MAILLIST = Menu.FIRST;
-	
+	public static final int MARK_ALL_READ = Menu.FIRST + 1;
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
-		
+
 		menu.add(0, REFRESH_MAILLIST, Menu.NONE, "刷新")
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+		if (m_viewModel.getMailboxType() > 3) {
+			menu.add(0, MARK_ALL_READ, Menu.NONE, "全部已读").setShowAsAction(
+					MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// super.onOptionsItemSelected(item);
@@ -170,6 +178,19 @@ public class MailListActivity extends SherlockActivity implements
 			LoadMailListTask loadMailListTask = new LoadMailListTask(this,
 					m_viewModel, -1);
 			loadMailListTask.execute();
+			break;
+		case MARK_ALL_READ:
+			Toast.makeText(this, "正在标记已读，结束后返回上一级",
+					Toast.LENGTH_SHORT).show();
+			Thread th = new Thread() {
+				@Override
+				public void run() {
+					m_viewModel.markAllMessageRead();
+					m_viewModel.setAllMailRead();
+					finish();
+				}
+			};
+			th.start();
 			break;
 		}
 
