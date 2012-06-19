@@ -12,6 +12,7 @@ public class PostListViewModel extends BaseViewModel {
 	private Subject m_currentSubject;
 	private List<Post> m_postList;
 
+	private boolean m_isSubjectExpand = false;
 	private boolean m_isToRefreshBoard = false;
 	private int m_currentPageNo = 1;
 	private int m_boardType = 0; // 1是普通，0是同主题
@@ -187,6 +188,11 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public boolean updateSubject(Subject subject) {
 		
+		if (m_isSubjectExpand) {
+			m_currentSubject = null;
+			m_isSubjectExpand = false;
+		}
+		
 		boolean isNewSubject = true;
 		
 		if (m_currentSubject != null) {
@@ -216,6 +222,14 @@ public class PostListViewModel extends BaseViewModel {
 		m_isPreloadFinished = false;
 		m_preloadPostList = null;
 		m_preloadSubject = null;
+	}
+
+	public boolean isSubjectExpand() {
+		return m_isSubjectExpand;
+	}
+
+	public void setSubjectExpand(boolean isSubjectExpand) {
+		this.m_isSubjectExpand = isSubjectExpand;
 	}
 
 }

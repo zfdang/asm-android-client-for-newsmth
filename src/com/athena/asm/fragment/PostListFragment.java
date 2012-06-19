@@ -324,6 +324,7 @@ public class PostListFragment extends SherlockFragment implements
 				action = 3;
 				isNext = true;
 			} else if (view.getId() == R.id.btn_last_page) {
+				m_viewModel.setSubjectExpand(true);
 				m_viewModel.setBoardType(0);
 				m_startNumber = Integer.parseInt(m_viewModel
 						.getCurrentSubject().getSubjectID());
