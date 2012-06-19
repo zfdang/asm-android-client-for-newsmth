@@ -65,7 +65,7 @@ public class ReadMailActivity extends SherlockActivity implements BaseViewModel.
 		else {
 			loadMailContent();
 		}
-			
+		
 	}
 
 	@Override

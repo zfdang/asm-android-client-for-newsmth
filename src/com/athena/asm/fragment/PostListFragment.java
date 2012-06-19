@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.ClipboardManager;
+import android.text.Editable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -42,6 +43,7 @@ import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.task.ForwardPostToMailTask;
 import com.athena.asm.util.task.LoadPostTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
@@ -77,9 +79,9 @@ public class PostListFragment extends SherlockFragment implements
 	private float m_touchCurrentY = 0;
 
 	private int m_startNumber = 0;
-	
+
 	private String m_url = null;
-	
+
 	private ShareActionProvider actionProvider;
 
 	@Override
@@ -192,7 +194,7 @@ public class PostListFragment extends SherlockFragment implements
 			m_nextButton.setEnabled(false);
 			m_lastButton.setEnabled(false);
 		}
-		
+
 		actionProvider.setShareIntent(createShareIntent());
 
 		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel
@@ -403,6 +405,7 @@ public class PostListFragment extends SherlockFragment implements
 					.findViewById(R.id.AuthorID)).getText();
 			final Post post = ((PostListAdapter.ViewHolder) relativeLayout
 					.getTag()).post;
+			final Post firstPost = m_viewModel.getPostList().get(0);
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.post_reply_post));
 			itemList.add(getString(R.string.post_reply_mail));
@@ -410,6 +413,8 @@ public class PostListFragment extends SherlockFragment implements
 			itemList.add(getString(R.string.post_copy_author));
 			itemList.add(getString(R.string.post_copy_content));
 			itemList.add(getString(R.string.post_foward_self));
+			itemList.add(getString(R.string.post_foward_external));
+			itemList.add(getString(R.string.post_group_foward_external));
 			if (post.getAuthor().equals(m_viewModel.getSmthSupport().userid)) {
 				itemList.add(getString(R.string.post_edit_post));
 			}
@@ -472,14 +477,18 @@ public class PostListFragment extends SherlockFragment implements
 								Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
-						boolean result = m_viewModel.getSmthSupport()
-								.forwardPostToMailBox(post);
-						if (result) {
-							Toast.makeText(getActivity(), "已转寄到自己信箱中",
-									Toast.LENGTH_SHORT).show();
-						}
+						ForwardPostToMailTask task = new ForwardPostToMailTask(
+								getActivity(), m_viewModel, post,
+								ForwardPostToMailTask.FORWARD_TO_SELF, "");
+						task.execute();
 						break;
 					case 6:
+						forwardToEmail(post, false);
+						break;
+					case 7:
+						forwardToEmail(firstPost, true);
+						break;
+					case 8:
 						intent = new Intent();
 						intent.setClassName("com.athena.asm",
 								"com.athena.asm.WritePostActivity");
@@ -545,17 +554,20 @@ public class PostListFragment extends SherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
-		((SherlockFragmentActivity) getActivity()).getSupportMenuInflater().inflate(R.menu.share_action_provider, menu);
-		
+		((SherlockFragmentActivity) getActivity()).getSupportMenuInflater()
+				.inflate(R.menu.share_action_provider, menu);
+
 		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		
-		MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);
+
+		MenuItem actionItem = menu
+				.findItem(R.id.menu_item_share_action_provider_action_bar);
 		actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-        actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+		actionProvider
+				.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 	}
 
 	@Override
@@ -571,39 +583,106 @@ public class PostListFragment extends SherlockFragment implements
 
 		return true;
 	}
-	
+
 	/**
-     * Creates a sharing {@link Intent}.
-     *
-     * @return The sharing intent.
-     */
-    private Intent createShareIntent() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        if (m_viewModel.getCurrentSubject() != null) {
-        	Subject subject = m_viewModel.getCurrentSubject();
-        	shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject.getTitle());
-        	if (m_isFromReplyOrAt && m_url != null) {
-        		shareIntent.putExtra(Intent.EXTRA_TEXT, m_url);
-        	} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-        		shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
-            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
-    					+ "/" + subject.getSubjectID());
+	 * Creates a sharing {@link Intent}.
+	 * 
+	 * @return The sharing intent.
+	 */
+	private Intent createShareIntent() {
+		Intent shareIntent = new Intent(Intent.ACTION_SEND);
+		shareIntent.setType("text/plain");
+		if (m_viewModel.getCurrentSubject() != null) {
+			Subject subject = m_viewModel.getCurrentSubject();
+			shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject.getTitle());
+			if (m_isFromReplyOrAt && m_url != null) {
+				shareIntent.putExtra(Intent.EXTRA_TEXT, m_url);
+			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+				shareIntent.putExtra(
+						Intent.EXTRA_TEXT,
+						subject.getTitle() + " http://m.newsmth.net/article/"
+								+ subject.getBoardEngName() + "/"
+								+ subject.getSubjectID());
 			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL) {
-				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
-						"http://www.newsmth.net/bbscon.php?bid="
-						+ subject.getBoardID() + "&id=" + subject.getSubjectID());
+				shareIntent.putExtra(
+						Intent.EXTRA_TEXT,
+						subject.getTitle()
+								+ "http://www.newsmth.net/bbscon.php?bid="
+								+ subject.getBoardID() + "&id="
+								+ subject.getSubjectID());
 			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_DIGEST) {
-				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
-            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
-    					+ "/single/" + subject.getSubjectID() + "/1");
+				shareIntent.putExtra(Intent.EXTRA_TEXT,
+						subject.getTitle() + " http://m.newsmth.net/article/"
+								+ subject.getBoardEngName() + "/single/"
+								+ subject.getSubjectID() + "/1");
 			} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_MARK) {
-				shareIntent.putExtra(Intent.EXTRA_TEXT, subject.getTitle() + 
-            			" http://m.newsmth.net/article/" + subject.getBoardEngName()
-    					+ "/single/" + subject.getSubjectID() + "/3");
+				shareIntent.putExtra(Intent.EXTRA_TEXT,
+						subject.getTitle() + " http://m.newsmth.net/article/"
+								+ subject.getBoardEngName() + "/single/"
+								+ subject.getSubjectID() + "/3");
 			}
-        	
+
 		}
-        return shareIntent;
-    }
+		return shareIntent;
+	}
+
+	private void forwardToEmail(final Post post, final boolean group) {
+		String email = aSMApplication.getCurrentApplication()
+				.getForwardEmailAddr();
+		if (email == "") {
+			final EditText input = new EditText(getActivity());
+
+			new AlertDialog.Builder(getActivity())
+					.setTitle("设置转寄邮箱")
+					.setMessage("您还没有设置转寄邮箱，请先设置。如需更改，请至设置页面")
+					.setView(input)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									Editable value = input.getText();
+									aSMApplication.getCurrentApplication()
+											.updateForwardEmailAddr(
+													value.toString());
+
+									ForwardPostToMailTask task;
+									if (group)
+										task = new ForwardPostToMailTask(
+												getActivity(),
+												m_viewModel,
+												post,
+												ForwardPostToMailTask.FORWARD_TO_EMAIL_GROUP,
+												value.toString());
+									else
+										task = new ForwardPostToMailTask(
+												getActivity(),
+												m_viewModel,
+												post,
+												ForwardPostToMailTask.FORWARD_TO_EMAIL,
+												value.toString());
+									task.execute();
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									// Do nothing.
+								}
+							}).show();
+		} else {
+			ForwardPostToMailTask task;
+			if (group)
+				task = new ForwardPostToMailTask(getActivity(), m_viewModel,
+						post, ForwardPostToMailTask.FORWARD_TO_EMAIL_GROUP,
+						email);
+			else
+				task = new ForwardPostToMailTask(getActivity(), m_viewModel,
+						post, ForwardPostToMailTask.FORWARD_TO_EMAIL, email);
+			task.execute();
+		}
+
+		return;
+	}
+
 }

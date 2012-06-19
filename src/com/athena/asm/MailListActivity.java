@@ -13,9 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.MailListAdapter;
 import com.athena.asm.data.Mail;
@@ -31,6 +29,8 @@ public class MailListActivity extends SherlockActivity implements
 	private LayoutInflater m_inflater;
 
 	private MailViewModel m_viewModel;
+	
+	private MailListAdapter m_listAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,31 +89,45 @@ public class MailListActivity extends SherlockActivity implements
 	}
 
 	public void reloadMailList() {
-		ListView listView = (ListView) findViewById(R.id.post_list);
-		listView.setAdapter(new MailListAdapter(m_inflater, m_viewModel
-				.getMailList(), m_viewModel.getMailboxType()));
+		if (m_viewModel.getMailList() != null) {
+			ListView listView = (ListView) findViewById(R.id.post_list);
+			m_listAdapter = new MailListAdapter(m_inflater, m_viewModel
+					.getMailList(), m_viewModel.getMailboxType());
+			listView.setAdapter(m_listAdapter);
 
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					final int position, long id) {
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(StringUtility.MAIL,
-						(Mail) view.getTag());
-				intent.putExtras(bundle);
-				if (m_viewModel.getMailboxType() < 3) {
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.ReadMailActivity");
-				} else {
-					intent.putExtra(StringUtility.BOARD_TYPE,
-							SubjectListFragment.BOARD_TYPE_NORMAL);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.PostListActivity");
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						final int position, long id) {
+					if (m_viewModel.getMailboxType() < 3) {
+						m_viewModel.setMailRead(m_viewModel.getMailList().size() - position - 1);
+					} else {
+						m_viewModel.setMailRead(position);
+					}
+					
+					Intent intent = new Intent();
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(StringUtility.MAIL,
+							(Mail) view.getTag());
+					intent.putExtras(bundle);
+					if (m_viewModel.getMailboxType() < 3) {
+						intent.setClassName("com.athena.asm",
+								"com.athena.asm.ReadMailActivity");
+					} else {
+						intent.putExtra(StringUtility.BOARD_TYPE,
+								SubjectListFragment.BOARD_TYPE_NORMAL);
+						intent.setClassName("com.athena.asm",
+								"com.athena.asm.PostListActivity");
+					}
+					startActivityForResult(intent, 0);
 				}
-				startActivity(intent);
-			}
-		});
+			});
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		m_listAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -133,17 +147,32 @@ public class MailListActivity extends SherlockActivity implements
 		loadMailListTask.execute();
 	}
 	
-	public static final int REFRESH_SUBJECTLIST = Menu.FIRST;
+	public static final int REFRESH_MAILLIST = Menu.FIRST;
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 		
-		menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
+		menu.add(0, REFRESH_MAILLIST, Menu.NONE, "刷新")
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case REFRESH_MAILLIST:
+			m_viewModel.setMailList(null);
+			LoadMailListTask loadMailListTask = new LoadMailListTask(this,
+					m_viewModel, -1);
+			loadMailListTask.execute();
+			break;
+		}
+
 		return true;
 	}
 

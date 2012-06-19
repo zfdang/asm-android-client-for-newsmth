@@ -34,6 +34,10 @@ public class MailViewModel extends BaseViewModel {
 		m_maillList = mailList;
 	}
 	
+	public void setMailRead(int position) {
+		m_maillList.get(position).setUnread(false);
+	}
+	
 	public int getMailboxType() {
 		return m_boxType;
 	}
