@@ -18,9 +18,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.HomeActivity;
+import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.PostListActivity;
+import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
-import com.athena.asm.SubjectListActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.BoardTypeListAdapter;
 import com.athena.asm.Adapter.SubjectListAdapter;
@@ -45,6 +48,9 @@ public class SubjectListFragment extends SherlockFragment implements
 	private EditText m_pageNoEditText;
 
 	private boolean m_isNewInstance = false;
+	
+	private ProgressDialogProvider m_progressDialogProvider;
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 	
 	public static int BOARD_TYPE_SUBJECT = 0;
 	public static int BOARD_TYPE_NORMAL = 1;
@@ -105,6 +111,14 @@ public class SubjectListFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof ProgressDialogProvider) {
+			m_progressDialogProvider = (ProgressDialogProvider) parentActivity;
+		}
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		boolean isNewBoard = false;
 		if (m_isNewInstance) {
@@ -188,17 +202,12 @@ public class SubjectListFragment extends SherlockFragment implements
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						final int position, long id) {
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.SUBJECT,
-							(Subject) view.getTag());
-					bundle.putInt(StringUtility.BOARD_TYPE,
-							m_viewModel.getBoardType());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.PostListActivity");
-					// activity.startActivity(intent);
-					startActivityForResult(intent, 0);
+					if (m_onOpenActivityFragmentListener != null) {
+						Bundle bundle = new Bundle();
+						bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
+						bundle.putInt(StringUtility.BOARD_TYPE, m_viewModel.getBoardType());
+						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.POST_LIST, bundle);
+					}
 				}
 			});
 
@@ -219,7 +228,9 @@ public class SubjectListFragment extends SherlockFragment implements
 	private void refreshSubjectList() {
 		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(m_viewModel);
 		loadSubjectTask.execute();
-		((SubjectListActivity) getActivity()).showProgressDialog();
+		if (m_progressDialogProvider != null) {
+			m_progressDialogProvider.showProgressDialog();
+		}
 	}
 
 	public static final int SWITCH_BOARD_TYPE = Menu.FIRST;
@@ -322,7 +333,9 @@ public class SubjectListFragment extends SherlockFragment implements
 		LoadSubjectTask loadSubjectTask = new LoadSubjectTask(m_viewModel);
 		loadSubjectTask.execute();
 		dialog.dismiss();
-		((SubjectListActivity) getActivity()).showProgressDialog();
+		if (m_progressDialogProvider != null) {
+			m_progressDialogProvider.showProgressDialog();
+		}
 	}
 
 	@Override
@@ -331,7 +344,9 @@ public class SubjectListFragment extends SherlockFragment implements
 		if (changedPropertyName
 				.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
 			reloadSubjectList();
-			((SubjectListActivity) getActivity()).dismissProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.dismissProgressDialog();
+			}
 		}
 	}
 

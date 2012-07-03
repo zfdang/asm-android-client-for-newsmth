@@ -1,5 +1,6 @@
 package com.athena.asm;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -7,11 +8,18 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.athena.asm.data.Mail;
+import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.viewmodel.PostListViewModel;
 
-public class PostListActivity extends SherlockFragmentActivity {
+public class PostListActivity extends SherlockFragmentActivity
+							  implements ProgressDialogProvider,
+							  OnOpenActivityFragmentListener {
 	
 	private ProgressDialog m_pdialog;
+	
+	private PostListViewModel m_viewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +29,9 @@ public class PostListActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.post_list_activity);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		aSMApplication application = (aSMApplication) getApplication();
+		m_viewModel = application.getPostListViewModel();
 	}
 
 	@Override
@@ -60,6 +71,42 @@ public class PostListActivity extends SherlockFragmentActivity {
 			m_pdialog.cancel();
 			m_pdialog = null;
 		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (resultCode) {
+		case Activity.RESULT_OK:
+			Bundle b = data.getExtras();
+			m_viewModel.setIsToRefreshBoard(b.getBoolean(StringUtility.REFRESH_BOARD));
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onOpenActivityOrFragment(String target, Bundle bundle) {
+		Intent intent = new Intent();
+		intent.putExtras(bundle);
+		if (target.equals(ActivityFragmentTargets.WRITE_POST)) {
+			int writeType = bundle.getInt(StringUtility.WRITE_TYPE);
+			if (writeType == WritePostActivity.TYPE_MAIL) {
+				intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
+				startActivity(intent);
+			}
+			else if (writeType == WritePostActivity.TYPE_POST ||
+					 writeType == WritePostActivity.TYPE_POST_EDIT) {
+				intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
+				startActivityForResult(intent, 0);
+			}
+		}
+		else if (target.equals(ActivityFragmentTargets.VIEW_PROFILE)) {
+			intent.setClassName("com.athena.asm", ViewProfileActivity.class.getName());
+			startActivity(intent);
+		}
+		
 	}
 
 }

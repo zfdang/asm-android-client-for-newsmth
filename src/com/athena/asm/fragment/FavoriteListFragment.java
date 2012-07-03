@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +14,10 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
 import com.athena.asm.R;
+import com.athena.asm.SubjectListActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.data.Board;
@@ -32,6 +36,8 @@ public class FavoriteListFragment extends SherlockFragment implements
 	private ExpandableListView m_listView;
 
 	private boolean m_isLoaded;
+	
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,11 @@ public class FavoriteListFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		if (m_viewModel.getCurrentTab() != null
 				&& m_viewModel.getCurrentTab().equals(
@@ -131,16 +142,15 @@ public class FavoriteListFragment extends SherlockFragment implements
 				@Override
 				public boolean onChildClick(ExpandableListView parent,
 						View view, int groupPosition, int childPosition, long id) {
-					Intent intent = new Intent();
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(StringUtility.BOARD,
 							(Board) view.getTag());
 					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
 							.getTag());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.SubjectListActivity");
-					startActivity(intent);
+					
+					if (m_onOpenActivityFragmentListener != null) {
+						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
+					}
 					return false;
 				}
 			});

@@ -29,7 +29,8 @@ import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class HomeActivity extends SherlockFragmentActivity {
+public class HomeActivity extends SherlockFragmentActivity
+						  implements OnOpenActivityFragmentListener {
 
 	private HomeViewModel m_viewModel;
 
@@ -435,5 +436,33 @@ public class HomeActivity extends SherlockFragmentActivity {
 			break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onOpenActivityOrFragment(String target, Bundle bundle) {
+		if (target.equals(ActivityFragmentTargets.POST_LIST)) {
+			Intent intent = new Intent();
+			intent.putExtras(bundle);
+			intent.setClassName("com.athena.asm", PostListActivity.class.getName());
+			startActivity(intent);
+		}
+		else if (target.equals(ActivityFragmentTargets.SUBJECT_LIST)) {
+			Intent intent = new Intent();
+			intent.putExtras(bundle);
+			intent.setClassName("com.athena.asm", SubjectListActivity.class.getName());
+			startActivity(intent);
+		}
+		else if (target.equals(ActivityFragmentTargets.MAIL_LIST)) {
+			Intent intent = new Intent();
+			intent.putExtras(bundle);
+			intent.setClassName("com.athena.asm", MailListActivity.class.getName());
+			startActivity(intent);
+		}
+		else if (target.equals(ActivityFragmentTargets.WRITE_POST)) {
+			Intent intent = new Intent();
+			intent.putExtras(bundle);
+			intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
+			startActivity(intent);
+		}
 	}
 }
