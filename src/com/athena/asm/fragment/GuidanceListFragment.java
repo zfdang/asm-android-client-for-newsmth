@@ -1,5 +1,6 @@
 package com.athena.asm.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,10 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.PostListActivity;
+import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.GuidanceListAdapter;
@@ -28,6 +33,8 @@ public class GuidanceListFragment extends SherlockFragment implements
 	private ExpandableListView m_listView;
 
 	private boolean m_isLoaded;
+	
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,11 @@ public class GuidanceListFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		if (m_viewModel.getCurrentTab() != null
 				&& m_viewModel.getCurrentTab().equals(
@@ -86,14 +98,11 @@ public class GuidanceListFragment extends SherlockFragment implements
 				@Override
 				public boolean onChildClick(ExpandableListView parent, View v,
 						int groupPosition, int childPosition, long id) {
-					Intent intent = new Intent();
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.SUBJECT,
-							(Subject) v.getTag());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.PostListActivity");
-					startActivity(intent);
+					bundle.putSerializable(StringUtility.SUBJECT, (Subject) v.getTag());
+					if (m_onOpenActivityFragmentListener != null) {
+						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.POST_LIST, bundle);
+					}
 					return true;
 				}
 			});

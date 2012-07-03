@@ -1,5 +1,6 @@
 package com.athena.asm.fragment;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +14,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.MailAdapter;
+import com.athena.asm.data.Subject;
 import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadMailTask;
@@ -32,6 +37,8 @@ public class MailFragment extends SherlockFragment implements
 	private ListView m_listView;
 
 	private boolean m_isLoaded;
+	
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,11 @@ public class MailFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		if (m_viewModel.getCurrentTab() != null
 				&& m_viewModel.getCurrentTab().equals(StringUtility.TAB_MAIL)) {
@@ -89,22 +101,20 @@ public class MailFragment extends SherlockFragment implements
 					public void onItemClick(AdapterView<?> parent, View view,
 							final int position, long id) {
 						if (position != 3) {
-							final int boxType = position;
-							Intent intent = new Intent();
-							intent.putExtra(StringUtility.MAIL_BOX_TYPE,
-									boxType);
-							intent.setClassName("com.athena.asm",
-									"com.athena.asm.MailListActivity");
-							startActivity(intent);
+							if (m_onOpenActivityFragmentListener != null) {
+								final int boxType = position;
+								Bundle bundle = new Bundle();
+								bundle.putSerializable(StringUtility.MAIL_BOX_TYPE, boxType);
+								m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.MAIL_LIST, bundle);
+							}
 						} else if (position == 3) {
-							Intent intent = new Intent();
-							intent.setClassName("com.athena.asm",
-									"com.athena.asm.WritePostActivity");
-							intent.putExtra(StringUtility.URL,
-									"http://www.newsmth.net/bbspstmail.php");
-							intent.putExtra(StringUtility.WRITE_TYPE, 1);
-							intent.putExtra(StringUtility.IS_REPLY, false);
-							startActivity(intent);
+							if (m_onOpenActivityFragmentListener != null) {
+								Bundle bundle = new Bundle();
+								bundle.putSerializable(StringUtility.URL, "http://www.newsmth.net/bbspstmail.php");
+								bundle.putSerializable(StringUtility.WRITE_TYPE, 1);
+								bundle.putSerializable(StringUtility.IS_REPLY, false);
+								m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST, bundle);
+							}
 						}
 					}
 				});

@@ -1,5 +1,6 @@
 package com.athena.asm.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,11 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
+import com.athena.asm.SubjectListActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.data.Board;
@@ -38,6 +43,8 @@ public class CategoryFragment extends SherlockFragment implements
 	private View layout;
 
 	private boolean m_isLoaded;
+	
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,11 @@ public class CategoryFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		if (m_viewModel.getCurrentTab() != null
 				&& m_viewModel.getCurrentTab().equals(
@@ -111,16 +123,13 @@ public class CategoryFragment extends SherlockFragment implements
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View view,
 						int arg2, long arg3) {
-					Intent intent = new Intent();
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.BOARD,
-							(Board) view.getTag());
-					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
-							.getTag());
-					intent.putExtras(bundle);
-					intent.setClassName("com.athena.asm",
-							"com.athena.asm.SubjectListActivity");
-					startActivity(intent);
+					Board board = ((CategoryListAdapter.ViewHolder)view.getTag()).board;
+					bundle.putSerializable(StringUtility.BOARD, board);
+					aSMApplication.getCurrentApplication().addRecentBoard(board);
+					if (m_onOpenActivityFragmentListener != null) {
+						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
+					}
 				}
 				
 			});
@@ -170,13 +179,11 @@ public class CategoryFragment extends SherlockFragment implements
 
 			aSMApplication.getCurrentApplication().addRecentBoard(board);
 
-			Intent intent = new Intent();
 			Bundle bundle = new Bundle();
 			bundle.putSerializable(StringUtility.BOARD, board);
-			intent.putExtras(bundle);
-			intent.setClassName("com.athena.asm",
-					"com.athena.asm.SubjectListActivity");
-			this.startActivity(intent);
+			if (m_onOpenActivityFragmentListener != null) {
+				m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
+			}
 		}
 	}
 }

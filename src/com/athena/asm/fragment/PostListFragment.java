@@ -35,11 +35,14 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.athena.asm.PostListActivity;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.PostListAdapter;
+import com.athena.asm.data.Board;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
@@ -86,6 +89,9 @@ public class PostListFragment extends SherlockFragment implements
 	private String m_url = null;
 
 	private ShareActionProvider actionProvider;
+	
+	private ProgressDialogProvider m_progressDialogProvider;
+	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +151,14 @@ public class PostListFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 
 		boolean isNewSubject = false;
+		
+		Activity parentActivity = getSherlockActivity();
+		if (parentActivity instanceof ProgressDialogProvider) {
+			m_progressDialogProvider = (ProgressDialogProvider) parentActivity;
+		}
+		if (parentActivity instanceof OnOpenActivityFragmentListener) {
+			m_onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+		}
 
 		if (m_isNewInstance) {
 			Subject newSubject = (Subject) getActivity().getIntent()
@@ -172,13 +186,17 @@ public class PostListFragment extends SherlockFragment implements
 					m_viewModel.getCurrentSubject(), 0, false, false,
 					m_startNumber, null);
 			loadPostTask.execute();
-			((PostListActivity) getActivity()).showProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.showProgressDialog();
+			}
 		} else if (m_isFromReplyOrAt) {
 			LoadPostTask loadPostTask = new LoadPostTask(m_viewModel,
 					m_viewModel.getCurrentSubject(), 0, false, false,
 					m_startNumber, m_url);
 			loadPostTask.execute();
-			((PostListActivity) getActivity()).showProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.showProgressDialog();
+			}
 		} else {
 			reloadPostList();
 		}
@@ -259,20 +277,6 @@ public class PostListFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (resultCode) {
-		case Activity.RESULT_OK:
-			Bundle b = data.getExtras();
-			m_viewModel.setIsToRefreshBoard(b
-					.getBoolean(StringUtility.REFRESH_BOARD));
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.edittext_page_no) {
 			changePageNoEditStatus();
@@ -313,7 +317,9 @@ public class PostListFragment extends SherlockFragment implements
 					m_viewModel.getCurrentSubject(), 0, false, isNext,
 					m_startNumber, null);
 			loadPostTask.execute();
-			((PostListActivity) getActivity()).showProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.showProgressDialog();
+			}
 		} else {
 			int action = 0;
 			if (view.getId() == R.id.btn_first_page) {
@@ -335,7 +341,9 @@ public class PostListFragment extends SherlockFragment implements
 					m_viewModel.getCurrentSubject(), action, false, isNext,
 					m_startNumber, null);
 			loadPostTask.execute();
-			((PostListActivity) getActivity()).showProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.showProgressDialog();
+			}
 		}
 	}
 
@@ -346,7 +354,9 @@ public class PostListFragment extends SherlockFragment implements
 		if (changedPropertyName
 				.equals(PostListViewModel.POSTLIST_PROPERTY_NAME)) {
 			reloadPostList();
-			((PostListActivity) getActivity()).dismissProgressDialog();
+			if (m_progressDialogProvider != null) {
+				m_progressDialogProvider.dismissProgressDialog();
+			}
 		}
 
 	}
@@ -443,42 +453,41 @@ public class PostListFragment extends SherlockFragment implements
 			builder.setTitle(R.string.post_alert_title);
 			builder.setItems(items, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Intent intent;
 					switch (item) {
 					case 0:
-						intent = new Intent();
-						intent.setClassName("com.athena.asm",
-								"com.athena.asm.WritePostActivity");
-						intent.putExtra(
-								StringUtility.URL,
-								"http://www.newsmth.net/bbspst.php?board="
-										+ post.getBoard() + "&reid="
-										+ post.getSubjectID());
-						intent.putExtra(StringUtility.WRITE_TYPE,
-								WritePostActivity.TYPE_POST);
-						intent.putExtra(StringUtility.IS_REPLY, true);
-						// activity.startActivity(intent);
-						startActivityForResult(intent, 0);
+						if (m_onOpenActivityFragmentListener != null) {
+							Bundle bundle = new Bundle();
+							bundle.putSerializable(StringUtility.URL,
+												   "http://www.newsmth.net/bbspst.php?board="
+												   + post.getBoard() + "&reid="
+												   + post.getSubjectID());
+							bundle.putSerializable(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST);
+							bundle.putSerializable(StringUtility.IS_REPLY, true);
+							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
+									  bundle);
+						}
 						break;
 					case 1:
-						intent = new Intent();
-						intent.setClassName("com.athena.asm",
-								"com.athena.asm.WritePostActivity");
-						intent.putExtra(
-								StringUtility.URL,
-								"http://www.newsmth.net/bbspstmail.php?board="
-										+ post.getBoard() + "&id="
-										+ post.getSubjectID());
-						intent.putExtra(StringUtility.WRITE_TYPE, 1);
-						intent.putExtra(StringUtility.IS_REPLY, true);
-						startActivity(intent);
+						if (m_onOpenActivityFragmentListener != null) {
+							Bundle bundle = new Bundle();
+							bundle.putSerializable(StringUtility.URL,
+												   "http://www.newsmth.net/bbspstmail.php?board="
+												   + post.getBoard() + "&id="
+												   + post.getSubjectID());
+							bundle.putSerializable(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_MAIL);
+							bundle.putSerializable(StringUtility.IS_REPLY, true);
+							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
+																					  bundle);
+						}
+						
 						break;
 					case 2:
-						intent = new Intent();
-						intent.setClassName("com.athena.asm",
-								"com.athena.asm.ViewProfileActivity");
-						intent.putExtra(StringUtility.USERID, authorID);
-						startActivity(intent);
+						if (m_onOpenActivityFragmentListener != null) {
+							Bundle bundle = new Bundle();
+							bundle.putSerializable(StringUtility.USERID, authorID);
+							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.VIEW_PROFILE,
+																					  bundle);
+						}
 						break;
 					case 3:
 						ClipboardManager clip = (ClipboardManager) getActivity()
@@ -508,19 +517,17 @@ public class PostListFragment extends SherlockFragment implements
 						forwardToEmail(firstPost, true);
 						break;
 					case 8:
-						intent = new Intent();
-						intent.setClassName("com.athena.asm",
-								"com.athena.asm.WritePostActivity");
-						intent.putExtra(
-								StringUtility.URL,
-								"http://www.newsmth.net/bbsedit.php?board="
-										+ post.getBoard() + "&id="
-										+ post.getSubjectID() + "&ftype=");
-						intent.putExtra(StringUtility.WRITE_TYPE,
-								WritePostActivity.TYPE_POST_EDIT);
-						intent.putExtra(StringUtility.TITLE, post.getTitle()
-								.replace("主题:", ""));
-						startActivityForResult(intent, 0);
+						if (m_onOpenActivityFragmentListener != null) {
+							Bundle bundle = new Bundle();
+							bundle.putSerializable(StringUtility.URL,
+												   "http://www.newsmth.net/bbspst.php?board="
+												   + post.getBoard() + "&id="
+												   + post.getSubjectID() + "&ftype=");
+							bundle.putSerializable(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST_EDIT);
+							bundle.putSerializable(StringUtility.TITLE, post.getTitle().replace("主题:", ""));
+							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
+									  												  bundle);
+						}
 					default:
 						break;
 					}
@@ -570,7 +577,9 @@ public class PostListFragment extends SherlockFragment implements
 				m_viewModel.getCurrentSubject(), 0, false, false,
 				m_startNumber, null);
 		loadPostTask.execute();
-		((PostListActivity) getActivity()).showProgressDialog();
+		if (m_progressDialogProvider != null) {
+			m_progressDialogProvider.showProgressDialog();
+		}
 	}
 
 	public static final int REFRESH_SUBJECTLIST = Menu.FIRST;

@@ -118,8 +118,7 @@ public class MailListActivity extends SherlockActivity implements
 					} else {
 						intent.putExtra(StringUtility.BOARD_TYPE,
 								SubjectListFragment.BOARD_TYPE_NORMAL);
-						intent.setClassName("com.athena.asm",
-								"com.athena.asm.PostListActivity");
+						intent.setClassName("com.athena.asm", PostListActivity.class.getName());
 					}
 					startActivityForResult(intent, 0);
 				}

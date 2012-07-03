@@ -58,7 +58,7 @@ public class SearchPostResultListActivity extends SherlockActivity {
 				bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
 				bundle.putInt(StringUtility.BOARD_TYPE, m_boardType);
 				intent.putExtras(bundle);
-				intent.setClassName("com.athena.asm", "com.athena.asm.PostListActivity");
+				intent.setClassName("com.athena.asm", PostListActivity.class.getName());
 				startActivity(intent);
 			}
 		});

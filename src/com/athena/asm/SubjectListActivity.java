@@ -1,12 +1,17 @@
 package com.athena.asm;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.athena.asm.data.Mail;
+import com.athena.asm.data.Subject;
+import com.athena.asm.util.StringUtility;
 
-public class SubjectListActivity extends SherlockFragmentActivity {
+public class SubjectListActivity extends SherlockFragmentActivity
+								 implements ProgressDialogProvider, OnOpenActivityFragmentListener {
 	
 	private ProgressDialog m_pdialog;
 
@@ -39,6 +44,16 @@ public class SubjectListActivity extends SherlockFragmentActivity {
 		if (m_pdialog != null) {
 			m_pdialog.cancel();
 			m_pdialog = null;
+		}
+	}
+	
+	@Override
+	public void onOpenActivityOrFragment(String target, Bundle bundle) {
+		if (target.equals(ActivityFragmentTargets.POST_LIST)) {
+			Intent intent = new Intent();
+			intent.putExtras(bundle);
+			intent.setClassName("com.athena.asm", PostListActivity.class.getName());
+			startActivityForResult(intent, 0);
 		}
 	}
 }
