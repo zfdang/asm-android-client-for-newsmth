@@ -26,11 +26,13 @@ import com.athena.asm.fragment.ProfileFragment;
 import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoginTask;
+import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class HomeActivity extends SherlockFragmentActivity
-						  implements OnOpenActivityFragmentListener {
+						  implements OnOpenActivityFragmentListener,
+						  BaseViewModel.OnViewModelChangObserver {
 
 	private HomeViewModel m_viewModel;
 
@@ -44,6 +46,8 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	ViewPager m_viewPager;
 	TabsAdapter m_tabsAdapter;
+	
+	private ProgressDialog m_pdialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
 		m_viewModel = application.getHomeViewModel();
-		// m_viewModel.registerViewModelChangeObserver(this);
+		m_viewModel.registerViewModelChangeObserver(this);
 		m_viewModel.setCurrentTab(null); // since m_tabsAdapter.addTab will set
 											// current tab
 
@@ -124,8 +128,9 @@ public class HomeActivity extends SherlockFragmentActivity
 			String userName = application.getAutoUserName();
 			String password = application.getAutoPassword();
 
-			LoginTask loginTask = new LoginTask(this, m_viewModel, userName,
-					password);
+			showProgressDialog("登陆中...");
+			
+			LoginTask loginTask = new LoginTask(m_viewModel, userName, password);
 			loginTask.execute();
 		}
 		// 如果是第一次启动且没有自动登陆
@@ -153,7 +158,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	@Override
 	public void onDestroy() {
-		// m_viewModel.unregisterViewModelChangeObserver(this);
+		m_viewModel.unregisterViewModelChangeObserver(this);
 		super.onDestroy();
 	}
 
@@ -463,6 +468,31 @@ public class HomeActivity extends SherlockFragmentActivity
 			intent.putExtras(bundle);
 			intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
 			startActivity(intent);
+		}
+	}
+
+	@Override
+	public void onViewModelChange(BaseViewModel viewModel,
+			String changedPropertyName, Object... params) {
+		if (changedPropertyName.equals(HomeViewModel.LOGIN_PROPERTY_NAME)) {
+			dismissProgressDialog();
+			boolean isLogin = (Boolean)params[0];
+			loginTaskDone(isLogin);
+		}
+	}
+	
+	private void showProgressDialog(String message) {
+		if (m_pdialog == null) {
+			m_pdialog = new ProgressDialog(this);
+			m_pdialog.setMessage(message);
+			m_pdialog.show();
+		}
+	}
+	
+	private void dismissProgressDialog() {
+		if (m_pdialog != null) {
+			m_pdialog.cancel();
+			m_pdialog = null;
 		}
 	}
 }

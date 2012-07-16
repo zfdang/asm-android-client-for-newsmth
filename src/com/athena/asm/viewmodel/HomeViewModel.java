@@ -39,6 +39,7 @@ public class HomeViewModel extends BaseViewModel {
 	public static final String FAVLIST_PROPERTY_NAME = "FavList";
 	public static final String MAILBOX_PROPERTY_NAME = "Mailbox";
 	public static final String PROFILE_PROPERTY_NAME = "Profile";
+	public static final String LOGIN_PROPERTY_NAME = "Login";
 	
 	public HomeViewModel() {
 		m_smthSupport = SmthSupport.getInstance();
@@ -279,6 +280,10 @@ public class HomeViewModel extends BaseViewModel {
 	
 	public void notifyProfileChanged(Profile profile) {
 		notifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile);
+	}
+	
+	public void notifyLoginChanged(boolean result) {
+		notifyViewModelChange(this, LOGIN_PROPERTY_NAME, result);
 	}
 	
 }
