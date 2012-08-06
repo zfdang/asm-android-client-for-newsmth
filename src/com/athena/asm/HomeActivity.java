@@ -205,10 +205,12 @@ public class HomeActivity extends SherlockFragmentActivity
 			alertBuilder.show();
 		}
 
+		m_viewModel.setChangeNotificationEnabled(false);
 		String tab = m_viewModel.getCurrentTab() == null ? application
 				.getDefaultTab() : m_viewModel.getCurrentTab();
 		m_viewModel.setCurrentTab(tab);
-
+		m_viewModel.setChangeNotificationEnabled(true);
+		
 		int item = 0;
 		if (tab.equals(StringUtility.TAB_GUIDANCE)) {
 			item = 0;
@@ -223,7 +225,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 
 		m_viewPager.setCurrentItem(item);
-
+		
 		CheckMessageService.schedule(this);
 	}
 

@@ -14,6 +14,8 @@ public abstract class BaseViewModel {
 	}
 
 	private List<OnViewModelChangObserver> m_changeObserverList = new ArrayList<BaseViewModel.OnViewModelChangObserver>();
+	
+	private boolean m_isNotificationEnabled = true;
 
 	public void registerViewModelChangeObserver(
 			OnViewModelChangObserver observer) {
@@ -27,13 +29,19 @@ public abstract class BaseViewModel {
 
 	public void notifyViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		for (Iterator<OnViewModelChangObserver> iterator = m_changeObserverList
-				.iterator(); iterator.hasNext();) {
-			OnViewModelChangObserver changeObserver = iterator.next();
-			changeObserver.onViewModelChange(viewModel, changedPropertyName,
-					params);
 
+		if (!m_isNotificationEnabled) {
+			return;
 		}
+		
+		for (int i = 0; i < m_changeObserverList.size(); i++) {
+			m_changeObserverList.get(i).onViewModelChange(viewModel,
+					changedPropertyName, params);
+		}
+	}
+	
+	public void setChangeNotificationEnabled(boolean enabled) {
+		m_isNotificationEnabled = enabled;
 	}
 
 }
