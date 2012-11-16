@@ -184,6 +184,10 @@ public class HomeActivity extends SherlockFragmentActivity
 		} else {
 			m_viewModel.updateLoginStatus();
 			init();
+			if(m_viewModel.getCurrentTab().equals(StringUtility.TAB_GUIDANCE)){
+				m_viewModel.notifyGuidanceChanged();
+			}
+				
 		}
 	}
 
