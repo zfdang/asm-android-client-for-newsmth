@@ -1,7 +1,6 @@
 package com.athena.asm.viewmodel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class BaseViewModel {
@@ -17,17 +16,17 @@ public abstract class BaseViewModel {
 	
 	private boolean m_isNotificationEnabled = true;
 
-	public void registerViewModelChangeObserver(
+	public synchronized void registerViewModelChangeObserver(
 			OnViewModelChangObserver observer) {
 		m_changeObserverList.add(observer);
 	}
 
-	public void unregisterViewModelChangeObserver(
+	public synchronized void unregisterViewModelChangeObserver(
 			OnViewModelChangObserver observer) {
 		m_changeObserverList.remove(observer);
 	}
 
-	public void notifyViewModelChange(BaseViewModel viewModel,
+	public synchronized void notifyViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
 
 		if (!m_isNotificationEnabled) {
