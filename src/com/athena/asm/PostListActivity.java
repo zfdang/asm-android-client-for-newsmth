@@ -73,6 +73,14 @@ public class PostListActivity extends SherlockFragmentActivity
 		}
 	}
 	
+	public void doFinishBackToBoard(String boardEngName, String boardChsName) {
+		Intent i = new Intent();
+		i.putExtra("board_eng_name", boardEngName);
+		i.putExtra("board_chs_name", boardChsName);
+		setResult(Activity.RESULT_OK, i);
+		finish();
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {

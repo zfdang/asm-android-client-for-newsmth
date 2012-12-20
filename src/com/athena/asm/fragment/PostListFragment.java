@@ -37,12 +37,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
+import com.athena.asm.PostListActivity;
 import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.PostListAdapter;
-import com.athena.asm.data.Board;
+import com.athena.asm.data.Constants;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
@@ -87,6 +88,8 @@ public class PostListFragment extends SherlockFragment implements
 	private int m_startNumber = 0;
 
 	private String m_url = null;
+	private String m_boardEngName = null;
+	private String m_boardChsName = null;
 
 	private ShareActionProvider actionProvider;
 	
@@ -146,6 +149,7 @@ public class PostListFragment extends SherlockFragment implements
 		return postListView;
 	}
 
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -165,6 +169,8 @@ public class PostListFragment extends SherlockFragment implements
 					.getSerializableExtra(StringUtility.SUBJECT);
 			if (newSubject != null) {
 				isNewSubject = m_viewModel.updateSubject(newSubject);
+				m_boardEngName = newSubject.getBoardEngName();
+				m_boardChsName = newSubject.getBoardChsName();
 			} else {
 				m_isFromReplyOrAt = true;
 				Mail mail = (Mail) getActivity().getIntent()
@@ -583,6 +589,7 @@ public class PostListFragment extends SherlockFragment implements
 	}
 
 	public static final int REFRESH_SUBJECTLIST = Menu.FIRST;
+	public static final int GO_TO_BOARD = Menu.FIRST +1;
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -594,6 +601,10 @@ public class PostListFragment extends SherlockFragment implements
 				.setIcon(
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		menu.add(0, GO_TO_BOARD, Menu.NONE, "返回版面")
+		.setIcon( isLight ? R.drawable.toboard_inverse
+				: R.drawable.toboard)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		MenuItem actionItem = menu
@@ -610,6 +621,11 @@ public class PostListFragment extends SherlockFragment implements
 			switch (item.getItemId()) {
 			case REFRESH_SUBJECTLIST:
 				refreshPostList();
+				break;
+			case GO_TO_BOARD:
+				if (getActivity() instanceof PostListActivity && m_boardEngName != null){
+					((PostListActivity)getActivity()).doFinishBackToBoard(m_boardEngName, m_boardChsName);
+				}
 				break;
 			}
 		}

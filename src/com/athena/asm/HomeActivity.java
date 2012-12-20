@@ -18,6 +18,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.TabsAdapter;
+import com.athena.asm.data.Board;
+import com.athena.asm.data.Constants;
 import com.athena.asm.fragment.CategoryFragment;
 import com.athena.asm.fragment.FavoriteListFragment;
 import com.athena.asm.fragment.GuidanceListFragment;
@@ -448,6 +450,8 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 		return true;
 	}
+	
+	private static final int REQUESTCODE_POST_LIST = 1;
 
 	@Override
 	public void onOpenActivityOrFragment(String target, Bundle bundle) {
@@ -455,7 +459,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			Intent intent = new Intent();
 			intent.putExtras(bundle);
 			intent.setClassName("com.athena.asm", PostListActivity.class.getName());
-			startActivity(intent);
+			startActivityForResult(intent, REQUESTCODE_POST_LIST);
 		}
 		else if (target.equals(ActivityFragmentTargets.SUBJECT_LIST)) {
 			Intent intent = new Intent();
@@ -475,6 +479,32 @@ public class HomeActivity extends SherlockFragmentActivity
 			intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
 			startActivity(intent);
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		
+        if (requestCode == REQUESTCODE_POST_LIST) {
+
+        	if (resultCode == RESULT_OK) {
+        		String boardEngName = intent.getStringExtra("board_eng_name");
+        		String boardChsName = intent.getStringExtra("board_chs_name");
+        		if (boardEngName != null) {
+        			Board board = new Board();
+        			board.setEngName(boardEngName);
+        			board.setChsName(boardChsName);
+        			board.setCurrentPageNo(0);
+        			board.setBoardID("fake");
+        			Intent newIntent = new Intent();
+        			Bundle bundle = new Bundle();
+        			bundle.putSerializable(StringUtility.BOARD, board);
+        			newIntent.putExtras(bundle);
+        			newIntent.setClass(this, SubjectListActivity.class);
+        			startActivity(newIntent);
+        		}
+        	}
+        } 
 	}
 
 	@Override
