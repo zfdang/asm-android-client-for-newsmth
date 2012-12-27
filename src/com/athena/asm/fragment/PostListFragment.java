@@ -88,8 +88,6 @@ public class PostListFragment extends SherlockFragment implements
 	private int m_startNumber = 0;
 
 	private String m_url = null;
-	private String m_boardEngName = null;
-	private String m_boardChsName = null;
 
 	private ShareActionProvider actionProvider;
 	
@@ -169,8 +167,6 @@ public class PostListFragment extends SherlockFragment implements
 					.getSerializableExtra(StringUtility.SUBJECT);
 			if (newSubject != null) {
 				isNewSubject = m_viewModel.updateSubject(newSubject);
-				m_boardEngName = newSubject.getBoardEngName();
-				m_boardChsName = newSubject.getBoardChsName();
 			} else {
 				m_isFromReplyOrAt = true;
 				Mail mail = (Mail) getActivity().getIntent()
@@ -623,8 +619,12 @@ public class PostListFragment extends SherlockFragment implements
 				refreshPostList();
 				break;
 			case GO_TO_BOARD:
-				if (getActivity() instanceof PostListActivity && m_boardEngName != null){
-					((PostListActivity)getActivity()).doFinishBackToBoard(m_boardEngName, m_boardChsName);
+				if (getActivity() instanceof PostListActivity ){
+					String boardEngName = m_viewModel.getCurrentSubject().getBoardEngName();
+					String boardChsName = m_viewModel.getCurrentSubject().getBoardChsName(); 
+					if(boardEngName != null){
+						((PostListActivity)getActivity()).doFinishBackToBoard(boardEngName, boardChsName);
+					}
 				}
 				break;
 			}

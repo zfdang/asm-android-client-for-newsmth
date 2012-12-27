@@ -17,6 +17,8 @@ import javax.crypto.spec.SecretKeySpec;
  * @author ferenc.hechler
  */
 public class SimpleCrypto {
+	
+	private static int JELLY_BEAN_4_2 = 17;
 
 	public static String encrypt(String seed, String cleartext) throws Exception {
 		byte[] rawKey = getRawKey(seed.getBytes());
@@ -31,9 +33,20 @@ public class SimpleCrypto {
 		return new String(result);
 	}
 
+	/**
+	 * This set seed way is just a simple encrypt trick which is not safe. 
+	 * @param seed
+	 * @return
+	 * @throws Exception
+	 */
 	private static byte[] getRawKey(byte[] seed) throws Exception {
 		KeyGenerator kgen = KeyGenerator.getInstance("AES");
-		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+		SecureRandom sr = null;
+		if (android.os.Build.VERSION.SDK_INT >= JELLY_BEAN_4_2) {
+		    sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+		} else {
+		    sr = SecureRandom.getInstance("SHA1PRNG");
+		}
 		sr.setSeed(seed);
 	    kgen.init(128, sr); // 192 and 256 bits may not be available
 	    SecretKey skey = kgen.generateKey();
