@@ -35,7 +35,7 @@ public class SubjectListViewModel extends BaseViewModel {
 	public boolean updateCurrentBoard(Board board, String boardType) {
 		boolean isNewBoard = true;
 		if (m_currentBoard != null) {
-			isNewBoard = !m_currentBoard.getBoardID().equals(board.getBoardID());
+			isNewBoard = !m_currentBoard.getEngName().equals(board.getEngName());
 		}
 		
 		if (isNewBoard) {
