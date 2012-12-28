@@ -92,8 +92,16 @@ public class PhoneNumSensor extends Sensor {
 		return ret;
 	}
 
+	/**
+	 * 检查是否满足长度要求
+	 * 1. 最少长度为8，对于纯中文串，最少长度为5
+	 * 2. 最大长度为16
+	 * @param content
+	 * @return
+	 */
 	private boolean satisfyLengthConstraint(String content) {
-		return (content.length() >= 8 || !isPureChinese(content) && content.length() >= 5);
+		return (content.length() <= 16) && 
+				(content.length() >= 8 || !isPureChinese(content) && content.length() >= 5);
 	}
 
 	private boolean isPureChinese(String content) {
