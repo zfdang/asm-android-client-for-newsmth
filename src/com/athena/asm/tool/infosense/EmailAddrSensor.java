@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 从文本中解析出疑似的电子邮件
+ * 从文本中解析出可能的电子邮件地址
  * @author aleck
  * 
  * Email地址的详细定义可以参见：

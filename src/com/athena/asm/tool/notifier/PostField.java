@@ -1,7 +1,7 @@
 package com.athena.asm.tool.notifier;
 
 /**
- * 对应一个Post里面可以用来搜索的Field
+ * 对应一个Post里面可以用来筛选的Field
  * @author aleck
  *
  */

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * EmailAddr 和 PhoneNumber的合体
+ * EmailAddrSensro + PhoneNumSensor
  * @author aleck
  *
  */

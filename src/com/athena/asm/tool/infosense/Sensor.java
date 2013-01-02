@@ -3,7 +3,7 @@ package com.athena.asm.tool.infosense;
 import java.util.List;
 
 /**
- * 从文本中发掘信息
+ * 从文本中发掘信息的类
  * @author aleck
  *
  */

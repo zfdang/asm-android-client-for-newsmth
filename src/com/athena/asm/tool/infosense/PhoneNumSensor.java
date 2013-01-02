@@ -9,50 +9,64 @@ import java.util.regex.Pattern;
 
 /**
  * 考虑如下电话号码的混淆方式：
- * 使用中文：〇一二三四五六七八九,零幺洞拐, 来代替相应数字
+ * 使用中文：〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐oO①②③④⑤⑥⑦⑧⑨, 来代替相应数字
  * 1. 括号不会被嵌套
  * 2. 段与段之间只有不超过1个WhiteSpace
  * 3. '-'不能作为开头
- * 4. 电话号码必须>=5位，纯中文书写的则必须>=8位
+ * 4. 电话号码必须>=5位，纯特殊字符书写的则必须>=8位
  * @author aleck
  *
  */
 public class PhoneNumSensor extends Sensor {
+	// 其余可能的字符，只用于检测，不要求specials映射对应（但最好是对应）
+	private static final String OTHER_DIGITS = "〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐oO①②③④⑤⑥⑦⑧⑨";
+	// 正则表达式
 	private static final Pattern phone = Pattern.compile(
-			"((\\+?)(([0-9PpWw〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐])+|\\(([0-9PpWw〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐])+\\)))" +
-			"((\\s|[\\+\\-])?(([0-9PpWw〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐])+|\\(([0-9PpWw〇一二三四五六七八九零壹贰叁肆伍陆柒捌玖洞幺参拐])+\\)))*"
+			"((\\+?)(([0-9PpWw" + OTHER_DIGITS + "])+|\\(([0-9PpWw" + OTHER_DIGITS + "])+\\)))" +
+			"((\\s|[\\+\\-])?(([0-9PpWw" + OTHER_DIGITS + "])+|\\(([0-9PpWw" + OTHER_DIGITS + "])+\\)))*"
 			);
-	private static final Map<Character, Character> chinese;
+	private static final Map<Character, Character> specials;
 
 	static {
-		chinese = new HashMap<Character, Character>();
+		specials = new HashMap<Character, Character>();
 		// simple form
-		chinese.put('〇', '0');
-		chinese.put('一', '1');
-		chinese.put('二', '2');
-		chinese.put('三', '3');
-		chinese.put('四', '4');
-		chinese.put('五', '5');
-		chinese.put('六', '6');
-		chinese.put('七', '7');
-		chinese.put('八', '8');
-		chinese.put('九', '9');
+		specials.put('〇', '0');
+		specials.put('一', '1');
+		specials.put('二', '2');
+		specials.put('三', '3');
+		specials.put('四', '4');
+		specials.put('五', '5');
+		specials.put('六', '6');
+		specials.put('七', '7');
+		specials.put('八', '8');
+		specials.put('九', '9');
 		// capital form
-		chinese.put('零', '0');
-		chinese.put('贰', '1');
-		chinese.put('叁', '2');
-		chinese.put('肆', '3');
-		chinese.put('伍', '4');
-		chinese.put('陆', '5');
-		chinese.put('柒', '6');
-		chinese.put('捌', '7');
-		chinese.put('玖', '8');
-		chinese.put('拾', '9');
+		specials.put('零', '0');
+		specials.put('贰', '1');
+		specials.put('叁', '2');
+		specials.put('肆', '3');
+		specials.put('伍', '4');
+		specials.put('陆', '5');
+		specials.put('柒', '6');
+		specials.put('捌', '7');
+		specials.put('玖', '8');
+		specials.put('拾', '9');
 		// others
-		chinese.put('洞', '0');
-		chinese.put('幺', '1');
-		chinese.put('参', '3');
-		chinese.put('拐', '7');
+		specials.put('洞', '0');
+		specials.put('幺', '1');
+		specials.put('参', '3');
+		specials.put('拐', '7');
+		specials.put('o', '0');
+		specials.put('O', '0');
+		specials.put('①', '1');
+		specials.put('②', '2');
+		specials.put('③', '3');
+		specials.put('④', '4');
+		specials.put('⑤', '5');
+		specials.put('⑥', '6');
+		specials.put('⑦', '7');
+		specials.put('⑧', '8');
+		specials.put('⑨', '9');
 	}
 
 	protected PhoneNumSensor() {
@@ -68,9 +82,9 @@ public class PhoneNumSensor extends Sensor {
 			Character ch = raw.charAt(i);
 			if (Character.isWhitespace(ch) || ignore.indexOf(ch) != -1) {
 				// ignore
-			} else if (chinese.containsKey(ch)) {
-				// translate chinese
-				output.append(chinese.get(ch));
+			} else if (specials.containsKey(ch)) {
+				// translate
+				output.append(specials.get(ch));
 			} else {
 				output.append(ch);
 			}
@@ -101,13 +115,13 @@ public class PhoneNumSensor extends Sensor {
 	 */
 	private boolean satisfyLengthConstraint(String content) {
 		return (content.length() <= 16) && 
-				(content.length() >= 8 || !isPureChinese(content) && content.length() >= 5);
+				(content.length() >= 8 || !isPureSpecial(content) && content.length() >= 5);
 	}
 
-	private boolean isPureChinese(String content) {
+	private boolean isPureSpecial(String content) {
 		for (int i = 0; i < content.length(); i++) {
 			Character ch = content.charAt(i);
-			if (!chinese.containsKey(ch)) {
+			if (!specials.containsKey(ch)) {
 				return false;
 			}
 		}
