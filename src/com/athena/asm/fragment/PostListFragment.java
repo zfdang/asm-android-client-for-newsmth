@@ -43,7 +43,6 @@ import com.athena.asm.R;
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.PostListAdapter;
-import com.athena.asm.data.Constants;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
@@ -89,7 +88,7 @@ public class PostListFragment extends SherlockFragment implements
 
 	private String m_url = null;
 
-	private ShareActionProvider actionProvider;
+	private ShareActionProvider m_actionProvider;
 	
 	private ProgressDialogProvider m_progressDialogProvider;
 	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
@@ -222,7 +221,9 @@ public class PostListFragment extends SherlockFragment implements
 			m_lastButton.setEnabled(false);
 		}
 
-		actionProvider.setShareIntent(createShareIntent());
+        if (m_actionProvider != null) {
+            m_actionProvider.setShareIntent(createShareIntent());
+        }
 
 		m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel
 				.getPostList()));
@@ -605,8 +606,8 @@ public class PostListFragment extends SherlockFragment implements
 
 		MenuItem actionItem = menu
 				.findItem(R.id.menu_item_share_action_provider_action_bar);
-		actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-		actionProvider
+		m_actionProvider = (ShareActionProvider) actionItem.getActionProvider();
+		m_actionProvider
 				.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 	}
 
