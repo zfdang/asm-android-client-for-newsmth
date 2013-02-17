@@ -112,7 +112,7 @@ public class PostListAdapter extends BaseAdapter {
 					imageView.setTag(attachments.get(i));
 					holder.imageLayout.addView(imageView);
 					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl,
-							R.drawable.loading, 60000, true);
+							R.drawable.loading, 60000);
 					imageView.setOnClickListener(new OnClickListener() {
 						
 						@Override

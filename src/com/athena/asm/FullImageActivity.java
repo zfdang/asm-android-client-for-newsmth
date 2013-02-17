@@ -44,7 +44,7 @@ public class FullImageActivity extends SherlockActivity {
 		m_image = (TouchImageView) findViewById(R.id.image_view);
 
 		UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl,
-				R.drawable.loading, 60000, false);
+				R.drawable.loading, 60000);
 
 	}
 
