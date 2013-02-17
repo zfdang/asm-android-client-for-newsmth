@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!--
+    Header
+
+    <include layout="@layout/header" />
+    -->
+
+
+    <!-- 工具栏 -->
+
+    <LinearLayout
+        android:id="@+id/post_first_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="标    题" />
+
+        <EditText
+            android:id="@+id/post_title"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/btn_attach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="@string/post_attach" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/post_second_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="签名档" />
+
+        <Spinner
+            android:id="@+id/sig_spinner"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="收信ID" />
+
+        <EditText
+            android:id="@+id/post_userid"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:singleLine="true" />
+        <!-- 发送按钮 -->
+
+        <Button
+            android:id="@+id/btn_send_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="@string/write_label_post" />
+    </LinearLayout>
+
+    <!-- main text input -->
+
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_marginTop="5dip"
+        android:paddingLeft="10dp"
+        android:text="内容" />
+
+    <EditText
+        android:id="@+id/post_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:hint="请输入内容"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:imeOptions="actionSend|flagNoEnterAction"
+        android:textSize="15dp" />
+
+</LinearLayout>

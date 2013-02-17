@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="tab_name">
+		<item>首页导读</item>
+		<item>我的收藏夹</item>
+		<item>分类讨论区</item>
+		<item>我的信箱</item>
+		<item>个人资料</item>
+	</string-array>
+	<string-array name="tab_value">
+		<item>001</item>
+		<item>002</item>
+		<item>003</item>
+		<item>004</item>
+		<item>005</item>
+	</string-array>
+	<string-array name="board_type_name">
+		<item>同主题</item>
+		<item>普通模式</item>
+	</string-array>
+	<string-array name="board_type_value">
+		<item>001</item>
+		<item>002</item>
+	</string-array>
+	<string-array name="check_interval_name">
+		<item>1分钟</item>
+		<item>3分钟</item>
+		<item>5分钟</item>
+		<item>9分钟</item>
+	</string-array>
+	<string-array name="check_interval_value">
+		<item>1</item>
+		<item>3</item>
+		<item>5</item>
+		<item>9</item>
+	</string-array>
+	<string-array name="orientation_name">
+		<item>系统默认</item>
+		<item>竖屏锁定</item>
+		<item>横屏锁定</item>
+	</string-array>
+	<string-array name="orientation_value">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+</resources>

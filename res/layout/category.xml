@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+
+    <RelativeLayout android:id="@+id/board_relative_layout"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+		<Button android:id="@+id/btn_go_board" 
+		    android:layout_height="wrap_content"
+			android:layout_width="wrap_content" 
+			android:text="@string/go_page" 
+			android:layout_alignParentRight="true" 
+			android:paddingRight="10dip"
+			android:paddingLeft="10dip"
+			android:layout_marginTop="2dip"  />
+		<AutoCompleteTextView
+		    android:id="@+id/search_board"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@id/btn_go_board"
+		    android:layout_marginTop="2dip" 
+		    android:layout_marginLeft="10dip"  />
+		
+	</RelativeLayout >
+	
+	<ListView android:layout_width="fill_parent" android:layout_height="0dip"
+		android:layout_weight="1" android:cacheColorHint="#00000000" android:scrollingCache="false"
+		android:id="@+id/category_list" />
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content" android:paddingBottom="4dp"
+	android:paddingLeft="12dp" android:paddingRight="12dp">
+	<TextView android:id="@+id/CategoryName" android:text="TextView01"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:textColor="@color/status_text" />
+	<TextView android:id="@+id/ModeratorID" android:text="TextView02"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:maxLength="25" android:textColor="@color/blue_text"
+		android:gravity="right" />
+	<TextView android:id="@+id/BoardName" android:text="TextView03"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:layout_below="@+id/CategoryName" android:textColor="@color/status_text"
+		android:textSize="20dp" />
+</RelativeLayout>
