@@ -91,6 +91,9 @@
 	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>
 	<string name="setting_auto_login">自动登陆</string>
 	<string name="setting_auto_login_details">自动用保存的用户名登陆</string>
+	<string name="setting_logout_confirm">登出确认</string>
+	<string name="setting_logout_confirm_summary_on">退出的时候需要确认</string>
+	<string name="setting_logout_confirm_summary_off">退出的时候不需要确认</string>
 	<string name="setting_default_tab">默认加载标签页</string>
 	<string name="setting_default_tab_details">选择默认要加载标签页</string>
 	<string name="setting_default_board_type">默认版面模式</string>

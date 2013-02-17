@@ -6,8 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,7 +21,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.TabsAdapter;
 import com.athena.asm.data.Board;
-import com.athena.asm.data.Constants;
+import com.athena.asm.data.Preferences;
 import com.athena.asm.fragment.CategoryFragment;
 import com.athena.asm.fragment.FavoriteListFragment;
 import com.athena.asm.fragment.GuidanceListFragment;
@@ -297,19 +299,29 @@ public class HomeActivity extends SherlockFragmentActivity
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (m_viewModel.isLogined()) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("确认要注销退出吗？");
-				builder.setPositiveButton("确定",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								logout(true);
-							}
-						});
-				builder.setNegativeButton("取消", null);
-				builder.create().show();
-				// logout();
+//				check preference for logout_confirm
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+				boolean b_logout_confirm = settings.getBoolean(Preferences.LOGOUT_CONFIRM, false);
+
+				if(b_logout_confirm){
+//					logout is required
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle("确认要注销退出吗？");
+					builder.setPositiveButton("确定",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									logout(true);
+								}
+							});
+					builder.setNegativeButton("取消", null);
+					builder.create().show();
+				}
+				else
+				{
+					logout(true);
+				}
 			} else {
 				finishAndClean();
 			}

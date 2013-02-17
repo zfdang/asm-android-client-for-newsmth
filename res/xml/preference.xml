@@ -13,7 +13,14 @@
             android:summary="@string/setting_auto_login_details"
             android:title="@string/setting_auto_login" >
         </CheckBoxPreference>
-    </PreferenceCategory>
+        <CheckBoxPreference
+            android:key="logout_confirm"
+            android:title="@string/setting_logout_confirm"
+            android:summaryOn="@string/setting_logout_confirm_summary_on"
+            android:summaryOff="@string/setting_logout_confirm_summary_off"
+            android:defaultValue="false">
+        </CheckBoxPreference>
+        </PreferenceCategory>
     <PreferenceCategory android:title="默认风格" >
         <ListPreference
             android:dialogTitle="选择"
