@@ -1,7 +1,7 @@
 aSM: Android Client for newsmth
 ==============================
 
-asm -  android client for newsmth
+aSM -- android上的水木清华客户端
 
 
 下载地址
