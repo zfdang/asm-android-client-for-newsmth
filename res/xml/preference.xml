@@ -5,20 +5,22 @@
         <CheckBoxPreference
             android:key="remember_user"
             android:summary="@string/setting_remember_user_details"
-            android:title="@string/setting_remember_user" >
+            android:title="@string/setting_remember_user"
+            android:defaultValue="true">
         </CheckBoxPreference>
         <CheckBoxPreference
             android:dependency="remember_user"
             android:key="auto_login"
             android:summary="@string/setting_auto_login_details"
-            android:title="@string/setting_auto_login" >
+            android:title="@string/setting_auto_login"
+            android:defaultValue="false">
         </CheckBoxPreference>
         <CheckBoxPreference
             android:key="logout_confirm"
             android:title="@string/setting_logout_confirm"
             android:summaryOn="@string/setting_logout_confirm_summary_on"
             android:summaryOff="@string/setting_logout_confirm_summary_off"
-            android:defaultValue="false">
+            android:defaultValue="true">
         </CheckBoxPreference>
         </PreferenceCategory>
     <PreferenceCategory android:title="默认风格" >

@@ -337,6 +337,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	public static final int ABOUT = Menu.FIRST + 3;
 	public static final int LOGOUT = Menu.FIRST + 4;
 	public static final int EXIT = Menu.FIRST + 5;
+	public static final int NIGHT_THEME = Menu.FIRST + 6;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -356,9 +357,15 @@ public class HomeActivity extends SherlockFragmentActivity
 						isLight ? R.drawable.refresh_inverse
 								: R.drawable.refresh)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+		menu.add(0, NIGHT_THEME, Menu.NONE, "光线模式")
+		.setIcon(isLight ? R.drawable.light_mode_inverse : R.drawable.light_mode)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
 		menu.add(0, ABOUT, Menu.NONE, "关于")
 				.setIcon(isLight ? R.drawable.about_inverse : R.drawable.about)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
 		menu.add(0, LOGOUT, Menu.NONE, "注销").setShowAsAction(
 				MenuItem.SHOW_AS_ACTION_NEVER
 						| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -423,6 +430,46 @@ public class HomeActivity extends SherlockFragmentActivity
 				break;
 			default:
 				break;
+			}
+			break;
+		case NIGHT_THEME:
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+			boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, false);
+			SharedPreferences.Editor editor = settings.edit();
+
+//			change night_theme settings
+			if (b_night_theme)
+			{
+//				switch to day mode
+				aSMApplication.THEME = R.style.Theme_Sherlock_Light;
+				editor.putBoolean(Preferences.NIGHT_THEME, false);
+				editor.commit();
+			} else {
+//				switch to night mode
+				aSMApplication.THEME = R.style.Theme_Sherlock;
+				editor.putBoolean(Preferences.NIGHT_THEME, true);
+				editor.commit();
+			}
+
+//			refresh current view
+//			m_viewPager.invalidate();
+//			we destroy current activity, and create a new one
+//			it's a very heavy process and should be improved later
+			finish();
+			aSMApplication.getCurrentApplication().initPreferences();
+			Intent homeIntent = new Intent(this, HomeActivity.class);
+			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(homeIntent);
+			
+//			show toast for the switch
+			if (b_night_theme)
+			{
+				Toast.makeText(getApplicationContext(), "已切换至日光模式",
+					Toast.LENGTH_SHORT).show();
+			}
+			else{
+				Toast.makeText(getApplicationContext(), "已切换至夜间模式",
+						Toast.LENGTH_SHORT).show();
 			}
 			break;
 		case CLEAN:
