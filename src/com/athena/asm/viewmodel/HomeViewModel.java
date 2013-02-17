@@ -171,20 +171,24 @@ public class HomeViewModel extends BaseViewModel {
 	public ArrayList<Board> updateFavList(ArrayList<Board> realFavList) {
 		if (realFavList == null) {
 			realFavList = new ArrayList<Board>();
-			m_smthSupport.getFavorite("0", realFavList, 0);
 		}
+		else{
+			realFavList.clear();
+		}
+		m_smthSupport.getFavorite("0", realFavList, 0);
 		
 		ArrayList<Board> favList = new ArrayList<Board>();
+		favList.addAll(realFavList);
+
 		Board board = new Board();
 		board.setDirectory(true);
 		board.setDirectoryName("最近访问版面");
 		board.setCategoryName("目录");
 		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
 		favList.add(board);
-		favList.addAll(realFavList);
-		setFavList(favList);
 		
-		return realFavList;
+		setFavList(favList);
+		return favList;
 	}
 	
 	public void updateCategoryList() {

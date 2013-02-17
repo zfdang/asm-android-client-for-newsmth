@@ -129,14 +129,16 @@ public class FavoriteListFragment extends SherlockFragment implements
 			}
 
 			if (isRootBoardExist) {
-				directoryList.add("根目录");
-				realBoardList.add(rootBoardList);
+				directoryList.add(0, "我的收藏夹");
+				realBoardList.add(0, rootBoardList);
 			}
 
 			final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
 					m_inflater, directoryList, realBoardList);
 			m_listView.setAdapter(favoriteListAdapter);
 
+//			expand favorite by default
+			m_listView.expandGroup(0);
 			m_listView.setOnChildClickListener(new OnChildClickListener() {
 
 				@Override
