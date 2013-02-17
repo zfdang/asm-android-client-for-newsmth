@@ -10,7 +10,7 @@ Build Date: 2013-02-17.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
-升级历史
+更新历史
 ==============================
 2013-02-17:
 ------------------------------
