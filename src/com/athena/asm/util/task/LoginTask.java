@@ -7,7 +7,7 @@ import com.athena.asm.viewmodel.HomeViewModel;
 public class LoginTask extends AsyncTask<String, Integer, String> {
 	private String userName;
 	private String password;
-	private boolean isLogined;
+	private int iLoginResult;
 	
 	private HomeViewModel m_viewModel;
 
@@ -23,12 +23,12 @@ public class LoginTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		isLogined = m_viewModel.login(userName, password);
+		iLoginResult = m_viewModel.login(userName, password);
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		m_viewModel.notifyLoginChanged(isLogined);
+		m_viewModel.notifyLoginChanged(iLoginResult);
 	}
 }

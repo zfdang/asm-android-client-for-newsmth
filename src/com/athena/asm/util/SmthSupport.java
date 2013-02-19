@@ -59,7 +59,7 @@ public class SmthSupport {
 	/**
 	 * 登录.
 	 */
-	public boolean login() {
+	public int login() {
 		loginned = true;
 		return crawler.login(userid, passwd);
 	}
@@ -633,7 +633,6 @@ public class SmthSupport {
 		String patternStr = "o\\.f\\((\\d+),'([^']+)',\\d+,'([^']+)'\\);";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(content);
-		List<String> list = new ArrayList<String>();
 		while (matcher.find()) {
 			// Log.d("Find folder", matcher.group(2));
 			getCategory(matcher.group(1), boardList, true);
@@ -643,7 +642,6 @@ public class SmthSupport {
 		patternStr = "o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
-		List<Board> dirList = new ArrayList<Board>();
 		while (matcher.find()) {
 			String isGroup = matcher.group(1);
 			String boardID = matcher.group(2);
@@ -664,7 +662,6 @@ public class SmthSupport {
 			else
 			{
 				// Log.d("find Board", engName);
-
 				Board board = new Board();
 				board.setBoardID(boardID);
 				board.setCategoryName(category);

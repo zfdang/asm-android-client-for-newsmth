@@ -142,7 +142,7 @@ public class HomeViewModel extends BaseViewModel {
 		notifyViewModelChange(this, CURRENTTAB_PROPERTY_NAME);
 	}
 	
-	public boolean login(String userName, String password) {
+	public int login(String userName, String password) {
 		m_smthSupport.setUserid(userName);
 		m_smthSupport.setPasswd(password);
 		return m_smthSupport.login();
@@ -290,8 +290,8 @@ public class HomeViewModel extends BaseViewModel {
 		notifyViewModelChange(this, PROFILE_PROPERTY_NAME, profile);
 	}
 	
-	public void notifyLoginChanged(boolean result) {
-		notifyViewModelChange(this, LOGIN_PROPERTY_NAME, result);
+	public void notifyLoginChanged(int iLoginResult) {
+		notifyViewModelChange(this, LOGIN_PROPERTY_NAME, iLoginResult);
 	}
 	
 }

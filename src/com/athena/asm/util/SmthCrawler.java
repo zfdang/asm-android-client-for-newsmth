@@ -96,7 +96,9 @@ public class SmthCrawler {
 		destroy = false;
 	}
 
-	public boolean login(String userid, String passwd) {
+	// return values:
+	// 1: success; 0: authentication failed; -1: connection failed
+	public int login(String userid, String passwd) {
 		String url = "http://www.newsmth.net/bbslogin.php";
 		HttpPost httpPost = new HttpPost(url);
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
@@ -106,7 +108,7 @@ public class SmthCrawler {
 		try {
 			entity = new UrlEncodedFormEntity(formparams, "GBK");
 		} catch (UnsupportedEncodingException e1) {
-			return false;
+			return -1;
 		}
 		httpPost.setEntity(entity);
 		httpPost.setHeader("User-Agent", userAgent);
@@ -124,14 +126,15 @@ public class SmthCrawler {
 				httpPost.setEntity(entity2);
 				httpClient.execute(httpPost);
 			} else if (content.contains("您的用户名并不存在，或者您的密码错误")) {
-				return false;
+				return 0;
 			} else if (content.contains("用户密码错误")) {
-				return false;
+				return 0;
 			}
 		} catch (IOException e) {
-			return false;
+			e.printStackTrace();
+			return -1;
 		}
-		return true;
+		return 1;
 	}
 
 	public boolean uploadAttachFile(File file) {

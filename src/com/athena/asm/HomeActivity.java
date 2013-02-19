@@ -132,8 +132,12 @@ public class HomeActivity extends SherlockFragmentActivity
 			String userName = application.getAutoUserName();
 			String password = application.getAutoPassword();
 
-			showProgressDialog("登陆中...");
+			showProgressDialog("自动登陆中...");
 			
+			// LoginTask.doInBackground --> HomeViewModel.login --> SmthSupport.login
+			// loginTask.onPostExecute --> HomeViewModel.notifyLoginChanged 
+			// 		--> HomeViewModel.notifyViewModelChange
+			//			--> HomeActivity.onViewModelChange --> HomeActivity.loginTaskDone
 			LoginTask loginTask = new LoginTask(m_viewModel, userName, password);
 			loginTask.execute();
 		}
@@ -166,7 +170,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		super.onDestroy();
 	}
 
-	public void showFailedToast() {
+	public void showAuthenticationFailedToast() {
 		m_handler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -176,9 +180,22 @@ public class HomeActivity extends SherlockFragmentActivity
 		});
 	}
 
-	public void loginTaskDone(boolean result) {
-		if (!result) {
-			showFailedToast();
+	public void showConnectionFailedToast() {
+		m_handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), "连接错误，请检查网络.",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	public void loginTaskDone(int iLoginResult) {
+		if (iLoginResult != 1) {
+			if ( iLoginResult == 0)
+				showAuthenticationFailedToast();
+			else if(iLoginResult == -1)
+				showConnectionFailedToast();
 
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm",
@@ -572,8 +589,8 @@ public class HomeActivity extends SherlockFragmentActivity
 			String changedPropertyName, Object... params) {
 		if (changedPropertyName.equals(HomeViewModel.LOGIN_PROPERTY_NAME)) {
 			dismissProgressDialog();
-			boolean isLogin = (Boolean)params[0];
-			loginTaskDone(isLogin);
+			int iLoginResult = (Integer)params[0];
+			loginTaskDone(iLoginResult);
 		}
 	}
 	

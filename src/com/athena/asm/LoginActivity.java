@@ -71,11 +71,21 @@ public class LoginActivity extends SherlockFragmentActivity implements
 		});
 	}
 
-	public void showFailedToast() {
+	public void showAuthenticationFailedToast() {
 		m_handler.post(new Runnable() {
 			@Override
 			public void run() {
 				Toast.makeText(getApplicationContext(), "用户名或密码错.",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	public void showConnectionFailedToast() {
+		m_handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), "连接错误，请检查网络.",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -102,10 +112,14 @@ public class LoginActivity extends SherlockFragmentActivity implements
 				public void run() {
 					m_smthSupport.setUserid(newUserName);
 					m_smthSupport.setPasswd(newPassword);
-					boolean result = m_smthSupport.login();
-					if (!result) {
-						showFailedToast();
-					} else {
+					int result = m_smthSupport.login();
+					if (result == 0) {
+						showAuthenticationFailedToast();
+					}
+					else if(result == -1){
+						showConnectionFailedToast();
+					}
+					else {
 						// showSuccessToast();
 						aSMApplication.getCurrentApplication()
 								.updateAutoUserNameAndPassword(newUserName,

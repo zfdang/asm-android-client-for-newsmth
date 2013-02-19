@@ -377,7 +377,7 @@ public class aSMApplication extends Application {
 						recentBoardNameSet.add(board.getEngName());
 					}
 				}
-				Log.d("com.athena.asm", "loading from file");
+				Log.d("aSMApplication.initPreferences", "loading from file");
 				fis.close();
 				for (Iterator<Board> iterator = toDeleteBoards.iterator(); iterator
 						.hasNext();) {
