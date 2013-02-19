@@ -597,14 +597,31 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public void getCategory(String id, List<Board> boardList, boolean isTypeTwo) {
+	public void getCategory(String id, List<Board> boardList, boolean isFolder) {
+		// http://www.newsmth.net/bbsfav.php?x
+		// there are three kinds of items in category: folder, group, board
+
+		// 1. folder
+		// o.f(1,'系统　　　 水木社区系统版面 ',0,'NewSMTH.net');
+		// http://www.newsmth.net/bbsfav.php?select=1&x
+
+		// 2. group
+		// o.o(true,1,502,356446,'[站务]','BBSData','社区系统数据','[目录]',10,501,0);
+		// http://www.newsmth.net/bbsboa.php?group=0&group2=502
+
+		// 3. board
+		// o.o(false,1,104,27745,'[出国]','AdvancedEdu','飞跃重洋','LSAT madonion Mperson',22553,103,25);
+		// http://www.newsmth.net/bbsdoc.php?board=AdvancedEdu
+
 		String url;
 		if (id.equals("TOP")) {
 			url = "http://www.newsmth.net/bbsfav.php?x";
-		} else if (!isTypeTwo) {
+		} else if (isFolder) {
+			// 1. folder
 			url = "http://www.newsmth.net/bbsfav.php?select=" + id + "&x";
 		} else {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + id;
+			// 2. group
+			url = "http://www.newsmth.net/bbsboa.php?group=0&group2=" + id;
 		}
 
 		String content = crawler.getUrlContent(url);
@@ -612,40 +629,23 @@ public class SmthSupport {
 			return;
 		}
 
-		// 先提取目录
+		// 先提取folder
 		String patternStr = "o\\.f\\((\\d+),'([^']+)',\\d+,'([^']+)'\\);";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(content);
 		List<String> list = new ArrayList<String>();
 		while (matcher.find()) {
-			list.add(matcher.group(1));
-			Board board = new Board();
-			board.setDirectory(true);
-			board.setDirectoryName(matcher.group(2));
-			board.setCategoryName("目录");
-			boardList.add(board);
+			// Log.d("Find folder", matcher.group(2));
+			getCategory(matcher.group(1), boardList, true);
 		}
 
-		/*
-		 * patternStr =
-		 * "o\\.o\\(true,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']+)',\\d+,\\d+,\\d+\\)"
-		 * ; pattern = Pattern.compile(patternStr); matcher =
-		 * pattern.matcher(content); while (matcher.find()) {
-		 * //list.add(matcher.group(1)); Board board = new Board();
-		 * board.setDirectory(true); board.setDirectoryName(matcher.group(2));
-		 * board.setCategoryName("目录"); //boardList.add(board); }
-		 */
-
-		for (int i = 0; i < list.size(); i++) {
-			getCategory(list.get(i), boardList.get(i).getChildBoards(), false);
-		}
-
+		// 再寻找board和group
 		patternStr = "o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		pattern = Pattern.compile(patternStr);
 		matcher = pattern.matcher(content);
 		List<Board> dirList = new ArrayList<Board>();
 		while (matcher.find()) {
-			String isDirString = matcher.group(1);
+			String isGroup = matcher.group(1);
 			String boardID = matcher.group(2);
 			String category = matcher.group(3);
 			String engName = matcher.group(4);
@@ -654,29 +654,26 @@ public class SmthSupport {
 			if (moderator.length() > 25) {
 				moderator = moderator.substring(0, 21) + "...";
 			}
-			Board board = new Board();
-			board.setBoardID(boardID);
-			board.setCategoryName(category);
-			board.setEngName(engName);
-			board.setChsName(chsName);
-			board.setModerator(moderator);
 
-			if (isDirString.equals("true")) {
-				board.setDirectory(true);
-				board.setDirectoryName(category + "  " + chsName);
-				dirList.add(board);
-			} else {
-				board.setDirectory(false);
+			if(isGroup.equals("true"))
+			{
+				// find group, add its child boards recursively
+				// Log.d("find Group", engName);
+				getCategory(boardID, boardList, false);
 			}
+			else
+			{
+				// Log.d("find Board", engName);
 
-			boardList.add(board);
+				Board board = new Board();
+				board.setBoardID(boardID);
+				board.setCategoryName(category);
+				board.setEngName(engName);
+				board.setChsName(chsName);
+				board.setModerator(moderator);
+				boardList.add(board);
+			}
 		}
-
-		for (Iterator<Board> iterator = dirList.iterator(); iterator.hasNext();) {
-			Board board = (Board) iterator.next();
-			getCategory(board.getEngName(), board.getChildBoards(), true);
-		}
-
 	}
 
 	public List<Subject> getSearchSubjectList(String boardName, String boardID,

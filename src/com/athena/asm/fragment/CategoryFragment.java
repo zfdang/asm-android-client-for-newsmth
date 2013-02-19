@@ -139,15 +139,15 @@ public class CategoryFragment extends SherlockFragment implements
 	@Override
 	public void onViewModelChange(BaseViewModel viewModel,
 			String changedPropertyName, Object... params) {
-		if (changedPropertyName
-				.equals(HomeViewModel.CATEGORYLIST_PROPERTY_NAME)) {
+		if (changedPropertyName.equals(HomeViewModel.CATEGORYLIST_PROPERTY_NAME))
+		{
 			reloadCategory();
-		} else if (changedPropertyName
-				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			if (!m_isLoaded
-					&& m_viewModel.getCurrentTab() != null
-					&& m_viewModel.getCurrentTab().equals(
-							StringUtility.TAB_CATEGORY)) {
+		}
+		else if (changedPropertyName.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME))
+		{
+			if (!m_isLoaded	&& m_viewModel.getCurrentTab() != null
+					&& m_viewModel.getCurrentTab().equals(StringUtility.TAB_CATEGORY))
+			{
 				reloadCategory();
 			}
 		}

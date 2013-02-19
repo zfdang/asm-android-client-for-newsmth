@@ -1,9 +1,13 @@
 package com.athena.asm.viewmodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import android.util.Log;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.data.MailBox;
@@ -194,6 +198,37 @@ public class HomeViewModel extends BaseViewModel {
 	public void updateCategoryList() {
 		ArrayList<Board> categoryList = new ArrayList<Board>();
 		m_smthSupport.getCategory("TOP", categoryList, false);
+		// sort categoryList by board's English name
+		Collections.sort(categoryList, new Comparator<Board>() {
+		    public int compare(Board one, Board other) {
+		        return one.getEngName().compareTo(other.getEngName());
+		    }
+		});
+		// remove duplicated board name in a sorted list
+		// Log.d("Number of categories before dedup", Integer.toString(categoryList.size()));
+		Iterator<Board> itr = categoryList.iterator();
+		String previousID = null;
+		while (itr.hasNext()) {
+			Board current = (Board) itr.next();
+			if(previousID == null)
+			{
+				// no previous board, for the first record
+				previousID = current.getBoardID();
+				continue;
+			}
+			if(current.getBoardID().equals(previousID))
+			{
+				// duplicated board, remove current board
+				// Log.d("updateCategoryList", "remove duplicated board" + current.getEngName());
+				itr.remove();
+			}
+			else
+			{
+				// valid board, save current board id
+				previousID = current.getBoardID();
+			}
+		}
+		// Log.d("Number of categories after dedup", Integer.toString(categoryList.size()));
 		setCategoryList(categoryList);
 	}
 	
