@@ -41,9 +41,9 @@ public class SubjectListViewModel extends BaseViewModel {
 		if (isNewBoard) {
 			setCurrentBoard(board);
 			if (boardType.equals("001")) {
-				setBoardType(0);
+				setBoardType(SubjectListFragment.BOARD_TYPE_SUBJECT);
 			} else {
-				setBoardType(1);
+				setBoardType(SubjectListFragment.BOARD_TYPE_NORMAL);
 			}
 		}
 		

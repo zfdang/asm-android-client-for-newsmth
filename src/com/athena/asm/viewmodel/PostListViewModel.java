@@ -15,7 +15,9 @@ public class PostListViewModel extends BaseViewModel {
 	private boolean m_isSubjectExpand = false;
 	private boolean m_isToRefreshBoard = false;
 	private int m_currentPageNo = 1;
-	private int m_boardType = 0; // 1是普通，0是同主题
+
+	// defined in SubjectListFragment ==> BOARD_TYPE_*
+	private int m_boardType = 0;
 	
 	private boolean m_isPreloadFinished = false;
 	private List<Post> m_preloadPostList;
