@@ -57,66 +57,65 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected String doInBackground(String... params) {
-		if (!aSMApplication.getCurrentApplication().isLoadDefaultCategoryFile()) {
-			try {
-				Log.d("asm", "Load default category file");
-				InputStream is = m_context.getResources().openRawResource(
-						R.raw.categories);// .openFileInput("CategoryList");
-				FileOutputStream fos = m_context.openFileOutput("CategoryList",
-						Context.MODE_PRIVATE);
+		// refactor logics to load categories:
+		// 1. check saved categories file
+		// 1.1 if it exists, load categories from it
+		// 1.2 if it does not exist, load categories from web, and save it to file
 
-				BufferedInputStream bufr = new BufferedInputStream(is);
-				BufferedOutputStream bufw = new BufferedOutputStream(fos);
-
-				int len = 0;
-
-				byte[] buf = new byte[1024];
-				while ((len = bufr.read(buf)) != -1) {
-					bufw.write(buf, 0, len);
-					bufw.flush();
-				}
-
-				bufw.close();
-				bufr.close();
-				aSMApplication.getCurrentApplication().updateDefaultCategoryLoadStatus(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
+		// 1.1 read categories from file
 		try {
 			FileInputStream is = m_context.openFileInput("CategoryList");
 			ObjectInputStream ois = new ObjectInputStream(is);
-			m_viewModel.setCategoryList((List<Board>) ois.readObject());
-			Log.d("com.athena.asm", "loading from file");
+			m_viewModel.setCategoryList((ArrayList<Board>) ois.readObject());
 			is.close();
+			Log.d("LoadCategoryTask", "succeed to load categories from file");
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.d("LoadCategoryTask", "failed to load categories from file");
+			// e.printStackTrace();
 		}
 
 		if (m_viewModel.getCategoryList() == null) {
+			Log.d("LoadCategoryTask", "load categories from web");
+			// 1.2.1 read categories from web
 			m_viewModel.updateCategoryList();
+			ArrayList<Board> categoryList =  m_viewModel.getCategoryList();
 
-			ArrayList<Board> fullBoards = new ArrayList<Board>();
-			readBoadInfo(m_viewModel.getCategoryList(), fullBoards);
-			HashSet<String> keySet = new HashSet<String>();
-			for (Iterator<Board> iterator = fullBoards.iterator(); iterator
-					.hasNext();) {
-				Board board = (Board) iterator.next();
-				if (!keySet.contains(board.getEngName())) {
-					keySet.add(board.getEngName());
-				} else {
-					iterator.remove();
+			// 1.2.2 sort categoryList by board's English name
+			Collections.sort(categoryList, new BoardNameComparator());
+			// 1.2.3 remove duplicated board name in a sorted list
+			// Log.d("Number of categories before dedup", Integer.toString(categoryList.size()));
+			Iterator<Board> itr = categoryList.iterator();
+			String previousID = null;
+			while (itr.hasNext()) {
+				Board current = (Board) itr.next();
+				if(previousID == null)
+				{
+					// no previous board, for the first record
+					previousID = current.getBoardID();
+					continue;
+				}
+				if(current.getBoardID().equals(previousID))
+				{
+					// duplicated board, remove current board
+					// Log.d("updateCategoryList", "remove duplicated board" + current.getEngName());
+					itr.remove();
+				}
+				else
+				{
+					// valid board, save current board id
+					previousID = current.getBoardID();
 				}
 			}
-			Collections.sort(fullBoards, new BoardNameComparator());
+			// Log.d("Number of categories after dedup", Integer.toString(categoryList.size()));
 
+			// 1.2.4 save categories to file
 			try {
 				FileOutputStream fos = m_context.openFileOutput("CategoryList",
 						Context.MODE_PRIVATE);
 				ObjectOutputStream os = new ObjectOutputStream(fos);
-				os.writeObject(fullBoards);
+				os.writeObject(categoryList);
 				fos.close();
+				Log.d("LoadCategoryTask", "save categories to file for future usage");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

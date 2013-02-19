@@ -412,6 +412,7 @@ public class HomeActivity extends SherlockFragmentActivity
 								boolean isDeleted = deleteFile("CategoryList");
 								if (isDeleted) {
 									m_viewModel.setCategoryList(null);
+									// tigger CategoryFragment: onViewModelChange -> reloadCategory
 									m_viewModel.notifyCategoryChanged();
 								}
 

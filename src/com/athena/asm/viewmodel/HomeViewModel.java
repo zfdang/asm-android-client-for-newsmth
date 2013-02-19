@@ -23,7 +23,7 @@ public class HomeViewModel extends BaseViewModel {
 	private List<List<Subject>> m_guidanceSectionDetails = null;
 	private List<Board> m_favList = null;
 	private MailBox m_mailBox = null;
-	private List<Board> m_categoryList = null;
+	private ArrayList<Board> m_categoryList = null;
 	private List<String> m_boardFullStrings = null;
 	private HashMap<String, Board> m_boardHashMap = null;
 
@@ -108,11 +108,11 @@ public class HomeViewModel extends BaseViewModel {
 		m_mailBox = mailbox;
 	}
 	
-	public List<Board> getCategoryList() {
+	public ArrayList<Board> getCategoryList() {
 		return m_categoryList;
 	}
 	
-	public void setCategoryList(List<Board> categoryList) {
+	public void setCategoryList(ArrayList<Board> categoryList) {
 		m_categoryList = categoryList;
 	}
 	
@@ -198,37 +198,6 @@ public class HomeViewModel extends BaseViewModel {
 	public void updateCategoryList() {
 		ArrayList<Board> categoryList = new ArrayList<Board>();
 		m_smthSupport.getCategory("TOP", categoryList, false);
-		// sort categoryList by board's English name
-		Collections.sort(categoryList, new Comparator<Board>() {
-		    public int compare(Board one, Board other) {
-		        return one.getEngName().compareTo(other.getEngName());
-		    }
-		});
-		// remove duplicated board name in a sorted list
-		// Log.d("Number of categories before dedup", Integer.toString(categoryList.size()));
-		Iterator<Board> itr = categoryList.iterator();
-		String previousID = null;
-		while (itr.hasNext()) {
-			Board current = (Board) itr.next();
-			if(previousID == null)
-			{
-				// no previous board, for the first record
-				previousID = current.getBoardID();
-				continue;
-			}
-			if(current.getBoardID().equals(previousID))
-			{
-				// duplicated board, remove current board
-				// Log.d("updateCategoryList", "remove duplicated board" + current.getEngName());
-				itr.remove();
-			}
-			else
-			{
-				// valid board, save current board id
-				previousID = current.getBoardID();
-			}
-		}
-		// Log.d("Number of categories after dedup", Integer.toString(categoryList.size()));
 		setCategoryList(categoryList);
 	}
 	

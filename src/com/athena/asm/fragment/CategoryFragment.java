@@ -93,6 +93,8 @@ public class CategoryFragment extends SherlockFragment implements
 
 	public void reloadCategory() {
 		if (m_viewModel.getCategoryList() == null) {
+			// it seems the following task might be called cocurrently
+			// we might have to add Synchronized Methods
 			LoadCategoryTask loadCategoryTask = new LoadCategoryTask(
 					getActivity(), m_viewModel);
 			loadCategoryTask.execute();
