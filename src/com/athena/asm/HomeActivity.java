@@ -301,7 +301,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			if (m_viewModel.isLogined()) {
 //				check preference for logout_confirm
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-				boolean b_logout_confirm = settings.getBoolean(Preferences.LOGOUT_CONFIRM, false);
+				boolean b_logout_confirm = settings.getBoolean(Preferences.LOGOUT_CONFIRM, true);
 
 				if(b_logout_confirm){
 //					logout is required
