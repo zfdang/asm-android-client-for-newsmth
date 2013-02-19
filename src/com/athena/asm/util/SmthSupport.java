@@ -793,7 +793,7 @@ public class SmthSupport {
 
 		List<Subject> subjectList = new ArrayList<Subject>();
 
-		// <a class="plant">1/1272</a>
+		// <a class="plant">1/1272</a>  当前页/总共页
 		Pattern pagePattern = Pattern
 				.compile("<a class=\"plant\">(\\d+)/(\\d+)");
 		Matcher pageMatcher = pagePattern.matcher(result);
@@ -802,7 +802,9 @@ public class SmthSupport {
 			board.setTotalPageNo(Integer.parseInt(pageMatcher.group(2)));
 		}
 
-		// 2012-05-28<a href="/user/query/
+	    // <li><div><a href="/article/AutoTravel/25462">请教奇骏大拿</a>(22)</div><div>2013-02-01&nbsp;<a href="/user/query/LVZHL">LVZHL</a>|16:18:15&nbsp;<a href="/user/query/Normalzzz">Normalzzz</a></div></li>
+
+		// 2013-02-01&nbsp;<a href="/user/query/LVZHL"
 		Pattern userIDPattern = Pattern
 				.compile("([^<>]+)<a href=\"/user/query/([^<>]+)\"");
 		Matcher userIDMatcher = userIDPattern.matcher(result);
@@ -831,7 +833,7 @@ public class SmthSupport {
 			subjectList.add(subject);
 		}
 
-		// <a href="/article/PocketLife/1047054" class="top">title
+		// <div><a href="/article/AutoTravel/25462">请教奇骏大拿</a>(22)</div>
 		String subPattern = "\"";
 		if (boardType != SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			boardname = boardname + "/single";
@@ -844,7 +846,7 @@ public class SmthSupport {
 			subPattern = "/3\"";
 		}
 		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
-				+ boardname + "/(\\d+)" + subPattern + "([^<>]*)>([^<>]+)");
+				+ boardname + "/(\\d+)" + subPattern + "([^<>]*)>([^<>]+)</a>\\((\\d+)\\)");
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		index = 0;
 		while (subjectMatcher.find()) {
@@ -857,7 +859,8 @@ public class SmthSupport {
 					subjectList.get(index).setType(Subject.TYPE_BOTTOM);
 				}
 				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
-				subjectList.get(index).setTitle(subjectMatcher.group(3));
+				subjectList.get(index).setTitle(subjectMatcher.group(3) +
+					" (" + subjectMatcher.group(4) + ")");
 			}
 			index++;
 			if (index > subjectList.size()) {
