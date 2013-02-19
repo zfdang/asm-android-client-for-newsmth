@@ -72,7 +72,27 @@ public final class UrlImageViewHelper {
         mResources = new Resources(mgr, mMetrics, context.getResources().getConfiguration());
     }
 
-    private static boolean mUseBitmapScaling = true;
+    private static boolean mUseZoomIn = true;
+    private static boolean mUseZoomOut = true;
+
+    /**
+     * Bitmap scaling will use smart/sane values to limit the maximum
+     * dimension of the bitmap during decode. This will prevent any dimension of the
+     * bitmap from being smaller than the dimensions of the device itself.
+     * @param useBitmapScaling Toggle for smart resizing.
+     */
+    public static void setUseZoomIn(boolean useZoomIn) {
+        mUseZoomIn = useZoomIn;
+    }
+    /**
+     * Bitmap scaling will use smart/sane values to limit the maximum
+     * dimension of the bitmap during decode. This will prevent any dimension of the
+     * bitmap from being smaller than the dimensions of the device itself.
+     */
+    public static boolean getUseZoomIn() {
+        return mUseZoomIn;
+    }
+
     /**
      * Bitmap scaling will use smart/sane values to limit the maximum
      * dimension of the bitmap during decode. This will prevent any dimension of the
@@ -80,8 +100,8 @@ public final class UrlImageViewHelper {
      * Doing this will conserve memory.
      * @param useBitmapScaling Toggle for smart resizing.
      */
-    public static void setUseBitmapScaling(boolean useBitmapScaling) {
-        mUseBitmapScaling = useBitmapScaling;
+    public static void setUseZoomOut(boolean useZoomOut) {
+        mUseZoomOut = useZoomOut;
     }
     /**
      * Bitmap scaling will use smart/sane values to limit the maximum
@@ -89,8 +109,8 @@ public final class UrlImageViewHelper {
      * bitmap from being larger than the dimensions of the device itself.
      * Doing this will conserve memory.
      */
-    public static boolean getUseBitmapScaling() {
-        return mUseBitmapScaling;
+    public static boolean getUseZoomOut() {
+        return mUseZoomOut;
     }
 
     private static Drawable loadDrawableFromStream(final Context context, final String url, final String filename, final int targetWidth, final int targetHeight) {
@@ -101,8 +121,9 @@ public final class UrlImageViewHelper {
         // clog("Decoding: url=" + url + " filename=" + filename);
         try {
             BitmapFactory.Options o = null;
+
             Bitmap bitmap = null;
-            if (mUseBitmapScaling) {
+            if (mUseZoomOut || mUseZoomIn) {
                 // decode image size (decode metadata only, not the whole image)
                 o = new BitmapFactory.Options();
                 o.inJustDecodeBounds = true;
@@ -126,19 +147,28 @@ public final class UrlImageViewHelper {
             stream.close();
             // clog(String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
 
-            if (mUseBitmapScaling) {
+            if (mUseZoomOut || mUseZoomIn) {
                 // create bitmap which matches exactly with the target size
                 float[] values = new float[9];
-                {
-                    // calc exact destination size
-                    // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
-                    Matrix m = new Matrix();
-                    RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
-                    RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
-                    m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
-                    m.getValues(values);
+                // calc exact destination size
+                // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
+                Matrix m = new Matrix();
+                RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
+                m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
+                m.getValues(values);
+
+                if( mUseZoomOut && (values[0] < 1.0 || values[4] < 1.0) ){
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
+                        (int) (bitmap.getHeight() * values[4]), true);
+                    // clog(String.format("Zoom out: (%fx%f).", values[0], values[4]));
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]), (int) (bitmap.getHeight() * values[4]), true);
+
+                if( mUseZoomIn && (values[0] > 1.0 || values[4] > 1.0) ){
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
+                            (int) (bitmap.getHeight() * values[4]), true);
+                    // clog(String.format("Zoom in: (%fx%f).", values[0], values[4]));
+                }
             }
 
             // clog(String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
