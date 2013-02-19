@@ -22,6 +22,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -94,28 +96,52 @@ public final class UrlImageViewHelper {
     private static Drawable loadDrawableFromStream(final Context context, final String url, final String filename, final int targetWidth, final int targetHeight) {
         prepareResources(context);
 
-//        Log.v(Constants.LOGTAG,targetWidth);
-//        Log.v(Constants.LOGTAG,targetHeight);
+        // clog(String.format("Target size: (%dx%d).", targetWidth, targetHeight));
         FileInputStream stream = null;
-        clog("Decoding: " + url + " " + filename);
+        // clog("Decoding: url=" + url + " filename=" + filename);
         try {
             BitmapFactory.Options o = null;
+            Bitmap bitmap = null;
             if (mUseBitmapScaling) {
+                // decode image size (decode metadata only, not the whole image)
                 o = new BitmapFactory.Options();
                 o.inJustDecodeBounds = true;
                 stream = new FileInputStream(filename);
                 BitmapFactory.decodeStream(stream, null, o);
                 stream.close();
-                int scale = 0;
-                while ((o.outWidth >> scale) > targetWidth || (o.outHeight >> scale) > targetHeight) {
-                    scale++;
-                }
+
+                // get original image size
+                int inWidth =  o.outWidth;
+                int inHeight = o.outHeight;
+                // clog(String.format("Original bitmap size: (%dx%d).", inWidth, inHeight));
+
+                // get size for pre-resized image
                 o = new Options();
-                o.inSampleSize = 1 << scale;
+                o.inSampleSize = Math.max(inWidth/targetWidth, inHeight/targetHeight);
             }
+
+            // decode pre-resized image
             stream = new FileInputStream(filename);
-            final Bitmap bitmap = BitmapFactory.decodeStream(stream, null, o);
-            clog(String.format("Loaded bitmap (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+            bitmap = BitmapFactory.decodeStream(stream, null, o);
+            stream.close();
+            // clog(String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+
+            if (mUseBitmapScaling) {
+                // create bitmap which matches exactly with the target size
+                float[] values = new float[9];
+                {
+                    // calc exact destination size
+                    // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
+                    Matrix m = new Matrix();
+                    RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                    RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
+                    m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
+                    m.getValues(values);
+                }
+                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]), (int) (bitmap.getHeight() * values[4]), true);
+            }
+
+            // clog(String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
             final BitmapDrawable bd = new BitmapDrawable(mResources, bitmap);
             return new ZombieDrawable(url, bd);
         } catch (final IOException e) {

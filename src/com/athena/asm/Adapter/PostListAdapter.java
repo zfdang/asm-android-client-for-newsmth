@@ -96,7 +96,7 @@ public class PostListAdapter extends BaseAdapter {
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
 				contentBuilder.append("<a href='").append(attachUrl).append("'>");
-				contentBuilder.append(attachments.get(i).getName()).append("</a><br/><br/>");
+				contentBuilder.append(attachments.get(i).getName()).append("</a><br/>");
 				String fileType = attachments.get(i).getName().toLowerCase();
 				if (fileType.endsWith("jpg")
 						|| fileType.endsWith("jpeg")
@@ -107,12 +107,12 @@ public class PostListAdapter extends BaseAdapter {
 					LayoutParams layoutParams = new LayoutParams(
 							LayoutParams.WRAP_CONTENT,
 							LayoutParams.WRAP_CONTENT);
-					layoutParams.setMargins(2, 2, 2, 2);
+					layoutParams.setMargins(1, 1, 1, 1);
 					imageView.setLayoutParams(layoutParams);
 					imageView.setTag(attachments.get(i));
 					holder.imageLayout.addView(imageView);
 					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl,
-							R.drawable.loading, 60000);
+							R.drawable.loading, 360000);
 					imageView.setOnClickListener(new OnClickListener() {
 						
 						@Override
