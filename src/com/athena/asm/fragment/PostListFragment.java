@@ -131,9 +131,16 @@ public class PostListFragment extends SherlockFragment implements
 		m_preButton.setOnClickListener(this);
 		m_goButton = (Button) postListView.findViewById(R.id.btn_go_page);
 		m_goButton.setOnClickListener(this);
-		m_goButton.setText(R.string.go_and_last_page);
 		m_nextButton = (Button) postListView.findViewById(R.id.btn_next_page);
 		m_nextButton.setOnClickListener(this);
+
+		// hide all buttons and edittext
+		m_firstButton.setVisibility(View.GONE);
+		m_lastButton.setVisibility(View.GONE);
+		m_preButton.setVisibility(View.GONE);
+		m_nextButton.setVisibility(View.GONE);
+		m_goButton.setVisibility(View.GONE);
+		m_pageNoEditText.setVisibility(View.GONE);
 
 		m_listView = (ListView) postListView.findViewById(R.id.post_list);
 
@@ -236,29 +243,30 @@ public class PostListFragment extends SherlockFragment implements
 		m_viewModel.updatePreloadSubjectFromCurrentSubject();
 
 		if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-			m_goButton.setVisibility(View.VISIBLE);
-			m_pageNoEditText.setVisibility(View.VISIBLE);
-			m_lastButton.setVisibility(View.GONE);
 			m_firstButton.setText(R.string.first_page);
 			m_lastButton.setText(R.string.last_page);
 			m_preButton.setText(R.string.pre_page);
 			m_nextButton.setText(R.string.next_page);
+			m_goButton.setText(R.string.go_and_last_page);
+			// show buttons
+			m_goButton.setVisibility(View.VISIBLE);
+			m_pageNoEditText.setVisibility(View.VISIBLE);
+			m_firstButton.setVisibility(View.VISIBLE);
+			m_preButton.setVisibility(View.VISIBLE);
+			m_nextButton.setVisibility(View.VISIBLE);
 		} else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL
 				&& !m_isFromReplyOrAt) {
-			m_goButton.setVisibility(View.GONE);
-			m_pageNoEditText.setVisibility(View.GONE);
-			m_lastButton.setVisibility(View.VISIBLE);
 			m_firstButton.setText(R.string.topic_first_page);
 			m_lastButton.setText(R.string.topic_all_page);
 			m_preButton.setText(R.string.topic_pre_page);
 			m_nextButton.setText(R.string.topic_next_page);
+			// show buttons
+			m_firstButton.setVisibility(View.VISIBLE);
+			m_lastButton.setVisibility(View.VISIBLE);
+			m_preButton.setVisibility(View.VISIBLE);
+			m_nextButton.setVisibility(View.VISIBLE);
 		} else {
-			m_goButton.setVisibility(View.GONE);
-			m_pageNoEditText.setVisibility(View.GONE);
-			m_firstButton.setVisibility(View.GONE);
-			m_lastButton.setVisibility(View.GONE);
-			m_preButton.setVisibility(View.GONE);
-			m_nextButton.setVisibility(View.GONE);
+			// do not show any button in BOARD_TYPE_DIGEST & BOARD_TYPE_MARK
 		}
 		getActivity().setTitle(m_viewModel.getSubjectTitle());
 
