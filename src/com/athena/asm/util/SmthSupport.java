@@ -673,6 +673,11 @@ public class SmthSupport {
 		}
 	}
 
+	/**
+	 * 获取经过过滤的主题列表.
+	 *
+	 * @return
+	 */
 	public List<Subject> getSearchSubjectList(String boardName, String boardID,
 			String queryString) {
 		String url = "http://www.newsmth.net/bbsbfind.php?q=1&" + queryString;
@@ -718,63 +723,6 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public List<Subject> getSubjectList(Board board, int boardType,
-			boolean isReloadPageNo, ArrayList<String> blackList) {
-		String boardname = board.getEngName();
-		int pageno = board.getCurrentPageNo();
-		if (isReloadPageNo) {
-			pageno = 0;
-		}
-		String result = getMainSubjectList(boardname, pageno, boardType);
-		if (result == null) {
-			return Collections.emptyList();
-		}
-		Pattern p = Pattern
-				.compile("docWriter\\('[^']+',(\\d+),\\d+,\\d+,\\d+,(\\d+),\\d+,'[^']+',\\d+,\\d+\\)");
-		Matcher m = p.matcher(result);
-		if (m.find()) {
-			board.setBoardID(m.group(1));
-			board.setCurrentPageNo(Integer.parseInt(m.group(2)));
-			if (board.getCurrentPageNo() > board.getTotalPageNo()
-					|| isReloadPageNo) {
-				board.setTotalPageNo(board.getCurrentPageNo());
-			}
-		}
-
-		String patternStr = "c\\.o\\((\\d+),\\d+,'([^']+)','([^']+)',(\\d+),'([^']+)',\\d+,\\d+,\\d+\\);";
-		Pattern pattern = Pattern.compile(patternStr);
-		Matcher matcher = pattern.matcher(result);
-		List<Subject> subjectList = new ArrayList<Subject>();
-		while (matcher.find()) {
-			String subjectid = matcher.group(1);
-			String author = matcher.group(2);
-			if (blackList.contains(author)) {
-				continue;
-			}
-			String type = matcher.group(3).trim();
-			// 隐藏置底
-			if (aSMApplication.getCurrentApplication().isHidePinSubject()
-					&& type.toLowerCase().contains(Subject.TYPE_BOTTOM)) {
-				continue;
-			}
-			String dateStr = matcher.group(4);
-			Date date = StringUtility.toDate(dateStr);
-			String title = matcher.group(5);
-			Subject subject = new Subject();
-			subject.setAuthor(author);
-			subject.setBoardID(board.getBoardID());
-			subject.setBoardEngName(boardname);
-			subject.setSubjectID(subjectid);
-			subject.setTitle(title);
-			subject.setType(type);
-			subject.setDateString(date.toLocaleString());
-			subject.setCurrentPageNo(1);
-			subjectList.add(subject);
-		}
-
-		return subjectList;
-	}
-
 	public List<Subject> getSubjectListFromMobile(Board board, int boardType,
 			boolean isReloadPageNo, ArrayList<String> blackList) {
 		String boardname = board.getEngName();
@@ -799,9 +747,16 @@ public class SmthSupport {
 			board.setTotalPageNo(Integer.parseInt(pageMatcher.group(2)));
 		}
 
-	    // <li><div><a href="/article/AutoTravel/25462">请教奇骏大拿</a>(22)</div><div>2013-02-01&nbsp;<a href="/user/query/LVZHL">LVZHL</a>|16:18:15&nbsp;<a href="/user/query/Normalzzz">Normalzzz</a></div></li>
+		// 同主题模式, 主题后面有(NNN), 两个作者
+		// <div><a href="/article/DC/423562" class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div><div>2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a>|2013-02-06&nbsp;<a href="/user/query/DRAGON9">DRAGON9</a></div>
 
-		// 2013-02-01&nbsp;<a href="/user/query/LVZHL"
+		// 其他模式
+		// <div><a href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div><div>2515&nbsp;2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a></div>
+
+		// 置顶的帖子， class="top"
+		// <div><a href="/article/DC/419129" class="top">审核通过DC版治版方针</a>(0)</div><div>2012-12-22&nbsp;<a href="/user/query/SYSOP">SYSOP</a>|2012-12-22&nbsp;<a href="/user/query/SYSOP">SYSOP</a></div>		
+
+		// 2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a>
 		Pattern userIDPattern = Pattern
 				.compile("([^<>]+)<a href=\"/user/query/([^<>]+)\"");
 		Matcher userIDMatcher = userIDPattern.matcher(result);
@@ -830,34 +785,48 @@ public class SmthSupport {
 			subjectList.add(subject);
 		}
 
-		// <div><a href="/article/AutoTravel/25462">请教奇骏大拿</a>(22)</div>
-		String subPattern = "\"";
+		// <div><a href="/article/DC/423562" class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div>
+		// <div><a href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div>
+		String subPattern1 = "";
+		String subPattern2 = "";
 		if (boardType != SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			boardname = boardname + "/single";
 		}
 		if (boardType == SubjectListFragment.BOARD_TYPE_NORMAL) {
-			subPattern = "/0\"";
+			subPattern1 = "/0";
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_DIGEST) {
-			subPattern = "/1\"";
+			subPattern1 = "/1";
 		} else if (boardType == SubjectListFragment.BOARD_TYPE_MARK) {
-			subPattern = "/3\"";
+			subPattern1 = "/3";
 		}
+		if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			subPattern2 = "\\((\\d+)\\)";
+		}
+
 		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
-				+ boardname + "/(\\d+)" + subPattern + "([^<>]*)>([^<>]+)</a>\\((\\d+)\\)");
+				+ boardname + "/(\\d+)" + subPattern1 + "\"([^<>]*)>([^<>]+)</a>" + subPattern2);
+		Log.d("getSubjectListFromMobile RE", subjectPattern.pattern());
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		index = 0;
 		while (subjectMatcher.find()) {
+			Log.d("getSubjectListFromMobile result", subjectMatcher.group(0));
 			if (subjectMatcher.groupCount() == 2) {
 				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
 				subjectList.get(index).setTitle(subjectMatcher.group(2));
 			} else {
 				String type = subjectMatcher.group(2);
 				if (type.contains("top")) {
+					// 置顶的帖子
 					subjectList.get(index).setType(Subject.TYPE_BOTTOM);
 				}
 				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
-				subjectList.get(index).setTitle(subjectMatcher.group(3) +
-					" (" + subjectMatcher.group(4) + ")");
+				// add replied number after subject title in SUBJECT mode
+				String subjectTitle = "null";
+				if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT)
+					subjectTitle = subjectMatcher.group(3) + " (" + subjectMatcher.group(4) + ")";
+				else
+					subjectTitle = subjectMatcher.group(3);
+				subjectList.get(index).setTitle(subjectTitle);
 			}
 			index++;
 			if (index > subjectList.size()) {
@@ -878,6 +847,12 @@ public class SmthSupport {
 		return subjectList;
 	}
 
+
+	/**
+	 *
+	 *
+	 * @return
+	 */
 	public List<Post> getSinglePostListFromMobileUrl(Subject subject, String url) {
 		String result = crawler.getUrlContentFromMobile(url);
 		if (result == null || result.contains("指定的文章不存在或链接错误")
@@ -1117,8 +1092,7 @@ public class SmthSupport {
 	 * @param pageno
 	 * @return
 	 */
-	public List<Post> getPostList(Subject subject, ArrayList<String> blackList,
-			int startNumber) {
+	public List<Post> getPostList(Subject subject, ArrayList<String> blackList, int startNumber) {
 		// String result = getPostListContent(subject.getBoardEngName(),
 		// subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
 		String url = "http://www.newsmth.net/bbstcon.php?board="
@@ -1126,7 +1100,7 @@ public class SmthSupport {
 		if (subject.getCurrentPageNo() > 0) {
 			url += "&pno=" + subject.getCurrentPageNo();
 		}
-		if (startNumber > 0) {
+		if (startNumber > 0) { // 对应web的"从此处展开"
 			url += "&start=" + startNumber;
 		}
 		String result = crawler.getUrlContent(url);
@@ -1134,8 +1108,7 @@ public class SmthSupport {
 			return Collections.emptyList();
 		}
 		Matcher bidMatcher = Pattern
-				.compile(
-						"tconWriter\\('[^']+',(\\d+),\\d+,\\d+,(\\d+),(\\d+),\\d+,\\d+,\\d+")
+				.compile("tconWriter\\('[^']+',(\\d+),\\d+,\\d+,(\\d+),(\\d+),\\d+,\\d+,\\d+")
 				.matcher(result);
 		String boardid = "";
 		if (bidMatcher.find()) {
@@ -1189,8 +1162,7 @@ public class SmthSupport {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Post> getPostListFromMobile(Subject subject,
-			ArrayList<String> blackList, int boardType) {
+	public List<Post> getPostListFromMobile(Subject subject, ArrayList<String> blackList, int boardType) {
 		String url = "";
 		int currentPageNo = subject.getCurrentPageNo();
 		boolean isInSubject = false;
