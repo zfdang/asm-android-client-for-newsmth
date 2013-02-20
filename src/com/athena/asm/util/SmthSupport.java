@@ -805,11 +805,11 @@ public class SmthSupport {
 
 		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
 				+ boardname + "/(\\d+)" + subPattern1 + "\"([^<>]*)>([^<>]+)</a>" + subPattern2);
-		Log.d("getSubjectListFromMobile RE", subjectPattern.pattern());
+		// Log.d("getSubjectListFromMobile RE", subjectPattern.pattern());
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		index = 0;
 		while (subjectMatcher.find()) {
-			Log.d("getSubjectListFromMobile result", subjectMatcher.group(0));
+			// Log.d("getSubjectListFromMobile result", subjectMatcher.group(0));
 			if (subjectMatcher.groupCount() == 2) {
 				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
 				subjectList.get(index).setTitle(subjectMatcher.group(2));

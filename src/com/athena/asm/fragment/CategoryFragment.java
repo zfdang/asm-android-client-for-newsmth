@@ -1,7 +1,6 @@
 package com.athena.asm.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -22,12 +21,11 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
-import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
-import com.athena.asm.SubjectListActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.data.Board;
+import com.athena.asm.util.AutoCompleteAdapter;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadCategoryTask;
 import com.athena.asm.viewmodel.BaseViewModel;
@@ -110,9 +108,8 @@ public class CategoryFragment extends SherlockFragment implements
 			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout
 					.findViewById(R.id.search_board);
 			textView.setCompletionHint("请输入版面英文或中文名");
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_dropdown_item_1line,
-					m_viewModel.getBoardFullStrings());
+			ArrayAdapter<String> adapter = new AutoCompleteAdapter(getActivity(),
+					android.R.layout.simple_dropdown_item_1line, m_viewModel.getBoardFullStrings());
 			textView.setAdapter(adapter);
 
 			ListView categoryList = (ListView) layout
