@@ -172,6 +172,7 @@ public class HomeViewModel extends BaseViewModel {
 	}
 	
 	
+	// this method get all favorite boards / folders from web
 	public ArrayList<Board> updateFavList(ArrayList<Board> realFavList) {
 		if (realFavList == null) {
 			realFavList = new ArrayList<Board>();
@@ -181,18 +182,17 @@ public class HomeViewModel extends BaseViewModel {
 		}
 		m_smthSupport.getFavorite("0", realFavList, 0);
 		
-		ArrayList<Board> favList = new ArrayList<Board>();
-		favList.addAll(realFavList);
+		// ArrayList<Board> favList = new ArrayList<Board>();
+		// favList.addAll(realFavList);
 
-		Board board = new Board();
-		board.setDirectory(true);
-		board.setDirectoryName("最近访问版面");
-		board.setCategoryName("目录");
-		//board.setChildBoards(new ArrayList<Board>(application.getRecentBoards()));
-		favList.add(board);
+		// Board board = new Board();
+		// board.setDirectory(true);
+		// board.setDirectoryName("最近访问版面");
+		// board.setCategoryName("目录");
+		// favList.add(board);
 		
-		setFavList(favList);
-		return favList;
+		setFavList(realFavList);
+		return realFavList;
 	}
 	
 	public void updateCategoryList() {

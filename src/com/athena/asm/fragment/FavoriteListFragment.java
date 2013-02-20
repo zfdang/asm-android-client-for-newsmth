@@ -104,40 +104,57 @@ public class FavoriteListFragment extends SherlockFragment implements
 			loadFavoriteTask.execute();
 		} else {
 			m_isLoaded = true;
+
+			// list of directories
 			List<String> directoryList = new ArrayList<String>();
-			List<List<Board>> realBoardList = new ArrayList<List<Board>>();
+			// list of boardlist, each boardlist is for a directory in directoryList
+			List<List<Board>> listOfBoardList = new ArrayList<List<Board>>();
+			// list of boards without parent directory, put it in special 'root' directory
 			List<Board> rootBoardList = new ArrayList<Board>();
 
-			boolean isRootBoardExist = false;
-			for (Iterator<Board> iterator = m_viewModel.getFavList().iterator(); iterator
-					.hasNext();) {
+			// get local copy of favlist
+			ArrayList<Board> favList = new ArrayList<Board>();
+			favList.addAll(m_viewModel.getFavList());
+
+			// add faked directory for recently viewed boards
+			Board fakeBoard = new Board();
+			fakeBoard.setDirectory(true);
+			fakeBoard.setDirectoryName("最近访问版面");
+			fakeBoard.setCategoryName("目录");
+			favList.add(fakeBoard);
+
+			for (Iterator<Board> iterator = favList.iterator(); iterator.hasNext();) {
 				Board board = iterator.next();
 				if (board.isDirectory()) {
+					// directory
 					directoryList.add(board.getDirectoryName());
 					if (board.getDirectoryName().equals("最近访问版面")) {
-						realBoardList.add(new ArrayList<Board>(
+						// special directory for recently viewed boards
+						listOfBoardList.add(new ArrayList<Board>(
 								aSMApplication.getCurrentApplication().getRecentBoards()));
 					} else {
-						List<Board> currentBoardList = new ArrayList<Board>();
-						extractSubDirectory(board, currentBoardList);
-						realBoardList.add(currentBoardList);
+						// normal directory, find child boards
+						List<Board> childBoardList = new ArrayList<Board>();
+						extractSubDirectory(board, childBoardList);
+						listOfBoardList.add(childBoardList);
 					}
 				} else {
-					isRootBoardExist = true;
+					// board without parent, add it to rootBoardList
 					rootBoardList.add(board);
 				}
 			}
 
-			if (isRootBoardExist) {
+			if (listOfBoardList.size() > 0) {
+				// add special 'root' directory
 				directoryList.add(0, "我的收藏夹");
-				realBoardList.add(0, rootBoardList);
+				listOfBoardList.add(0, rootBoardList);
 			}
 
 			final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
-					m_inflater, directoryList, realBoardList);
+					m_inflater, directoryList, listOfBoardList);
 			m_listView.setAdapter(favoriteListAdapter);
 
-//			expand favorite by default
+			// expand special 'root' directory by default
 			m_listView.expandGroup(0);
 			m_listView.setOnChildClickListener(new OnChildClickListener() {
 
@@ -164,10 +181,8 @@ public class FavoriteListFragment extends SherlockFragment implements
 			String changedPropertyName, Object... params) {
 		if (changedPropertyName.equals(HomeViewModel.FAVLIST_PROPERTY_NAME)) {
 			reloadFavorite();
-		} else if (changedPropertyName
-				.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
-			if (!m_isLoaded
-					&& m_viewModel.getCurrentTab() != null
+		} else if (changedPropertyName.equals(HomeViewModel.CURRENTTAB_PROPERTY_NAME)) {
+			if (!m_isLoaded && m_viewModel.getCurrentTab() != null
 					&& m_viewModel.getCurrentTab().equals(
 							StringUtility.TAB_FAVORITE)) {
 				reloadFavorite();

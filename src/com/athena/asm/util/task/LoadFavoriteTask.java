@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -38,29 +39,40 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected String doInBackground(String... params) {
+		// 1. read fav from file first
 		try {
 			FileInputStream fis = context.openFileInput("FavList");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			realFavList = (ArrayList<Board>) ois.readObject();
 			fis.close();
+			// Log.d("LoadFavoriteTask", "succeed to load favlist from file");
 		} catch (Exception e) {
+			// Log.d("LoadFavoriteTask", "fail to load favlist from file");
 			e.printStackTrace();
 		}
 		
-		boolean isToWrite = true;
+		// 2. if fail to read from file, read from web
+		boolean isLoadFromWeb = false;
 		if (realFavList == null) {
-			
+			realFavList = m_viewModel.updateFavList(realFavList);
+			// Log.d("LoadFavoriteTask", "load favlist from web");
+			isLoadFromWeb = true;
 		}
-		realFavList = m_viewModel.updateFavList(realFavList);
-		
-		if (isToWrite) {
+		else
+		{
+			m_viewModel.setFavList(realFavList);
+		}
+
+		// 3. save to file if load from web
+		if (isLoadFromWeb) {
 			try {
-				FileOutputStream fos = context.openFileOutput("FavList",
-						Context.MODE_PRIVATE);
+				FileOutputStream fos = context.openFileOutput("FavList", Context.MODE_PRIVATE);
 				ObjectOutputStream os = new ObjectOutputStream(fos);
 				os.writeObject(realFavList);
 				fos.close();
+				// Log.d("LoadFavoriteTask", "succeed to save favlist to file");
 			} catch (IOException e) {
+				// Log.d("LoadFavoriteTask", "fail to save favlist to file");
 				e.printStackTrace();
 			}
 		}
