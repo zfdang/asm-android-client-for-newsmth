@@ -3,6 +3,7 @@ package com.athena.asm.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -158,8 +159,9 @@ public class CategoryFragment extends SherlockFragment implements
 			AutoCompleteTextView textView = (AutoCompleteTextView) ((RelativeLayout) view
 					.getParent()).findViewById(R.id.search_board);
 
-			Board board = m_viewModel.getBoardHashMap().get(
-					textView.getText().toString().toLowerCase());
+			// this line of code has problem, since "IT业界特快" can't work in this method
+			// Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString().toLowerCase());
+			Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString());
 
 			if (board == null) {
 				new Handler().post(new Runnable() {
