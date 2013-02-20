@@ -11,8 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -212,22 +216,33 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 	}
 
+	// show information dialog, called by first run and about icon
+	private void showInfoDialog()
+	{
+		final SpannableString msg = new SpannableString(getText(R.string.about_content));
+	    Linkify.addLinks(msg, Linkify.WEB_URLS);
+
+	    final AlertDialog dlg = new AlertDialog.Builder(this)
+        .setPositiveButton(android.R.string.ok, null)
+        .setIcon(R.drawable.icon)
+        .setTitle(R.string.about_title)
+        .setMessage( msg )
+        .create();
+
+	    dlg.show();
+
+		// Make the textview clickable. Must be called after show()
+	    ((TextView)dlg.findViewById(android.R.id.message)).
+			setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
+
 	private void init() {
 		// initTasks();
 		aSMApplication application = aSMApplication.getCurrentApplication();
 		if (application.isFirstLaunchApp() || application.isFirstLaunchAfterUpdate()) {
 			application.markFirstLaunchApp();
-			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-			alertBuilder.setTitle(R.string.update_title);
-			alertBuilder.setMessage(R.string.update_info);
-			alertBuilder.setPositiveButton("确定",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int i) {
-							dialog.dismiss();
-						}
-					});
-			alertBuilder.show();
+		    showInfoDialog();
 		}
 
 		m_viewModel.setChangeNotificationEnabled(false);
@@ -496,20 +511,7 @@ public class HomeActivity extends SherlockFragmentActivity
 					Toast.LENGTH_SHORT).show();
 			break;
 		case ABOUT:
-			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-			alertBuilder.setTitle(R.string.about_title);
-			// TextView message = new TextView(this);
-			// message.setText(Html.fromHtml(getString(R.string.about_content)));
-			// alertBuilder.setView(message);
-			alertBuilder.setMessage(R.string.about_content);
-			alertBuilder.setPositiveButton("确认",
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int i) {
-							dialog.dismiss();
-						}
-					});
-			alertBuilder.show();
+			showInfoDialog();
 			break;
 		case LOGOUT:
 			logout(false);
