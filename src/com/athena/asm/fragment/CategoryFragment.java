@@ -108,7 +108,7 @@ public class CategoryFragment extends SherlockFragment implements
 
 			AutoCompleteTextView textView = (AutoCompleteTextView) relativeLayout
 					.findViewById(R.id.search_board);
-			textView.setCompletionHint("请输入版面英文或中文名");
+			textView.setCompletionHint("请输入版面中/英文名(支持部分查找)");
 			ArrayAdapter<String> adapter = new AutoCompleteAdapter(getActivity(),
 					android.R.layout.simple_dropdown_item_1line, m_viewModel.getBoardFullStrings());
 			textView.setAdapter(adapter);
