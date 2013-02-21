@@ -252,7 +252,7 @@ public class HomeViewModel extends BaseViewModel {
 					if (!m_boardFullStrings.contains(board.getChsName())) {
 						m_boardFullStrings.add(board.getChsName());
 					}
-					m_boardHashMap.put(board.getChsName(), board);
+					m_boardHashMap.put(board.getChsName().toLowerCase(), board);
 				}
 			}
 			if (board.getChildBoards() != null) {

@@ -506,7 +506,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			}
 			break;
 		case CLEAN:
-			UrlImageViewHelper.cleanup(this);
+			UrlImageViewHelper.cleanup(this, 0);
 			Toast.makeText(getApplicationContext(), "已清空图片缓存",
 					Toast.LENGTH_SHORT).show();
 			break;

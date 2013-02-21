@@ -160,8 +160,7 @@ public class CategoryFragment extends SherlockFragment implements
 					.getParent()).findViewById(R.id.search_board);
 
 			// this line of code has problem, since "IT业界特快" can't work in this method
-			// Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString().toLowerCase());
-			Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString());
+			Board board = m_viewModel.getBoardHashMap().get(textView.getText().toString().toLowerCase());
 
 			if (board == null) {
 				new Handler().post(new Runnable() {
