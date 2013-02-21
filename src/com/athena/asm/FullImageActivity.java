@@ -43,6 +43,8 @@ public class FullImageActivity extends SherlockActivity {
 
 		m_image = (TouchImageView) findViewById(R.id.image_view);
 
+		UrlImageViewHelper.setUseZoomIn(true); // enable zoom in
+		UrlImageViewHelper.setMaxImageSize(0); // load all size
 		UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl, R.drawable.loading);
 
 	}

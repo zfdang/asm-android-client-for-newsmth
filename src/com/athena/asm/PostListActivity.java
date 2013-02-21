@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.athena.asm.data.Mail;
-import com.athena.asm.data.Subject;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.PostListViewModel;
 

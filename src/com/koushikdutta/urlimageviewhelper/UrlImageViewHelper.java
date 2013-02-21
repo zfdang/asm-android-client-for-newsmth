@@ -725,7 +725,9 @@ public final class UrlImageViewHelper {
     private static long maxImageSizeThreshold = 0;
     public static void setMaxImageSize(long imageSize)
     {
+        clog(String.format("Max Image Size: %d", imageSize));
         maxImageSizeThreshold = imageSize;
+        mHttpDownloader.setMaxsizeToDownload(maxImageSizeThreshold);
     }
     public static long getMaxImageSize()
     {
@@ -742,7 +744,6 @@ public final class UrlImageViewHelper {
     }
     
     static {
-        mHttpDownloader.setMaxsizeToDownload(maxImageSizeThreshold);
         mDownloaders.add(mHttpDownloader);
         mDownloaders.add(mContactDownloader);
         mDownloaders.add(mContentDownloader);

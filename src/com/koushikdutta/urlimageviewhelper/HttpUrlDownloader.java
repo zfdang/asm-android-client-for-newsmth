@@ -65,6 +65,8 @@ public class HttpUrlDownloader implements UrlDownloader {
                     if( maxSizeThreshold != 0 &&  contentSize > maxSizeThreshold ){
                         UrlImageViewHelper.clog(String.format("Download abort, size %d > %d, %s", contentSize, maxSizeThreshold, url));
                         return null;
+                    } else {
+                        UrlImageViewHelper.clog(String.format("Image size %d < threshold %d, %s", contentSize, maxSizeThreshold, url));
                     }
                     is = urlConnection.getInputStream();
                     callback.onDownloadComplete(HttpUrlDownloader.this, is, null);

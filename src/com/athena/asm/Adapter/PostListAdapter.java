@@ -3,7 +3,10 @@ package com.athena.asm.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -47,6 +50,28 @@ public class PostListAdapter extends BaseAdapter {
 		this.m_fragment = fragment;
 		this.m_inflater = inflater;
 		this.m_postList = postList;
+	}
+
+	// image size > threshold won't be loaded in 2G/3G
+	private int getMaxImageSize() {
+		boolean isAutoOptimize = aSMApplication.getCurrentApplication().isAutoOptimize();
+		// 非自动优化
+		if( !isAutoOptimize )
+			return 0;
+
+		Context context = aSMApplication.getCurrentApplication().getApplicationContext();
+		ConnectivityManager connectionManager =
+				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
+		int netType = networkInfo.getType();
+		// WIFI下全部下载
+		if (netType == ConnectivityManager.TYPE_WIFI) {
+			return 0;
+		}
+
+		// 自动优化且在移动网络中，返回阈值
+		float threshold = aSMApplication.getCurrentApplication().getImageSizeThreshold();
+		return (int)threshold * 1024;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -100,6 +125,9 @@ public class PostListAdapter extends BaseAdapter {
 			else{
 				UrlImageViewHelper.setUseZoomIn(true);
 			}
+
+			// set threshold for max image size
+			UrlImageViewHelper.setMaxImageSize(getMaxImageSize());
 
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
