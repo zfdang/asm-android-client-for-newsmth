@@ -93,6 +93,14 @@ public class PostListAdapter extends BaseAdapter {
 			StringBuilder contentBuilder = new StringBuilder();
 			contentBuilder.append("");
 
+			if (attachments.size() >= 8){
+				// 如果照片数量多余8张，不再放大图片
+				UrlImageViewHelper.setUseZoomIn(false);
+			}
+			else{
+				UrlImageViewHelper.setUseZoomIn(true);
+			}
+
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
 				contentBuilder.append("<a href='").append(attachUrl).append("'>");
@@ -111,8 +119,7 @@ public class PostListAdapter extends BaseAdapter {
 					imageView.setLayoutParams(layoutParams);
 					imageView.setTag(attachments.get(i));
 					holder.imageLayout.addView(imageView);
-					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl,
-							R.drawable.loading, 360000);
+					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading);
 					imageView.setOnClickListener(new OnClickListener() {
 						
 						@Override

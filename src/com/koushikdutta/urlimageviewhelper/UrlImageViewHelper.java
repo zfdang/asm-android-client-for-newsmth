@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 
 import junit.framework.Assert;
@@ -143,6 +142,7 @@ public final class UrlImageViewHelper {
 
             // decode pre-resized image
             stream = new FileInputStream(filename);
+            // o.inPurgeable = true;
             bitmap = BitmapFactory.decodeStream(stream, null, o);
             stream.close();
             clog(String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
@@ -172,12 +172,17 @@ public final class UrlImageViewHelper {
                 }
             }
 
-            // clog(String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+            clog(String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
             final BitmapDrawable bd = new BitmapDrawable(mResources, bitmap);
-            return new ZombieDrawable(url, bd);
+            return bd;
         } catch (final IOException e) {
+            clog(e.toString());
             return null;
-        } finally {
+        } catch (final OutOfMemoryError e) {
+            clog(e.toString());
+            return null;
+        }
+        finally {
             if (stream != null) {
                 try {
                     stream.close();
@@ -486,20 +491,6 @@ public final class UrlImageViewHelper {
         return cacheDurationMs == CACHE_DURATION_INFINITE || System.currentTimeMillis() < file.lastModified() + cacheDurationMs;
     }
     
-    public static Drawable getImmediateMutableDrawable(String url) {
-        Drawable ret = null;
-        if (mDeadCache != null)
-            ret = mDeadCache.get(url);
-        if (ret != null)
-            return ret;
-        if (mLiveCache != null)
-            ret = mLiveCache.get(url);
-        if (ret != null && ret instanceof ZombieDrawable) {
-            ZombieDrawable zd = (ZombieDrawable)ret;
-            return zd.getBitmapDrawable().mutate();
-        }
-        return null;
-    }
 
     /**
      * Download and shrink an Image located at a specified URL, and display it
@@ -543,22 +534,10 @@ public final class UrlImageViewHelper {
         final File file = new File(filename);
         clog(String.format("Target file cache = %s", filename));
 
-        if (mDeadCache == null) {
-            mDeadCache = new UrlLruCache(getHeapSize(context) / 16);
-        }
-        Drawable drawable;
-        final BitmapDrawable bd = mDeadCache.remove(url);
-        if (bd != null) {
-            // this drawable was resurrected, it should not be in the live cache
-            clog("loaded from dead cache: " + url);
-            clog("zombie load: " + url);
-//            Assert.assertTrue(url, !mAllCache.contains(bd));
-            drawable = new ZombieDrawable(url, bd);
-        } else {
-            drawable = mLiveCache.get(url);
-            if( drawable != null){
-                clog("loaded from live cache: " + url);
-            }
+        // mLiveCache
+        Drawable drawable = mLiveCache.get(url);
+        if( drawable != null){
+            clog("loaded from live cache: " + url);
         }
 
         if (drawable != null) {
@@ -569,8 +548,6 @@ public final class UrlImageViewHelper {
             // 404 or failed load.
             if (file.exists() && !checkCacheDuration(file, cacheDurationMs)) {
                 clog("Cache hit, but file is stale. Forcing reload: " + url);
-                if (drawable instanceof ZombieDrawable)
-                    ((ZombieDrawable)drawable).headshot();
                 drawable = null;
             }
             else {
@@ -584,14 +561,7 @@ public final class UrlImageViewHelper {
                 imageView.setImageDrawable(drawable);
             }
             if (callback != null) {
-                // when invoking the callback from cache, check to see if this was
-                // a drawable that was successfully loaded from the filesystem or url.
-                // this will be indicated by it being a ZombieDrawable (ie, something we are managing).
-                // The default drawables will be BitmapDrawables (or whatever else the user passed in).
-                Drawable loaderResult = null;
-                if (drawable instanceof ZombieDrawable)
-                    loaderResult = drawable;
-                callback.onLoaded(imageView, loaderResult, url, true);
+                callback.onLoaded(imageView, drawable, url, true);
             }
             return;
         }
@@ -672,10 +642,13 @@ public final class UrlImageViewHelper {
                 if (usableResult == null) {
                     clog("No usable result, fallback!! " + url);
                     usableResult = defaultDrawable;
-                    mLiveCache.put(url, usableResult);
+                    // never cache fallback drawable
+                    // mLiveCache.put(url, usableResult);
+                } else {
+                    // cache the result
+                    // mLiveCache.put(url, usableResult);
                 }
                 mPendingDownloads.remove(url);
-//                mLiveCache.put(url, usableResult);
                 if (callback != null && imageView == null)
                     callback.onLoaded(null, loader.result, url, false);
                 int waitingCount = 0;
@@ -726,6 +699,7 @@ public final class UrlImageViewHelper {
                 }
             }
             catch (final Exception ex) {
+                clog(ex.toString());
             }
         }
         
@@ -748,7 +722,7 @@ public final class UrlImageViewHelper {
     * max image size to be downloaded, in bytes
     *
     */
-    private static long maxImageSizeThreshold = 50*1024;
+    private static long maxImageSizeThreshold = 0;
     public static void setMaxImageSize(long imageSize)
     {
         maxImageSizeThreshold = imageSize;
@@ -790,45 +764,6 @@ public final class UrlImageViewHelper {
     }
 
     private static UrlImageCache mLiveCache = UrlImageCache.getInstance();
-
-    private static UrlLruCache mDeadCache;
-    private static HashSet<BitmapDrawable> mAllCache = new HashSet<BitmapDrawable>();
-    private static int getHeapSize(final Context context) {
-        return ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() * 1024 * 1024;
-    }
-
-    private static class ZombieDrawable extends WrapperDrawable {
-        public ZombieDrawable(final String url, final BitmapDrawable drawable) {
-            super(drawable);
-            mUrl = url;
-
-            mAllCache.add(drawable);
-            mDeadCache.remove(url);
-            mLiveCache.put(url, this);
-        }
-
-        String mUrl;
-
-        @Override
-        protected void finalize() throws Throwable {
-            super.finalize();
-
-            if (!mHeadshot)
-                mDeadCache.put(mUrl, mDrawable);
-            mAllCache.remove(mDrawable);
-            mLiveCache.remove(mUrl);
-            clog("Zombie GC event " + mUrl);
-        }
-        
-        // kill this zombie, forever.
-        private boolean mHeadshot = false;
-        public void headshot() {
-            clog("BOOM! Headshot: " + mUrl);
-            mHeadshot = true;
-            mLiveCache.remove(mUrl);
-            mAllCache.remove(mDrawable);
-        }
-    }
 
     static void executeTask(final AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT < Constants.HONEYCOMB) {
