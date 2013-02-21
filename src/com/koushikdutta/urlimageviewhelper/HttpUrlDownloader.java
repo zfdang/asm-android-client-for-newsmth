@@ -31,6 +31,7 @@ public class HttpUrlDownloader implements UrlDownloader {
             @Override
             protected Void doInBackground(final Void... params) {
                 try {
+                    UrlImageViewHelper.clog("Downloading URL " + url);
                     InputStream is = null;
 
                     String thisUrl = url;
@@ -70,6 +71,7 @@ public class HttpUrlDownloader implements UrlDownloader {
 
             @Override
             protected void onPostExecute(final Void result) {
+                UrlImageViewHelper.clog("Finish download URL " + url);
                 completion.run();
             }
         };

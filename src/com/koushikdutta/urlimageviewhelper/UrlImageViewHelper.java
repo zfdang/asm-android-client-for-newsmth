@@ -430,8 +430,6 @@ public final class UrlImageViewHelper {
         return (s == null || s.equals("") || s.equals("null") || s.equals("NULL"));
     }
 
-    private static boolean mHasCleaned = false;
-
     public static String getFilenameForUrl(final String url) {
         return url.hashCode() + ".urlimage";
     }
@@ -443,14 +441,12 @@ public final class UrlImageViewHelper {
      *              will be removed.
      */
     public static void cleanup(final Context context, long age) {
-        if (mHasCleaned) {
-            return;
-        }
-        mHasCleaned = true;
+        clog(String.format("Cleanup, age=%d", age));
         try {
-            // purge any *.urlimage files over a week old
+            // purge any *.urlimage files over "age" old
             final String[] files = context.getFilesDir().list();
             if (files == null) {
+                clog("Cleanup, no cached files found");
                 return;
             }
             for (final String file : files) {
@@ -461,6 +457,7 @@ public final class UrlImageViewHelper {
                 final File f = new File(context.getFilesDir().getAbsolutePath() + '/' + file);
                 if (System.currentTimeMillis() > f.lastModified() + age) {
                     f.delete();
+                    clog(String.format("Cached file %s removed", file));
                 }
             }
         } catch (final Exception e) {
@@ -470,10 +467,17 @@ public final class UrlImageViewHelper {
 
     /**
      * Clear out all cached images older than a week.
-     * The same as calling cleanup(context, CACHE_DURATION_ONE_WEEK);
+     * it will call cleanup(context, CACHE_DURATION_ONE_WEEK);
      * @param context
      */
+    private static boolean mHasCleaned = false;
     public static void cleanup(final Context context) {
+        // only cleanup for the first time
+        if(mHasCleaned)
+            return;
+        mHasCleaned = true;
+
+        // purge any *.urlimage files over a week old
         cleanup(context, CACHE_DURATION_ONE_WEEK);
     }
     
@@ -536,19 +540,24 @@ public final class UrlImageViewHelper {
 
         final String filename = context.getFileStreamPath(getFilenameForUrl(url)).getAbsolutePath();
         final File file = new File(filename);
+        clog(String.format("Target file cache = %s", filename));
 
         if (mDeadCache == null) {
-            mDeadCache = new UrlLruCache(getHeapSize(context) / 8);
+            mDeadCache = new UrlLruCache(getHeapSize(context) / 16);
         }
         Drawable drawable;
         final BitmapDrawable bd = mDeadCache.remove(url);
         if (bd != null) {
             // this drawable was resurrected, it should not be in the live cache
+            clog("loaded from dead cache: " + url);
             clog("zombie load: " + url);
 //            Assert.assertTrue(url, !mAllCache.contains(bd));
             drawable = new ZombieDrawable(url, bd);
         } else {
             drawable = mLiveCache.get(url);
+            if( drawable != null){
+                clog("loaded from live cache: " + url);
+            }
         }
 
         if (drawable != null) {
@@ -564,7 +573,7 @@ public final class UrlImageViewHelper {
                 drawable = null;
             }
             else {
-                clog("Using cached: " + url);
+                clog("Using cached image: " + url);
             }
         }
 
@@ -632,9 +641,11 @@ public final class UrlImageViewHelper {
                         FileOutputStream fout = new FileOutputStream(filename);
                         copyStream(in, fout);
                         fout.close();
+                        clog("DownloadComplete: stream saved to cached file " + filename);
                     }
                     else {
                         targetFilename = existingFilename;
+                        clog("DownloadComplete: use cached file " + existingFilename);
                     }
                     result = loadDrawableFromStream(context, url, targetFilename, targetWidth, targetHeight);
                 }
@@ -658,7 +669,7 @@ public final class UrlImageViewHelper {
                 Assert.assertEquals(Looper.myLooper(), Looper.getMainLooper());
                 Drawable usableResult = loader.result;
                 if (usableResult == null) {
-                    clog("No usable result, defaulting " + url);
+                    clog("No usable result, fallback!! " + url);
                     usableResult = defaultDrawable;
                     mLiveCache.put(url, usableResult);
                 }
@@ -685,7 +696,7 @@ public final class UrlImageViewHelper {
                     if (callback != null && iv == imageView)
                         callback.onLoaded(iv, loader.result, url, false);
                 }
-                clog("Populated: " + waitingCount);
+                clog("Populated: " + url + waitingCount);
             }
         };
 
