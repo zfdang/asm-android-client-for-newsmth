@@ -134,7 +134,7 @@ public final class UrlImageViewHelper {
                 // get original image size
                 int inWidth =  o.outWidth;
                 int inHeight = o.outHeight;
-                // clog(String.format("Original bitmap size: (%dx%d).", inWidth, inHeight));
+                clog(String.format("Original bitmap size: (%dx%d).", inWidth, inHeight));
 
                 // get size for pre-resized image
                 o = new Options();
@@ -145,7 +145,7 @@ public final class UrlImageViewHelper {
             stream = new FileInputStream(filename);
             bitmap = BitmapFactory.decodeStream(stream, null, o);
             stream.close();
-            // clog(String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+            clog(String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
 
             if (mUseZoomOut || mUseZoomIn) {
                 // create bitmap which matches exactly with the target size
@@ -158,16 +158,17 @@ public final class UrlImageViewHelper {
                 m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
                 m.getValues(values);
 
+                clog(String.format("Zoom: (%fx%f).", values[0], values[4]));
                 if( mUseZoomOut && (values[0] < 1.0 || values[4] < 1.0) ){
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
                         (int) (bitmap.getHeight() * values[4]), true);
-                    // clog(String.format("Zoom out: (%fx%f).", values[0], values[4]));
+                    clog("Zoom out");
                 }
 
                 if( mUseZoomIn && (values[0] > 1.0 || values[4] > 1.0) ){
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
                             (int) (bitmap.getHeight() * values[4]), true);
-                    // clog(String.format("Zoom in: (%fx%f).", values[0], values[4]));
+                    clog("Zoom in");
                 }
             }
 
@@ -730,6 +731,7 @@ public final class UrlImageViewHelper {
         
         for (UrlDownloader downloader: mDownloaders) {
             if (downloader.canDownloadUrl(url)) {
+
                 downloader.download(context, url, filename, loader, completion);
                 return;
             }
@@ -742,6 +744,20 @@ public final class UrlImageViewHelper {
         Drawable result;
     }
     
+    /*
+    * max image size to be downloaded, in bytes
+    *
+    */
+    private static long maxImageSizeThreshold = 50*1024;
+    public static void setMaxImageSize(long imageSize)
+    {
+        maxImageSizeThreshold = imageSize;
+    }
+    public static long getMaxImageSize()
+    {
+        return maxImageSizeThreshold;
+    }
+
     private static HttpUrlDownloader mHttpDownloader = new HttpUrlDownloader();
     private static ContentUrlDownloader mContentDownloader = new ContentUrlDownloader();
     private static ContactContentUrlDownloader mContactDownloader = new ContactContentUrlDownloader();
@@ -752,6 +768,7 @@ public final class UrlImageViewHelper {
     }
     
     static {
+        mHttpDownloader.setMaxsizeToDownload(maxImageSizeThreshold);
         mDownloaders.add(mHttpDownloader);
         mDownloaders.add(mContactDownloader);
         mDownloaders.add(mContentDownloader);

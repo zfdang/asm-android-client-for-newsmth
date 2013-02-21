@@ -44,4 +44,8 @@ public class ContactContentUrlDownloader implements UrlDownloader {
     public boolean canDownloadUrl(String url) {
         return url.startsWith(ContactsContract.Contacts.CONTENT_URI.toString());
     }
+
+    @Override
+    public void setMaxsizeToDownload(long size){
+    }
 }

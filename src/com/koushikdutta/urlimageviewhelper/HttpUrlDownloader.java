@@ -15,6 +15,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper.RequestPropertiesC
 
 public class HttpUrlDownloader implements UrlDownloader {
     private RequestPropertiesCallback mRequestPropertiesCallback;
+    private long maxSizeThreshold = 0;
 
     public RequestPropertiesCallback getRequestPropertiesCallback() {
         return mRequestPropertiesCallback;
@@ -59,6 +60,12 @@ public class HttpUrlDownloader implements UrlDownloader {
                         UrlImageViewHelper.clog("Response Code: " + urlConnection.getResponseCode());
                         return null;
                     }
+                    // check response size
+                    int contentSize = urlConnection.getContentLength();
+                    if( maxSizeThreshold != 0 &&  contentSize > maxSizeThreshold ){
+                        UrlImageViewHelper.clog(String.format("Download abort, size %d > %d, %s", contentSize, maxSizeThreshold, url));
+                        return null;
+                    }
                     is = urlConnection.getInputStream();
                     callback.onDownloadComplete(HttpUrlDownloader.this, is, null);
                     return null;
@@ -88,4 +95,10 @@ public class HttpUrlDownloader implements UrlDownloader {
     public boolean canDownloadUrl(String url) {
         return url.startsWith("http");
     }
+
+    @Override
+    public void setMaxsizeToDownload(long size){
+        maxSizeThreshold = size;
+    }
+
 }

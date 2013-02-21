@@ -40,4 +40,8 @@ public class FileUrlDownloader implements UrlDownloader {
     public boolean canDownloadUrl(String url) {
         return url.startsWith("file:/");
     }
+
+    @Override
+    public void setMaxsizeToDownload(long size){
+    }
 }

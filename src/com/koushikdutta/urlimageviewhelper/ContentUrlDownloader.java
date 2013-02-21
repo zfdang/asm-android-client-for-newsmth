@@ -43,4 +43,9 @@ public class ContentUrlDownloader implements UrlDownloader {
     public boolean canDownloadUrl(String url) {
         return url.startsWith(ContentResolver.SCHEME_CONTENT);
     }
+
+    @Override
+    public void setMaxsizeToDownload(long size){
+    }
+
 }

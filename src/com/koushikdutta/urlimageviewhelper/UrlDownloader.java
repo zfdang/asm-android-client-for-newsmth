@@ -12,4 +12,6 @@ public interface UrlDownloader {
     public void download(Context context, String url, String filename, UrlDownloaderCallback callback, Runnable completion);
     public boolean allowCache();
     public boolean canDownloadUrl(String url);
+
+    public void setMaxsizeToDownload(long size);
 }
