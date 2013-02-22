@@ -14,6 +14,7 @@ import com.athena.asm.viewmodel.PostListViewModel;
 public class PostListActivity extends SherlockFragmentActivity
 							  implements ProgressDialogProvider,
 							  OnOpenActivityFragmentListener {
+	public static final int RETURN_FROM_FULL_IMAGE = 101;
 	
 	private ProgressDialog m_pdialog;
 	
@@ -86,7 +87,10 @@ public class PostListActivity extends SherlockFragmentActivity
 			Bundle b = data.getExtras();
 			m_viewModel.setIsToRefreshBoard(b.getBoolean(StringUtility.REFRESH_BOARD));
 			break;
-
+		case PostListActivity.RETURN_FROM_FULL_IMAGE:
+			// refresh current list
+			m_viewModel.notifyPostListChanged();
+			break;
 		default:
 			break;
 		}

@@ -71,9 +71,19 @@ public final class UrlImageViewHelper {
         mResources = new Resources(mgr, mMetrics, context.getResources().getConfiguration());
     }
 
+
+    /**
+     * If bitmap can't be loaded successfully, errorResource will be draw to imageview
+     * @param drawable resource
+     */
+    private static int mErrorResource = 0;
+    public static void setErrorResource(int errorResource) {
+        mErrorResource = errorResource;
+    }
+
+
     private static boolean mUseZoomIn = true;
     private static boolean mUseZoomOut = true;
-
     /**
      * Bitmap scaling will use smart/sane values to limit the maximum
      * dimension of the bitmap during decode. This will prevent any dimension of the
@@ -640,8 +650,14 @@ public final class UrlImageViewHelper {
                 Assert.assertEquals(Looper.myLooper(), Looper.getMainLooper());
                 Drawable usableResult = loader.result;
                 if (usableResult == null) {
-                    clog("No usable result, fallback!! " + url);
-                    usableResult = defaultDrawable;
+                    clog("No usable result: " + url);
+                    if (mErrorResource != 0 && imageView != null){
+                        usableResult = imageView.getResources().getDrawable(mErrorResource);;
+                        clog("fallback to error resource");
+                    } else {
+                        usableResult = defaultDrawable;
+                        clog("fallback to default resource");
+                    }
                     // never cache fallback drawable
                     // mLiveCache.put(url, usableResult);
                 } else {

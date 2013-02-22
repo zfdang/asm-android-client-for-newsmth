@@ -125,9 +125,17 @@ public class PostListAdapter extends BaseAdapter {
 			else{
 				UrlImageViewHelper.setUseZoomIn(true);
 			}
+			UrlImageViewHelper.setUseZoomOut(true); // always enable zoom out
 
 			// set threshold for max image size
 			UrlImageViewHelper.setMaxImageSize(getMaxImageSize());
+
+			// set error resource, this resource will be used when failed to load image
+			if (aSMApplication.getCurrentApplication().isNightTheme()) {
+				UrlImageViewHelper.setErrorResource(R.drawable.failure_night);
+			} else {
+				UrlImageViewHelper.setErrorResource(R.drawable.failure_day);
+			}
 
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
@@ -147,7 +155,11 @@ public class PostListAdapter extends BaseAdapter {
 					imageView.setLayoutParams(layoutParams);
 					imageView.setTag(attachments.get(i));
 					holder.imageLayout.addView(imageView);
-					UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading);
+					if (aSMApplication.getCurrentApplication().isNightTheme()) {
+						UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading_night);
+					} else {
+						UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading_day);
+					}
 					imageView.setOnClickListener(new OnClickListener() {
 						
 						@Override
@@ -158,7 +170,7 @@ public class PostListAdapter extends BaseAdapter {
 							Attachment attachment = (Attachment) v.getTag();
 							intent.putExtra(StringUtility.IMAGE_URL, attachment.getAttachUrl());
 							intent.putExtra(StringUtility.IMAGE_NAME, attachment.getName());
-							m_fragment.startActivity(intent);
+							m_fragment.startActivityForResult(intent, 0);
 						}
 					});
 				}

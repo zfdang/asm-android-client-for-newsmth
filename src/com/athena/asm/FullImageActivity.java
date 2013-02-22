@@ -44,9 +44,10 @@ public class FullImageActivity extends SherlockActivity {
 		m_image = (TouchImageView) findViewById(R.id.image_view);
 
 		UrlImageViewHelper.setUseZoomIn(true); // enable zoom in
+		UrlImageViewHelper.setUseZoomOut(false); // don't zoom out
 		UrlImageViewHelper.setMaxImageSize(0); // load all size
-		UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl, R.drawable.loading);
 
+		UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl);
 	}
 
 	@Override
@@ -120,5 +121,14 @@ public class FullImageActivity extends SherlockActivity {
 			break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		// expect post refresh
+		setResult(PostListActivity.RETURN_FROM_FULL_IMAGE, getIntent());
+
+		// TODO Auto-generated method stub
+		super.onBackPressed();
 	}
 }
