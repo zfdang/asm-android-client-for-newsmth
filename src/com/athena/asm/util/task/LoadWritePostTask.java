@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.util.StringUtility;
@@ -96,6 +97,7 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 			contentString = writePostActivity.m_smthSupport
 					.getUrlContent(m_viewModel.getToHandlerUrl());
 		} else if (type == WritePostActivity.TYPE_POST_EDIT) {
+			// http://www.newsmth.net/bbsedit.php?board=PocketLife&id=1408697&ftype=0&do
 			postUrl = "http://www.newsmth.net/bbsedit.php";
 			Map<String, String> paramsMap = StringUtility
 					.getUrlParams(m_viewModel.getToHandlerUrl());
@@ -105,7 +107,9 @@ public class LoadWritePostTask extends AsyncTask<String, Integer, String> {
 			if (paramsMap.containsKey("id")) {
 				postUrl += "&id=" + paramsMap.get("id");
 			}
-			postUrl += "&ftype=0";
+			postUrl += "&ftype=0&do";
+			// Log.d("TYPE_POST_EDIT update URL = ", postUrl);
+
 			m_viewModel.setPostUrl(postUrl);
 			
 			contentString = writePostActivity.m_smthSupport

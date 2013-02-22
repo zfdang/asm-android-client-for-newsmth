@@ -530,10 +530,12 @@ public class PostListFragment extends SherlockFragment implements
 					case 8:
 						if (m_onOpenActivityFragmentListener != null) {
 							Bundle bundle = new Bundle();
-							bundle.putSerializable(StringUtility.URL,
-												   "http://www.newsmth.net/bbspst.php?board="
-												   + post.getBoard() + "&id="
-												   + post.getSubjectID() + "&ftype=");
+							// http://www.newsmth.net/bbsedit.php?board=PocketLife&id=1408697&ftype=0
+							String url = "http://www.newsmth.net/bbsedit.php?board="
+									   + post.getBoard() + "&id=" + post.getSubjectID() + "&ftype=0";
+							bundle.putSerializable(StringUtility.URL, url);
+							// Log.d("TYPE_POST_EDIT read URL = ", url);
+
 							bundle.putSerializable(StringUtility.WRITE_TYPE, WritePostActivity.TYPE_POST_EDIT);
 							bundle.putSerializable(StringUtility.TITLE, post.getTitle().replace("主题:", ""));
 							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
