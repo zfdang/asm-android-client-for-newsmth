@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 
+import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -134,8 +135,9 @@ public class CheckMessageService extends Service {
 		@Override
 		protected void onPostExecute(String result) {
 			if (m_result != null) {
+				Intent notificationIntent = new Intent(m_context, MailListActivity.class);
 				PendingIntent pendingIntent = PendingIntent.getActivity(m_context, 0,
-						new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 				
 				String title = "";
 				String text = "";
