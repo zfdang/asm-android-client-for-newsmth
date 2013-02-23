@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.ImageView;
 
 public class TouchImageView extends ImageView {
@@ -44,6 +45,7 @@ public class TouchImageView extends ImageView {
     protected float origWidth, origHeight;
     int oldMeasuredWidth, oldMeasuredHeight;
 
+    private long mActionDownTime;
 
     ScaleGestureDetector mScaleDetector;
 
@@ -80,6 +82,8 @@ public class TouchImageView extends ImageView {
                         last.set(curr);
                         start.set(last);
                         mode = DRAG;
+
+                        mActionDownTime = System.currentTimeMillis();
                         break;
                         
                     case MotionEvent.ACTION_MOVE:
@@ -98,8 +102,14 @@ public class TouchImageView extends ImageView {
                         mode = NONE;
                         int xDiff = (int) Math.abs(curr.x - start.x);
                         int yDiff = (int) Math.abs(curr.y - start.y);
-                        if (xDiff < CLICK && yDiff < CLICK)
-                            performClick();
+                        if (xDiff < CLICK && yDiff < CLICK){
+                            if(System.currentTimeMillis() - mActionDownTime > ViewConfiguration.getLongPressTimeout()) {
+                                mActionDownTime = System.currentTimeMillis();
+                                performLongClick();
+                            } else {
+                                performClick();
+                            }
+                        }
                         break;
 
                     case MotionEvent.ACTION_POINTER_UP:
@@ -109,7 +119,7 @@ public class TouchImageView extends ImageView {
                 
                 setImageMatrix(matrix);
                 invalidate();
-                return false; // indicate event was handled
+                return true; // indicate event was handled
             }
 
         });
