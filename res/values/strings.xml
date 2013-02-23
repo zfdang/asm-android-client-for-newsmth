@@ -62,6 +62,9 @@
 	<string name="post_edit_post">修改文章</string>
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
+     <!-- fulll screen image 相关 -->
+    <string name="full_image_save">保存图片</string>
+    <string name="full_image_back">返回</string>
 	 <!-- search post相关 -->
 	<string name="search_tip1">标题含有</string>
 	<string name="search_tip2">AND</string>
