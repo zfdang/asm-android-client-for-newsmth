@@ -180,11 +180,11 @@ public class PullToRefreshListView extends ListView implements
 		localGestureDetector.onTouchEvent(event);
 		final int y = (int) event.getY();
 
-		Log.d(TAG,
-				String.format(
-						"[onTouchEvent]event.Action=%d, currState=%d, refreshState=%d,y=%d",
-						event.getAction(), mCurrentScrollState, mRefreshState,
-						y));
+		// Log.d(TAG,
+		// 		String.format(
+		// 				"[onTouchEvent]event.Action=%d, currState=%d, refreshState=%d,y=%d",
+		// 				event.getAction(), mCurrentScrollState, mRefreshState,
+		// 				y));
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_UP:
 			if (!isVerticalScrollBarEnabled()) {
@@ -225,9 +225,9 @@ public class PullToRefreshListView extends ListView implements
 	private void applyHeaderPadding(MotionEvent ev) {
 		final int historySize = ev.getHistorySize();
 
-		Log.d(TAG, String.format(
-				"[applyHeaderPadding]currState=%d, refreshState=%d",
-				mCurrentScrollState, mRefreshState));
+		// Log.d(TAG, String.format(
+		// 		"[applyHeaderPadding]currState=%d, refreshState=%d",
+		// 		mCurrentScrollState, mRefreshState));
 		// Workaround for getPointerCount() which is unavailable in 1.5
 		// (it's always 1 in 1.5)
 		int pointerCount = 1;
@@ -291,9 +291,9 @@ public class PullToRefreshListView extends ListView implements
 	 * Sets the header padding back to original size.
 	 */
 	private void resetHeaderPadding() {
-		Log.d(TAG, String.format(
-				"[resetHeaderPadding]currState=%d, refreshState=%d",
-				mCurrentScrollState, mRefreshState));
+		// Log.d(TAG, String.format(
+		// 		"[resetHeaderPadding]currState=%d, refreshState=%d",
+		// 		mCurrentScrollState, mRefreshState));
 		// invalidate();
 
 		//this.mPadding=0;
@@ -308,8 +308,8 @@ public class PullToRefreshListView extends ListView implements
 	 * Resets the header to the original state.
 	 */
 	private void resetHeader() {
-		Log.d(TAG, String.format("[resetHeader]currState=%d, refreshState=%d",
-				mCurrentScrollState, mRefreshState));
+		// Log.d(TAG, String.format("[resetHeader]currState=%d, refreshState=%d",
+		// 		mCurrentScrollState, mRefreshState));
 		if (mRefreshState != TAP_TO_REFRESH) {
 			mRefreshState = TAP_TO_REFRESH;
 
@@ -330,8 +330,8 @@ public class PullToRefreshListView extends ListView implements
 	}
 
 	private void measureView(View child) {
-		Log.d(TAG, String.format("[measureView]currState=%d, refreshState=%d",
-				mCurrentScrollState, mRefreshState));
+		// Log.d(TAG, String.format("[measureView]currState=%d, refreshState=%d",
+		// 		mCurrentScrollState, mRefreshState));
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
 			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
@@ -354,7 +354,7 @@ public class PullToRefreshListView extends ListView implements
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		Log.d(TAG, "List onScroll");
+		// Log.d(TAG, "List onScroll");
 		
 		
 		if (mCurrentScrollState == SCROLL_STATE_FLING
@@ -394,7 +394,7 @@ public class PullToRefreshListView extends ListView implements
 	}
 
 	public void onRefresh() {
-		Log.d(TAG, "onRefresh");
+		// Log.d(TAG, "onRefresh");
 
 		if (mOnRefreshListener != null) {
 			mOnRefreshListener.onRefresh();
@@ -416,7 +416,7 @@ public class PullToRefreshListView extends ListView implements
 	 * Resets the list to a normal state after a refresh.
 	 */
 	public void onRefreshComplete() {
-		Log.d(TAG, "onRefreshComplete");
+		// Log.d(TAG, "onRefreshComplete");
 
 		resetHeader();
 
@@ -486,9 +486,9 @@ public class PullToRefreshListView extends ListView implements
 		// When the refresh view is completely visible, change the text to say
 		// "Release to refresh..." and flip the arrow drawable.
 
-		Log.d(TAG, String.format(
-				"[OnScroll]first=%d, currState=%d, refreshState=%d",
-				firstVisibleItem, mCurrentScrollState, mRefreshState));
+		// Log.d(TAG, String.format(
+		// 		"[OnScroll]first=%d, currState=%d, refreshState=%d",
+		// 		firstVisibleItem, mCurrentScrollState, mRefreshState));
 
 		if (mCurrentScrollState == SCROLL_STATE_TOUCH_SCROLL
 				&& mRefreshState != REFRESHING) {
