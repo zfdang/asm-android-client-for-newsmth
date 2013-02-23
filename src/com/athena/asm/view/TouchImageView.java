@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -45,11 +46,48 @@ public class TouchImageView extends ImageView {
     protected float origWidth, origHeight;
     int oldMeasuredWidth, oldMeasuredHeight;
 
-    private long mActionDownTime;
 
     ScaleGestureDetector mScaleDetector;
 
     Context context;
+
+    /**
+     * flag to wait long click event
+     */
+    private boolean mWaitingForLongClick;
+    private Handler mHandler = null;
+    private PendingCheckForLongClick mPendingCheckForLongClick = null;
+
+    class PendingCheckForLongClick implements Runnable {
+        public void run() {
+            if (mWaitingForLongClick) {
+                mWaitingForLongClick = false;
+                performLongClick();
+            }
+        }
+    }
+
+    private void checkForLongClick(int delayOffset) {
+        mWaitingForLongClick = true;
+
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        if (mPendingCheckForLongClick != null) {
+            mHandler.removeCallbacks(mPendingCheckForLongClick);
+        } else {
+            mPendingCheckForLongClick = new PendingCheckForLongClick();
+        }
+        mHandler.postDelayed(mPendingCheckForLongClick,
+                ViewConfiguration.getLongPressTimeout() - delayOffset);
+    }
+
+    private void clearCheckForLongClick() {
+        mWaitingForLongClick = false;
+        if (mHandler != null && mPendingCheckForLongClick!= null) {
+            mHandler.removeCallbacks(mPendingCheckForLongClick);
+        }
+    }
 
     public TouchImageView(Context context) {
         super(context);
@@ -77,13 +115,15 @@ public class TouchImageView extends ImageView {
                 mScaleDetector.onTouchEvent(event);
                 PointF curr = new PointF(event.getX(), event.getY());
 
+                int xDiff = (int) Math.abs(curr.x - start.x);
+                int yDiff = (int) Math.abs(curr.y - start.y);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         last.set(curr);
                         start.set(last);
                         mode = DRAG;
 
-                        mActionDownTime = System.currentTimeMillis();
+                        checkForLongClick(0);
                         break;
                         
                     case MotionEvent.ACTION_MOVE:
@@ -96,20 +136,16 @@ public class TouchImageView extends ImageView {
                             fixTrans();
                             last.set(curr.x, curr.y);
                         }
+                        if (xDiff > CLICK || yDiff > CLICK) {
+                            clearCheckForLongClick();
+                        }
                         break;
 
                     case MotionEvent.ACTION_UP:
                         mode = NONE;
-                        int xDiff = (int) Math.abs(curr.x - start.x);
-                        int yDiff = (int) Math.abs(curr.y - start.y);
-                        if (xDiff < CLICK && yDiff < CLICK){
-                            if(System.currentTimeMillis() - mActionDownTime > ViewConfiguration.getLongPressTimeout()) {
-                                mActionDownTime = System.currentTimeMillis();
-                                performLongClick();
-                            } else {
-                                performClick();
-                            }
-                        }
+                        if (xDiff < CLICK && yDiff < CLICK)
+                            performClick();
+                        clearCheckForLongClick();
                         break;
 
                     case MotionEvent.ACTION_POINTER_UP:

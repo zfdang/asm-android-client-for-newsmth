@@ -50,6 +50,7 @@ public class FullImageActivity extends SherlockActivity
 
 		m_image = (TouchImageView) findViewById(R.id.image_view);
 		m_image.setOnLongClickListener(this);
+		m_image.setMaxZoom(4f);
 
 		UrlImageViewHelper.setUseZoomIn(true); // enable zoom in
 		UrlImageViewHelper.setUseZoomOut(false); // don't zoom out
@@ -60,7 +61,7 @@ public class FullImageActivity extends SherlockActivity
 			UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl, R.drawable.loading_day);
 		}
 
-		Toast.makeText(this, "长按后松开弹出菜单,双指缩放,返回键退出", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "长按弹出菜单,双指缩放,返回键退出", Toast.LENGTH_SHORT).show();
 
 		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
