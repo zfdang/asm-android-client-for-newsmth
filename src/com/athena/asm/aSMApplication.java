@@ -398,7 +398,8 @@ public class aSMApplication extends Application {
 
 		switch (defaultOrientation) {
 		case 0:
-			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+			// http://developer.android.com/reference/android/R.attr.html#screenOrientation
+			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 			break;
 		case 1:
 			ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
