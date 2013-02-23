@@ -57,7 +57,7 @@ public final class UrlImageViewHelper {
     }
 
     static Resources mResources;
-    public static DisplayMetrics mMetrics;
+    static DisplayMetrics mMetrics;
     private static void prepareResources(final Context context) {
         if (mMetrics != null) {
             return;

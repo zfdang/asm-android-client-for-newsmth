@@ -137,8 +137,7 @@ public class PostListAdapter extends BaseAdapter {
 				UrlImageViewHelper.setErrorResource(R.drawable.failure_day);
 			}
 
-			// reset device metrics since screen might be rotate
-			UrlImageViewHelper.mMetrics = null;
+			// TODO: pass screen orientation to UrlImageViewHelper
 
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
