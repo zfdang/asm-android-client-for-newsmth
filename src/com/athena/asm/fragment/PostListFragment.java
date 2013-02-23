@@ -268,7 +268,12 @@ public class PostListFragment extends SherlockFragment implements
 		} else {
 			// do not show any button in BOARD_TYPE_DIGEST & BOARD_TYPE_MARK
 		}
-		getActivity().setTitle(m_viewModel.getSubjectTitle());
+
+		// getActivity might return null in Fragment
+		// http://stackoverflow.com/questions/11631408/android-fragment-getactivity-sometime-returns-null
+		Activity act = getActivity();
+		if (act != null)
+			act.setTitle(m_viewModel.getSubjectTitle());
 
 		if (m_viewModel.getBoardType() == 0) {
 			int nextPage = m_viewModel.getNextPageNumber();

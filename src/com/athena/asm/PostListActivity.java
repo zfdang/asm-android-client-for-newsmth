@@ -31,13 +31,15 @@ public class PostListActivity extends SherlockFragmentActivity
 		
 		aSMApplication application = (aSMApplication) getApplication();
 		m_viewModel = application.getPostListViewModel();
+
+		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// do nothing to stop onCreated
-		super.onConfigurationChanged(newConfig);
-	}
+	// @Override
+	// public void onConfigurationChanged(Configuration newConfig) {
+	// 	// do nothing to stop onCreated
+	// 	super.onConfigurationChanged(newConfig);
+	// }
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

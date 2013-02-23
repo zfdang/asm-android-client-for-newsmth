@@ -57,7 +57,7 @@ public final class UrlImageViewHelper {
     }
 
     static Resources mResources;
-    static DisplayMetrics mMetrics;
+    public static DisplayMetrics mMetrics;
     private static void prepareResources(final Context context) {
         if (mMetrics != null) {
             return;
@@ -482,8 +482,8 @@ public final class UrlImageViewHelper {
     }
 
     /**
-     * Clear out all cached images older than a week.
-     * it will call cleanup(context, CACHE_DURATION_ONE_WEEK);
+     * Clear out all cached images older than a day
+     * it will call cleanup(context, CACHE_DURATION_ONE_DAY);
      * @param context
      */
     private static boolean mHasCleaned = false;
@@ -494,7 +494,7 @@ public final class UrlImageViewHelper {
         mHasCleaned = true;
 
         // purge any *.urlimage files over a week old
-        cleanup(context, CACHE_DURATION_ONE_WEEK);
+        cleanup(context, CACHE_DURATION_ONE_DAY);
     }
     
     private static boolean checkCacheDuration(File file, long cacheDurationMs) {
