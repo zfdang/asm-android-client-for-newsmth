@@ -84,7 +84,7 @@
 	<string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于aSM</string>
-	<string name="about_content">Build: 2013-02-24.\naSM是水木社区(newsmth.net)的一个Android客户端程序。\n\n获取更新和说明:\nhttps://github.com/zfdang/asm-android-client-for-newsmth\n\nBY leo18, r7000@SMTH\nModified by zfdang</string>
+	<string name="about_content">Build: %s.\naSM是水木社区(newsmth.net)的一个Android客户端程序。\n\n获取更新和说明:\nhttps://github.com/zfdang/asm-android-client-for-newsmth\n\nBY leo18, r7000@SMTH\nModified by zfdang</string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
 	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>

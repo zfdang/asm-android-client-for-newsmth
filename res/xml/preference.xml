@@ -20,7 +20,7 @@
             android:title="@string/setting_logout_confirm"
             android:summaryOn="@string/setting_logout_confirm_summary_on"
             android:summaryOff="@string/setting_logout_confirm_summary_off"
-            android:defaultValue="true">
+            android:defaultValue="false">
         </CheckBoxPreference>
         </PreferenceCategory>
     <PreferenceCategory android:title="默认风格" >

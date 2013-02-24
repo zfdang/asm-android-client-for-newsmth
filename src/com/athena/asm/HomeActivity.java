@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -14,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -56,6 +60,15 @@ public class HomeActivity extends SherlockFragmentActivity
 	TabsAdapter m_tabsAdapter;
 	
 	private ProgressDialog m_pdialog;
+
+    private boolean mDoubleBackToExit;
+    private Handler mHandler = null;
+
+    class PendingDoubleBackToExit implements Runnable {
+        public void run() {
+			mDoubleBackToExit = false;
+        }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +232,23 @@ public class HomeActivity extends SherlockFragmentActivity
 	// show information dialog, called by first run and about icon
 	private void showInfoDialog()
 	{
-		final SpannableString msg = new SpannableString(getText(R.string.about_content));
+	    // read version info from androidmanifest.xml
+	    String version = "unknown";
+		PackageManager pm = getPackageManager();
+		try {
+			PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+			version = pi.versionName;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			Log.d("HomeActivity: can't get version name", e.toString());
+		}
+
+		// generate about_content with version from manifest
+		String content = getText(R.string.about_content).toString();
+		String content_with_version = String.format(content, version);
+
+		// linkify
+		final SpannableString msg = new SpannableString(content_with_version);
 	    Linkify.addLinks(msg, Linkify.WEB_URLS);
 
 	    final AlertDialog dlg = new AlertDialog.Builder(this)
@@ -333,7 +362,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			if (m_viewModel.isLogined()) {
 //				check preference for logout_confirm
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-				boolean b_logout_confirm = settings.getBoolean(Preferences.LOGOUT_CONFIRM, true);
+				boolean b_logout_confirm = settings.getBoolean(Preferences.LOGOUT_CONFIRM, false);
 
 				if(b_logout_confirm){
 //					logout is required
@@ -352,7 +381,19 @@ public class HomeActivity extends SherlockFragmentActivity
 				}
 				else
 				{
-					logout(true);
+					if( mDoubleBackToExit ){
+						// if mDoubleBackToExit is true, exit now
+						logout(true);
+				    } else {
+						// set mDoubleBackToExit = true, and set delayed task to reset it to false
+						mDoubleBackToExit = true;
+				        if (mHandler == null) {
+				            mHandler = new Handler();
+				        }
+				        // reset will be run after 1500 ms
+				        mHandler.postDelayed(new PendingDoubleBackToExit(), 1500);
+						Toast.makeText(this, "再按一次\"返回\"退出", Toast.LENGTH_SHORT).show();
+				    }
 				}
 			} else {
 				finishAndClean();
