@@ -130,23 +130,23 @@ public class FullImageActivity extends SherlockActivity
 						LayoutInflater inflater = getLayoutInflater();
 			            View layout = inflater.inflate(R.layout.image_info, (ViewGroup)findViewById(R.id.image_info_layout));
 			            try {
-			        	   String sFileName = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
-			               // String sFileName = "/sdcard/DCIM/tintin.jpg";
-			               ExifInterface exif = new ExifInterface(sFileName);
-			               // basic information
-			               setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
-			               setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
-			               setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
+			            	String filename = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
+			            	String sFileName = getFilesDir().getAbsolutePath() + '/' + filename;
+							ExifInterface exif = new ExifInterface(sFileName);
+							// basic information
+							setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
+							setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
+							setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
 
-			               // capture information
-			               setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
-			               setImageAttributeFromExif(layout, R.id.ii_model, exif, ExifInterface.TAG_MODEL);
-			               setImageAttributeFromExif(layout, R.id.ii_focal_length, exif, ExifInterface.TAG_FOCAL_LENGTH);
-			               setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_APERTURE);
-			               setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
-			               setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
-			               setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO);
-			               setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
+							// capture information
+							setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
+							setImageAttributeFromExif(layout, R.id.ii_model, exif, ExifInterface.TAG_MODEL);
+							setImageAttributeFromExif(layout, R.id.ii_focal_length, exif, ExifInterface.TAG_FOCAL_LENGTH);
+							setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_APERTURE);
+							setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
+							setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
+							setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO);
+							setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
 			           } catch (IOException e){
 			               Log.d("read ExifInfo", "can't read Exif information");
 			           }
