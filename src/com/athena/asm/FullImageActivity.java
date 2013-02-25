@@ -85,6 +85,7 @@ public class FullImageActivity extends SherlockActivity
 		String attribute = exif.getAttribute(attr);
 		if (attribute != null){
 			// there are some special treatment
+			// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
 			if(attr.equals(ExifInterface.TAG_APERTURE)){
 				attribute = "F/" + attribute;
 			} else if(attr.equals(ExifInterface.TAG_EXPOSURE_TIME)){
@@ -104,6 +105,103 @@ public class FullImageActivity extends SherlockActivity
 					}
 				} catch(NumberFormatException e){
 					Log.d("Can't convert exposure:", attribute);
+				}
+			} else if(attr.equals(ExifInterface.TAG_FLASH)){
+				int flash = Integer.parseInt(attribute);
+				switch(flash){
+				case 0x0:
+					attribute += " (No Flash)";
+					break;
+				case 0x1:
+					attribute += " (Fired)";
+					break;
+				case 0x5:
+					attribute += " (Fired, Return not detected)";
+					break;
+				case 0x7:
+					attribute += " (Fired, Return detected)";
+					break;
+				case 0x8:
+					attribute += " (On, Did not fire)";
+					break;
+				case 0x9:
+					attribute += " (On, Fired)";
+					break;
+				case 0xd:
+					attribute += " (On, Return not detected)";
+					break;
+				case 0xf:
+					attribute += " (On, Return detected)";
+					break;
+				case 0x10:
+					attribute += " (Off, Did not fire)";
+					break;
+				case 0x14:
+					attribute += " (Off, Did not fire, Return not detected)";
+					break;
+				case 0x18:
+					attribute += " (Auto, Did not fire)";
+					break;
+				case 0x19:
+					attribute += " (Auto, Fired)";
+					break;
+				case 0x1d:
+					attribute += " (Auto, Fired, Return not detected)";
+					break;
+				case 0x1f:
+					attribute += " (Auto, Fired, Return detected)";
+					break;
+				case 0x20:
+					attribute += " (No flash function)";
+					break;
+				case 0x30:
+					attribute += " (Off, No flash function)";
+					break;
+				case 0x41:
+					attribute += " (Fired, Red-eye reduction)";
+					break;
+				case 0x45:
+					attribute += " (Fired, Red-eye reduction, Return not detected)";
+					break;
+				case 0x47:
+					attribute += " (Fired, Red-eye reduction, Return detected)";
+					break;
+				case 0x49:
+					attribute += " (On, Red-eye reduction)";
+					break;
+				case 0x4d:
+					attribute += " (On, Red-eye reduction, Return not detected)";
+					break;
+				case 0x4f:
+					attribute += " (On, Red-eye reduction, Return detected)";
+					break;
+				case 0x50:
+					attribute += " (Off, Red-eye reduction)";
+					break;
+				case 0x58:
+					attribute += " (Auto, Did not fire, Red-eye reduction)";
+					break;
+				case 0x59:
+					attribute += " (Auto, Fired, Red-eye reduction)";
+					break;
+				case 0x5d:
+					attribute += " (Auto, Fired, Red-eye reduction, Return not detected)";
+					break;
+				case 0x5f:
+					attribute += " (Auto, Fired, Red-eye reduction, Return detected)";
+					break;
+				default:
+					break;
+				}
+			} else if(attr.equals(ExifInterface.TAG_WHITE_BALANCE)){
+				int wb = Integer.parseInt(attribute);
+				switch(wb){
+				case 0:
+					attribute += " (Auto)";
+					break;
+				case 1:
+					attribute += " (Manual)";
+					break;
 				}
 			}
 			tv.setText(attribute);
