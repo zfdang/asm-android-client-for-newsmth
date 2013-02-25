@@ -129,7 +129,7 @@ public class SearchPostViewModel extends BaseViewModel {
 		if (m_mgFlag) {
 			queryBuilder.append("&mg=on");
 		}
-		if (m_mgFlag) {
+		if (m_agFlag) {
 			queryBuilder.append("&ag=on");
 		}
 		if (m_ogFlag) {

@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="10dp"
+            android:singleLine="true"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/textView1" />
 
@@ -56,6 +57,7 @@
             android:id="@+id/edittext_title2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="2dp"
@@ -80,6 +82,7 @@
 
         <EditText
             android:id="@+id/edittext_title3"
+            android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
@@ -106,6 +109,7 @@
 
         <EditText
             android:id="@+id/edittext_userid"
+            android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
@@ -142,6 +146,7 @@
         
         <EditText
             android:id="@+id/edittext_dt"
+            android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
