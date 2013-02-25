@@ -138,9 +138,10 @@
 	<string name="action_bar_share_with">分享</string>
 	
     <string name="image_info_basic">基本信息:</string>
-    <string name="image_info_datetime">日期</string>
+    <string name="image_info_datetime">时间</string>
     <string name="image_info_width">宽度</string>
     <string name="image_info_height">高度</string>
+    <string name="image_info_size">文件大小</string>
     <string name="image_info_capture">拍摄信息:</string>
     <string name="image_info_make">制造商</string>
     <string name="image_info_model">型号</string>

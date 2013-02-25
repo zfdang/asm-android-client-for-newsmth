@@ -41,6 +41,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/image_info_height" />
 
+            <TextView
+                android:id="@+id/ii_size_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/image_info_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,6 +75,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:id="@+id/ii_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
@@ -86,7 +95,6 @@
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="20dp" >
-
 
             <TextView
                 android:id="@+id/ii_capture_key"

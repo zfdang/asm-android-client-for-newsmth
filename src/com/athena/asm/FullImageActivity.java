@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -235,6 +237,14 @@ public class FullImageActivity extends SherlockActivity
 							setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
 							setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
 							setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
+							// get filesize
+							FileInputStream fis = openFileInput(filename);
+							int filesize = fis.available();
+							fis.close();
+							TextView tv = (TextView) layout.findViewById(R.id.ii_size);
+							if(tv != null) {
+								tv.setText(FileUtils.byteCountToDisplaySize(filesize));
+							}
 
 							// capture information
 							setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
