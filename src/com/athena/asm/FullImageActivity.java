@@ -5,6 +5,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,12 +15,18 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -27,7 +35,7 @@ import com.athena.asm.view.TouchImageView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class FullImageActivity extends SherlockActivity
-	implements OnLongClickListener {
+	implements OnLongClickListener, OnClickListener {
 
 	private TouchImageView m_image;
 	private String m_imageName;
@@ -66,10 +74,47 @@ public class FullImageActivity extends SherlockActivity
 		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
+	private void setImageAttributeFromExif(View layout, int tv_id, ExifInterface exif, String attr){
+		if (layout == null || exif == null)
+			return;
+		TextView tv = (TextView) layout.findViewById(tv_id);
+		if (tv == null){
+			Log.d("setImageAttributeFromExif", "Invalid resource ID: " + tv_id);
+			return;
+		}
+		String attribute = exif.getAttribute(attr);
+		if (attribute != null){
+			// there are some special treatment
+			if(attr.equals(ExifInterface.TAG_APERTURE)){
+				attribute = "F/" + attribute;
+			} else if(attr.equals(ExifInterface.TAG_EXPOSURE_TIME)){
+				try{
+					float f = Float.parseFloat(attribute);
+					if(f >= 1.0){
+						attribute = attribute + " s";
+					} else if ( f >= 0.1 ){
+						f = 1/f;
+						BigDecimal exposure = new BigDecimal(f).setScale(0, BigDecimal.ROUND_HALF_UP);
+						attribute = "1/" + exposure.toString() + " s";
+					} else {
+						f = 1/f/10;
+						BigDecimal exposure = new BigDecimal(f).setScale(0, BigDecimal.ROUND_HALF_UP);
+						exposure = exposure.multiply(new BigDecimal(10));
+						attribute = "1/" + exposure.toString() + " s";
+					}
+				} catch(NumberFormatException e){
+					Log.d("Can't convert exposure:", attribute);
+				}
+			}
+			tv.setText(attribute);
+		}
+	}
+
 
 	@Override
 	public boolean onLongClick(View arg0) {
 			List<String> itemList = new ArrayList<String>();
+			itemList.add(getString(R.string.full_image_information));
 			itemList.add(getString(R.string.full_image_save));
 			itemList.add(getString(R.string.full_image_back));
 			final String[] items = new String[itemList.size()];
@@ -81,6 +126,37 @@ public class FullImageActivity extends SherlockActivity
 				public void onClick(DialogInterface dialog, int item) {
 					switch (item) {
 					case 0:
+						// show exif information dialog
+						LayoutInflater inflater = getLayoutInflater();
+			            View layout = inflater.inflate(R.layout.image_info, (ViewGroup)findViewById(R.id.image_info_layout));
+			            try {
+			        	   String sFileName = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
+			               // String sFileName = "/sdcard/DCIM/tintin.jpg";
+			               ExifInterface exif = new ExifInterface(sFileName);
+			               // basic information
+			               setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
+			               setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
+			               setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
+
+			               // capture information
+			               setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
+			               setImageAttributeFromExif(layout, R.id.ii_model, exif, ExifInterface.TAG_MODEL);
+			               setImageAttributeFromExif(layout, R.id.ii_focal_length, exif, ExifInterface.TAG_FOCAL_LENGTH);
+			               setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_APERTURE);
+			               setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
+			               setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
+			               setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO);
+			               setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
+			           } catch (IOException e){
+			               Log.d("read ExifInfo", "can't read Exif information");
+			           }
+
+			           new AlertDialog.Builder(FullImageActivity.this).setTitle("图片信息").setView(layout)
+			             .setPositiveButton("确定", null)
+			             .show();
+			           break;
+					case 1:
+						// save image to sdcard
 						try {
 							String fileName;
 							if (m_imageName.equals("未命名")) {
@@ -120,7 +196,8 @@ public class FullImageActivity extends SherlockActivity
 							Toast.makeText(FullImageActivity.this, "保存时出现未知错误.", Toast.LENGTH_SHORT).show();
 						}
 						break;
-					case 1:
+					case 2:
+						// quit
 						onBackPressed();
 						break;
 					default:
@@ -143,5 +220,10 @@ public class FullImageActivity extends SherlockActivity
 
 		// TODO Auto-generated method stub
 		super.onBackPressed();
+	}
+
+	@Override
+	public void onClick(DialogInterface arg0, int arg1) {
+		// TODO Auto-generated method stub
 	}
 }

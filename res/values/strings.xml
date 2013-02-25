@@ -63,6 +63,7 @@
 	<string name="write_label_post">发表</string>
 	<string name="post_attach">附件</string>
      <!-- fulll screen image 相关 -->
+    <string name="full_image_information">图片信息</string>
     <string name="full_image_save">保存图片</string>
     <string name="full_image_back">返回</string>
 	 <!-- search post相关 -->
@@ -136,6 +137,19 @@
 	
 	<string name="action_bar_share_with">分享</string>
 	
+    <string name="image_info_basic">基本信息:</string>
+    <string name="image_info_datetime">日期</string>
+    <string name="image_info_width">宽度</string>
+    <string name="image_info_height">高度</string>
+    <string name="image_info_capture">拍摄信息:</string>
+    <string name="image_info_make">制造商</string>
+    <string name="image_info_model">型号</string>
+    <string name="image_info_focal_length">焦距</string>
+    <string name="image_info_aperture">光圈</string>
+    <string name="image_info_exposure_time">曝光时间</string>
+    <string name="image_info_flash">闪光</string>
+    <string name="image_info_iso">ISO</string>
+    <string name="image_info_white_balance">白平衡</string>
 </resources>
 
 
