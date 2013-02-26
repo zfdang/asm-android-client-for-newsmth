@@ -685,7 +685,7 @@ public class SmthSupport {
 		if (result == null) {
 			return Collections.emptyList();
 		}
-		String patternStr = "ta\\.r\\('[^']+','([^']+)','<a href=\"bbsqry.php\\?userid=(\\w+)\">\\w+</a>','([^']+)','<a href=\"bbscon.php\\?bid=\\d+&id=(\\d+)\">([^<>]+)</a>'\\);";
+		String patternStr = "ta\\.r\\('[^']+','([^']+)','<a href=\"bbsqry.php\\?userid=(\\w+)\">\\w+</a>','([^']+)','<a href=\"bbscon.php\\?bid=(\\d+)&id=(\\d+)\">([^<>]+)</a>'\\);";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(result);
 		List<Subject> subjectList = new ArrayList<Subject>();
@@ -701,13 +701,15 @@ public class SmthSupport {
 			// } catch (ParseException e) {
 			// date = new Date();
 			// }
-			String subjectid = matcher.group(4);
-			String title = matcher.group(5);
+			String boardid = matcher.group(4);
+			String subjectid = matcher.group(5);
+			String title = matcher.group(6);
 
 			Subject subject = new Subject();
 			subject.setAuthor(author);
 			subject.setBoardID(boardID);
 			subject.setBoardEngName(boardName);
+			subject.setBoardID(boardid);
 			subject.setSubjectID(subjectid);
 			subject.setTitle(title);
 			subject.setType(type);

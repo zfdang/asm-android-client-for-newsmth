@@ -615,6 +615,8 @@ public class HomeActivity extends SherlockFragmentActivity
         			board.setEngName(boardEngName);
         			board.setChsName(boardChsName);
         			board.setCurrentPageNo(0);
+					// this will cause issue when
+					// 导读页面->帖子详情->回到版面->搜索->搜索结果->点击帖子 的内容无法显示
         			board.setBoardID("fake");
         			Intent newIntent = new Intent();
         			Bundle bundle = new Bundle();
