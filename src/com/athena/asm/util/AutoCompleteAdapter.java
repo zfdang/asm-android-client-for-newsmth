@@ -44,8 +44,9 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                // clear results
-                filteredData.clear();
+                // create temporary list to avoid update original list frequently
+                // http://stackoverflow.com/questions/3132021/android-listview-illegalstateexception-the-content-of-the-adapter-has-changed
+                ArrayList<String> list = new ArrayList<String>();
                 if(constraint != null) {
                     String key = constraint.toString();
                     Pattern keyPattern = Pattern.compile(Pattern.quote(key), Pattern.CASE_INSENSITIVE);
@@ -55,11 +56,12 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                         String current = (String) itr.next();
                         if(keyPattern.matcher(current).find())
                         {
-                            filteredData.add(current);
+                            list.add(current);
                             // Log.d("AutoCompleteAdapter", "matched with " + current);
                         }
                     }
                     // Now assign the values and count to the FilterResults object
+                    filteredData = list;
                     filterResults.values = filteredData;
                     filterResults.count = filteredData.size();
                 }
