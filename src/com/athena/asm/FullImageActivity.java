@@ -231,14 +231,17 @@ public class FullImageActivity extends SherlockActivity
 			            View layout = inflater.inflate(R.layout.image_info, (ViewGroup)findViewById(R.id.image_info_layout));
 			            try {
 			            	String filename = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
-			            	String sFileName = getFilesDir().getAbsolutePath() + '/' + filename;
+					        File file = new File(getExternalFilesDir(null), filename);
+					        String sFileName =  file.getAbsolutePath();
+
 							ExifInterface exif = new ExifInterface(sFileName);
 							// basic information
 							setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
 							setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
 							setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
+
 							// get filesize
-							FileInputStream fis = openFileInput(filename);
+							FileInputStream fis = new FileInputStream(file);
 							int filesize = fis.available();
 							fis.close();
 							TextView tv = (TextView) layout.findViewById(R.id.ii_size);
@@ -282,7 +285,9 @@ public class FullImageActivity extends SherlockActivity
 									dir.mkdirs();
 								}
 
-								FileInputStream fis = openFileInput(UrlImageViewHelper.getFilenameForUrl(m_imageUrl));
+								File file = new File(getExternalFilesDir(null),
+									UrlImageViewHelper.getFilenameForUrl(m_imageUrl));
+								FileInputStream fis = new FileInputStream(file);
 								FileOutputStream fos = new FileOutputStream(path + fileName);
 
 								BufferedInputStream bufr = new BufferedInputStream(fis);

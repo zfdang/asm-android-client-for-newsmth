@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -273,6 +274,11 @@ public class HomeActivity extends SherlockFragmentActivity
 			application.markFirstLaunchApp();
 		    showInfoDialog();
 		}
+
+		// if external sdcard is not available, we can't show images
+		if (! Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				Toast.makeText(this, "存储卡故障!附件图片将无法显示!", Toast.LENGTH_LONG).show();
+			}
 
 		m_viewModel.setChangeNotificationEnabled(false);
 		String tab = m_viewModel.getCurrentTab() == null ? application

@@ -460,7 +460,7 @@ public final class UrlImageViewHelper {
         clog(String.format("Cleanup, age=%d", age));
         try {
             // purge any *.urlimage files over "age" old
-            final String[] files = context.getFilesDir().list();
+            final String[] files = context.getExternalFilesDir(null).list();
             if (files == null) {
                 clog("Cleanup, no cached files found");
                 return;
@@ -470,7 +470,7 @@ public final class UrlImageViewHelper {
                     continue;
                 }
 
-                final File f = new File(context.getFilesDir().getAbsolutePath() + '/' + file);
+                final File f = new File(context.getExternalFilesDir(null), file);
                 if (System.currentTimeMillis() > f.lastModified() + age) {
                     f.delete();
                     clog(String.format("Cached file %s removed", file));
@@ -482,8 +482,8 @@ public final class UrlImageViewHelper {
     }
 
     /**
-     * Clear out all cached images older than a day
-     * it will call cleanup(context, CACHE_DURATION_ONE_DAY);
+     * Clear out all cached images older than a week
+     * it will call cleanup(context, CACHE_DURATION_ONE_WEEK);
      * @param context
      */
     private static boolean mHasCleaned = false;
@@ -494,7 +494,7 @@ public final class UrlImageViewHelper {
         mHasCleaned = true;
 
         // purge any *.urlimage files over a week old
-        cleanup(context, CACHE_DURATION_ONE_DAY);
+        cleanup(context, CACHE_DURATION_ONE_WEEK);
     }
     
     private static boolean checkCacheDuration(File file, long cacheDurationMs) {
@@ -540,8 +540,8 @@ public final class UrlImageViewHelper {
         tw = mMetrics.widthPixels;
         th = mMetrics.heightPixels;
 
-        final String filename = context.getFileStreamPath(getFilenameForUrl(url)).getAbsolutePath();
-        final File file = new File(filename);
+        final File file = new File(context.getExternalFilesDir(null), getFilenameForUrl(url));
+        final String filename =  file.getAbsolutePath();
         clog(String.format("Target file cache = %s", filename));
 
         // mLiveCache
