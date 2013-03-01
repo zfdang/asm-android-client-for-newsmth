@@ -1330,17 +1330,17 @@ public class SmthSupport {
 			}
 			if (aSMApplication.getCurrentApplication().isShowIp()) {
 				Pattern myipPattern = Pattern
-						.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\S+)");
+						.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)\\S+");
 				Matcher myipMatcher = myipPattern.matcher(contentString);
 				while (myipMatcher.find()) {
 					String ipl = myipMatcher.group(1);
-					if (ipl.length() > 7) {
-						ipl = "<font color=\"#c0c0c0\">FROM $1("
+					if (ipl.length() > 5) {
+						ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
 								+ aSMApplication.db
-										.getLocation(Dot2LongIP(ipl))
+										.getLocation(Dot2LongIP(ipl + "1"))
 								+ ")<\\/font>";
 					} else {
-						ipl = "<font color=\"#c0c0c0\">FROM $1<\\/font>";
+						ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
 					}
 					contentString = myipMatcher.replaceAll(ipl);
 				}
