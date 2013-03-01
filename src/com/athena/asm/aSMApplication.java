@@ -21,12 +21,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.database.Cursor;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Preferences;
 import com.athena.asm.util.CrashHandler;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.MyDatabase;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.athena.asm.viewmodel.MailViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
@@ -58,6 +60,8 @@ public class aSMApplication extends Application {
 	private int lastLaunchVersionCode = 4;
 	private int currentVersionCode = 5;
 
+	private boolean isWeiboStyle = true;
+	private boolean isShowIp = true;
 	private int guidanceFontSize = 25;
 	private int guidanceSecondFontSize = 20;
 	private int subjectFontSize = 18;
@@ -87,6 +91,9 @@ public class aSMApplication extends Application {
 	private PostListViewModel m_postListViewModel = new PostListViewModel();
 	private MailViewModel m_mailViewModel = new MailViewModel();
 
+	// IP database
+	public static MyDatabase db;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -94,8 +101,14 @@ public class aSMApplication extends Application {
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
 
+		db = new MyDatabase(this);
+
 		m_application = this;
 		m_application.initPreferences();
+	}
+
+	protected void onDestroy() {
+		db.close();
 	}
 
 	public static aSMApplication getCurrentApplication() {
@@ -117,7 +130,7 @@ public class aSMApplication extends Application {
 	public boolean isFirstLaunchApp() {
 		return m_isFirstLaunch;
 	}
-	
+
 	public void markFirstLaunchApp() {
 		m_isFirstLaunch = false;
 		lastLaunchVersionCode = currentVersionCode;
@@ -198,6 +211,18 @@ public class aSMApplication extends Application {
 		} else {
 			setCheckInterval(settings
 					.getString(Preferences.CHECK_INTERVAL, "3"));
+		}
+
+		if (!settings.contains(Preferences.WEIBO_STYLE)) {
+			editor.putBoolean(Preferences.WEIBO_STYLE, true);
+		} else {
+			setWeiboStyle(settings.getBoolean(Preferences.WEIBO_STYLE, true));
+		}
+
+		if (!settings.contains(Preferences.SHOW_IP)) {
+			editor.putBoolean(Preferences.SHOW_IP, true);
+		} else {
+			setShowIp(settings.getBoolean(Preferences.SHOW_IP, true));
 		}
 
 		if (!settings.contains(Preferences.GUIDANCE_FONT_SIZE)) {
@@ -649,6 +674,22 @@ public class aSMApplication extends Application {
 
 	public void setShowCheck(boolean isShowCheck) {
 		this.isShowCheck = isShowCheck;
+	}
+
+	public boolean isWeiboStyle() {
+		return isWeiboStyle;
+	}
+
+	public void setWeiboStyle(boolean isWeiboStyle) {
+		this.isWeiboStyle = isWeiboStyle;
+	}
+
+	public boolean isShowIp() {
+		return isShowIp;
+	}
+
+	public void setShowIp(boolean isShowIp) {
+		this.isShowIp = isShowIp;
 	}
 
 	public String getCheckInterval() {

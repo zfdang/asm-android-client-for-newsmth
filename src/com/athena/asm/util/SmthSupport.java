@@ -261,7 +261,7 @@ public class SmthSupport {
 				result = "新回复";
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -277,7 +277,7 @@ public class SmthSupport {
 			return false;
 		}
 	}
-	
+
 	public void markAllMessageRead(int type) {
 		String url = "";
 		if (type == 0) {
@@ -585,7 +585,8 @@ public class SmthSupport {
 			Matcher contentMatcher = contentPattern.matcher(result);
 			if (contentMatcher.find()) {
 				String contentString = contentMatcher.group(1);
-				Object[] objects = StringUtility.parsePostContent(contentString);
+				Object[] objects = StringUtility
+						.parsePostContent(contentString);
 				mail.setContent((String) objects[0]);
 				mail.setDate((java.util.Date) objects[1]);
 			}
@@ -610,7 +611,8 @@ public class SmthSupport {
 		// http://www.newsmth.net/bbsboa.php?group=0&group2=502
 
 		// 3. board
-		// o.o(false,1,104,27745,'[出国]','AdvancedEdu','飞跃重洋','LSAT madonion Mperson',22553,103,25);
+		// o.o(false,1,104,27745,'[出国]','AdvancedEdu','飞跃重洋','LSAT madonion
+		// Mperson',22553,103,25);
 		// http://www.newsmth.net/bbsdoc.php?board=AdvancedEdu
 
 		String url;
@@ -653,14 +655,11 @@ public class SmthSupport {
 				moderator = moderator.substring(0, 21) + "...";
 			}
 
-			if(isGroup.equals("true"))
-			{
+			if (isGroup.equals("true")) {
 				// find group, add its child boards recursively
 				// Log.d("find Group", engName);
 				getCategory(boardID, boardList, false);
-			}
-			else
-			{
+			} else {
 				// Log.d("find Board", engName);
 				Board board = new Board();
 				board.setBoardID(boardID);
@@ -675,7 +674,7 @@ public class SmthSupport {
 
 	/**
 	 * 获取经过过滤的主题列表.
-	 *
+	 * 
 	 * @return
 	 */
 	public List<Subject> getSearchSubjectList(String boardName, String boardID,
@@ -740,7 +739,7 @@ public class SmthSupport {
 
 		List<Subject> subjectList = new ArrayList<Subject>();
 
-		// <a class="plant">1/1272</a>  当前页/总共页
+		// <a class="plant">1/1272</a> 当前页/总共页
 		Pattern pagePattern = Pattern
 				.compile("<a class=\"plant\">(\\d+)/(\\d+)");
 		Matcher pageMatcher = pagePattern.matcher(result);
@@ -750,13 +749,21 @@ public class SmthSupport {
 		}
 
 		// 同主题模式, 主题后面有(NNN), 两个作者
-		// <div><a href="/article/DC/423562" class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div><div>2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a>|2013-02-06&nbsp;<a href="/user/query/DRAGON9">DRAGON9</a></div>
+		// <div><a href="/article/DC/423562"
+		// class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div><div>2013-02-06&nbsp;<a
+		// href="/user/query/penwall">penwall</a>|2013-02-06&nbsp;<a
+		// href="/user/query/DRAGON9">DRAGON9</a></div>
 
 		// 其他模式
-		// <div><a href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div><div>2515&nbsp;2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a></div>
+		// <div><a
+		// href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div><div>2515&nbsp;2013-02-06&nbsp;<a
+		// href="/user/query/penwall">penwall</a></div>
 
 		// 置顶的帖子， class="top"
-		// <div><a href="/article/DC/419129" class="top">审核通过DC版治版方针</a>(0)</div><div>2012-12-22&nbsp;<a href="/user/query/SYSOP">SYSOP</a>|2012-12-22&nbsp;<a href="/user/query/SYSOP">SYSOP</a></div>		
+		// <div><a href="/article/DC/419129"
+		// class="top">审核通过DC版治版方针</a>(0)</div><div>2012-12-22&nbsp;<a
+		// href="/user/query/SYSOP">SYSOP</a>|2012-12-22&nbsp;<a
+		// href="/user/query/SYSOP">SYSOP</a></div>
 
 		// 2013-02-06&nbsp;<a href="/user/query/penwall">penwall</a>
 		Pattern userIDPattern = Pattern
@@ -778,7 +785,7 @@ public class SmthSupport {
 			} else {
 				subject.setDateString(dates[1]);
 			}
-			//subject.setDateString(dateString.replace("&nbsp;", ""));
+			// subject.setDateString(dateString.replace("&nbsp;", ""));
 			subject.setAuthor(userIDMatcher.group(2));
 			subject.setBoardID(board.getBoardID());
 			subject.setBoardEngName(boardname);
@@ -787,8 +794,10 @@ public class SmthSupport {
 			subjectList.add(subject);
 		}
 
-		// <div><a href="/article/DC/423562" class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div>
-		// <div><a href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div>
+		// <div><a href="/article/DC/423562"
+		// class="m">如了个3D相机，FUJI-REAL3D-W3</a>(1)</div>
+		// <div><a
+		// href="/article/DC/single/2515/1">●&nbsp;如了个3D相机，FUJI-REAL3D-W3</a></div>
 		String subPattern1 = "";
 		String subPattern2 = "";
 		if (boardType != SubjectListFragment.BOARD_TYPE_SUBJECT) {
@@ -806,12 +815,14 @@ public class SmthSupport {
 		}
 
 		Pattern subjectPattern = Pattern.compile("<div><a href=\"/article/"
-				+ boardname + "/(\\d+)" + subPattern1 + "\"([^<>]*)>([^<>]+)</a>" + subPattern2);
+				+ boardname + "/(\\d+)" + subPattern1
+				+ "\"([^<>]*)>([^<>]+)</a>" + subPattern2);
 		// Log.d("getSubjectListFromMobile RE", subjectPattern.pattern());
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		index = 0;
 		while (subjectMatcher.find()) {
-			// Log.d("getSubjectListFromMobile result", subjectMatcher.group(0));
+			// Log.d("getSubjectListFromMobile result",
+			// subjectMatcher.group(0));
 			if (subjectMatcher.groupCount() == 2) {
 				subjectList.get(index).setSubjectID(subjectMatcher.group(1));
 				subjectList.get(index).setTitle(subjectMatcher.group(2));
@@ -825,7 +836,8 @@ public class SmthSupport {
 				// add replied number after subject title in SUBJECT mode
 				String subjectTitle = "null";
 				if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT)
-					subjectTitle = subjectMatcher.group(3) + " (" + subjectMatcher.group(4) + ")";
+					subjectTitle = subjectMatcher.group(3) + " ("
+							+ subjectMatcher.group(4) + ")";
 				else
 					subjectTitle = subjectMatcher.group(3);
 				subjectList.get(index).setTitle(subjectTitle);
@@ -849,10 +861,9 @@ public class SmthSupport {
 		return subjectList;
 	}
 
-
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 * @return
 	 */
 	public List<Post> getSinglePostListFromMobileUrl(Subject subject, String url) {
@@ -1094,7 +1105,8 @@ public class SmthSupport {
 	 * @param pageno
 	 * @return
 	 */
-	public List<Post> getPostList(Subject subject, ArrayList<String> blackList, int startNumber) {
+	public List<Post> getPostList(Subject subject, ArrayList<String> blackList,
+			int startNumber) {
 		// String result = getPostListContent(subject.getBoardEngName(),
 		// subject.getSubjectID(), subject.getCurrentPageNo(), startNumber);
 		String url = "http://www.newsmth.net/bbstcon.php?board="
@@ -1110,7 +1122,8 @@ public class SmthSupport {
 			return Collections.emptyList();
 		}
 		Matcher bidMatcher = Pattern
-				.compile("tconWriter\\('[^']+',(\\d+),\\d+,\\d+,(\\d+),(\\d+),\\d+,\\d+,\\d+")
+				.compile(
+						"tconWriter\\('[^']+',(\\d+),\\d+,\\d+,(\\d+),(\\d+),\\d+,\\d+,\\d+")
 				.matcher(result);
 		String boardid = "";
 		if (bidMatcher.find()) {
@@ -1164,7 +1177,8 @@ public class SmthSupport {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Post> getPostListFromMobile(Subject subject, ArrayList<String> blackList, int boardType) {
+	public List<Post> getPostListFromMobile(Subject subject,
+			ArrayList<String> blackList, int boardType) {
 		String url = "";
 		int currentPageNo = subject.getCurrentPageNo();
 		boolean isInSubject = false;
@@ -1287,6 +1301,10 @@ public class SmthSupport {
 			postList.get(index).setTitle(titleString);
 		}
 		titleString = "Re: " + titleString;
+		if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
+			titleString = null;
+		}
+
 		for (int i = 1; i < postList.size(); i++) {
 			postList.get(i).setTitle(titleString);
 		}
@@ -1298,6 +1316,36 @@ public class SmthSupport {
 		Matcher contentMatcher = contentPattern.matcher(result);
 		while (contentMatcher.find()) {
 			String contentString = contentMatcher.group(1);
+			
+			if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
+				contentString = contentString
+						.replaceAll(
+								"(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
+								"//<font color=\"#0099ff\">@$2<\\/font>: $3 <br \\/>FROM");
+				contentString = contentString.replaceAll("--\\<br \\/\\>FROM",
+						"<br \\/>FROM");
+				contentString = contentString.replaceAll(
+						"FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\*)\\]",
+						"<br \\/>");
+			}
+			if (aSMApplication.getCurrentApplication().isShowIp()) {
+				Pattern myipPattern = Pattern
+						.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\S+)");
+				Matcher myipMatcher = myipPattern.matcher(contentString);
+				while (myipMatcher.find()) {
+					String ipl = myipMatcher.group(1);
+					if (ipl.length() > 7) {
+						ipl = "<font color=\"#c0c0c0\">FROM $1("
+								+ aSMApplication.db
+										.getLocation(Dot2LongIP(ipl))
+								+ ")<\\/font>";
+					} else {
+						ipl = "<font color=\"#c0c0c0\">FROM $1<\\/font>";
+					}
+					contentString = myipMatcher.replaceAll(ipl);
+				}
+			}
+
 			Object[] objects = StringUtility
 					.parseMobilePostContent(contentString);
 			postList.get(index).setContent((String) objects[0]);
@@ -1498,4 +1546,23 @@ public class SmthSupport {
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
+
+	public static String Dot2LongIP(String dottedIP) {
+		dottedIP = dottedIP.replace('*', '1');
+		String[] addrArray = dottedIP.split("\\.");
+		long int_max = 2147483647;
+
+		long num = 0;
+		for (int i = 0; i < addrArray.length; i++) {
+			int power = 3 - i;
+			num += ((Integer.parseInt(addrArray[i]) % 256) * Math.pow(256,
+					power));
+		}
+		if (num < int_max) {
+			return String.valueOf(num);
+		} else {
+			return String.valueOf(num - int_max - int_max - 2);
+		}
+   }
+
 }

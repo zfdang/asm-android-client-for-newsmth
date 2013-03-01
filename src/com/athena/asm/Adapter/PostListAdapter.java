@@ -38,6 +38,7 @@ public class PostListAdapter extends BaseAdapter {
 	public class ViewHolder {
 		public TextView authorTextView;
 		public TextView titleTextView;
+		public View lineView;
 		public TextView contentTextView;
 		public TextView attachTextView;
 		public LinearLayout imageLayout;
@@ -84,6 +85,7 @@ public class PostListAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
+			holder.lineView = (View) layout.findViewById(R.id.SeperatorView);
 			holder.contentTextView = (TextView) layout.findViewById(R.id.PostContent);
 			holder.attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
 			holder.imageLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
@@ -109,7 +111,12 @@ public class PostListAdapter extends BaseAdapter {
 		
 		holder.authorTextView.setText(post.getAuthor());
 		holder.titleTextView.setText(post.getTitle());
-		
+		if (post.getTitle() == null) {
+			holder.titleTextView.setHeight(0);
+			holder.lineView.setVisibility(View.INVISIBLE);
+			holder.attachTextView.setHeight(0);
+		}
+
 		holder.contentTextView.setText(post.getContent());
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();

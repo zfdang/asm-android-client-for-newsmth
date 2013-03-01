@@ -60,6 +60,14 @@
         </ListPreference>
     </PreferenceCategory> 
     <PreferenceCategory android:title="界面调整" >
+        <CheckBoxPreference
+            android:key="weibo_style"
+            android:summary="@string/setting_weibo_style_details"
+            android:title="@string/setting_weibo_style" />
+        <CheckBoxPreference
+            android:key="show_ip"
+            android:summary="@string/setting_show_ip_details"
+            android:title="@string/setting_show_ip" />
         <EditTextPreference
             android:defaultValue="25"
             android:dialogTitle="请输入数字"

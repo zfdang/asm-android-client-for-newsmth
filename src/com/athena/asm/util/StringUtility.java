@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.athena.asm.data.Profile;
+import com.athena.asm.aSMApplication;
 
 public class StringUtility {
 
@@ -145,7 +146,9 @@ public class StringUtility {
         int linequote = 0;
         int seperator = 0;
         boolean isMainbodyEnd = false;
-        sb.append("<br />");
+		if (!aSMApplication.getCurrentApplication().isWeiboStyle()) {
+			sb.append("<br />");
+		}
         ArrayList<String> attachList = new ArrayList<String>();
         for (String line : lines) {
         	Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"><img");

@@ -100,6 +100,11 @@
 	<string name="setting_default_board_type_details">选择默认的版面模式</string>
 	<string name="setting_show_check">启用消息检查</string>
 	<string name="setting_show_check_details">自动检查信件、回复与@信息</string>
+	<string name="setting_show_check">启用消息检查</string>
+	<string name="setting_weibo_style">启用微博风格</string>
+	<string name="setting_show_ip">显示ip</string>
+	<string name="setting_weibo_style_details">阅读文章时使用新浪微博的缺省版式</string>
+	<string name="setting_show_ip_details">阅读文章时显示发帖的IP所属地点</string>
 	<string name="setting_use_vibrate">启用振动提示</string>
 	<string name="setting_use_vibrate_details">有新消息时将振动提示</string>
 	<string name="setting_check_interval">检查消息频率</string>
