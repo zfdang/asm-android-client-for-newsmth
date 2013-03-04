@@ -16,6 +16,7 @@ import android.os.IBinder;
 import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.util.StringUtility;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class CheckMessageService extends Service {
@@ -135,27 +136,31 @@ public class CheckMessageService extends Service {
 		@Override
 		protected void onPostExecute(String result) {
 			if (m_result != null) {
-				Intent notificationIntent = new Intent(m_context, MailListActivity.class);
-				PendingIntent pendingIntent = PendingIntent.getActivity(m_context, 0,
-						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-				
+				int boxType = 0;
 				String title = "";
 				String text = "";
 				if (m_result.contains("信件")) {
 					title = "新来信";
 					text = "您有新信件，收查收";
+					boxType = 0;
 				} else if (m_result.contains("@")) {
 					title = "新@";
 					text = "您有新@，快去看看吧";
+					boxType = 4;
 				} else if (m_result.contains("回复")) {
 					title = "新回复";
 					text = "您有新回复，快去看看吧";
+					boxType = 5;
 				}
 
+				Intent notificationIntent = new Intent(m_context, MailListActivity.class);
+				notificationIntent.putExtra(StringUtility.MAIL_BOX_TYPE, boxType);
+				PendingIntent pendingIntent = PendingIntent.getActivity(m_context, 0,
+						notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 				showNotification(pendingIntent, MESSAGE_NOTIFICATION_ID, R.drawable.icon, 
 						title, title, text);
 			}
-			
+
 			stopSelf();
 		}
 	}
