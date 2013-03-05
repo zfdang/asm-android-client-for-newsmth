@@ -100,7 +100,7 @@ public class FullImageActivity extends SherlockActivity
         vp.setCurrentItem(m_imageIdx);
         setCurIndicator(m_imageIdx);
 
-		Toast.makeText(this, "左右滑动切换照片;长按出菜单;双指缩放;返回键退出", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "左右滑动切换照片;长按出菜单;双指缩放;返回键退出", Toast.LENGTH_SHORT).show();
 
 		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
