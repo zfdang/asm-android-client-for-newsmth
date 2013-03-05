@@ -162,7 +162,8 @@ public class PostListAdapter extends BaseAdapter {
 							LayoutParams.WRAP_CONTENT);
 					layoutParams.setMargins(1, 1, 1, 1);
 					imageView.setLayoutParams(layoutParams);
-					imageView.setTag(attachments.get(i));
+					imageView.setTag(R.id.tag_attachment_index, i);
+					imageView.setTag(R.id.tag_attachments, attachments);
 					holder.imageLayout.addView(imageView);
 					if (aSMApplication.getCurrentApplication().isNightTheme()) {
 						UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading_night);
@@ -176,9 +177,17 @@ public class PostListAdapter extends BaseAdapter {
 							Intent intent = new Intent();
 							intent.setClassName("com.athena.asm",
 									"com.athena.asm.FullImageActivity");
-							Attachment attachment = (Attachment) v.getTag();
-							intent.putExtra(StringUtility.IMAGE_URL, attachment.getAttachUrl());
-							intent.putExtra(StringUtility.IMAGE_NAME, attachment.getName());
+							int attachmentIdx = (Integer) v.getTag(R.id.tag_attachment_index);
+							ArrayList<Attachment> attachments = (ArrayList<Attachment>) v.getTag(R.id.tag_attachments);
+							ArrayList<String> urlList = new ArrayList<String>();
+							ArrayList<String> fnameList = new ArrayList<String>();
+							for (int i = 0; i < attachments.size(); i++) {
+								urlList.add(attachments.get(i).getAttachUrl());
+								fnameList.add(attachments.get(i).getName());
+							}
+							intent.putExtra(StringUtility.IMAGE_INDEX, attachmentIdx);
+							intent.putStringArrayListExtra(StringUtility.IMAGE_URL, urlList);
+							intent.putStringArrayListExtra(StringUtility.IMAGE_NAME, fnameList);
 							m_fragment.startActivityForResult(intent, 0);
 						}
 					});
