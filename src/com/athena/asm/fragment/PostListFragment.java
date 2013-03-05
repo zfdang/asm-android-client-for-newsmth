@@ -46,6 +46,7 @@ import com.athena.asm.Adapter.PostListAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
+import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.ForwardPostToMailTask;
 import com.athena.asm.util.task.LoadPostTask;
@@ -461,8 +462,11 @@ public class PostListFragment extends SherlockFragment implements
 			itemList.add(getString(R.string.post_foward_external));
 			itemList.add(getString(R.string.post_group_foward_external));
 			if (post.getAuthor().equals(m_viewModel.getSmthSupport().userid)) {
-				itemList.add(getString(R.string.post_edit_post));
+				// itemList.add(getString(R.string.post_edit_post));
+				// itemList.add(getString(R.string.post_delete_post));
 			}
+			itemList.add(getString(R.string.post_edit_post));
+			itemList.add(getString(R.string.post_delete_post));
 			final String[] items = new String[itemList.size()];
 			itemList.toArray(items);
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -546,6 +550,21 @@ public class PostListFragment extends SherlockFragment implements
 							m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
 									  												  bundle);
 						}
+						break;
+					case 9:
+					// delete the post
+						SmthSupport smthSupport = SmthSupport.getInstance();
+						Boolean result = smthSupport.deletePost(post.getBoard(), post.getSubjectID());
+						if(result){
+							// refresh current post
+							String alert = String.format("帖子(id=%s)已删除!", post.getSubjectID());
+							Toast.makeText(getActivity(), alert, Toast.LENGTH_SHORT).show();
+							refreshPostList();
+						} else {
+							String alert = String.format("帖子(id=%s)删除失败!", post.getSubjectID());
+							Toast.makeText(getActivity(), alert, Toast.LENGTH_SHORT).show();
+						}
+						break;
 					default:
 						break;
 					}
