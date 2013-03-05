@@ -1,209 +1,214 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_info_layout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp" >
+            android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/ii_basic_key"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/image_info_basic" />
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp" >
 
-            <TextView
-                android:id="@+id/ii_datetime_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_datetime" />
+                <TextView
+                    android:id="@+id/ii_basic_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_basic" />
 
-            <TextView
-                android:id="@+id/ii_width_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_width" />
+                <TextView
+                    android:id="@+id/ii_datetime_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_datetime" />
 
-            <TextView
-                android:id="@+id/ii_height_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_height" />
+                <TextView
+                    android:id="@+id/ii_width_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_width" />
 
-            <TextView
-                android:id="@+id/ii_size_key"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/ii_height_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_height" />
+
+                <TextView
+                    android:id="@+id/ii_size_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/image_info_size" />
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingLeft="20dp" >
+
+                <TextView
+                    android:id="@+id/ii_basic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_datetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_width"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="20dp" >
+            android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/ii_basic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp" >
 
-            <TextView
-                android:id="@+id/ii_datetime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/ii_capture_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_capture" />
 
-            <TextView
-                android:id="@+id/ii_width"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/ii_make_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_make" />
 
-            <TextView
-                android:id="@+id/ii_height"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/ii_model_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_model" />
 
-            <TextView
-                android:id="@+id/ii_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/ii_focal_length_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_focal_length" />
+
+                <TextView
+                    android:id="@+id/ii_aperture_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_aperture" />
+
+                <TextView
+                    android:id="@+id/ii_exposure_time_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_exposure_time" />
+
+                <TextView
+                    android:id="@+id/ii_flash_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_flash" />
+
+                <TextView
+                    android:id="@+id/ii_iso_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_iso" />
+
+                <TextView
+                    android:id="@+id/ii_white_balance_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_white_balance" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingLeft="20dp" >
+
+                <TextView
+                    android:id="@+id/ii_capture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_make"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_model"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_focal_length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_aperture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_exposure_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_flash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_iso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_white_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp" >
-
-            <TextView
-                android:id="@+id/ii_capture_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_capture" />
-
-            <TextView
-                android:id="@+id/ii_make_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_make" />
-
-            <TextView
-                android:id="@+id/ii_model_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_model" />
-
-            <TextView
-                android:id="@+id/ii_focal_length_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_focal_length" />
-
-            <TextView
-                android:id="@+id/ii_aperture_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_aperture" />
-
-            <TextView
-                android:id="@+id/ii_exposure_time_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_exposure_time" />
-
-            <TextView
-                android:id="@+id/ii_flash_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_flash" />
-
-            <TextView
-                android:id="@+id/ii_iso_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_iso" />
-
-            <TextView
-                android:id="@+id/ii_white_balance_key"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/image_info_white_balance" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="20dp" >
-
-            <TextView
-                android:id="@+id/ii_capture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_make"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_model"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_focal_length"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_aperture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_exposure_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_flash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_iso"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/ii_white_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
