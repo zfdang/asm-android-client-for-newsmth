@@ -110,8 +110,9 @@ public class FullImageActivity extends SherlockActivity
      */
     private void setCurIndicator(int position)
     {
-        String pos = String.format("%s/%s", position+1, m_imageUrls.size());
-        m_tv.setText(pos);
+		m_imageIdx = position;
+		String pos = String.format("%s/%s", position+1, m_imageUrls.size());
+		m_tv.setText(pos);
     }
 
 	// get image attribute from exif
