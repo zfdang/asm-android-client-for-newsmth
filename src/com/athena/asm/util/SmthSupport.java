@@ -1434,6 +1434,21 @@ public class SmthSupport {
 		return forwardPostTo(post, userid);
 	}
 
+	public Boolean deletePost(String boardname, String postid){
+		// http://www.newsmth.net/bbsdel.php?board=PocketLife&id=1418719
+		// "操作成功: 删除成功.
+		String url = "http://www.newsmth.net/bbsdel.php?board=" + boardname + "&id=" + postid;
+		String content = crawler.getUrlContent(url);
+		if (content == null) {
+			return false;
+		}
+		if (content.contains("删除成功")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * 获得个人信息
 	 * 
