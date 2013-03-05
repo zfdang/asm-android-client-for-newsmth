@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
-import com.athena.asm.Adapter.PostListAdapter.ViewHolder;
 import com.athena.asm.data.Board;
-import com.athena.asm.data.Post;
 
 public class CategoryListAdapter extends BaseAdapter {
 

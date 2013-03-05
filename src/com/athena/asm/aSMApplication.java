@@ -21,14 +21,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.database.Cursor;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.data.Preferences;
 import com.athena.asm.util.CrashHandler;
+import com.athena.asm.util.MyDatabase;
 import com.athena.asm.util.SimpleCrypto;
 import com.athena.asm.util.StringUtility;
-import com.athena.asm.util.MyDatabase;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.athena.asm.viewmodel.MailViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;

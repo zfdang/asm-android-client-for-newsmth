@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
 import com.athena.asm.R;
-import com.athena.asm.SubjectListActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.data.Board;

@@ -6,9 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.athena.asm.data.Mail;
-import com.athena.asm.data.Subject;
-import com.athena.asm.util.StringUtility;
 
 public class SubjectListActivity extends SherlockFragmentActivity
 								 implements ProgressDialogProvider, OnOpenActivityFragmentListener {
