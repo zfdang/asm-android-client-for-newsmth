@@ -17,10 +17,11 @@ import org.apache.commons.io.FileUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,18 +29,29 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.view.TouchImageView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class FullImageActivity extends SherlockActivity
-	implements OnLongClickListener, OnClickListener {
+	implements OnLongClickListener, OnPageChangeListener {
 
-	private TouchImageView m_image;
+    private ViewPager vp;
+    private ViewPagerAdapter vpAdapter;
+    private List<View> views;
+
+    // pagination navigator current position
+	private TextView m_tv;
+	private int m_imageIdx;
+
+    private ArrayList<String> m_imageNames;
+	private ArrayList<String> m_imageUrls;
 	private String m_imageName;
 	private String m_imageUrl;
 
@@ -52,30 +64,57 @@ public class FullImageActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.full_image);
 
-		m_imageName = getIntent().getStringExtra(StringUtility.IMAGE_NAME);
-		if (m_imageName.trim().length() == 0) {
-			m_imageName = "未命名";
-		}
-		m_imageUrl = getIntent().getStringExtra(StringUtility.IMAGE_URL);
+        // get page indicator textview
+        m_tv = (TextView) findViewById(R.id.full_image_indicator);
 
-		m_image = (TouchImageView) findViewById(R.id.image_view);
-		m_image.setOnLongClickListener(this);
-		m_image.setMaxZoom(4f);
+		m_imageNames = getIntent().getStringArrayListExtra (StringUtility.IMAGE_NAME);
+		m_imageUrls = getIntent().getStringArrayListExtra (StringUtility.IMAGE_URL);
+		m_imageIdx = getIntent().getIntExtra(StringUtility.IMAGE_INDEX, 0);
 
+		views = new ArrayList<View>();
+
+		// add all attachments as list<view>
+        LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(
+			LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        // initialize TouchImageView
 		UrlImageViewHelper.setUseZoomIn(true); // enable zoom in
 		UrlImageViewHelper.setUseZoomOut(false); // don't zoom out
 		UrlImageViewHelper.setMaxImageSize(0); // load all size
-		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl, R.drawable.loading_night);
-		} else {
-			UrlImageViewHelper.setUrlDrawable(m_image, m_imageUrl, R.drawable.loading_day);
-		}
+        for(int i=0; i < m_imageUrls.size(); i++) {
+			TouchImageView iv = new TouchImageView(this);
+            iv.setLayoutParams(mParams);
+            iv.setMaxZoom(4f);
+            iv.setOnLongClickListener(this);
+			if (aSMApplication.getCurrentApplication().isNightTheme()) {
+				UrlImageViewHelper.setUrlDrawable(iv, m_imageUrls.get(i), R.drawable.loading_night);
+			} else {
+				UrlImageViewHelper.setUrlDrawable(iv, m_imageUrls.get(i), R.drawable.loading_day);
+			}
+            views.add(iv);
+        }
 
-		Toast.makeText(this, "长按弹出菜单,双指缩放,返回键退出", Toast.LENGTH_SHORT).show();
+        vp = (ViewPager) findViewById(R.id.viewpager);
+        vpAdapter = new ViewPagerAdapter(views);
+        vp.setAdapter(vpAdapter);
+        vp.setOnPageChangeListener(this);
+        vp.setCurrentItem(m_imageIdx);
+        setCurIndicator(m_imageIdx);
+
+		Toast.makeText(this, "左右滑动切换照片;长按出菜单;双指缩放;返回键退出", Toast.LENGTH_SHORT).show();
 
 		setRequestedOrientation(aSMApplication.ORIENTATION);
 	}
 
+    /**
+     * set current page indicator "N/M"
+     */
+    private void setCurIndicator(int position)
+    {
+        String pos = String.format("%s/%s", position+1, m_imageUrls.size());
+        m_tv.setText(pos);
+    }
+
+	// get image attribute from exif
 	private void setImageAttributeFromExif(View layout, int tv_id, ExifInterface exif, String attr){
 		if (layout == null || exif == null)
 			return;
@@ -213,6 +252,14 @@ public class FullImageActivity extends SherlockActivity
 
 	@Override
 	public boolean onLongClick(View arg0) {
+			// update imageName and imageURL
+			m_imageName = m_imageNames.get(m_imageIdx);
+            if (m_imageName.trim().length() == 0) {
+                m_imageName = "未命名";
+            }
+            m_imageUrl = m_imageUrls.get(m_imageIdx);
+
+            // build menu for long click
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.full_image_information));
 			itemList.add(getString(R.string.full_image_save));
@@ -330,13 +377,25 @@ public class FullImageActivity extends SherlockActivity
 	public void onBackPressed() {
 		// expect post refresh
 		// setResult(PostListActivity.RETURN_FROM_FULL_IMAGE, getIntent());
-
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 	}
 
+	/*
+	 * three methods from OnPageChangeListener
+	 */
 	@Override
-	public void onClick(DialogInterface arg0, int arg1) {
+	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		setCurIndicator(arg0);
 	}
 }
