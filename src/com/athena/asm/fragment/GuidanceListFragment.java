@@ -1,7 +1,6 @@
 package com.athena.asm.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
-import com.athena.asm.PostListActivity;
-import com.athena.asm.ProgressDialogProvider;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.GuidanceListAdapter;

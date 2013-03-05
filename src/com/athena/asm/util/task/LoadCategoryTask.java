@@ -1,15 +1,11 @@
 package com.athena.asm.util.task;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,8 +14,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 import com.athena.asm.data.BoardNameComparator;
 import com.athena.asm.viewmodel.HomeViewModel;

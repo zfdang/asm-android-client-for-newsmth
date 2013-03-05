@@ -14,7 +14,6 @@ import junit.framework.Assert;
 import org.apache.http.NameValuePair;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.athena.asm.WritePostActivity;
 import com.athena.asm.util.StringUtility;

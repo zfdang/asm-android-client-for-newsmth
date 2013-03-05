@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
