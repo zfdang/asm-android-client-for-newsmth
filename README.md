@@ -6,7 +6,7 @@ aSM -- android上的水木清华客户端
 
 下载地址
 ==============================
-Build Date: 2013-03-05.
+Build Date: 2013-03-06.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
