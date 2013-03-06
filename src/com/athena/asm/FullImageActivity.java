@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,7 +45,6 @@ public class FullImageActivity extends SherlockActivity
 
     private ViewPager vp;
     private ViewPagerAdapter vpAdapter;
-    private List<View> views;
 
     // pagination navigator current position
 	private TextView m_tv;
@@ -71,38 +71,15 @@ public class FullImageActivity extends SherlockActivity
 		m_imageUrls = getIntent().getStringArrayListExtra (StringUtility.IMAGE_URL);
 		m_imageIdx = getIntent().getIntExtra(StringUtility.IMAGE_INDEX, 0);
 
-		views = new ArrayList<View>();
-
-		// add all attachments as list<view>
-        LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(
-			LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        // initialize TouchImageView
-		UrlImageViewHelper.setUseZoomIn(true); // enable zoom in
-		UrlImageViewHelper.setUseZoomOut(false); // don't zoom out
-		UrlImageViewHelper.setMaxImageSize(0); // load all size
-        for(int i=0; i < m_imageUrls.size(); i++) {
-			TouchImageView iv = new TouchImageView(this);
-            iv.setLayoutParams(mParams);
-            iv.setMaxZoom(4f);
-            iv.setOnLongClickListener(this);
-			if (aSMApplication.getCurrentApplication().isNightTheme()) {
-				UrlImageViewHelper.setUrlDrawable(iv, m_imageUrls.get(i), R.drawable.loading_night);
-			} else {
-				UrlImageViewHelper.setUrlDrawable(iv, m_imageUrls.get(i), R.drawable.loading_day);
-			}
-            views.add(iv);
-        }
-
         vp = (ViewPager) findViewById(R.id.viewpager);
-        vpAdapter = new ViewPagerAdapter(views);
+        vpAdapter = new ViewPagerAdapter(m_imageUrls, this);
         vp.setAdapter(vpAdapter);
         vp.setOnPageChangeListener(this);
         vp.setCurrentItem(m_imageIdx);
         setCurIndicator(m_imageIdx);
 
-//		Toast.makeText(this, "左右滑动切换照片;长按出菜单;双指缩放;返回键退出", Toast.LENGTH_SHORT).show();
-
-		setRequestedOrientation(aSMApplication.ORIENTATION);
+//		setRequestedOrientation(aSMApplication.ORIENTATION);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
     /**
