@@ -106,7 +106,7 @@ public class TouchImageView extends ImageView {
         matrix.getValues(m);
         float x = Math.abs(m[Matrix.MSCALE_X]);
 
-        Log.d("canScrollHorizontally", String.format("%f -- %f", scaleX, x));
+        // Log.d("canScrollHorizontally", String.format("%f -- %f", scaleX, x));
         if (x * 0.95 <= scaleX) {
             // allow scroll when image are almost fit the screen (*0.95 to better UE)
             return false;
@@ -282,7 +282,7 @@ public class TouchImageView extends ImageView {
             int bmWidth = drawable.getIntrinsicWidth();
             int bmHeight = drawable.getIntrinsicHeight();
             
-            Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+            // Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
 
             float scaleX = (float) viewWidth / (float) bmWidth;
             float scaleY = (float) viewHeight / (float) bmHeight;
