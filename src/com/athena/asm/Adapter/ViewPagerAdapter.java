@@ -2,7 +2,6 @@ package com.athena.asm.Adapter;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;

@@ -30,14 +30,12 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
-import com.athena.asm.view.TouchImageView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class FullImageActivity extends SherlockActivity
