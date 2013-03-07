@@ -396,9 +396,9 @@ public class HomeActivity extends SherlockFragmentActivity
 				        if (mHandler == null) {
 				            mHandler = new Handler();
 				        }
-				        // reset will be run after 1500 ms
-				        mHandler.postDelayed(new PendingDoubleBackToExit(), 1500);
-						Toast.makeText(this, "再按一次\"返回\"退出", Toast.LENGTH_SHORT).show();
+				        // reset will be run after 2000 ms
+				        mHandler.postDelayed(new PendingDoubleBackToExit(), 2000);
+						Toast.makeText(this, "再按一次退出aSM", Toast.LENGTH_SHORT).show();
 				    }
 				}
 			} else {

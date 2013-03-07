@@ -36,7 +36,9 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		((ViewPager) container).removeView((TouchImageView)object);
+		TouchImageView view = (TouchImageView)object;
+		((ViewPager) container).removeView(view);
+		view = null;
 	}
 
 	@Override
