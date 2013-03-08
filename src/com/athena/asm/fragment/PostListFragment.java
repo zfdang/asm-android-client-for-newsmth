@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -775,6 +776,17 @@ public class PostListFragment extends SherlockFragment implements
 	@Override
 	public void refresh() {
 		refreshPostList();
+	}
+
+	public boolean onKeyDown(int keyCode) {
+		if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+			setListOffset(1);
+			return true;
+		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+			setListOffset(-1);
+			return true;
+		}
+		return false;
 	}
 
 }
