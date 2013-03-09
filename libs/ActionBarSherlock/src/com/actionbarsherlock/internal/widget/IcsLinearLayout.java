@@ -226,7 +226,7 @@ public class IcsLinearLayout extends NineLinearLayout {
             if (child == null) {
                 right = getWidth() - getPaddingRight() - mDividerWidth;
             } else {
-                final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+//                final LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 right = child.getRight()/* + lp.rightMargin*/;
             }
             drawVerticalDivider(canvas, right);

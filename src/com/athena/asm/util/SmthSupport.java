@@ -947,6 +947,7 @@ public class SmthSupport {
 					.parseMobilePostContent(contentString);
 			post.setContent((String) objects[0]);
 			ArrayList<Attachment> attachFiles = new ArrayList<Attachment>();
+			@SuppressWarnings("unchecked")
 			ArrayList<String> attachList = (ArrayList<String>) objects[1];
 			for (Iterator<String> iterator = attachList.iterator(); iterator
 					.hasNext();) {

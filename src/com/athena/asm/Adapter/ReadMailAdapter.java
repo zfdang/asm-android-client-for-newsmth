@@ -4,10 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;

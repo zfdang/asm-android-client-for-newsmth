@@ -2,8 +2,8 @@
 <RelativeLayout android:layout_width="fill_parent"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="wrap_content" android:paddingTop="4dp"
-	android:paddingBottom="2dp" android:paddingLeft="12dp"
-	android:paddingRight="12dp" android:id="@+id/PostListLayout">
+	android:paddingBottom="2dp" android:paddingLeft="6dp"
+	android:paddingRight="6dp" android:id="@+id/PostListLayout">
 	<TextView android:id="@+id/AuthorID"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textColor="@color/blue_text" android:textSize="15dp" />

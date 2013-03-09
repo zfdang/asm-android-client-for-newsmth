@@ -1,5 +1,6 @@
 package com.athena.asm.Adapter;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,14 @@ import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class PostListAdapter extends BaseAdapter {
+public class PostListAdapter extends BaseAdapter implements OnClickListener {
 
 	private PostListFragment m_fragment;
 	private LayoutInflater m_inflater;
 	private List<Post> m_postList;
 	
+	// http://developer.android.com/training/improving-layouts/smooth-scrolling.html
+	// use ViewHolder pattern
 	public class ViewHolder {
 		public TextView authorTextView;
 		public TextView titleTextView;
@@ -51,6 +54,19 @@ public class PostListAdapter extends BaseAdapter {
 		this.m_fragment = fragment;
 		this.m_inflater = inflater;
 		this.m_postList = postList;
+
+		// set parameters for UrlImageViewHelper
+		// set threshold for max image size
+		UrlImageViewHelper.setMaxImageSize(getMaxImageSize());
+
+		UrlImageViewHelper.setUseZoomOut(true); // always enable zoom out
+
+		// set error resource, this resource will be used when failed to load image
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
+			UrlImageViewHelper.setErrorResource(R.drawable.failure_night);
+		} else {
+			UrlImageViewHelper.setErrorResource(R.drawable.failure_day);
+		}
 	}
 
 	// image size > threshold won't be loaded in 2G/3G
@@ -132,20 +148,8 @@ public class PostListAdapter extends BaseAdapter {
 			else{
 				UrlImageViewHelper.setUseZoomIn(true);
 			}
-			UrlImageViewHelper.setUseZoomOut(true); // always enable zoom out
-
-			// set threshold for max image size
-			UrlImageViewHelper.setMaxImageSize(getMaxImageSize());
-
-			// set error resource, this resource will be used when failed to load image
-			if (aSMApplication.getCurrentApplication().isNightTheme()) {
-				UrlImageViewHelper.setErrorResource(R.drawable.failure_night);
-			} else {
-				UrlImageViewHelper.setErrorResource(R.drawable.failure_day);
-			}
 
 			// TODO: pass screen orientation to UrlImageViewHelper
-
 			for (int i = 0; i < attachments.size(); i++) {
 				String attachUrl = attachments.get(i).getAttachUrl();
 				contentBuilder.append("<a href='").append(attachUrl).append("'>");
@@ -170,33 +174,13 @@ public class PostListAdapter extends BaseAdapter {
 					} else {
 						UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading_day);
 					}
-					imageView.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent();
-							intent.setClassName("com.athena.asm",
-									"com.athena.asm.FullImageActivity");
-							int attachmentIdx = (Integer) v.getTag(R.id.tag_attachment_index);
-							ArrayList<Attachment> attachments = (ArrayList<Attachment>) v.getTag(R.id.tag_attachments);
-							ArrayList<String> urlList = new ArrayList<String>();
-							ArrayList<String> fnameList = new ArrayList<String>();
-							for (int i = 0; i < attachments.size(); i++) {
-								urlList.add(attachments.get(i).getAttachUrl());
-								fnameList.add(attachments.get(i).getName());
-							}
-							intent.putExtra(StringUtility.IMAGE_INDEX, attachmentIdx);
-							intent.putStringArrayListExtra(StringUtility.IMAGE_URL, urlList);
-							intent.putStringArrayListExtra(StringUtility.IMAGE_NAME, fnameList);
-							m_fragment.startActivityForResult(intent, 0);
-						}
-					});
+					imageView.setOnClickListener(this);
 				}
 			}
 			holder.attachTextView.setText(Html.fromHtml(contentBuilder.toString()));
 		}
 
-		holder.dateTextView.setText(post.getDate().toLocaleString());
+		holder.dateTextView.setText(DateFormat.getDateInstance().format(post.getDate()));
 
 		holder.contentTextView.setOnLongClickListener(m_fragment);
 		layout.setOnLongClickListener(m_fragment);
@@ -212,11 +196,6 @@ public class PostListAdapter extends BaseAdapter {
 		}
 
 		return layout;
-	}
-
-	private Context getConext() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -235,5 +214,26 @@ public class PostListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent();
+		intent.setClassName("com.athena.asm",
+				"com.athena.asm.FullImageActivity");
+		int attachmentIdx = (Integer) v.getTag(R.id.tag_attachment_index);
+		@SuppressWarnings("unchecked")
+		ArrayList<Attachment> attachments = (ArrayList<Attachment>) v.getTag(R.id.tag_attachments);
+		ArrayList<String> urlList = new ArrayList<String>();
+		ArrayList<String> fnameList = new ArrayList<String>();
+		for (int i = 0; i < attachments.size(); i++) {
+			urlList.add(attachments.get(i).getAttachUrl());
+			fnameList.add(attachments.get(i).getName());
+		}
+		intent.putExtra(StringUtility.IMAGE_INDEX, attachmentIdx);
+		intent.putStringArrayListExtra(StringUtility.IMAGE_URL, urlList);
+		intent.putStringArrayListExtra(StringUtility.IMAGE_NAME, fnameList);
+		m_fragment.startActivityForResult(intent, 0);
 	}
 }
