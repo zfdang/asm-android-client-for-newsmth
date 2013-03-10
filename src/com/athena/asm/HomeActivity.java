@@ -514,7 +514,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			break;
 		case NIGHT_THEME:
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, false);
+			boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, true);
 			SharedPreferences.Editor editor = settings.edit();
 
 //			change night_theme settings
