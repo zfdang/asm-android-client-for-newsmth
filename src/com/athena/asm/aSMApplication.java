@@ -74,7 +74,7 @@ public class aSMApplication extends Application {
 
 	private boolean isTouchScroll = true;
 	private boolean isHidePinSubject = false;
-	private boolean isNightTheme = false;
+	private boolean isNightTheme = true;
 
 	private int defaultOrientation = 0;
 	private boolean isPromotionShow = true;
@@ -281,9 +281,9 @@ public class aSMApplication extends Application {
 		}
 
 		if (!settings.contains(Preferences.NIGHT_THEME)) {
-			editor.putBoolean(Preferences.NIGHT_THEME, false);
+			editor.putBoolean(Preferences.NIGHT_THEME, true);
 		} else {
-			setNightTheme(settings.getBoolean(Preferences.NIGHT_THEME, false));
+			setNightTheme(settings.getBoolean(Preferences.NIGHT_THEME, true));
 		}
 
 		if (!settings.contains(Preferences.DEFAULT_ORIENTATION)) {
