@@ -19,6 +19,12 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	private List<String> m_directories;
 	private List<List<Board>> m_boards;
 
+	static class ChildViewHolder{
+		TextView categoryNameTextView;
+		TextView moderatorIDTextView;
+		TextView boardNameTextView;
+	}
+
 	public FavoriteListAdapter(LayoutInflater inflater, 
 			List<String> directoryList, List<List<Board>> boardList) {
 		this.m_inflater = inflater;
@@ -38,30 +44,33 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
             View convertView, ViewGroup parent) {
 		Board board = m_boards.get(groupPosition).get(childPosition);
-		View layout = null;
-		if (convertView != null) {
-			layout = convertView;
+
+		ChildViewHolder holder;
+		if (convertView == null) {
+			convertView = m_inflater.inflate(R.layout.favorite_list_item, null);
+
+			holder = new ChildViewHolder();
+			holder.categoryNameTextView = (TextView) convertView.findViewById(R.id.CategoryName);
+			holder.moderatorIDTextView = (TextView) convertView.findViewById(R.id.ModeratorID);
+			holder.boardNameTextView = (TextView) convertView.findViewById(R.id.BoardName);
+			convertView.setTag(R.id.tag_first, holder);
 		} else {
-			layout = m_inflater.inflate(R.layout.favorite_list_item, null);
+			holder = (ChildViewHolder) convertView.getTag(R.id.tag_first);
 		}
-		TextView categoryNameTextView = (TextView) layout
-				.findViewById(R.id.CategoryName);
-		categoryNameTextView.setText(board.getCategoryName());
-		TextView moderatorIDTextView = (TextView) layout
-				.findViewById(R.id.ModeratorID);
-		moderatorIDTextView.setText(board.getModerator());
-		TextView boardNameTextView = (TextView) layout
-				.findViewById(R.id.BoardName);
-		boardNameTextView.setText("[" + board.getEngName() + "]"
+		holder.categoryNameTextView.setText(board.getCategoryName());
+		holder.moderatorIDTextView.setText(board.getModerator());
+		holder.boardNameTextView.setText("[" + board.getEngName() + "]"
 				+ board.getChsName());
-		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
-		layout.setTag(board);
+		holder.boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
+
+		convertView.setTag(R.id.tag_second, board);
+
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			categoryNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
-			moderatorIDTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
-			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			holder.categoryNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
+			holder.moderatorIDTextView.setTextColor(convertView.getResources().getColor(R.color.blue_text_night));
+			holder.boardNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
 		}
-		return layout;
+		return convertView;
 	}
 
 	@Override

@@ -160,11 +160,10 @@ public class FavoriteListFragment extends SherlockFragment implements
 				public boolean onChildClick(ExpandableListView parent,
 						View view, int groupPosition, int childPosition, long id) {
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.BOARD,
-							(Board) view.getTag());
+					bundle.putSerializable(StringUtility.BOARD, (Board) view.getTag(R.id.tag_second));
 					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
-							.getTag());
-					
+							.getTag(R.id.tag_second));
+
 					if (m_onOpenActivityFragmentListener != null) {
 						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
 					}
