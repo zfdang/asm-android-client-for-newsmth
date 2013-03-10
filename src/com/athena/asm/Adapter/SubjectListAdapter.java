@@ -19,25 +19,39 @@ public class SubjectListAdapter extends BaseAdapter {
 	private LayoutInflater m_inflater;
 	private List<Subject> m_subjectList;
 
+	static class ViewHolder {
+		public TextView authorTextView;
+		public TextView titleTextView;
+		public TextView dateTextView;
+	}
+
 	public SubjectListAdapter(LayoutInflater inflater, List<Subject> subjectList) {
 		this.m_inflater = inflater;
 		this.m_subjectList = subjectList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View layout = null;
-		if (convertView != null) {
-			layout = convertView;
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = m_inflater.inflate(R.layout.subject_list_item, null);
+
+			// save all elements in ViewHolder
+			holder = new ViewHolder();
+			holder.authorTextView = (TextView) convertView.findViewById(R.id.AuthorID);
+			holder.titleTextView = (TextView) convertView.findViewById(R.id.SubjectTitle);
+			holder.dateTextView = (TextView) convertView.findViewById(R.id.SubjectPostDate);
+			convertView.setTag(R.id.tag_first, holder);
 		}
 		else {
-			layout = m_inflater.inflate(R.layout.subject_list_item, null);
+			// retrieve ViewHolder
+			holder = (ViewHolder) convertView.getTag(R.id.tag_first);
 		}
 		
+		// set subject
 		Subject subject = m_subjectList.get(position);
-		
-		TextView authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
-		authorTextView.setText(subject.getAuthor());
-		TextView titleTextView = (TextView) layout.findViewById(R.id.SubjectTitle);
+		holder.authorTextView.setText(subject.getAuthor());
+
+		// set title
 		String titleString = subject.getTitle();
 		if (subject.getType().toLowerCase().contains(Subject.TYPE_BOTTOM)) {
 			boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
@@ -48,20 +62,19 @@ public class SubjectListAdapter extends BaseAdapter {
 			}
 			
 		}
-		titleTextView.setText(Html.fromHtml(titleString));
-		titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getSubjectFontSize());
+		holder.titleTextView.setText(Html.fromHtml(titleString));
+		holder.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getSubjectFontSize());
 		
-		TextView dateTextView = (TextView) layout.findViewById(R.id.SubjectPostDate);
-		dateTextView.setText(subject.getDateString());
+		holder.dateTextView.setText(subject.getDateString());
 		
-		layout.setTag(subject);
+		convertView.setTag(R.id.tag_second, subject);
 		
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
-			authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
+			holder.titleTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
+			holder.authorTextView.setTextColor(convertView.getResources().getColor(R.color.blue_text_night));
 		}
 
-		return layout;
+		return convertView;
 	}
 
 	@Override

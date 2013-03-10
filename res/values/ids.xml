@@ -16,6 +16,7 @@
 
 <resources>
   <item type="id" name="homePager" />
-  <item type="id" name="tag_attachment_index" />
-  <item type="id" name="tag_attachments" />
+  <item type="id" name="tag_first" />
+  <item type="id" name="tag_second" />
+  <item type="id" name="tag_third" />
 </resources>

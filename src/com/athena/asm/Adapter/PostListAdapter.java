@@ -166,8 +166,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 							LayoutParams.WRAP_CONTENT);
 					layoutParams.setMargins(1, 1, 1, 1);
 					imageView.setLayoutParams(layoutParams);
-					imageView.setTag(R.id.tag_attachment_index, i);
-					imageView.setTag(R.id.tag_attachments, attachments);
+					imageView.setTag(R.id.tag_first, i);
+					imageView.setTag(R.id.tag_second, attachments);
 					holder.imageLayout.addView(imageView);
 					if (aSMApplication.getCurrentApplication().isNightTheme()) {
 						UrlImageViewHelper.setUrlDrawable(imageView, attachUrl, R.drawable.loading_night);
@@ -222,9 +222,9 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		Intent intent = new Intent();
 		intent.setClassName("com.athena.asm",
 				"com.athena.asm.FullImageActivity");
-		int attachmentIdx = (Integer) v.getTag(R.id.tag_attachment_index);
+		int attachmentIdx = (Integer) v.getTag(R.id.tag_first);
 		@SuppressWarnings("unchecked")
-		ArrayList<Attachment> attachments = (ArrayList<Attachment>) v.getTag(R.id.tag_attachments);
+		ArrayList<Attachment> attachments = (ArrayList<Attachment>) v.getTag(R.id.tag_second);
 		ArrayList<String> urlList = new ArrayList<String>();
 		ArrayList<String> fnameList = new ArrayList<String>();
 		for (int i = 0; i < attachments.size(); i++) {

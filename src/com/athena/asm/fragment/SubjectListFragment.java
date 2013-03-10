@@ -203,7 +203,7 @@ public class SubjectListFragment extends SherlockFragment implements
 						final int position, long id) {
 					if (m_onOpenActivityFragmentListener != null) {
 						Bundle bundle = new Bundle();
-						bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag());
+						bundle.putSerializable(StringUtility.SUBJECT, (Subject)view.getTag(R.id.tag_second));
 						bundle.putInt(StringUtility.BOARD_TYPE, m_viewModel.getBoardType());
 						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.POST_LIST, bundle);
 					}
