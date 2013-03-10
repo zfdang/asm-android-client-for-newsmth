@@ -171,12 +171,16 @@
                 <TextView
                     android:id="@+id/ii_make"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
 
                 <TextView
                     android:id="@+id/ii_model"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
 
                 <TextView
                     android:id="@+id/ii_focal_length"
@@ -196,7 +200,9 @@
                 <TextView
                     android:id="@+id/ii_flash"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
 
                 <TextView
                     android:id="@+id/ii_iso"
