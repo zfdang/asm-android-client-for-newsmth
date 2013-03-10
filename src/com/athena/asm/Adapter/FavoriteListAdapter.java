@@ -25,6 +25,10 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 		TextView boardNameTextView;
 	}
 
+	static class GroupViewHolder{
+		TextView boardNameTextView;
+	}
+
 	public FavoriteListAdapter(LayoutInflater inflater, 
 			List<String> directoryList, List<List<Board>> boardList) {
 		this.m_inflater = inflater;
@@ -96,16 +100,23 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		View layout = m_inflater.inflate(
-				R.layout.favorite_list_section_header, null);
-		TextView boardNameTextView = (TextView) layout
-				.findViewById(R.id.BoardName);
-		boardNameTextView.setText(m_directories.get(groupPosition));
-		boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceFontSize());
-		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			boardNameTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+		GroupViewHolder holder;
+		if(convertView == null){
+			convertView = m_inflater.inflate(R.layout.favorite_list_section_header, null);
+
+			holder = new GroupViewHolder();
+			holder.boardNameTextView = (TextView) convertView.findViewById(R.id.BoardName);
+			convertView.setTag(holder);
+		} else {
+			holder = (GroupViewHolder) convertView.getTag();
 		}
-		return layout;
+		holder.boardNameTextView.setText(m_directories.get(groupPosition));
+		holder.boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+				aSMApplication.getCurrentApplication().getGuidanceFontSize());
+		if (aSMApplication.getCurrentApplication().isNightTheme()) {
+			holder.boardNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
+		}
+		return convertView;
 	}
 
 	@Override
