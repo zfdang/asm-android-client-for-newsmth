@@ -168,6 +168,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+<!-- http://stackoverflow.com/questions/1424276/ellipsize-not-working-for-textview-inside-custom-listview -->
                 <TextView
                     android:id="@+id/ii_make"
                     android:layout_width="match_parent"
