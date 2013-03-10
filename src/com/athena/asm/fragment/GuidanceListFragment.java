@@ -98,7 +98,7 @@ public class GuidanceListFragment extends SherlockFragment implements
 				public boolean onChildClick(ExpandableListView parent, View v,
 						int groupPosition, int childPosition, long id) {
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.SUBJECT, (Subject) v.getTag());
+					bundle.putSerializable(StringUtility.SUBJECT, (Subject) v.getTag(R.id.tag_second));
 					if (m_onOpenActivityFragmentListener != null) {
 						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.POST_LIST, bundle);
 					}
