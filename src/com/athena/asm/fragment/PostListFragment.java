@@ -416,7 +416,7 @@ public class PostListFragment extends SherlockFragment implements
 	}
 
 	private void setListOffsetByPage(int jump) {
-		int offset = (int)(m_listView.getHeight() * 0.82);
+		int offset = (int)(m_listView.getHeight() * 0.85);
 		if (jump == -1) {
 			m_listView.smoothScrollBy(-1 * offset, 500);
 		} else {
