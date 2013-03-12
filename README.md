@@ -17,6 +17,9 @@ Build Date: 2013-03-12.
 ------------------------------
 1. 更改了翻页的实现，原来是一个帖子一个帖子的翻，现在是在竖直方向上滚动95%。音量键和点击屏幕上下部的行为都改了
 2. 修正了exif显示错行的问题
+3. 将图片的最大放大数值从4改成12
+4. 禁用hardware accelerate, 希望能避免"Bitmap too large to be uploaded into a texture exception"的错误
+5. 开启了largeHeap，降低out-of-memory的问题
 
 2013-03-09:
 ------------------------------
