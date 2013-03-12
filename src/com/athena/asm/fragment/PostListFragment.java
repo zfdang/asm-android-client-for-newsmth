@@ -415,16 +415,13 @@ public class PostListFragment extends SherlockFragment implements
 
 	}
 
-	private void setListOffset(int jump) {
-		int index = m_listView.getFirstVisiblePosition();
-		Log.d("move", String.valueOf(index));
-		int newIndex = index + jump;
-		if (newIndex == -1) {
-			newIndex = 0;
-		} else if (m_listView.getItemAtPosition(newIndex) == null) {
-			newIndex = index;
+	private void setListOffsetByPage(int jump) {
+		int offset = (int)(m_listView.getHeight() * 0.82);
+		if (jump == -1) {
+			m_listView.smoothScrollBy(-1 * offset, 500);
+		} else {
+			m_listView.smoothScrollBy(offset, 500);
 		}
-		m_listView.setSelectionFromTop(newIndex, 0);
 	}
 
 	@Override
@@ -433,9 +430,9 @@ public class PostListFragment extends SherlockFragment implements
 			int touchY = (int) e.getRawY();
 			float scale = (float) (m_screenHeight / 800.0);
 			if (touchY > 60 * scale && touchY < 390 * scale) {
-				setListOffset(-1);
+				setListOffsetByPage(-1);
 			} else if (touchY > 410 * scale && touchY < 740 * scale) {
-				setListOffset(1);
+				setListOffsetByPage(1);
 			}
 		}
 		return false;
@@ -780,10 +777,10 @@ public class PostListFragment extends SherlockFragment implements
 
 	public boolean onKeyDown(int keyCode) {
 		if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			setListOffset(1);
+			setListOffsetByPage(1);
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
-			setListOffset(-1);
+			setListOffsetByPage(-1);
 			return true;
 		}
 		return false;
