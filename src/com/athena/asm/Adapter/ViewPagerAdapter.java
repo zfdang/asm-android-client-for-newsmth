@@ -58,7 +58,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 		String imageUrl = m_imageUrls.get(position);
 		TouchImageView iv = new TouchImageView(m_context);
 		iv.setLayoutParams(mParams);
-		iv.setMaxZoom(4f);
 		iv.setOnLongClickListener((OnLongClickListener)m_context);
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			UrlImageViewHelper.setErrorResource(R.drawable.failure_night);
