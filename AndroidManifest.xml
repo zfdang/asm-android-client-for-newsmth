@@ -17,6 +17,7 @@
         android:name=".aSMApplication"
         android:icon="@drawable/icon"
         android:largeHeap="true"
+        android:hardwareAccelerated="true"
         android:label="@string/app_name" >
         <activity android:name="com.athena.asm.LoginActivity" >
         </activity>
