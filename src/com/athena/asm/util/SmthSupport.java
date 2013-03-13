@@ -1,6 +1,7 @@
 package com.athena.asm.util;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1093,7 +1094,7 @@ public class SmthSupport {
 		subject.setSubjectID(post.getSubjectID());
 		subject.setTopicSubjectID(post.getTopicSubjectID());
 		subject.setAuthor(post.getAuthor());
-		subject.setDateString(post.getDate().toLocaleString());
+		subject.setDateString(DateFormat.getDateTimeInstance().format(post.getDate()));
 
 		return postList;
 	}

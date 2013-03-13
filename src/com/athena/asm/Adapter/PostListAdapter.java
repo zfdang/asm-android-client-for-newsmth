@@ -180,7 +180,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.attachTextView.setText(Html.fromHtml(contentBuilder.toString()));
 		}
 
-		holder.dateTextView.setText(DateFormat.getDateInstance().format(post.getDate()));
+		holder.dateTextView.setText(DateFormat.getDateTimeInstance().format(post.getDate()));
 
 		holder.contentTextView.setOnLongClickListener(m_fragment);
 		layout.setOnLongClickListener(m_fragment);
