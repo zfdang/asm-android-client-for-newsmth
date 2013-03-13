@@ -198,8 +198,9 @@ public class PostListViewModel extends BaseViewModel {
 		boolean isNewSubject = true;
 		
 		if (m_currentSubject != null) {
-			isNewSubject = !m_currentSubject.getSubjectID().equals(subject.getSubjectID()) ||
-					   	    m_currentSubject.getCurrentPageNo() != subject.getCurrentPageNo();
+			isNewSubject = m_currentSubject.getSubjectID() == null ||
+					!m_currentSubject.getSubjectID().equals(subject.getSubjectID()) ||
+					m_currentSubject.getCurrentPageNo() != subject.getCurrentPageNo();
 		}
 		
 		if (isNewSubject) {
