@@ -139,12 +139,34 @@ public class LoginActivity extends SherlockFragmentActivity implements
 			};
 			th.start();
 		} else if (view.getId() == R.id.guest_button) {
-			Intent intent = new Intent();
-			intent.setClassName("com.athena.asm", "com.athena.asm.HomeActivity");
-			intent.putExtra(StringUtility.LOGINED, false);
-			intent.putExtra(StringUtility.GUEST_LOGINED, true);
-			startActivity(intent);
-			finish();
+			// login with userid = "guest"
+			final ProgressDialog pdialog = new ProgressDialog(this);
+			pdialog.setMessage("匿名登陆中...");
+			// pdialog.setMax(1);
+			// pdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			pdialog.show();
+
+			Thread th = new Thread() {
+				@Override
+				public void run() {
+					m_smthSupport.setUserid("guest");
+					m_smthSupport.setPasswd("");
+					int result = m_smthSupport.login();
+					if (result == -1) {
+						showConnectionFailedToast();
+					}
+					else {
+						Intent intent = new Intent();
+						intent.setClassName("com.athena.asm", "com.athena.asm.HomeActivity");
+						intent.putExtra(StringUtility.LOGINED, false);
+						intent.putExtra(StringUtility.GUEST_LOGINED, true);
+						startActivity(intent);
+						finish();
+					}
+					pdialog.cancel();
+				}
+			};
+			th.start();
 		}
 	}
 
