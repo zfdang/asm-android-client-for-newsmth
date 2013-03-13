@@ -1094,7 +1094,7 @@ public class SmthSupport {
 		subject.setSubjectID(post.getSubjectID());
 		subject.setTopicSubjectID(post.getTopicSubjectID());
 		subject.setAuthor(post.getAuthor());
-		subject.setDateString(DateFormat.getDateTimeInstance().format(post.getDate()));
+		subject.setDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getDate()));
 
 		return postList;
 	}
