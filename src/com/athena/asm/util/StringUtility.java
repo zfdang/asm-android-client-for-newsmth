@@ -282,7 +282,23 @@ public class StringUtility {
             }
 
             if (line.contains("※ 来源:·水木社区")) {
-                break;
+                // [36m※ 来源:·水木社区 http://www.newsmth.net·[FROM: 113.88.18.*]
+                // find ip address here
+                Pattern myipPattern = Pattern
+                        .compile("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)\\S+");
+                Matcher myipMatcher = myipPattern.matcher(line);
+                if (myipMatcher.find()) {
+                    String ipl = myipMatcher.group(1);
+                    if( aSMApplication.getCurrentApplication().isShowIp() ) {
+                        ipl = "<font color=\"#c0c0c0\">FROM " + ipl + "*("
+                                + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1"))
+                                + ")<\\/font>";
+                    } else {
+                        ipl = "<font color=\"#c0c0c0\">FROM " + ipl + "*<\\/font>";
+                    }
+                    line = ipl;
+                }
+                // break;
             }
             sb.append(line).append("<br />");
         }
