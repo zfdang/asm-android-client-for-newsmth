@@ -13,10 +13,10 @@ package com.athena.asm.view;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -25,7 +25,7 @@ import android.widget.ImageView;
 
 public class TouchImageView extends ImageView {
 
-    Matrix matrix;
+	Matrix matrix;
 
     // We can be in one of these 3 states
     static final int NONE = 0;
@@ -96,22 +96,36 @@ public class TouchImageView extends ImageView {
         // clear longclick events
         clearCheckForLongClick();
 
-        // if image was in the original size, enable horizontal scroll;
-        Drawable drawable = getDrawable();
-        if (drawable == null || drawable.getIntrinsicWidth() == 0 || drawable.getIntrinsicHeight() == 0)
+        if (mode == ZOOM) {
+            // if mode is ZOOM, allow scroll
             return true;
-        int bmWidth = drawable.getIntrinsicWidth();
-        float scaleX = (float) viewWidth / (float) bmWidth;
-
-        matrix.getValues(m);
-        float x = Math.abs(m[Matrix.MSCALE_X]);
-
-        // Log.d("canScrollHorizontally", String.format("%f -- %f", scaleX, x));
-        if (x * 0.95 <= scaleX) {
-            // allow scroll when image are almost fit the screen (*0.95 to better UE)
-            return false;
         }
-        return true;
+
+        if(direction > 0){
+            // scroll to the left
+            // if the right board of the image is invisible then allow scroll; otherwise don't scroll
+            float[] point = {getDrawable().getIntrinsicWidth(), 0};
+            matrix.mapPoints(point);
+            // Log.d("canScrollHorizontally", String.format("direction = %d, point.x = %f, viewWidth = %d", direction, point[0], viewWidth));
+            // comparing float with integer, we can use strict equal. take 2 as threshold
+            if(point[0] > viewWidth + 2) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // scroll to the right
+            // if the left board of the image is invisible then allow scroll; otherwise don't scroll
+            float[] point = {0, 0};
+            matrix.mapPoints(point);
+            // Log.d("canScrollHorizontally", String.format("direction = %d, point.x = %f, viewWidth = %d", direction, point[0], viewWidth));
+            // comparing float with integer, we can use strict equal. take 2 as threshold
+            if(point[0] < -2 ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public TouchImageView(Context context) {
