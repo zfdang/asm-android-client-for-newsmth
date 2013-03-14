@@ -25,6 +25,7 @@
 	<EditText android:id="@+id/edittext_page_no"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
 		android:singleLine="true"
+		android:selectAllOnFocus="true"
 		android:inputType="number" android:layout_marginTop="3dip" />
 	<Button android:id="@+id/btn_go_page" android:layout_height="wrap_content"
 	    android:padding="5dip" android:textSize="14sp"
