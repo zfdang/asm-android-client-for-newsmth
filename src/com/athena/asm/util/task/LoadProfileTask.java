@@ -33,6 +33,7 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
+		m_viewModel.m_isLoadingInProgress = true;
 		pdialog.setMessage("加载用户信息中...");
 		pdialog.show();
 	}
@@ -57,5 +58,6 @@ public class LoadProfileTask extends AsyncTask<String, Integer, String> {
 		else {
 			viewProfileActivity.reloadProfile(profile);
 		}
+		m_viewModel.m_isLoadingInProgress = false;
 	}
 }

@@ -82,6 +82,7 @@ public class GuidanceListFragment extends SherlockFragment implements
 	public void reloadGuidanceList() {
 		if (m_viewModel.getGuidanceSectionNames() == null
 				|| m_viewModel.getGuidanceSectionDetails() == null) {
+			if(m_viewModel.m_isLoadingInProgress) return;
 			LoadGuidanceTask loadGuidanceTask = new LoadGuidanceTask(
 					getActivity(), m_viewModel);
 			loadGuidanceTask.execute();

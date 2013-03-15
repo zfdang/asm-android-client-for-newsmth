@@ -97,6 +97,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 
 	public void reloadFavorite() {
 		if (m_viewModel.getFavList() == null) {
+			if(m_viewModel.m_isLoadingInProgress) return;
 			LoadFavoriteTask loadFavoriteTask = new LoadFavoriteTask(
 					getActivity(), m_viewModel);
 			loadFavoriteTask.execute();

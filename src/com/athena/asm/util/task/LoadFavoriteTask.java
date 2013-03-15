@@ -31,6 +31,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
+		m_viewModel.m_isLoadingInProgress = true;
 		pdialog = new ProgressDialog(context);
 		pdialog.setMessage("加载收藏中...");
 		pdialog.show();
@@ -84,5 +85,6 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		m_viewModel.notifyFavListChanged();
+		m_viewModel.m_isLoadingInProgress = false;
 	}
 }

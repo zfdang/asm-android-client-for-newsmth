@@ -77,6 +77,7 @@ public class ProfileFragment extends SherlockFragment implements
 
 	public void reloadProfile() {
 		if (m_currentProfile == null) {
+			if(m_viewModel.m_isLoadingInProgress) return;
 			LoadProfileTask loadProfileTask = new LoadProfileTask(getActivity(),
 					m_viewModel, m_viewModel.getLoginUserID());
 			loadProfileTask.execute();

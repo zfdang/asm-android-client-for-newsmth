@@ -19,6 +19,7 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
+		m_viewModel.m_isLoadingInProgress = true;
 		pdialog.setMessage("加载邮箱信息中...");
 		pdialog.show();
 	}
@@ -33,5 +34,6 @@ public class LoadMailTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		m_viewModel.notifyMailboxChanged();
+		m_viewModel.m_isLoadingInProgress = false;
 	}
 }

@@ -85,6 +85,7 @@ public class MailFragment extends SherlockFragment implements
 	public void reloadMail() {
 		if (m_viewModel.isLogined()) {
 			if (m_viewModel.getMailBox() == null) {
+				if(m_viewModel.m_isLoadingInProgress) return;
 				LoadMailTask loadMailTask = new LoadMailTask(getActivity(),
 						m_viewModel);
 				loadMailTask.execute();

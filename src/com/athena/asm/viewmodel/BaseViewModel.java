@@ -5,6 +5,8 @@ import java.util.List;
 
 public abstract class BaseViewModel {
 
+	public boolean m_isLoadingInProgress = false;
+
 	public interface OnViewModelChangObserver {
 
 		public void onViewModelChange(BaseViewModel viewModel,
