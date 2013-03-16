@@ -3,6 +3,9 @@ aSM: Android Client for newsmth
 
 aSM -- android上的水木清华客户端
 
+项目和使用说明
+------------------------------
+http://asm.zfdang.com/
 
 下载地址
 ==============================
