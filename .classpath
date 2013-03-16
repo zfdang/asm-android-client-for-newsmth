@@ -6,7 +6,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/apache-mime4j-0.5.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.0-beta2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/aFileChooser"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/com_actionbarsherlock"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/aFileChooser"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/com_actionbarsherlock"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
