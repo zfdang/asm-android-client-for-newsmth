@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.athena.asm.data.Board;
 import com.athena.asm.viewmodel.HomeViewModel;

@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,17 +34,6 @@ public class LoadCategoryTask extends AsyncTask<String, Integer, String> {
 		pdialog = new ProgressDialog(m_context);
 		pdialog.setMessage("加载分类讨论区中...");
 		pdialog.show();
-	}
-
-	private void readBoadInfo(List<Board> boards, List<Board> fullBoards) {
-		for (Iterator<Board> iterator = boards.iterator(); iterator.hasNext();) {
-			Board board = (Board) iterator.next();
-			if (board != null && board.getEngName() != null
-					&& !board.isDirectory()) {
-				fullBoards.add(board);
-			}
-			readBoadInfo(board.getChildBoards(), fullBoards);
-		}
 	}
 
 	@SuppressWarnings("unchecked")

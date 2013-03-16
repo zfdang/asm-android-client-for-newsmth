@@ -63,7 +63,7 @@ public class FileUtils {
     /**
      * The file copy buffer size (30 MB)
      */
-    private static final long FILE_COPY_BUFFER_SIZE = ONE_MB * 30;
+//    private static final long FILE_COPY_BUFFER_SIZE = ONE_MB * 30;
 
     /**
      * The number of bytes in a gigabyte.
