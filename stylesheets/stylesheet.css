@@ -579,3 +579,9 @@ footer .owner p a {
 .highlight .vg { color: #008080 } /* Name.Variable.Global */
 .highlight .vi { color: #008080 } /* Name.Variable.Instance */
 .highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
+
+img.thumb
+{
+max-width: 80px;
+max-height: 80px;
+}

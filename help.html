@@ -6,16 +6,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
+  <link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
+  <!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
+  <link rel="stylesheet" href="big/css/bootstrap-image-gallery.min.css">
   <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
   <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/jquery-1.9.1.min.js"></script>
   <script type="text/javascript" src="javascripts/script.js"></script>
+  <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
+  <script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+  <script src="big/js/bootstrap-image-gallery.js"></script>
 
   <title>aSM 水木清华BBS的android客户端 | 帮助</title>
   <meta name="description" content="asm -  android client for newsmth">
-
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
 </head>
 
 <body>
@@ -25,40 +29,73 @@
       <h1 class="title">aSM - 帮助</h1>
     </header>
     <div id="container">
-      <p class="tagline">aSM - 水木清华BBS的android客户端</p>
+      <p class="tagline">aSM - 水木清华BBS的android客户端 | <a href="index.html">主页</a></p>
+      
+
       <div id="main" role="main">
         <article class="markdown-body">
+
 <h3>使用说明</h3>
-<p>
-请点击<a href="help.html">这里</a>查看使用说明
-</p>
-
-<h3>下载地址</h3>
-<p>
-Build Date: 2013-02-17
+<p>点击图片看屏幕截图和相关说明</p>
 <br>
-<a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
-</p>
+<div id="gallery" data-toggle="modal-gallery" data-target="#modal-gallery">
+<a data-gallery="gallery" href="screenshots/01.png" title="全站热点。下面的图标分别为：清空图片缓存、设置、刷新当前内容、切换日夜模式、关于">
+  <img src="screenshots/01.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/04.png" title="退出程序：在主界面连续按两次返回键">
+  <img src="screenshots/04.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/02.png" title="我的收藏夹：下面有最近访问版面列表">
+  <img src="screenshots/02.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/03.png" title="所有版面列表：输入版面中英文，可以自动提示补全">
+  <img src="screenshots/03.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/05.png" title="文章列表：向下拖动列表可刷新; 图标分别为：写文章、切换同主题/普通模式、刷新；按菜单键可搜索帖子">
+  <img src="screenshots/05.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/06.png" title="同主题阅读模式：点击屏幕上下部分或按音量键可滚屏；左右滑动可翻页；长按出菜单">
+  <img src="screenshots/06.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/07.png" title="帖子操作：长按帖子后弹出的菜单">
+  <img src="screenshots/07.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/08.png" title="附件照片的展示：点击图片可进入全屏看图模式">
+  <img src="screenshots/08.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/09.png" title="全屏看图模式：左右划动切换图片；双指缩放；长按出菜单">
+  <img src="screenshots/09.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/10.png" title="全屏看图模式：菜单">
+  <img src="screenshots/10.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/11.png" title="全屏看图模式：查看EXIF信息">
+  <img src="screenshots/11.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/12.png" title="设置">
+  <img src="screenshots/12.png" class="thumb"></a>
+
+<a data-gallery="gallery" href="screenshots/13.png" title="关于">
+  <img src="screenshots/13.png" class="thumb"></a>
+
+</div>
 
 
-<h3>更新历史</h3>
+<!-- modal-gallery is the modal dialog used for the image gallery -->
+<div id="modal-gallery" class="modal modal-gallery hide fade" tabindex="-1">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <p class="modal-title"></p>
+    </div>
+    <div class="modal-body"><div class="modal-image"></div></div>
+    <div class="modal-footer">
+        <a class="btn btn-primary modal-next">Next <i class="icon-arrow-right icon-white"></i></a>
+        <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i> Previous</a>
+        <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i> Slideshow</a>
+        <a class="btn modal-download" target="_blank"><i class="icon-download"></i> Download</a>
+    </div>
+</div>
 
-<h5>2013-02-17</h5>
-<ul>
-  <li>更新了UrlImageViewHelper库。原来附件里图片，缺省的显示大小是200X400，在高分辨率的屏幕下看起来效果不好；升级了之后，如果图片较大，可以充分利用屏幕了</li>
-  <li>增加了退出是否需要确认的设置；缺省需要确认退出；</li>
-  <li>在底部的工具栏中增加了夜间模式，这样可以快速切换白天、夜间模式了</li>
-  <li>缺省展开了水木十大</li>
-  <li>收藏夹里，首先显示“我的收藏夹”的内容并缺省展开，然后再显示最近访问的版块</li>
-</ul>
-
-
-<h3>原始项目地址</h3>
-
-<p>项目的原始地址位于： <a href="http://code.google.com/p/asm-android-client-for-newsmth/">http://code.google.com/p/asm-android-client-for-newsmth/</a>
-<br>
-本项目只是个人修改版。
-</p>
         </article>
       </div>
     </div>
