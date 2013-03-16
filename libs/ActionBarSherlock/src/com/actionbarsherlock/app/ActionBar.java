@@ -931,7 +931,7 @@ public abstract class ActionBar {
         }
 
         public LayoutParams(int gravity) {
-            this(WRAP_CONTENT, FILL_PARENT, gravity);
+            this(WRAP_CONTENT, MATCH_PARENT, gravity);
         }
 
         public LayoutParams(LayoutParams source) {

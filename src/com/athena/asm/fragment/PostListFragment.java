@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Editable;
@@ -178,8 +179,10 @@ public class PostListFragment extends SherlockFragment implements
 		m_viewModel = application.getPostListViewModel();
 		m_viewModel.registerViewModelChangeObserver(this);
 
-		this.m_screenHeight = getActivity().getWindowManager()
-				.getDefaultDisplay().getHeight();
+		// http://stackoverflow.com/questions/1016896/android-how-to-get-screen-dimensions
+		Point size = new Point();
+		getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+		this.m_screenHeight = size.y;
 
 		m_pageNoEditText = (EditText) postListView
 				.findViewById(R.id.edittext_page_no);

@@ -1,6 +1,5 @@
 package com.athena.asm.Adapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,7 +179,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.attachTextView.setText(Html.fromHtml(contentBuilder.toString()));
 		}
 
-		holder.dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getDate()));
+		holder.dateTextView.setText(StringUtility.getFormattedString(post.getDate()));
 
 		
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {

@@ -55,7 +55,7 @@ public class ReadMailAdapter extends BaseAdapter {
 		attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		TextView dateTextView = (TextView) layout.findViewById(R.id.PostDate);
-		dateTextView.setText(mail.getDate().toLocaleString());
+		dateTextView.setText(StringUtility.getFormattedString(mail.getDate()));
 		layout.setTag(mail);
 		
 		OnLongClickListener listener = new OnLongClickListener() {

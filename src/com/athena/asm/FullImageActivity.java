@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -294,8 +292,7 @@ public class FullImageActivity extends SherlockActivity
 						try {
 							String fileName;
 							if (m_imageName.equals("未命名")) {
-								DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-								String time = formatter.format(new Date());
+								String time = StringUtility.getFormattedString(new Date());
 								fileName = time + m_imageName + ".png";
 							} else {
 								fileName = m_imageName;

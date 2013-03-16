@@ -54,6 +54,16 @@ public class StringUtility {
     
     public static final String IS_NEW_MESSAGE = "isNewMessage";
 
+    private static SimpleDateFormat dateformat = null;
+
+    public static String getFormattedString(Date date){
+        if(dateformat == null)
+            dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(date != null)
+            return dateformat.format(date);
+        return "";
+    }
+
     /**
      * 从链接中提取相关参数
      */
