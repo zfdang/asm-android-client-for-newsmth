@@ -182,11 +182,6 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 
 		holder.dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getDate()));
 
-		holder.contentTextView.setOnLongClickListener(m_fragment);
-		layout.setOnLongClickListener(m_fragment);
-		
-		holder.contentTextView.setOnTouchListener(m_fragment);
-		layout.setOnTouchListener(m_fragment);
 		
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));

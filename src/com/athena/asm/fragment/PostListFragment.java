@@ -12,15 +12,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.Editable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,7 +47,6 @@ import com.athena.asm.Adapter.PostListAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
-import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.DeletePostTask;
 import com.athena.asm.util.task.ForwardPostToMailTask;
@@ -57,8 +56,8 @@ import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
 
 public class PostListFragment extends SherlockFragment implements
-		OnClickListener, OnTouchListener, OnLongClickListener,
-		OnGestureListener, BaseViewModel.OnViewModelChangObserver, RefreshEvent {
+		OnClickListener, OnTouchListener,
+		BaseViewModel.OnViewModelChangObserver, RefreshEvent {
 
 	private LayoutInflater m_inflater;
 
@@ -76,17 +75,10 @@ public class PostListFragment extends SherlockFragment implements
 	private int m_screenHeight;
 	private ListView m_listView;
 
-	private GestureDetector m_GestureDetector;
+	private GestureDetector m_gestureDetector;
 
 	private boolean m_isNewInstance = false;
 	private boolean m_isFromReplyOrAt = false;
-
-	private boolean m_isNewTouchStart = false;
-	private float m_touchStartX = 0;
-	private float m_touchStartY = 0;
-
-	private float m_touchCurrentX = 0;
-	private float m_touchCurrentY = 0;
 
 	private int m_startNumber = 0;
 
@@ -97,6 +89,69 @@ public class PostListFragment extends SherlockFragment implements
 	private ProgressDialogProvider m_progressDialogProvider;
 	private OnOpenActivityFragmentListener m_onOpenActivityFragmentListener;
 
+	// internal class for gesture detection
+	// http://stackoverflow.com/questions/3921138/gesture-in-listview-android
+    // if position change on Y axis > SWIPE_MAX_OFF_PATH, not swipe
+    private int SWIPE_MAX_OFF_PATH;
+    // if position change on X axis > SWIPE_MIN_DISTANCE, is swipe
+    private int SWIPE_MIN_DISTANCE;
+    // velocity must be larger than SWIPE_THRESHOLD_VELOCITY
+    private int SWIPE_THRESHOLD_VELOCITY;
+	class MyGestureDetector extends SimpleOnGestureListener {
+        @Override
+		public void onLongPress(MotionEvent e) {
+			super.onLongPress(e);
+
+			// get current view from position
+			int pos = m_listView.pointToPosition((int)e.getX(), (int)e.getY());
+			View v = m_listView.getChildAt(pos);
+
+			// trigger long click on the selected view
+			onLongClickOnView(v);
+		}
+
+		@Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            if (aSMApplication.getCurrentApplication().isTouchScroll()) {
+                int touchY = (int) e.getRawY();
+                float scale = (float) (m_screenHeight / 800.0);
+                if (touchY > 60 * scale && touchY < 390 * scale) {
+                    setListOffsetByPage(-1);
+                    return true;
+                } else if (touchY > 410 * scale && touchY < 740 * scale) {
+                    setListOffsetByPage(1);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+
+                // right to left swipe
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+                    m_nextButton.performClick();
+                  return true;
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+                    m_preButton.performClick();
+                  return true;
+                }
+            } catch (Exception e) {
+                // nothing
+                Log.d("onFling", e.toString());
+            }
+            return false;
+        }
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,6 +159,12 @@ public class PostListFragment extends SherlockFragment implements
 
 		setRetainInstance(true);
 		m_isNewInstance = true;
+
+		// use density-aware measurements.
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        SWIPE_MIN_DISTANCE = (int)(100.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_MAX_OFF_PATH = (int)(200.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_THRESHOLD_VELOCITY = (int)(150.0f * dm.densityDpi / 160.0f + 0.5);
 	}
 
 	@Override
@@ -152,12 +213,12 @@ public class PostListFragment extends SherlockFragment implements
 				StringUtility.BOARD_TYPE, 0));
 		m_viewModel.setIsToRefreshBoard(false);
 
-		m_GestureDetector = new GestureDetector(this);
+		m_gestureDetector = new GestureDetector(m_listView.getContext(), new MyGestureDetector());
+		m_listView.setOnTouchListener(this);
 
 		return postListView;
 	}
 
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -381,40 +442,6 @@ public class PostListFragment extends SherlockFragment implements
 
 	}
 
-	@Override
-	public boolean onDown(MotionEvent e) {
-		m_isNewTouchStart = true;
-		m_touchStartX = e.getX();
-		m_touchStartY = e.getY();
-		m_touchCurrentX = m_touchStartX;
-		m_touchCurrentY = m_touchStartY;
-		return false;
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		m_touchCurrentX += distanceX;
-		m_touchCurrentY += distanceY;
-		return true;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-
-	}
-
 	private void setListOffsetByPage(int jump) {
 		int offset = (int)(m_listView.getHeight() * 0.95);
 		if (jump == -1) {
@@ -424,29 +451,11 @@ public class PostListFragment extends SherlockFragment implements
 		}
 	}
 
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		if (aSMApplication.getCurrentApplication().isTouchScroll()) {
-			int touchY = (int) e.getRawY();
-			float scale = (float) (m_screenHeight / 800.0);
-			if (touchY > 60 * scale && touchY < 390 * scale) {
-				setListOffsetByPage(-1);
-			} else if (touchY > 410 * scale && touchY < 740 * scale) {
-				setListOffsetByPage(1);
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public boolean onLongClick(View v) {
+	// this method is called by guesture.onLongPress()
+	public boolean onLongClickOnView(View v) {
 		if (m_viewModel.getSmthSupport().getLoginStatus()) {
-			RelativeLayout relativeLayout = null;
-			if (v.getId() == R.id.PostContent) {
-				relativeLayout = (RelativeLayout) v.getParent();
-			} else {
-				relativeLayout = (RelativeLayout) v;
-			}
+			RelativeLayout relativeLayout = (RelativeLayout) v;
+
 			final String authorID = (String) ((TextView) relativeLayout
 					.findViewById(R.id.AuthorID)).getText();
 			final Post post = ((PostListAdapter.ViewHolder) relativeLayout
@@ -564,8 +573,9 @@ public class PostListFragment extends SherlockFragment implements
 			});
 			AlertDialog alert = builder.create();
 			alert.show();
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -575,29 +585,8 @@ public class PostListFragment extends SherlockFragment implements
 			return false;
 		}
 		
-		boolean isConsumed = m_GestureDetector.onTouchEvent(event);
-		if (event.getAction() == MotionEvent.ACTION_CANCEL
-				|| event.getAction() == MotionEvent.ACTION_UP) {
-			if (m_isNewTouchStart) {
-				m_isNewTouchStart = false;
-				final int flingMinXDistance = 100, flingMaxYDistance = 100;
-				if (m_touchCurrentX - m_touchStartX > flingMinXDistance
-						&& Math.abs(m_touchCurrentY - m_touchStartY) < flingMaxYDistance) {
-					// Fling left
-					Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT)
-							.show();
-					m_nextButton.performClick();
-				} else if (m_touchStartX - m_touchCurrentX > flingMinXDistance
-						&& Math.abs(m_touchStartY - m_touchCurrentY) < flingMaxYDistance) {
-					// Fling right
-					Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT)
-							.show();
-					m_preButton.performClick();
-				}
-			}
-
-		}
-		return isConsumed;
+		m_gestureDetector.onTouchEvent(event);
+		return false;
 	}
 
 	private void refreshPostList() {
@@ -785,5 +774,4 @@ public class PostListFragment extends SherlockFragment implements
 		}
 		return false;
 	}
-
 }
