@@ -239,9 +239,9 @@ a.zip span {
   -webkit-transition: opacity ease-in-out 0.3s;
 }
 
-a.tar,
-a.tar span {
-  background: transparent url(../images/tar.png) no-repeat 0 0;
+a.apk,
+a.apk span {
+  background: transparent url(../images/apk.png) no-repeat 0 0;
   width: 30px;
   height: 21px;
   opacity: 0.8;
@@ -266,7 +266,7 @@ a.code {
 }
 
 a.zip:hover,
-a.tar:hover,
+a.apk:hover,
 a.code:hover {
   opacity: 1;
   -moz-opacity: 1;
