@@ -6,12 +6,17 @@ aSM -- android上的水木清华客户端
 
 下载地址
 ==============================
-Build Date: 2013-03-15.
+Build Date: 2013-03-16.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2013-03-16:
+------------------------------
+1. 优化了加载信息的进程，防止多次加载
+2. 重构了同主题时，gesture/touch/longclick listener, 使得页面上下、左右切换更顺畅
 
 2013-03-15:
 ------------------------------
