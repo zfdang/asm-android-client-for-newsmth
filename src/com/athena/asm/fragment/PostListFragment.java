@@ -27,8 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -105,10 +103,19 @@ public class PostListFragment extends SherlockFragment implements
 
 			// get current view from position
 			int pos = m_listView.pointToPosition((int)e.getX(), (int)e.getY());
-			View v = m_listView.getChildAt(pos);
 
-			// trigger long click on the selected view
-			onLongClickOnView(v);
+			// do not get view from listview, since it might be null
+			// http://stackoverflow.com/questions/6766625/listview-getchildat-returning-null-for-visible-children
+			// int start = m_listView.getFirstVisiblePosition();
+			// int end = m_listView.getLastVisiblePosition();
+			// if( pos >= start && pos <= end){
+			// 	View v = (View) m_listView.getChildAt(pos - start);
+			// 	// trigger long click on the selected view
+			// 	onLongClickOnView(v);
+			// }
+
+			Post post = m_viewModel.getPostList().get(pos);
+			onLongClickOnPost(post);
 		}
 
 		@Override
@@ -164,7 +171,7 @@ public class PostListFragment extends SherlockFragment implements
 		// use density-aware measurements.
         DisplayMetrics dm = getResources().getDisplayMetrics();
         SWIPE_MIN_DISTANCE = (int)(100.0f * dm.densityDpi / 160.0f + 0.5);
-        SWIPE_MAX_OFF_PATH = (int)(200.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_MAX_OFF_PATH = (int)(150.0f * dm.densityDpi / 160.0f + 0.5);
         SWIPE_THRESHOLD_VELOCITY = (int)(150.0f * dm.densityDpi / 160.0f + 0.5);
 	}
 
@@ -455,15 +462,12 @@ public class PostListFragment extends SherlockFragment implements
 	}
 
 	// this method is called by guesture.onLongPress()
-	public boolean onLongClickOnView(View v) {
+	public boolean onLongClickOnPost(final Post post) {
 		if (m_viewModel.getSmthSupport().getLoginStatus()) {
-			RelativeLayout relativeLayout = (RelativeLayout) v;
-
-			final String authorID = (String) ((TextView) relativeLayout
-					.findViewById(R.id.AuthorID)).getText();
-			final Post post = ((PostListAdapter.ViewHolder) relativeLayout
-					.getTag()).post;
 			final Post firstPost = m_viewModel.getPostList().get(0);
+			final String authorID = post.getAuthor();
+
+			// popup menu
 			List<String> itemList = new ArrayList<String>();
 			itemList.add(getString(R.string.post_reply_post));
 			itemList.add(getString(R.string.post_reply_mail));
