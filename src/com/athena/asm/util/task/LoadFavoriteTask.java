@@ -54,7 +54,7 @@ public class LoadFavoriteTask extends AsyncTask<String, Integer, String> {
 		
 		// 2. if fail to read from file, read from web
 		boolean isLoadFromWeb = false;
-		if (realFavList == null) {
+		if (realFavList == null || realFavList.size() == 0) {
 			realFavList = m_viewModel.updateFavList(realFavList);
 			// Log.d("LoadFavoriteTask", "load favlist from web");
 			isLoadFromWeb = true;
