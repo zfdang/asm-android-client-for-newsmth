@@ -12,3 +12,7 @@ Contributing to the project is both welcomed and encouraged. To do so just do th
 That's it. 
 
 If you don't feel comfortable forking the project you can also [submit an issue](https://github.com/zfdang/asm-android-client-for-newsmth/issues).
+
+
+使用Fork+PULL的模式参与开发
+------------------------------------
