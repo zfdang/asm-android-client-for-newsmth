@@ -477,7 +477,7 @@ public class PostListFragment extends SherlockFragment implements
 			itemList.add(getString(R.string.post_foward_self));
 			itemList.add(getString(R.string.post_foward_external));
 			itemList.add(getString(R.string.post_group_foward_external));
-			if (post.getAuthor().equals(m_viewModel.getSmthSupport().userid)) {
+			if (authorID.compareToIgnoreCase(m_viewModel.getSmthSupport().userid) == 0) {
 				itemList.add(getString(R.string.post_edit_post));
 				itemList.add(getString(R.string.post_delete_post));
 			}
