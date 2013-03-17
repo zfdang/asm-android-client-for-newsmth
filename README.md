@@ -1,9 +1,9 @@
-aSM: Android Client for newsmth
+aSM: Android Client for NewSMTH
 ==============================
 
 aSM -- android上的水木清华客户端
 
-项目和使用说明
+项目介绍和使用说明
 ------------------------------
 http://asm.zfdang.com/
 
@@ -152,8 +152,3 @@ Build Date: 2013-03-17.
 3. 在底部的工具栏中增加了夜间模式，这样可以快速切换白天、夜间模式了
 4. 缺省展开了水木十大
 5. 收藏夹里，首先显示“我的收藏夹”的内容并缺省展开，然后再显示最近访问的版块
-
-Original project home
-==============================
-
-http://code.google.com/p/asm-android-client-for-newsmth/
