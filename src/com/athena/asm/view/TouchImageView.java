@@ -42,6 +42,7 @@ public class TouchImageView extends ImageView {
 
     int viewWidth, viewHeight;
     static final int CLICK = 3;
+    static final int LONG_CLICK = 10;
     float saveScale = 1f;
     protected float origWidth, origHeight;
     int oldMeasuredWidth, oldMeasuredHeight;
@@ -174,7 +175,7 @@ public class TouchImageView extends ImageView {
                             fixTrans();
                             last.set(curr.x, curr.y);
                         }
-                        if (xDiff > CLICK || yDiff > CLICK) {
+                        if (xDiff > LONG_CLICK || yDiff > LONG_CLICK) {
                             clearCheckForLongClick();
                         }
                         break;
