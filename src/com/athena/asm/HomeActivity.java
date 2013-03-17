@@ -38,6 +38,7 @@ import com.athena.asm.fragment.MailFragment;
 import com.athena.asm.fragment.ProfileFragment;
 import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.task.CheckUpdateAsyncTask;
 import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -253,13 +254,31 @@ public class HomeActivity extends SherlockFragmentActivity
 	    Linkify.addLinks(msg, Linkify.WEB_URLS);
 
 	    final AlertDialog dlg = new AlertDialog.Builder(this)
-        .setPositiveButton(android.R.string.ok, null)
         .setIcon(R.drawable.icon)
         .setTitle(R.string.about_title)
         .setMessage( msg )
         .create();
 
-	    dlg.show();
+		dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// do nothing here
+					}
+				});
+		dlg.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.about_upgrade),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						CheckUpdateAsyncTask task = new CheckUpdateAsyncTask(HomeActivity.this);
+						task.execute();
+						dlg.dismiss();
+					}
+				});
+
+		dlg.show();
 
 		// Make the textview clickable. Must be called after show()
 	    ((TextView)dlg.findViewById(android.R.id.message)).

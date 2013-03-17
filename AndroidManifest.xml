@@ -88,6 +88,7 @@
 
         <service android:name=".service.LogoutService" />
         <service android:name=".service.CheckMessageService" />
+        <service android:name=".service.UpdateService" />
     </application>
 
 </manifest>
