@@ -16,3 +16,5 @@ If you don't feel comfortable forking the project you can also [submit an issue]
 
 使用Fork+PULL的模式参与开发
 ------------------------------------
+详细方法请参考:
+http://www.worldhello.net/gotgithub/04-work-with-others/010-fork-and-pull.html
