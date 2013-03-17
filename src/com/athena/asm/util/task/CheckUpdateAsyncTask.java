@@ -20,9 +20,6 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
-import com.athena.asm.R;
-import com.athena.asm.service.UpdateService;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -35,6 +32,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.athena.asm.R;
+import com.athena.asm.service.UpdateService;
 
 public class CheckUpdateAsyncTask extends AsyncTask<Integer, Integer, String> {
 
@@ -94,10 +94,13 @@ public class CheckUpdateAsyncTask extends AsyncTask<Integer, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		if (remoteVersionName == null) {
+			// can't get remote version
 			Toast.makeText(mContext, NO_REMOTE_VERSION, Toast.LENGTH_SHORT).show();
 		} else if (remoteVersionName.equals(localVersionName)) {
+			// no new version
 			Toast.makeText(mContext, NO_NEW_UPDATE, Toast.LENGTH_SHORT).show();
 		} else {
+			// new version
 			showNoticeDialog();
 		}
 	}
@@ -110,7 +113,7 @@ public class CheckUpdateAsyncTask extends AsyncTask<Integer, Integer, String> {
 		String title = String.format(NEW_UPDATE_AVAILABLE, localVersionName, remoteVersionName);
 		builder.setTitle("软件版本更新").setMessage(title);
 
-		builder.setPositiveButton("下载", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("立即下载", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// 开启更新服务UpdateService
@@ -132,13 +135,6 @@ public class CheckUpdateAsyncTask extends AsyncTask<Integer, Integer, String> {
 		noticeDialog.show();
 	}
 
-	/**
-	 * 获取升级APK详细信息 {apkVersion:
-	 * '1.10',apkVerCode:2,apkName:'1.1.apk',apkDownloadUrl:'http://localhost:8080/myapp/1.1.apk
-	 * ' }
-	 * 
-	 * @return
-	 */
 	private void getUpateApkInfo() {
 		// read lated version from this URL:
 		// https://raw.github.com/zfdang/asm-android-client-for-newsmth/master/AndroidManifest.xml
@@ -187,7 +183,7 @@ public class CheckUpdateAsyncTask extends AsyncTask<Integer, Integer, String> {
 			}
 		}
 		// for testing purpose
-		// remoteVersionName = "2013.03.18";
+//		remoteVersionName = "2013.03.18";
 	}
 
 }

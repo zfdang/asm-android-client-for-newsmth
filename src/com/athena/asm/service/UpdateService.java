@@ -17,21 +17,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.widget.RemoteViews;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
 import com.athena.asm.util.FileUtil;
 
-/***
- * 更新版本
- * 
- * @author zhangjia
- * 
- */
 public class UpdateService extends Service {
 	private static final int TIMEOUT = 10 * 1000;// 超时
-	private static final String down_url = "https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk";
+	private static final String APK_URL = "https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk";
 
 	private static final int DOWN_IN_PROGRESS = 0;
 	private static final int DOWN_OK = 1;
@@ -41,7 +34,7 @@ public class UpdateService extends Service {
 
 	private NotificationManager mNotificationManager;
 	private Notification mNotification;
-	private RemoteViews mContentView;
+	private Notification.Builder mBuilder;
 
 	private Intent mUpdateIntent;
 	private PendingIntent mPendingIntent;
@@ -76,8 +69,11 @@ public class UpdateService extends Service {
 				intent.setDataAndType(uri, "application/vnd.android.package-archive");
 				mPendingIntent = PendingIntent.getActivity(UpdateService.this, 0, intent, 0);
 
-				mNotification.flags = Notification.FLAG_AUTO_CANCEL;
-				mNotification.setLatestEventInfo(UpdateService.this, app_name, "下载成功，点击安装", mPendingIntent);
+				mBuilder.setContentText("下载成功，点击安装");
+				mBuilder.setProgress(100, 100, true);
+				mBuilder.setAutoCancel(true);
+				mNotification = mBuilder.getNotification();
+				mNotification.contentIntent = mPendingIntent;
 
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
@@ -86,13 +82,19 @@ public class UpdateService extends Service {
 			case DOWN_IN_PROGRESS:
 				int updateCount = msg.arg1;
 				// update progress bar
-				mContentView.setTextViewText(R.id.notificationPercent, updateCount + "%");
-				mContentView.setProgressBar(R.id.notificationProgress, 100, updateCount, false);
+				mBuilder.setContentText(updateCount + "%");
+				mBuilder.setProgress(100, updateCount, false);
+				mNotification = mBuilder.getNotification();
 				// show notification
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+				stopService(mUpdateIntent);
 				break;
 			case DOWN_ERROR:
-				mNotification.setLatestEventInfo(UpdateService.this, app_name, "下载失败", mPendingIntent);
+				mBuilder.setContentText("下载失败");
+				mBuilder.setProgress(100, 100, true);
+				mBuilder.setAutoCancel(true);
+				mNotification = mBuilder.getNotification();
+				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 				break;
 			default:
 				stopService(mUpdateIntent);
@@ -101,7 +103,7 @@ public class UpdateService extends Service {
 			}
 		}
 	};
-	
+
 	/***
 	 * 开线程下载
 	 */
@@ -114,7 +116,7 @@ public class UpdateService extends Service {
 			public void run() {
 
 				try {
-					long downloadSize = downloadUpdateFile(down_url, FileUtil.updateFile.toString());
+					long downloadSize = downloadUpdateFile(APK_URL, FileUtil.updateFile.toString());
 					if (downloadSize > 0) {
 						// 下载成功
 						message.what = DOWN_OK;
@@ -134,19 +136,15 @@ public class UpdateService extends Service {
 	 */
 
 	public void createNotification() {
-		mNotification = new Notification.Builder(this)
-		// .setContentTitle("context title")
-		// .setContentText("context text")
-				.setSmallIcon(R.drawable.icon).setTicker(getString(R.string.update_service_ticker)).getNotification();
-
-		mNotification.flags = Notification.FLAG_ONGOING_EVENT;
-
-		// 指定个性化视图
-		mContentView = new RemoteViews(getPackageName(), R.layout.notification_item);
-		mContentView.setTextViewText(R.id.notificationTitle, "正在下载 aSM.apk");
-		mContentView.setTextViewText(R.id.notificationPercent, "0%");
-		mContentView.setProgressBar(R.id.notificationProgress, 100, 0, false);
-		mNotification.contentView = mContentView;
+		mBuilder = new Notification.Builder(this)
+		 .setContentTitle("正在下载 aSM.apk")
+		 .setContentText("0%")
+		 .setProgress(100, 0, false)
+		 .setSmallIcon(R.drawable.icon)
+		 .setOngoing(true)
+		 .setTicker(getString(R.string.update_service_ticker));
+		
+		mNotification = mBuilder.getNotification();
 
 		mUpdateIntent = new Intent(this, HomeActivity.class);
 		mPendingIntent = PendingIntent.getActivity(this, 0, mUpdateIntent, 0);
@@ -192,7 +190,7 @@ public class UpdateService extends Service {
 			 */
 			if (updateCount == 0 || (downloadCount * 100 / totalSize - down_step) >= updateCount) {
 				updateCount += down_step;
-				
+
 				// call handler to upgrade progree bar
 				final Message message = new Message();
 				message.what = DOWN_IN_PROGRESS;
