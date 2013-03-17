@@ -87,6 +87,8 @@
 	 <!-- 关于 -->
 	<string name="about_title">关于aSM</string>
 	<string name="about_content">Build: %s.\naSM是水木社区(newsmth.net)的一个Android客户端程序。\n\n获取更新和使用说明:\nhttp://asm.zfdang.com\n\nBY leo18, r7000@SMTH\nModified by zfdang</string>
+    <string name="about_close">关闭</string>
+    <string name="about_upgrade">检查更新</string>
 	<!-- 设置 -->
 	<string name="setting_remember_user">记住密码</string>
 	<string name="setting_remember_user_details">保存在登录页输入的用户名及密码</string>
@@ -157,6 +159,10 @@
     <string name="image_info_flash">闪光</string>
     <string name="image_info_iso">ISO</string>
     <string name="image_info_white_balance">白平衡</string>
+    <!-- 下拉刷新 -->
+    <string name="update_service_checking">检查新版本中...</string>
+    <string name="update_service_ticker">aSM - 开始下载最新版APK...</string>
+
 </resources>
 
 
