@@ -9,7 +9,7 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-03-17.
+Build Date: 2013-03-18.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
@@ -19,7 +19,7 @@ Build Date: 2013-03-17.
 2013-03-18:
 ------------------------------
 1. 在“关于”对话框里，增加了检测新版本的功能
-2. 在全屏看图的模式下，允许菜单键使用长按弹出的功能
+2. 在全屏看图的模式下，除了长按出菜单外，使用菜单键也可以弹出菜单
 
 
 2013-03-17:
