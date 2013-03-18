@@ -236,6 +236,31 @@ public class SmthSupport {
 
 	}
 
+    /**
+     * 根据boardName来获取boardID
+     */
+    public String getBoardIDFromName(String boardName) {
+        String url;
+            url = "http://www.newsmth.net/bbsdoc.php?board=" + boardName;
+
+        String content = crawler.getUrlContent(url);
+        if (content == null) {
+            return "";
+        }
+
+        // extrat board ID
+        Pattern pattern = Pattern.compile("new docWriter\\('(\\w+)',(\\d+),");
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            String name = matcher.group(1);
+            String id = matcher.group(2);
+            if(boardName.equals(name)){
+                return id;
+            }
+        }
+        return "";
+    }
+
 	public String checkNewReplyOrAt() {
 		String result = null;
 		String content = crawler.getUrlContentFromMobile("http://m.newsmth.net/");

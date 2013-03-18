@@ -141,6 +141,12 @@ public class SubjectListViewModel extends BaseViewModel {
 	}
 
 	public List<Subject> getSubjectListFromSmth(boolean isReloadPageNo) {
+        String boardID = m_currentBoard.getBoardID();
+        if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
+            m_currentBoard.setBoardID(m_smthSupport.getBoardIDFromName(m_currentBoard.getEngName()));
+            // Log.e("getSubjectListFromSmth",
+            //         String.format("update boardid from %s to %s", boardID, m_currentBoard.getBoardID()));
+        }
 		return m_smthSupport.getSubjectListFromMobile(m_currentBoard, m_boardType, isReloadPageNo, aSMApplication
 				.getCurrentApplication().getBlackList());
 	}
