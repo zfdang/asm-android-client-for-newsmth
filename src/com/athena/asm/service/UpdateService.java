@@ -69,7 +69,9 @@ public class UpdateService extends Service {
 				intent.setDataAndType(uri, "application/vnd.android.package-archive");
 				mPendingIntent = PendingIntent.getActivity(UpdateService.this, 0, intent, 0);
 
-				mBuilder.setContentText("下载成功，点击安装");
+				mBuilder.setContentTitle(getString(R.string.update_service_title_end));
+				mBuilder.setContentText(getString(R.string.update_service_content_end));
+				mBuilder.setTicker(getString(R.string.update_service_ticker_end));
 				mBuilder.setProgress(100, 100, true);
 				mBuilder.setAutoCancel(true);
 				mNotification = mBuilder.getNotification();
@@ -137,12 +139,12 @@ public class UpdateService extends Service {
 
 	public void createNotification() {
 		mBuilder = new Notification.Builder(this)
-		 .setContentTitle("正在下载 aSM.apk")
+		 .setContentTitle(getString(R.string.update_service_title_start))
 		 .setContentText("0%")
 		 .setProgress(100, 0, false)
 		 .setSmallIcon(R.drawable.icon)
 		 .setOngoing(true)
-		 .setTicker(getString(R.string.update_service_ticker));
+		 .setTicker(getString(R.string.update_service_ticker_start));
 		
 		mNotification = mBuilder.getNotification();
 
@@ -191,7 +193,7 @@ public class UpdateService extends Service {
 			if (updateCount == 0 || (downloadCount * 100 / totalSize - down_step) >= updateCount) {
 				updateCount += down_step;
 
-				// call handler to upgrade progree bar
+				// call handler to upgrade progress bar
 				final Message message = new Message();
 				message.what = DOWN_IN_PROGRESS;
 				message.arg1 = updateCount;

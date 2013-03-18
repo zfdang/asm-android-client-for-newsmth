@@ -161,7 +161,11 @@
     <string name="image_info_white_balance">白平衡</string>
     <!-- 下拉刷新 -->
     <string name="update_service_checking">检查新版本中...</string>
-    <string name="update_service_ticker">aSM - 开始下载最新版APK...</string>
+    <string name="update_service_title_start">正在下载aSM.apk...</string>
+    <string name="update_service_title_end">aSM.apk下载完成!</string>
+    <string name="update_service_content_end">点击安装...</string>
+    <string name="update_service_ticker_start">aSM - 开始下载最新版APK...</string>
+    <string name="update_service_ticker_end">aSM - APK下载成功，点击安装...</string>
 
 </resources>
 
