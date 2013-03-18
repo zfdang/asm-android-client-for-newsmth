@@ -215,6 +215,15 @@ public class StringUtility {
             } else {
                 linebreak = 0;
             }
+
+            // ※ 修改:·mozilla 于 Mar 18 13:42:45 2013 修改本文·[FROM: 220.249.41.*]
+            // ※ 来源:·水木社区 newsmth.net·[FROM: 220.249.41.*]
+            // 修改:mozilla FROM 220.249.41.*
+            // FROM 220.249.41.*
+            if(line.startsWith("※ 修改:") || line.startsWith("※ 来源:")){
+                // we don't expect these lines from mobile content
+                continue;
+            }
             sb.append(line).append("<br />");
         }
 
@@ -291,11 +300,19 @@ public class StringUtility {
                 linebreak = 0;
             }
 
-            if (line.contains("※ 来源:·水木社区")) {
-                // [36m※ 来源:·水木社区 http://www.newsmth.net·[FROM: 113.88.18.*]
+			// [36m※ 修改:・mozilla 于 Mar 18 13:42:45 2013 修改本文・[FROM: 220.249.41.*]\r[m\n\r
+			// [m\r[1;31m※ 来源:・水木社区 newsmth.net・[FROM: 220.249.41.*]\r[m\n
+            if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
+                // remove ascii control first
+                Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
+                Matcher cMatcher = cPattern.matcher(line);
+                if(cMatcher.find()){
+                    line = cMatcher.group(0);
+                }
+
                 // find ip address here
                 Pattern myipPattern = Pattern
-                        .compile("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)\\S+");
+                        .compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
                 Matcher myipMatcher = myipPattern.matcher(line);
                 if (myipMatcher.find()) {
                     String ipl = myipMatcher.group(1);
