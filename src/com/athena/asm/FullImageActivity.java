@@ -32,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -39,7 +41,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 public class FullImageActivity extends SherlockActivity
 	implements OnLongClickListener, OnPageChangeListener {
 
-    private ViewPager vp;
+	private ViewPager vp;
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
@@ -76,6 +78,37 @@ public class FullImageActivity extends SherlockActivity
 
 //		setRequestedOrientation(aSMApplication.ORIENTATION);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+	}
+
+	public static final int MENU_EXIF = Menu.FIRST;
+	public static final int MENU_SAVE = Menu.FIRST + 1;
+	public static final int MENU_BACK = Menu.FIRST + 2;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_EXIF, Menu.NONE, getString(R.string.full_image_information));
+		menu.add(0, MENU_SAVE, Menu.NONE, getString(R.string.full_image_save));
+		menu.add(0, MENU_BACK, Menu.NONE, getString(R.string.full_image_back));
+
+		return super.onCreateOptionsMenu(menu);
+    }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		updateImageInfoByIndex();
+
+		switch (item.getItemId()) {
+		case MENU_EXIF:
+			showExifDialog();
+			break;
+		case MENU_SAVE:
+			saveImage();
+			break;
+		case MENU_BACK:
+			onBackPressed();
+			break;
+		}
+		return true;
 	}
 
     /**
@@ -223,15 +256,103 @@ public class FullImageActivity extends SherlockActivity
 		}
 	}
 
+	void showExifDialog(){
+		// show exif information dialog
+		LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.image_info, (ViewGroup)findViewById(R.id.image_info_layout));
+        try {
+			String filename = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
+	        File file = new File(getExternalFilesDir(null), filename);
+	        String sFileName =  file.getAbsolutePath();
+
+			ExifInterface exif = new ExifInterface(sFileName);
+			// basic information
+			setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
+			setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
+			setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
+
+			// get filesize
+			FileInputStream fis = new FileInputStream(file);
+			int filesize = fis.available();
+			fis.close();
+			TextView tv = (TextView) layout.findViewById(R.id.ii_size);
+			if(tv != null) {
+				tv.setText(FileUtils.byteCountToDisplaySize(filesize));
+			}
+
+			// capture information
+			setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
+			setImageAttributeFromExif(layout, R.id.ii_model, exif, ExifInterface.TAG_MODEL);
+			setImageAttributeFromExif(layout, R.id.ii_focal_length, exif, ExifInterface.TAG_FOCAL_LENGTH);
+			setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_APERTURE);
+			setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
+			setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
+			setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO);
+			setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
+       } catch (IOException e){
+           Log.d("read ExifInfo", "can't read Exif information");
+       }
+
+       new AlertDialog.Builder(FullImageActivity.this).setTitle("图片信息").setView(layout)
+         .setPositiveButton("确定", null)
+         .show();
+	}
+
+	void saveImage(){
+		// save image to sdcard
+		try {
+			String fileName;
+			if (m_imageName.equals("未命名")) {
+				String time = StringUtility.getFormattedString(new Date());
+				fileName = time + m_imageName + ".png";
+			} else {
+				fileName = m_imageName;
+			}
+
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				String path = Environment.getExternalStorageDirectory().getPath() + "/aSM/images/";
+				File dir = new File(path);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				File file = new File(getExternalFilesDir(null),
+					UrlImageViewHelper.getFilenameForUrl(m_imageUrl));
+				FileInputStream fis = new FileInputStream(file);
+				FileOutputStream fos = new FileOutputStream(path + fileName);
+
+				BufferedInputStream bufr = new BufferedInputStream(fis);
+				BufferedOutputStream bufw = new BufferedOutputStream(fos);
+
+				int len = 0;
+				byte[] buf = new byte[1024];
+				while ((len = bufr.read(buf)) != -1) {
+					bufw.write(buf, 0, len);
+					bufw.flush();
+				}
+				bufw.close();
+				bufr.close();
+
+				Toast.makeText(FullImageActivity.this, "图片已存为SD卡下aSM/images/" + fileName,
+						Toast.LENGTH_SHORT).show();
+			}
+		} catch (Exception e) {
+			Toast.makeText(FullImageActivity.this, "保存时出现未知错误.", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	void updateImageInfoByIndex(){
+		// update imageName and imageURL
+		m_imageName = m_imageNames.get(m_imageIdx);
+        if (m_imageName.trim().length() == 0) {
+            m_imageName = "未命名";
+        }
+        m_imageUrl = m_imageUrls.get(m_imageIdx);
+	}
 
 	@Override
 	public boolean onLongClick(View arg0) {
-			// update imageName and imageURL
-			m_imageName = m_imageNames.get(m_imageIdx);
-            if (m_imageName.trim().length() == 0) {
-                m_imageName = "未命名";
-            }
-            m_imageUrl = m_imageUrls.get(m_imageIdx);
+			updateImageInfoByIndex();
 
             // build menu for long click
 			List<String> itemList = new ArrayList<String>();
@@ -247,90 +368,12 @@ public class FullImageActivity extends SherlockActivity
 				public void onClick(DialogInterface dialog, int item) {
 					switch (item) {
 					case 0:
-						// show exif information dialog
-						LayoutInflater inflater = getLayoutInflater();
-			            View layout = inflater.inflate(R.layout.image_info, (ViewGroup)findViewById(R.id.image_info_layout));
-			            try {
-			            	String filename = UrlImageViewHelper.getFilenameForUrl(m_imageUrl);
-					        File file = new File(getExternalFilesDir(null), filename);
-					        String sFileName =  file.getAbsolutePath();
-
-							ExifInterface exif = new ExifInterface(sFileName);
-							// basic information
-							setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
-							setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
-							setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);
-
-							// get filesize
-							FileInputStream fis = new FileInputStream(file);
-							int filesize = fis.available();
-							fis.close();
-							TextView tv = (TextView) layout.findViewById(R.id.ii_size);
-							if(tv != null) {
-								tv.setText(FileUtils.byteCountToDisplaySize(filesize));
-							}
-
-							// capture information
-							setImageAttributeFromExif(layout, R.id.ii_make, exif, ExifInterface.TAG_MAKE);
-							setImageAttributeFromExif(layout, R.id.ii_model, exif, ExifInterface.TAG_MODEL);
-							setImageAttributeFromExif(layout, R.id.ii_focal_length, exif, ExifInterface.TAG_FOCAL_LENGTH);
-							setImageAttributeFromExif(layout, R.id.ii_aperture, exif, ExifInterface.TAG_APERTURE);
-							setImageAttributeFromExif(layout, R.id.ii_exposure_time, exif, ExifInterface.TAG_EXPOSURE_TIME);
-							setImageAttributeFromExif(layout, R.id.ii_flash, exif, ExifInterface.TAG_FLASH);
-							setImageAttributeFromExif(layout, R.id.ii_iso, exif, ExifInterface.TAG_ISO);
-							setImageAttributeFromExif(layout, R.id.ii_white_balance, exif, ExifInterface.TAG_WHITE_BALANCE);
-			           } catch (IOException e){
-			               Log.d("read ExifInfo", "can't read Exif information");
-			           }
-
-			           new AlertDialog.Builder(FullImageActivity.this).setTitle("图片信息").setView(layout)
-			             .setPositiveButton("确定", null)
-			             .show();
+						showExifDialog();
 			           break;
 					case 1:
-						// save image to sdcard
-						try {
-							String fileName;
-							if (m_imageName.equals("未命名")) {
-								String time = StringUtility.getFormattedString(new Date());
-								fileName = time + m_imageName + ".png";
-							} else {
-								fileName = m_imageName;
-							}
-
-							if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-								String path = Environment.getExternalStorageDirectory().getPath() + "/aSM/images/";
-								File dir = new File(path);
-								if (!dir.exists()) {
-									dir.mkdirs();
-								}
-
-								File file = new File(getExternalFilesDir(null),
-									UrlImageViewHelper.getFilenameForUrl(m_imageUrl));
-								FileInputStream fis = new FileInputStream(file);
-								FileOutputStream fos = new FileOutputStream(path + fileName);
-
-								BufferedInputStream bufr = new BufferedInputStream(fis);
-								BufferedOutputStream bufw = new BufferedOutputStream(fos);
-
-								int len = 0;
-								byte[] buf = new byte[1024];
-								while ((len = bufr.read(buf)) != -1) {
-									bufw.write(buf, 0, len);
-									bufw.flush();
-								}
-								bufw.close();
-								bufr.close();
-
-								Toast.makeText(FullImageActivity.this, "图片已存为SD卡下aSM/images/" + fileName,
-										Toast.LENGTH_SHORT).show();
-							}
-						} catch (Exception e) {
-							Toast.makeText(FullImageActivity.this, "保存时出现未知错误.", Toast.LENGTH_SHORT).show();
-						}
+						saveImage();
 						break;
 					case 2:
-						// quit
 						onBackPressed();
 						break;
 					default:
