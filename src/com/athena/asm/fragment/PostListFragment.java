@@ -209,9 +209,10 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_viewModel.registerViewModelChangeObserver(this);
 
         // http://stackoverflow.com/questions/1016896/android-how-to-get-screen-dimensions
-        Point size = new Point();
-        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
-        this.m_screenHeight = size.y;
+//        Point size = new Point();
+//        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+//        this.m_screenHeight = size.y;
+        this.m_screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
         m_pageNumberEditText = (EditText) postListView.findViewById(R.id.edittext_page_no);
         m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
