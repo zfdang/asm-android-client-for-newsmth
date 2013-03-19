@@ -185,6 +185,7 @@ public class UpdateService extends Service {
 		outputStream = new FileOutputStream(file, false);// 文件存在则覆盖掉
 		byte buffer[] = new byte[1024];
 		int readsize = 0;
+		final Message message = new Message();
 		while ((readsize = inputStream.read(buffer)) != -1) {
 			outputStream.write(buffer, 0, readsize);
 			downloadCount += readsize;// 时时获取下载到的大小
@@ -195,7 +196,6 @@ public class UpdateService extends Service {
 				updateCount += down_step;
 
 				// call handler to upgrade progress bar
-				final Message message = new Message();
 				message.what = DOWN_IN_PROGRESS;
 				message.arg1 = updateCount;
 				handler.sendMessage(message);
