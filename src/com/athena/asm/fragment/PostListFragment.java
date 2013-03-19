@@ -5,12 +5,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.util.DisplayMetrics;
@@ -74,6 +76,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 	private ListView m_listView;
 
 	private GestureDetector m_gestureDetector;
+	private Vibrator m_vibrator;
 
 	private boolean m_isNewInstance = false;
 	private boolean m_isFromReplyOrAt = false;
@@ -442,6 +445,14 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 	// this method is called by guesture.onLongPress()
 	public boolean onLongClickOnPost(final Post post) {
 		if (m_viewModel.getSmthSupport().getLoginStatus()) {
+			// vibrate on long click
+			if(m_vibrator == null){
+				Activity parentActivity = getSherlockActivity();
+				m_vibrator = (Vibrator)parentActivity.getSystemService(Service.VIBRATOR_SERVICE);
+			}
+			m_vibrator.vibrate(40);
+
+			// show popup menu now
 			final Post firstPost = m_viewModel.getPostList().get(0);
 			final String authorID = post.getAuthor();
 
