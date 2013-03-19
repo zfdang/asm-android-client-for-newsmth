@@ -212,6 +212,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 //        Point size = new Point();
 //        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
 //        this.m_screenHeight = size.y;
+        // issue 2
         this.m_screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
         m_pageNumberEditText = (EditText) postListView.findViewById(R.id.edittext_page_no);
