@@ -89,7 +89,6 @@ public class UpdateService extends Service {
 				mNotification = mBuilder.getNotification();
 				// show notification
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-				stopService(mUpdateIntent);
 				break;
 			case DOWN_ERROR:
 				mBuilder.setContentText("下载失败");
@@ -97,6 +96,7 @@ public class UpdateService extends Service {
 				mBuilder.setAutoCancel(true);
 				mNotification = mBuilder.getNotification();
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+				stopService(mUpdateIntent);
 				break;
 			default:
 				stopService(mUpdateIntent);
