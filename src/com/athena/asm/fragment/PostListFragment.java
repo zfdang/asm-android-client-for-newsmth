@@ -53,6 +53,7 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.DeletePostTask;
 import com.athena.asm.util.task.ForwardPostToMailTask;
 import com.athena.asm.util.task.LoadPostTask;
+import com.athena.asm.util.task.OpenPostInBrowserTask;
 import com.athena.asm.util.task.RefreshEvent;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
@@ -546,10 +547,16 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 					case 8:
 						// post_view_in_browser
                         // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
-                        String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", post.getBoardID(),
-                                post.getSubjectID());
-                        Uri uri = Uri.parse(weburl);
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        String boardID = post.getBoardID();
+                        if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
+                            OpenPostInBrowserTask browserTask = new OpenPostInBrowserTask(getActivity(), post);
+                            browserTask.execute();
+                        } else {
+                            String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", boardID,
+                                    post.getSubjectID());
+                            Uri uri = Uri.parse(weburl);
+                            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        }
 						break;
 					case 9:
 						// post_edit_post
