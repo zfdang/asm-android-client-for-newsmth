@@ -1096,7 +1096,7 @@ public class SmthSupport {
 			boardid = bidMatcher.group(1);
 			int totalPage = Integer.parseInt(bidMatcher.group(2));
 			subject.setTotalPageNo(totalPage);
-			Log.d("asm : totalpageno", totalPage + "");
+			// Log.d("asm : totalpageno", totalPage + "");
 			int page = Integer.parseInt(bidMatcher.group(3));
 			subject.setCurrentPageNo(page);
 		}
@@ -1147,6 +1147,7 @@ public class SmthSupport {
 		int currentPageNo = subject.getCurrentPageNo();
 		boolean isInSubject = false;
 		if (boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+			// http://m.newsmth.net/article/Children/930419181?p=1
 			url = "http://m.newsmth.net/article/" + subject.getBoardEngName() + "/" + subject.getSubjectID();
 
 			if (currentPageNo > 0) {
@@ -1269,27 +1270,6 @@ public class SmthSupport {
 		while (contentMatcher.find()) {
 			String contentString = contentMatcher.group(1);
 
-			if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
-				contentString = contentString.replaceAll(
-						"(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
-						"//<font color=\"#0099ff\">@$2<\\/font>: $3 <br \\/>FROM");
-				contentString = contentString.replaceAll("--\\<br \\/\\>FROM", "<br \\/>FROM");
-				contentString = contentString.replaceAll("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\*)\\]", "<br \\/>");
-			}
-			if (aSMApplication.getCurrentApplication().isShowIp()) {
-				Pattern myipPattern = Pattern.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
-				Matcher myipMatcher = myipPattern.matcher(contentString);
-				while (myipMatcher.find()) {
-					String ipl = myipMatcher.group(1);
-					if (ipl.length() > 5) {
-						ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-								+ aSMApplication.db.getLocation(Dot2LongIP(ipl + "1")) + ")<\\/font>";
-					} else {
-						ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
-					}
-					contentString = myipMatcher.replaceAll(ipl);
-				}
-			}
 
 			Object[] objects = StringUtility.parseMobilePostContent(contentString);
 			postList.get(index).setContent((String) objects[0]);
