@@ -16,6 +16,11 @@ public class Post {
 	private CharSequence content;
 	private ArrayList<Attachment> attachFiles;
 	
+	public static int ACTION_DEFAULT = 0;
+	public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
+    public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
+    public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
+
 	public Post() {
 		date = new Date();
 	}

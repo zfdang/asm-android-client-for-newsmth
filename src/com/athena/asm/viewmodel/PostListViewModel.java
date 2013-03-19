@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
+import com.athena.asm.fragment.SubjectListFragment;
 import com.athena.asm.util.SmthSupport;
 
 public class PostListViewModel extends BaseViewModel {
@@ -17,7 +18,7 @@ public class PostListViewModel extends BaseViewModel {
 	private int m_currentPageNo = 1;
 
 	// defined in SubjectListFragment ==> BOARD_TYPE_*
-	private int m_boardType = 0;
+	private int m_boardType = SubjectListFragment.BOARD_TYPE_SUBJECT;
 	
 	private boolean m_isPreloadFinished = false;
 	private List<Post> m_preloadPostList;
@@ -128,7 +129,7 @@ public class PostListViewModel extends BaseViewModel {
 	
 	public String getSubjectTitle() {
 		
-		if (m_boardType == 0) {
+		if (m_boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
 			return "[" + m_currentPageNo + "/"
 					+ m_currentSubject.getTotalPageNo() + "]"
 					+ m_currentSubject.getTitle();
@@ -221,7 +222,7 @@ public class PostListViewModel extends BaseViewModel {
 		m_postList = null;
 		m_isToRefreshBoard = false;
 		m_currentPageNo = 1;
-		m_boardType = 0;
+		m_boardType = SubjectListFragment.BOARD_TYPE_SUBJECT;
 		m_isPreloadFinished = false;
 		m_preloadPostList = null;
 		m_preloadSubject = null;

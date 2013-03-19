@@ -984,15 +984,19 @@ public class SmthSupport {
 	}
 
 	public List<Post> getTopicPostList(Subject subject, int action) {
-		List<Post> postList = new ArrayList<Post>();
+	    List<Post> postList = new ArrayList<Post>();
 		String url = "http://www.newsmth.net/bbscon.php?bid=" + subject.getBoardID() + "&id=";
-		if (action == 1) {
+		if (action == Post.ACTION_FIRST_POST_IN_SUBJECT) {
+		    // http://www.newsmth.net/bbscon.php?bid=15&id=2956478
 			url += subject.getTopicSubjectID();
 		} else {
 			url += subject.getSubjectID();
-			if (action == 2) {
+			if (action == Post.ACTION_PREVIOUS_POST_IN_SUBJECT) {
+			    // http://www.newsmth.net/bbscon.php?bid=15&id=2956806&p=tp
 				url += "&p=tp";
 			} else {
+			    // http://www.newsmth.net/bbscon.php?bid=15&id=2956806&p=tn
+			    // Post.ACTION_NEXT_POST_IN_SUBJECT
 				url += "&p=tn";
 			}
 		}

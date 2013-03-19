@@ -40,15 +40,24 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	private List<Post> getPostList() {
 		List<Post> postList = null;
 		if (m_boardType == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+		    // view post in subject mode
 			if (m_startNumber == 0) {
+			    // expand from the first post, load from m
+			    // http://m.newsmth.net/article/CouponsLife/375717
 				postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_boardType);
 			} else {
+			    // expand from other post, load from www
+			    // http://www.newsmth.net/bbstcon.php?board=BasketballForum&gid=2956789&start=2956791
 				postList = m_viewModel.getSmthSupport().getPostList(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_startNumber);
 			}
 		}
 		else if (m_boardType == SubjectListFragment.BOARD_TYPE_NORMAL) {
-			if (m_action == 0) {
+		    // view post in normal mode
+			if (m_action == Post.ACTION_DEFAULT) {
 				if (m_url != null && m_url.length() > 0) {
+				    // from reply or @
+                    // m_url = "http://m.newsmth.net/refer/at/read?index=" + mail.getNumber();
+                    // m_url = "http://m.newsmth.net/refer/reply/read?index=" + mail.getNumber();
 					Subject newSubject = new Subject();
 					postList = m_viewModel.getSmthSupport().getSinglePostListFromMobileUrl(newSubject, m_url);
 					m_viewModel.updateSubject(newSubject);
@@ -57,9 +66,14 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 				}
 			}
 			else {
+			    // m_action might be:
+			    //   ACTION_FIRST_POST_IN_SUBJECT
+			    //   ACTION_PREVIOUS_POST_IN_SUBJECT
+			    //   ACTION_NEXT_POST_IN_SUBJECT
 				postList = m_viewModel.getSmthSupport().getTopicPostList(m_subject, m_action);
 			}
 		} else {
+		    // digest or mark mode
 			postList = m_viewModel.getSmthSupport().getPostListFromMobile(m_subject, aSMApplication.getCurrentApplication().getBlackList(), m_boardType);
 		}
 		return postList;

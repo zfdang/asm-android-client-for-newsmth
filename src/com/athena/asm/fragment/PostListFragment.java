@@ -58,6 +58,13 @@ import com.athena.asm.util.task.RefreshEvent;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
 
+/*
+ * this fragment is responsible to display three kinds of things:
+ * 1. post list in subject view mode
+ * 2. single post in normal view mode, digest mode, mark mode
+ * 3. post @ or replied to current user, opened in mailbox
+ * it's important to differentiate these three types
+ */
 public class PostListFragment extends SherlockFragment implements OnClickListener, OnTouchListener,
         BaseViewModel.OnViewModelChangObserver, RefreshEvent {
 
@@ -65,14 +72,14 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
     private PostListViewModel m_viewModel;
 
-    EditText m_pageNoEditText;
+    EditText m_pageNumberEditText;
     Button m_firstButton;
     Button m_lastButton;
     Button m_preButton;
     Button m_goButton;
     Button m_nextButton;
 
-    private boolean m_isPageNoEditTextTouched = false;
+    private boolean m_isPageNumberEditTextTouched = false;
 
     private int m_screenHeight;
     private ListView m_listView;
@@ -147,13 +154,27 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
                 // right to left swipe
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
-                    m_nextButton.performClick();
-                    return true;
+                    if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+                        Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+                        m_nextButton.performClick();
+                        return true;
+                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
+                        Toast.makeText(getActivity(), "同主题下一篇", Toast.LENGTH_SHORT).show();
+                        m_nextButton.performClick();
+                        return true;
+                    }
+                    return false;
                 } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
-                    m_preButton.performClick();
-                    return true;
+                    if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
+                        Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+                        m_preButton.performClick();
+                        return true;
+                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
+                        Toast.makeText(getActivity(), "同主题上一篇", Toast.LENGTH_SHORT).show();
+                        m_preButton.performClick();
+                        return true;
+                    }
+                    return false;
                 }
             } catch (Exception e) {
                 // nothing
@@ -192,11 +213,11 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         getActivity().getWindowManager().getDefaultDisplay().getSize(size);
         this.m_screenHeight = size.y;
 
-        m_pageNoEditText = (EditText) postListView.findViewById(R.id.edittext_page_no);
-        m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
-        m_pageNoEditText.setOnClickListener(this);
-        m_pageNoEditText.setOnTouchListener(this);
-        m_pageNoEditText.setTextColor(Color.GRAY);
+        m_pageNumberEditText = (EditText) postListView.findViewById(R.id.edittext_page_no);
+        m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+        m_pageNumberEditText.setOnClickListener(this);
+        m_pageNumberEditText.setOnTouchListener(this);
+        m_pageNumberEditText.setTextColor(Color.GRAY);
 
         m_firstButton = (Button) postListView.findViewById(R.id.btn_first_page);
         m_firstButton.setOnClickListener(this);
@@ -215,7 +236,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_preButton.setVisibility(View.GONE);
         m_nextButton.setVisibility(View.GONE);
         m_goButton.setVisibility(View.GONE);
-        m_pageNoEditText.setVisibility(View.GONE);
+        m_pageNumberEditText.setVisibility(View.GONE);
 
         m_listView = (ListView) postListView.findViewById(R.id.post_list);
 
@@ -303,7 +324,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel.getPostList()));
 
         m_viewModel.updateCurrentPageNumberFromSubject();
-        m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+        m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
         m_listView.requestFocus();
 
         m_viewModel.setIsPreloadFinished(false);
@@ -317,7 +338,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             m_goButton.setText(R.string.go_and_last_page);
             // show buttons
             m_goButton.setVisibility(View.VISIBLE);
-            m_pageNoEditText.setVisibility(View.VISIBLE);
+            m_pageNumberEditText.setVisibility(View.VISIBLE);
             m_firstButton.setVisibility(View.VISIBLE);
             m_preButton.setVisibility(View.VISIBLE);
             m_nextButton.setVisibility(View.VISIBLE);
@@ -359,35 +380,35 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.edittext_page_no) {
-            changePageNoEditStatus();
+            changePageNumberEditStatus();
             return;
         }
 
         boolean isNext = false;
-        if (m_viewModel.getBoardType() == 0) { // 同主题导航
-
+        if (m_viewModel.getBoardType() == 0) {
+            // 同主题导航
             if (view.getId() == R.id.btn_first_page) {
                 m_viewModel.gotoFirstPage();
             } else if (view.getId() == R.id.btn_last_page) {
+                // this button is hidden, so this code can never be reached
                 m_viewModel.gotoLastPage();
             } else if (view.getId() == R.id.btn_pre_page) {
                 m_viewModel.gotoPrevPage();
+            } else if (view.getId() == R.id.btn_next_page) {
+                m_viewModel.gotoNextPage();
+                isNext = true;
             } else if (view.getId() == R.id.btn_go_page) {
                 // 如果未按过编辑框，GO的功能为末页。否则为GO
-                if (m_isPageNoEditTextTouched) {
-                    int pageSet = Integer.parseInt(m_pageNoEditText.getText().toString());
+                if (m_isPageNumberEditTextTouched) {
+                    int pageSet = Integer.parseInt(m_pageNumberEditText.getText().toString());
                     m_viewModel.setCurrentPageNumber(pageSet);
                 } else {
                     m_viewModel.gotoLastPage();
                 }
-
-            } else if (view.getId() == R.id.btn_next_page) {
-                m_viewModel.gotoNextPage();
-                isNext = true;
             }
 
             m_viewModel.updateSubjectCurrentPageNumberFromCurrentPageNumber();
-            m_pageNoEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+            m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
             if (view.getParent() != null) {
                 ((View) view.getParent()).requestFocus();
             }
@@ -399,15 +420,17 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 m_progressDialogProvider.showProgressDialog();
             }
         } else {
-            int action = 0;
+            // 非同主题下的导航按钮
+            int action = Post.ACTION_DEFAULT;
             if (view.getId() == R.id.btn_first_page) {
-                action = 1;
+                action = Post.ACTION_FIRST_POST_IN_SUBJECT;
             } else if (view.getId() == R.id.btn_pre_page) {
-                action = 2;
+                action = Post.ACTION_PREVIOUS_POST_IN_SUBJECT;
             } else if (view.getId() == R.id.btn_next_page) {
-                action = 3;
+                action = Post.ACTION_NEXT_POST_IN_SUBJECT;
                 isNext = true;
             } else if (view.getId() == R.id.btn_last_page) {
+                // expand subject from this post
                 m_viewModel.setSubjectExpand(true);
                 m_viewModel.setBoardType(0);
                 m_startNumber = Integer.parseInt(m_viewModel.getCurrentSubject().getSubjectID());
@@ -454,11 +477,16 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             }
             m_vibrator.vibrate(40);
 
-            // show popup menu now
-            final Post firstPost = m_viewModel.getPostList().get(0);
             final String authorID = post.getAuthor();
+            if(authorID == null || authorID.equals("guest")){
+                // the post was not loaded successfully, return
+                Toast.makeText(getActivity(), "帖子异常，请返回！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
-            // popup menu
+            final Post firstPost = m_viewModel.getPostList().get(0);
+
+            // show popup menu now now
             List<String> itemList = new ArrayList<String>();
             itemList.add(getString(R.string.post_reply_post));
             itemList.add(getString(R.string.post_reply_mail));
@@ -597,7 +625,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (v.getId() == R.id.edittext_page_no) {
-            changePageNoEditStatus();
+            changePageNumberEditStatus();
             return false;
         }
 
@@ -690,14 +718,14 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         return shareIntent;
     }
 
-    private void changePageNoEditStatus() {
+    private void changePageNumberEditStatus() {
         if (aSMApplication.getCurrentApplication().isNightTheme()) {
-            m_pageNoEditText.setTextColor(Color.WHITE);
+            m_pageNumberEditText.setTextColor(Color.WHITE);
         } else {
-            m_pageNoEditText.setTextColor(Color.BLACK);
+            m_pageNumberEditText.setTextColor(Color.BLACK);
         }
 
-        m_isPageNoEditTextTouched = true;
+        m_isPageNumberEditTextTouched = true;
     }
 
     private void forwardToEmail(final Post post, final boolean group) {
