@@ -58,7 +58,8 @@
 	<string name="post_copy_content">复制帖子内容</string>
 	<string name="post_foward_self">转寄到自己信箱</string>
 	<string name="post_foward_external">转寄到外部邮箱</string>
-	<string name="post_group_foward_external">合集转寄到外部邮箱</string>
+    <string name="post_group_foward_external">合集转寄到外部邮箱</string>
+	<string name="post_view_in_browser">浏览器里打开</string>
     <string name="post_edit_post">修改文章</string>
 	<string name="post_delete_post">删除文章</string>
 	<string name="write_label_post">发表</string>

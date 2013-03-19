@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
@@ -466,6 +467,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 			itemList.add(getString(R.string.post_foward_self));
 			itemList.add(getString(R.string.post_foward_external));
 			itemList.add(getString(R.string.post_group_foward_external));
+			itemList.add(getString(R.string.post_view_in_browser));
 			if (authorID.compareToIgnoreCase(m_viewModel.getSmthSupport().userid) == 0) {
 				itemList.add(getString(R.string.post_edit_post));
 				itemList.add(getString(R.string.post_delete_post));
@@ -478,6 +480,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 				public void onClick(DialogInterface dialog, int item) {
 					switch (item) {
 					case 0:
+						// post_reply_post
 						if (m_onOpenActivityFragmentListener != null) {
 							Bundle bundle = new Bundle();
 							bundle.putSerializable(
@@ -491,6 +494,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 						}
 						break;
 					case 1:
+						// post_reply_mail
 						if (m_onOpenActivityFragmentListener != null) {
 							Bundle bundle = new Bundle();
 							bundle.putSerializable(StringUtility.URL, "http://www.newsmth.net/bbspstmail.php?board="
@@ -503,6 +507,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
 						break;
 					case 2:
+						// post_query_author
 						if (m_onOpenActivityFragmentListener != null) {
 							Bundle bundle = new Bundle();
 							bundle.putSerializable(StringUtility.USERID, authorID);
@@ -511,29 +516,43 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 						}
 						break;
 					case 3:
+						// post_copy_author
 						ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(
 								Context.CLIPBOARD_SERVICE);
 						clip.setText(authorID);
 						Toast.makeText(getActivity(), "ID ： " + authorID + "已复制到剪贴板", Toast.LENGTH_SHORT).show();
 						break;
 					case 4:
+						// post_copy_content
 						ClipboardManager clip2 = (ClipboardManager) getActivity().getSystemService(
 								Context.CLIPBOARD_SERVICE);
 						clip2.setText(post.getTextContent());
 						Toast.makeText(getActivity(), "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
+						// post_foward_self
 						ForwardPostToMailTask task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
 								ForwardPostToMailTask.FORWARD_TO_SELF, "");
 						task.execute();
 						break;
 					case 6:
+						// post_foward_external
 						forwardToEmail(post, false);
 						break;
 					case 7:
+						// post_group_foward_external
 						forwardToEmail(firstPost, true);
 						break;
 					case 8:
+						// post_view_in_browser
+                        // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
+                        String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", post.getBoardID(),
+                                post.getSubjectID());
+                        Uri uri = Uri.parse(weburl);
+                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+						break;
+					case 9:
+						// post_edit_post
 						if (m_onOpenActivityFragmentListener != null) {
 							Bundle bundle = new Bundle();
 							// http://www.newsmth.net/bbsedit.php?board=PocketLife&id=1408697&ftype=0
@@ -548,8 +567,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 									ActivityFragmentTargets.WRITE_POST, bundle);
 						}
 						break;
-					case 9:
-						// delete the post
+					case 10:
+						// post_delete_post
 						DeletePostTask deleteTask = new DeletePostTask(getActivity(), m_viewModel, post.getBoard(),
 								post.getSubjectID(), PostListFragment.this);
 						deleteTask.execute();
