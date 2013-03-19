@@ -54,7 +54,8 @@ public class UpdateService extends Service {
 		createNotification();
 		createThread();
 
-		return super.onStartCommand(intent, flags, startId);
+		// The service will not receive a onStartCommand(Intent, int, int) call with a null Intent with this value
+		return START_REDELIVER_INTENT;
 	}
 
 	// this handler is responsible to update the progress bar
