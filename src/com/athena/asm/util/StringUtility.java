@@ -162,7 +162,7 @@ public class StringUtility {
 		}
 
 		if (aSMApplication.getCurrentApplication().isShowIp()) {
-			Pattern myipPattern = Pattern.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+			Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
 			Matcher myipMatcher = myipPattern.matcher(content);
 			while (myipMatcher.find()) {
 				String ipl = myipMatcher.group(1);
@@ -330,6 +330,7 @@ public class StringUtility {
 
 			// [36m※ 修改:・mozilla 于 Mar 18 13:42:45 2013 修改本文・[FROM: 220.249.41.*]\r[m\n\r
 			// [m\r[1;31m※ 来源:・水木社区 newsmth.net・[FROM: 220.249.41.*]\r[m\n
+            // ※ 来源:·水木社区 newsmth.net·[FROM: 119.6.200.*]
             if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
                 // remove ASCII control first
                 Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
@@ -339,7 +340,7 @@ public class StringUtility {
                 }
 
                 if (aSMApplication.getCurrentApplication().isShowIp()) {
-                    Pattern myipPattern = Pattern.compile("FROM (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+                    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
                     Matcher myipMatcher = myipPattern.matcher(line);
                     while (myipMatcher.find()) {
                         String ipl = myipMatcher.group(1);
