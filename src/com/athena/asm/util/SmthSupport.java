@@ -254,7 +254,7 @@ public class SmthSupport {
         if (matcher.find()) {
             String name = matcher.group(1);
             String id = matcher.group(2);
-            Log.d("getBoardIDFromName", String.format("name=%s ==>id=%s", name, id));
+//            Log.d("getBoardIDFromName", String.format("name=%s ==>id=%s", name, id));
             if(boardName.equals(name)){
                 return id;
             }
