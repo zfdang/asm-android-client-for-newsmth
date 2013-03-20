@@ -3,7 +3,6 @@ package com.markupartist.android.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -346,7 +345,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     public void onRefresh() {
-        Log.d(TAG, "onRefresh");
 
         if (mOnRefreshListener != null) {
             mOnRefreshListener.onRefresh();
@@ -366,7 +364,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
      * Resets the list to a normal state after a refresh.
      */
     public void onRefreshComplete() {        
-        Log.d(TAG, "onRefreshComplete");
 
         resetHeader();
 
