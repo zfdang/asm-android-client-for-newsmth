@@ -1260,9 +1260,6 @@ public class SmthSupport {
 			postList.get(index).setTitle(titleString);
 		}
 		titleString = "Re: " + titleString;
-		if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
-			titleString = null;
-		}
 
 		for (int i = 1; i < postList.size(); i++) {
 			postList.get(i).setTitle(titleString);

@@ -154,9 +154,8 @@ public class StringUtility {
     	}
 
 		if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
-			content = content.replaceAll(
-					"(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
-					"//<font color=\"#0099ff\">@$2<\\/font>: $3 <br \\/>FROM");
+            content = content.replaceAll("(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
+                    "//<font color=\"#6A5ACD\">@$2<\\/font>: <font color=\"#708090\">$3<\\/font> <br \\/>FROM");
 			content = content.replaceAll("--\\<br \\/\\>FROM", "<br \\/>FROM");
 			content = content.replaceAll("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\*)\\]", "<br \\/>");
 		}
@@ -167,8 +166,8 @@ public class StringUtility {
 			while (myipMatcher.find()) {
 				String ipl = myipMatcher.group(1);
 				if (ipl.length() > 5) {
-					ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-							+ aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+                    ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
+                            + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
 				} else {
 					ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
 				}
