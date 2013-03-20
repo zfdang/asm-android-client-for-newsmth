@@ -5,21 +5,19 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -85,7 +83,6 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     private ListView m_listView;
 
     private GestureDetector m_gestureDetector;
-    private Vibrator m_vibrator;
 
     private boolean m_isNewInstance = false;
     private boolean m_isFromReplyOrAt = false;
@@ -472,12 +469,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     // this method is called by guesture.onLongPress()
     public boolean onLongClickOnPost(final Post post) {
         if (m_viewModel.getSmthSupport().getLoginStatus()) {
-            // vibrate on long click
-            if (m_vibrator == null) {
-                Activity parentActivity = getSherlockActivity();
-                m_vibrator = (Vibrator) parentActivity.getSystemService(Service.VIBRATOR_SERVICE);
-            }
-            m_vibrator.vibrate(40);
+            m_listView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
             final String authorID = post.getAuthor();
             if(authorID == null || authorID.equals("guest")){
