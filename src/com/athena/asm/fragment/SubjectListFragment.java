@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -225,6 +226,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     public static final int SEARCH_POST = Menu.FIRST + 2;
     public static final int CREATE_ID = Menu.FIRST + 3;
     public static final int QUICK_SWITCH_BOARD_TYPE = Menu.FIRST + 4;
+    public static final int SWITCH_STICKY = Menu.FIRST + 5;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -233,15 +235,17 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
 
         if (SmthSupport.getInstance().getLoginStatus()) {
             menu.add(0, CREATE_ID, Menu.NONE, "发新贴").setIcon(isLight ? R.drawable.write_inverse : R.drawable.write)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         menu.add(0, QUICK_SWITCH_BOARD_TYPE, Menu.NONE, "模式切换")
                 .setIcon(isLight ? R.drawable.switcher_inverse : R.drawable.switcher)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SWITCH_STICKY, Menu.NONE, "切换置底").setIcon(isLight ? R.drawable.sticky_inverse : R.drawable.sticky)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SEARCH_POST, Menu.NONE, "搜索").setIcon(isLight ? R.drawable.search_inverse : R.drawable.search)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
                 .setIcon(isLight ? R.drawable.refresh_inverse : R.drawable.refresh)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(0, SEARCH_POST, Menu.NONE, "搜索").setIcon(isLight ? R.drawable.search_inverse : R.drawable.search)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...").setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_NEVER | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -258,6 +262,11 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
             break;
         case QUICK_SWITCH_BOARD_TYPE:
             m_viewModel.toggleBoardType();
+            if(m_viewModel.getBoardType() == BOARD_TYPE_SUBJECT){
+                Toast.makeText(getActivity(), "已切换到同主题模式", Toast.LENGTH_SHORT).show();
+            } else if (m_viewModel.getBoardType() == BOARD_TYPE_NORMAL){
+                Toast.makeText(getActivity(), "已切换到普通模式", Toast.LENGTH_SHORT).show();
+            }
             m_viewModel.setIsFirstIn(true);
             refreshSubjectList();
             break;
@@ -269,6 +278,16 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
             builder.setAdapter(new BoardTypeListAdapter(m_viewModel.getBoardType(), m_inflater), this);
             AlertDialog alert = builder.create();
             alert.show();
+            break;
+        case SWITCH_STICKY:
+            // switch the variable, but do not save it
+            aSMApplication.getCurrentApplication().switchHidePinSubject();
+            if(aSMApplication.getCurrentApplication().isHidePinSubject()){
+                Toast.makeText(getActivity(), "置底文章已隐藏", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "显示置底文章", Toast.LENGTH_SHORT).show();
+            }
+            refreshSubjectList();
             break;
         case REFRESH_SUBJECTLIST:
             refreshSubjectList();

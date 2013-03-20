@@ -54,13 +54,7 @@ public class SubjectListAdapter extends BaseAdapter {
 		// set title
 		String titleString = subject.getTitle();
 		if (subject.getType().toLowerCase().contains(Subject.TYPE_BOTTOM)) {
-			boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
-			if (isLight) {
-				titleString = "<font color='#f00000'>" + titleString + "</font>";
-			} else {
-				titleString = "<font color='#e9f7fe'>" + titleString + "</font>";
-			}
-			
+			titleString = "<font color='#006400'>" + titleString + "</font>";
 		}
 		holder.titleTextView.setText(Html.fromHtml(titleString));
 		holder.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getSubjectFontSize());

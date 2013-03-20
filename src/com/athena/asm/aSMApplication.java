@@ -600,6 +600,10 @@ public class aSMApplication extends Application {
 		this.isHidePinSubject = isHidePinSubject;
 	}
 
+	public void switchHidePinSubject(){
+	    this.isHidePinSubject = !this.isHidePinSubject;
+	}
+
 	public boolean isPromotionShow() {
 		return isPromotionShow;
 	}
