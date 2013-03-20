@@ -182,9 +182,6 @@ public class StringUtility {
         int linequote = 0;
         int seperator = 0;
         boolean isMainbodyEnd = false;
-		if (!aSMApplication.getCurrentApplication().isWeiboStyle()) {
-			sb.append("<br />");
-		}
         ArrayList<String> attachList = new ArrayList<String>();
         for (String line : lines) {
         	Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"><img");

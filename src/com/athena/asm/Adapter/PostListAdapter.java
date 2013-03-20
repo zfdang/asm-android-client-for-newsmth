@@ -189,8 +189,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));
 		}
 
-		// weibo style, hide title
-		if (aSMApplication.getCurrentApplication().isWeiboStyle() && position != 0) {
+		// hide titles for all following posts
+		if (position != 0) {
 		    holder.titleTextView.setVisibility(View.GONE);
 		} else {
             holder.titleTextView.setVisibility(View.VISIBLE);
