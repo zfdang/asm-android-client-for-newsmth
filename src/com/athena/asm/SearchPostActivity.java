@@ -14,6 +14,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
@@ -27,7 +30,8 @@ public class SearchPostActivity extends SherlockActivity implements
 	EditText m_title2EditText;
 	EditText m_title3EditText;
 	EditText m_useridEditText;
-	EditText m_dtEditText;
+
+    EditText m_dtEditText;
 
 	CheckBox m_mgCheckBox;
 	CheckBox m_agCheckBox;
@@ -90,6 +94,27 @@ public class SearchPostActivity extends SherlockActivity implements
 		}
 	}
 	
+	public static final int MENU_SEARCH = Menu.FIRST;
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
+        menu.add(0, MENU_SEARCH, Menu.NONE, "搜索").setIcon(isLight ? R.drawable.search_inverse : R.drawable.search)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+	    return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case MENU_SEARCH:
+            m_startSearchButton.performClick();
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 	public void parseSearchResult(List<Subject> subjects) {
 		Intent intent = new Intent();
 		intent.setClassName("com.athena.asm",
