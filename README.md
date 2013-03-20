@@ -9,7 +9,7 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-03-20.
+Build Date: 2013-03-21.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
@@ -25,6 +25,8 @@ Build Date: 2013-03-20.
 5. 修改了编辑帖子时，正文的字体大小
 6. 使用ant自动编译项目并换了release key来编译，带来的后果是这次必须把旧版的卸载了才能安装...
 7. 长按帖子时，根据系统设置"触摸时震动"来决定是否震动
+8. 在文章列表的界面，增加了“切换置底”的图标，将搜索图标移到了actionbar
+9. 搜索帖子的界面，在上面增加了一个搜索的图标
 
 2013-03-19:
 ------------------------------
