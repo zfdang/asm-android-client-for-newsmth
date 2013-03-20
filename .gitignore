@@ -2,6 +2,7 @@
 *.diff
 *.rej
 *.orig
+local.properties
 /bin
 /gen
 /libs/aFileChooser/bin

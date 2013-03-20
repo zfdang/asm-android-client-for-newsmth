@@ -8,6 +8,10 @@
 
 2. rebuild project, and replace aSM.apk in dist/
 ==============================
+it's possible to build this project with ant. but you have to prepare file "local.properties"
+```
+    sdk.dir=D:\\android\\android-sdk-windows
+```
 
 3. udpate README.md
 ==============================
