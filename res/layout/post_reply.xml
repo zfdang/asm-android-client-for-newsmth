@@ -120,7 +120,6 @@
         android:hint="请输入内容"
         android:layout_weight="1"
         android:gravity="top"
-        android:imeOptions="actionSend|flagNoEnterAction"
-        android:textSize="15dp" />
+        android:imeOptions="actionSend|flagNoEnterAction" />
 
 </LinearLayout>
