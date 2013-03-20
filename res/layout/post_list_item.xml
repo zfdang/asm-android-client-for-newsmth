@@ -16,7 +16,7 @@
 		android:layout_below="@+id/AuthorID" android:paddingTop="1dp"
 		android:textColor="@color/status_text" android:textSize="15dp" />
 	<View android:id="@+id/SeperatorView" android:layout_width="fill_parent"
-		android:layout_height="1dp" android:background="?android:attr/listDivider"
+		android:layout_height="0dp" android:background="?android:attr/listDivider"
 		android:layout_below="@+id/PostTitle" />
 	<TextView android:id="@+id/PostContent"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
