@@ -42,6 +42,13 @@ public class aSMApplication extends Application {
 	private boolean m_isFirstLaunch = false;
 	private boolean m_isLoadDefaultCategoryFile = false;
 
+	/*
+	 * settings:
+	 * to change the default value of one setting:
+	 * 1. change android:defaultValue of the element in preference.xml
+	 * 2. change default value for the variable
+	 * 3. change default value when editor.putBoolean / settings.getBoolean
+	 */
 	private boolean m_isRememberUser = true;
 	private boolean m_isAutoLogin = false;
 
@@ -59,7 +66,7 @@ public class aSMApplication extends Application {
 	private int lastLaunchVersionCode = 4;
 	private int currentVersionCode = 5;
 
-	private boolean isWeiboStyle = true;
+	private boolean isWeiboStyle = false;
 	private boolean isShowIp = true;
 	private int guidanceFontSize = 25;
 	private int guidanceSecondFontSize = 20;
@@ -213,9 +220,9 @@ public class aSMApplication extends Application {
 		}
 
 		if (!settings.contains(Preferences.WEIBO_STYLE)) {
-			editor.putBoolean(Preferences.WEIBO_STYLE, true);
+			editor.putBoolean(Preferences.WEIBO_STYLE, false);
 		} else {
-			setWeiboStyle(settings.getBoolean(Preferences.WEIBO_STYLE, true));
+			setWeiboStyle(settings.getBoolean(Preferences.WEIBO_STYLE, false));
 		}
 
 		if (!settings.contains(Preferences.SHOW_IP)) {

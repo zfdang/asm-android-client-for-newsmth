@@ -63,6 +63,7 @@
         <CheckBoxPreference
             android:key="weibo_style"
             android:summary="@string/setting_weibo_style_details"
+            android:defaultValue="false"
             android:title="@string/setting_weibo_style" />
         <CheckBoxPreference
             android:key="show_ip"
