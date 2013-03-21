@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.athena.asm.listener.RefreshEventListener;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.viewmodel.PostListViewModel;
 
@@ -18,11 +19,11 @@ public class DeletePostTask extends AsyncTask<String, Integer, String> {
 	private PostListViewModel m_viewModel;
 	private String m_boardName;
 	private String m_postID;
-	private List<RefreshEvent> m_listners = new ArrayList<RefreshEvent>();
+	private List<RefreshEventListener> m_listners = new ArrayList<RefreshEventListener>();
 
 	private boolean m_result;
 
-	public DeletePostTask(Context ctx, PostListViewModel viewModel, String boardname, String postid, RefreshEvent listener) {
+	public DeletePostTask(Context ctx, PostListViewModel viewModel, String boardname, String postid, RefreshEventListener listener) {
 		m_viewModel = viewModel;
 		m_context = ctx;
 		pdialog = new ProgressDialog(ctx);
@@ -54,7 +55,7 @@ public class DeletePostTask extends AsyncTask<String, Integer, String> {
 			// refresh current post
 			String alert = String.format("帖子(id=%s)已删除!", m_postID);
 			Toast.makeText(m_context, alert, Toast.LENGTH_SHORT).show();
-	        for(RefreshEvent listner: m_listners) {
+	        for(RefreshEventListener listner: m_listners) {
 				listner.refresh();
 	        }
 		} else {

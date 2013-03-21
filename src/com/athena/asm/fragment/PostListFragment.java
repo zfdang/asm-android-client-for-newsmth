@@ -47,12 +47,12 @@ import com.athena.asm.Adapter.PostListAdapter;
 import com.athena.asm.data.Mail;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
+import com.athena.asm.listener.RefreshEventListener;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.DeletePostTask;
 import com.athena.asm.util.task.ForwardPostToMailTask;
 import com.athena.asm.util.task.LoadPostTask;
 import com.athena.asm.util.task.OpenPostInBrowserTask;
-import com.athena.asm.util.task.RefreshEvent;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.PostListViewModel;
 
@@ -64,7 +64,7 @@ import com.athena.asm.viewmodel.PostListViewModel;
  * it's important to differentiate these three types
  */
 public class PostListFragment extends SherlockFragment implements OnClickListener, OnTouchListener,
-        BaseViewModel.OnViewModelChangObserver, RefreshEvent {
+        BaseViewModel.OnViewModelChangObserver, RefreshEventListener {
 
     private LayoutInflater m_inflater;
 
