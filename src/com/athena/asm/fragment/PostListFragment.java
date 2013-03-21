@@ -652,7 +652,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);
         m_actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-        m_actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+        // m_actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+        // don't save share history persistently
+        m_actionProvider.setShareHistoryFileName(null);
     }
 
     @Override
