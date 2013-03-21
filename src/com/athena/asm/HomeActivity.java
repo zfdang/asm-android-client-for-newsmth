@@ -36,6 +36,7 @@ import com.athena.asm.fragment.FavoriteListFragment;
 import com.athena.asm.fragment.GuidanceListFragment;
 import com.athena.asm.fragment.MailFragment;
 import com.athena.asm.fragment.ProfileFragment;
+import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.service.CheckMessageService;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.CheckUpdateAsyncTask;
@@ -424,10 +425,32 @@ public class HomeActivity extends SherlockFragmentActivity
 				finishAndClean();
 			}
 			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            int index = m_viewPager.getCurrentItem();
+            // get OnKeyDownListener by this position;
+            // if the fragment has implement the interface and not recycled, we will get valid listener
+            OnKeyDownListener listener = m_tabsAdapter.getOnKeyDownListener(index);
+            if(listener != null){
+                return listener.onKeyDown(keyCode);
+            }
+        }
+		return super.onKeyDown(keyCode, event);
 	}
+
+	// http://stackoverflow.com/questions/4500354/control-volume-keys
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            // disable the beep sound when volume up/down is pressed
+            int index = m_viewPager.getCurrentItem();
+            OnKeyDownListener listener = m_tabsAdapter.getOnKeyDownListener(index);
+            if(listener != null){
+                // only if we have valid listener
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 
 	public static final int SETTING = Menu.FIRST;
 	public static final int REFRESH = Menu.FIRST + 1;

@@ -15,13 +15,15 @@ import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.GuidanceListAdapter;
 import com.athena.asm.data.Subject;
+import com.athena.asm.listener.OnKeyDownListener;
+import com.athena.asm.util.ListViewUtil;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadGuidanceTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class GuidanceListFragment extends SherlockFragment implements
-		BaseViewModel.OnViewModelChangObserver {
+		BaseViewModel.OnViewModelChangObserver, OnKeyDownListener {
 
 	private HomeViewModel m_viewModel;
 
@@ -124,4 +126,9 @@ public class GuidanceListFragment extends SherlockFragment implements
 			}
 		}
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode) {
+        return ListViewUtil.ScrollListViewByKey(m_listView, keyCode);
+    }
 }

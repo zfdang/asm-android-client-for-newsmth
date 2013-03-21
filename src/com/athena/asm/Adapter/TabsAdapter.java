@@ -1,6 +1,8 @@
 package com.athena.asm.Adapter;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class TabsAdapter extends FragmentPagerAdapter implements
@@ -22,6 +25,10 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final ArrayList<TabInfo> m_tabs = new ArrayList<TabInfo>();
 	private HomeViewModel m_viewModel;
 	private boolean m_isInited = false;
+
+	// save cached fragments which implement OnKeyDownListener
+    private Hashtable<Integer, SoftReference<OnKeyDownListener>> m_keyListeners
+        = new Hashtable<Integer, SoftReference<OnKeyDownListener>>();
 
 	static final class TabInfo {
 		private final Class<?> clss;
@@ -64,7 +71,26 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	@Override
 	public Fragment getItem(int position) {
 		TabInfo info = m_tabs.get(position);
-		return Fragment.instantiate(m_activity, info.clss.getName(), info.args);
+		Fragment m = Fragment.instantiate(m_activity, info.clss.getName(), info.args);
+		// cache the fragment as SoftReference object
+		if(m instanceof OnKeyDownListener){
+		    // only if the fragment has implemented OnKeyDownListener interface
+		    OnKeyDownListener listener = (OnKeyDownListener)m;
+		    m_keyListeners.put(position, new SoftReference<OnKeyDownListener>(listener));
+		}
+		return m;
+	}
+
+	// get keydown listener by position, null might be returned
+	public OnKeyDownListener getOnKeyDownListener(int position) {
+		try {
+            SoftReference<OnKeyDownListener> sf = m_keyListeners.get(position);
+            OnKeyDownListener listener = sf.get();
+            return listener;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            return null;
+        }
 	}
 
 	@Override

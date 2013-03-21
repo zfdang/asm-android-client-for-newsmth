@@ -25,20 +25,23 @@ import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.Adapter.CategoryListAdapter;
 import com.athena.asm.data.Board;
+import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.util.AutoCompleteAdapter;
+import com.athena.asm.util.ListViewUtil;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadCategoryTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class CategoryFragment extends SherlockFragment implements
-		BaseViewModel.OnViewModelChangObserver, OnClickListener {
+		BaseViewModel.OnViewModelChangObserver, OnClickListener, OnKeyDownListener {
 
 	private HomeViewModel m_viewModel;
 
 	private LayoutInflater m_inflater;
 
 	private View layout;
+    private ListView m_listView;
 
 	private boolean m_isLoaded;
 	
@@ -56,6 +59,7 @@ public class CategoryFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		layout = m_inflater.inflate(R.layout.category, null);
+		m_listView = (ListView)layout.findViewById(R.id.category_list);
 
 		aSMApplication application = (aSMApplication) getActivity()
 				.getApplication();
@@ -185,4 +189,9 @@ public class CategoryFragment extends SherlockFragment implements
 			}
 		}
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode) {
+        return ListViewUtil.ScrollListViewByKey(m_listView, keyCode);
+    }
 }
