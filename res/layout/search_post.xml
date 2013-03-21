@@ -147,6 +147,7 @@
             android:layout_marginRight="3dp"
             android:layout_marginTop="2dp"
             android:text="@string/search_tip7"
+            android:inputType="number"
             android:layout_toRightOf="@id/textView5"
             android:layout_toLeftOf="@id/textView6" />
         
