@@ -29,6 +29,8 @@ public class Preferences {
 
 	public static final String DEFAULT_ORIENTATION = "default_orientation";
 	public static final String TOUCH_SCROLL = "touch_scroll";
+	public static final String TOUCH_SWIPE = "touch_swipe";
+	public static final String TOUCH_SWIPE_BACK = "touch_swipe_back";
 	public static final String HIDE_PIN_SUBJECT = "hide_pin_subject";
 	public static final String NIGHT_THEME = "night_theme";
 

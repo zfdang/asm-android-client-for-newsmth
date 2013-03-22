@@ -112,7 +112,20 @@
         <CheckBoxPreference
             android:key="touch_scroll"
             android:summary="@string/setting_touch_scroll_details"
+            android:defaultValue="true"
             android:title="@string/setting_touch_scroll" />
+        <CheckBoxPreference
+            android:key="touch_swipe"
+            android:summaryOn="@string/setting_touch_swipe_details_on"
+            android:summaryOff="@string/setting_touch_swipe_details_off"
+            android:defaultValue="true"
+            android:title="@string/setting_touch_swipe" />
+        <CheckBoxPreference
+            android:key="touch_swipe_back"
+            android:summaryOn="@string/setting_touch_swipe_back_details_on"
+            android:summaryOff="@string/setting_touch_swipe_back_details_off"
+            android:defaultValue="true"
+            android:title="@string/setting_touch_swipe_back" />
         <CheckBoxPreference
             android:key="hide_pin_subject"
             android:summary="@string/setting_hide_pin_subject_details"

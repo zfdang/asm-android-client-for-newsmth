@@ -80,7 +80,9 @@ public class aSMApplication extends Application {
 	private float imageSizeThreshold = 50;
 
 	private boolean isTouchScroll = true;
-	private boolean isHidePinSubject = false;
+	private boolean isTouchSwipe = true;
+    private boolean isTouchSwipeBack = true;
+    private boolean isHidePinSubject = false;
 	private boolean isNightTheme = true;
 
 	private int defaultOrientation = 0;
@@ -278,6 +280,18 @@ public class aSMApplication extends Application {
 			editor.putBoolean(Preferences.TOUCH_SCROLL, true);
 		} else {
 			isTouchScroll = settings.getBoolean(Preferences.TOUCH_SCROLL, true);
+		}
+
+		if (!settings.contains(Preferences.TOUCH_SWIPE)) {
+			editor.putBoolean(Preferences.TOUCH_SWIPE, true);
+		} else {
+			isTouchSwipe = settings.getBoolean(Preferences.TOUCH_SWIPE, true);
+		}
+
+		if (!settings.contains(Preferences.TOUCH_SWIPE_BACK)) {
+			editor.putBoolean(Preferences.TOUCH_SWIPE_BACK, true);
+		} else {
+			isTouchSwipeBack = settings.getBoolean(Preferences.TOUCH_SWIPE_BACK, true);
 		}
 
 		if (!settings.contains(Preferences.HIDE_PIN_SUBJECT)) {
@@ -587,6 +601,14 @@ public class aSMApplication extends Application {
 	public boolean isTouchScroll() {
 		return isTouchScroll;
 	}
+
+    public boolean isTouchSwipe() {
+        return isTouchSwipe;
+    }
+
+    public boolean isTouchSwipeBack() {
+        return isTouchSwipeBack;
+    }
 
 	public void setTouchScroll(boolean isTouchScroll) {
 		this.isTouchScroll = isTouchScroll;

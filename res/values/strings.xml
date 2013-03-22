@@ -123,8 +123,14 @@
 	<string name="setting_image_size_threshold_details">阈值大小以KB为单位，设为0时不限制</string>
 	<string name="setting_hide_pin_subject">隐藏置底</string>
 	<string name="setting_hide_pin_subject_details">不显示置底文章</string>
-	<string name="setting_touch_scroll">触屏翻页</string>
-	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来翻页</string>
+	<string name="setting_touch_scroll">触屏滚动</string>
+	<string name="setting_touch_scroll_details">在读贴时点击屏幕上下来滚动屏幕</string>
+    <string name="setting_touch_swipe">左右划动切换内容</string>
+    <string name="setting_touch_swipe_details_on">允许使用左右划动的手势来翻页</string>
+    <string name="setting_touch_swipe_details_off">禁止左右划动的手势</string>
+    <string name="setting_touch_swipe_back">右划返回</string>
+    <string name="setting_touch_swipe_back_details_on">在首页向右划动时返回</string>
+    <string name="setting_touch_swipe_back_details_off">禁止右划返回</string>
 	<string name="setting_night_theme">夜间模式</string>
 	<string name="setting_night_theme_details">启用夜间模式</string>
 	<string name="setting_orientation">屏幕方向</string>

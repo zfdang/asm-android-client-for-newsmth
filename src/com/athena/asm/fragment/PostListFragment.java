@@ -145,6 +145,10 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if (!aSMApplication.getCurrentApplication().isTouchSwipe())
+                return false;
+
             try {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                     return false;
@@ -163,9 +167,16 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                     return false;
                 } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-                        Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
-                        m_preButton.performClick();
-                        return true;
+                        if (aSMApplication.getCurrentApplication().isTouchSwipeBack()
+                                && m_viewModel.getCurrentPageNumber() == 1) {
+                            Toast.makeText(getActivity(), "返回", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
+                            return true;
+                        } else {
+                            Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+                            m_preButton.performClick();
+                            return true;
+                        }
                     } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
                         Toast.makeText(getActivity(), "同主题上一篇", Toast.LENGTH_SHORT).show();
                         m_preButton.performClick();
