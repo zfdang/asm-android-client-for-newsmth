@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 
 import com.athena.asm.HomeActivity;
 import com.athena.asm.R;
@@ -35,7 +36,7 @@ public class UpdateService extends Service {
 
 	private NotificationManager mNotificationManager;
 	private Notification mNotification;
-	private Notification.Builder mBuilder;
+	private NotificationCompat.Builder mBuilder;
 
 	private Intent mUpdateIntent;
 	private PendingIntent mPendingIntent;
@@ -57,14 +58,17 @@ public class UpdateService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if(m_isRunning == false){
-			m_isRunning = true;
+		    if(intent == null){
+		        return START_NOT_STICKY;
+		    }
+		    m_isRunning = true;
 			app_name = intent.getStringExtra("app_name");
 			FileUtil.createFile(app_name);
 			createNotification();
 			createThread();
 		}
 		// The service will not receive a onStartCommand(Intent, int, int) call with a null Intent with this value
-		return START_STICKY;
+		return START_NOT_STICKY;
 	}
 
 	// this handler is responsible to update the progress bar
@@ -80,13 +84,14 @@ public class UpdateService extends Service {
 				mPendingIntent = PendingIntent.getActivity(UpdateService.this, 0, intent, 0);
 
 				mBuilder.setContentTitle(getString(R.string.update_service_title_end));
-				mBuilder.setContentText(getString(R.string.update_service_content_end));
+                mBuilder.setContentText(getString(R.string.update_service_content_end) + "("
+                        + FileUtil.updateFile.toString() + ")");
 				mBuilder.setTicker(getString(R.string.update_service_ticker_end));
 				mBuilder.setProgress(0, 0, false);
 				mBuilder.setAutoCancel(true);
 				mBuilder.setOngoing(false);
-				mNotification = mBuilder.getNotification();
-				mNotification.contentIntent = mPendingIntent;
+				mBuilder.setContentIntent(mPendingIntent);
+				mNotification = mBuilder.build();
 
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
@@ -98,7 +103,7 @@ public class UpdateService extends Service {
 				// update progress bar
 				mBuilder.setContentText(updateCount + "%");
 				mBuilder.setProgress(100, updateCount, false);
-				mNotification = mBuilder.getNotification();
+				mNotification = mBuilder.build();
 				// show notification
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 				break;
@@ -106,7 +111,7 @@ public class UpdateService extends Service {
 				mBuilder.setContentText("下载失败");
 				mBuilder.setProgress(100, 100, true);
 				mBuilder.setAutoCancel(true);
-				mNotification = mBuilder.getNotification();
+				mNotification = mBuilder.build();
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
 				m_isRunning = false;
@@ -153,19 +158,19 @@ public class UpdateService extends Service {
 	 */
 
 	public void createNotification() {
-		mBuilder = new Notification.Builder(this)
+        mUpdateIntent = new Intent(this, HomeActivity.class);
+        mPendingIntent = PendingIntent.getActivity(this, 0, mUpdateIntent, 0);
+
+	    mBuilder = new NotificationCompat.Builder(this)
 		 .setContentTitle(getString(R.string.update_service_title_start))
 		 .setContentText("0%")
 		 .setProgress(100, 0, false)
 		 .setSmallIcon(R.drawable.icon)
 		 .setOngoing(true)
+		 .setContentIntent(mPendingIntent)
 		 .setTicker(getString(R.string.update_service_ticker_start));
 		
-		mNotification = mBuilder.getNotification();
-
-		mUpdateIntent = new Intent(this, HomeActivity.class);
-		mPendingIntent = PendingIntent.getActivity(this, 0, mUpdateIntent, 0);
-		mNotification.contentIntent = mPendingIntent;
+        mNotification = mBuilder.build();
 
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(NOTIFICATION_ID, mNotification);

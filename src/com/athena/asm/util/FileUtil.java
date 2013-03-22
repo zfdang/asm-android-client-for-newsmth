@@ -14,8 +14,8 @@ public class FileUtil {
 	 */
 	public static void createFile(String name) {
 		if (android.os.Environment.MEDIA_MOUNTED.equals(android.os.Environment.getExternalStorageState())) {
-			updateDir = new File(Environment.getExternalStorageDirectory() + "/aSM/apk/");
-			updateFile = new File(updateDir + "/" + name + ".apk");
+			updateDir = new File(Environment.getExternalStorageDirectory(), name);
+			updateFile = new File(updateDir.getAbsolutePath(), name + ".apk");
 
 			if (!updateDir.exists()) {
 				updateDir.mkdirs();
