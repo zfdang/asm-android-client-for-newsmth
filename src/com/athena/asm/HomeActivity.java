@@ -10,9 +10,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
@@ -569,15 +571,19 @@ public class HomeActivity extends SherlockFragmentActivity
                 editor.putBoolean(Preferences.NIGHT_THEME, true);
                 editor.commit();
             }
-
             aSMApplication.getCurrentApplication().initPreferences();
-            // refresh current view
+
+            // refresh current activity
             // we destroy current activity, and create a new one
             // it's a very heavy process and should be improved later
             Intent tempIntent = getIntent();
             finish();
             startActivity(tempIntent);
 
+            if( Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH ){
+                // actionbar might disappear in old system, sleep to solve this issue
+                SystemClock.sleep(500);
+            }
             // show toast for the switch
             if (b_night_theme) {
                 Toast.makeText(getApplicationContext(), "已切换至日光模式", Toast.LENGTH_SHORT).show();
