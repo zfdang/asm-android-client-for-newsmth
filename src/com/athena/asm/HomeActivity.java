@@ -570,6 +570,7 @@ public class HomeActivity extends SherlockFragmentActivity
                 editor.commit();
             }
 
+            aSMApplication.getCurrentApplication().initPreferences();
             // refresh current view
             // we destroy current activity, and create a new one
             // it's a very heavy process and should be improved later
