@@ -31,6 +31,7 @@ public class UpdateService extends Service {
 	private static final int DOWN_ERROR = 2;
 
 	private String app_name;
+	private boolean m_isRunning = false;
 
 	private NotificationManager mNotificationManager;
 	private Notification mNotification;
@@ -39,23 +40,31 @@ public class UpdateService extends Service {
 	private Intent mUpdateIntent;
 	private PendingIntent mPendingIntent;
 
-	private static final int NOTIFICATION_ID = 0;
 
-	@Override
+    private static final int NOTIFICATION_ID = 0;
+
+    @Override
+    public void onDestroy() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
+        super.onDestroy();
+    }
+
+    @Override
 	public IBinder onBind(Intent arg0) {
 		return null;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
-		app_name = intent.getStringExtra("app_name");
-		FileUtil.createFile(app_name);
-		createNotification();
-		createThread();
-
+		if(m_isRunning == false){
+			m_isRunning = true;
+			app_name = intent.getStringExtra("app_name");
+			FileUtil.createFile(app_name);
+			createNotification();
+			createThread();
+		}
 		// The service will not receive a onStartCommand(Intent, int, int) call with a null Intent with this value
-		return START_REDELIVER_INTENT;
+		return START_STICKY;
 	}
 
 	// this handler is responsible to update the progress bar
@@ -73,13 +82,15 @@ public class UpdateService extends Service {
 				mBuilder.setContentTitle(getString(R.string.update_service_title_end));
 				mBuilder.setContentText(getString(R.string.update_service_content_end));
 				mBuilder.setTicker(getString(R.string.update_service_ticker_end));
-				mBuilder.setProgress(100, 100, true);
+				mBuilder.setProgress(0, 0, false);
 				mBuilder.setAutoCancel(true);
+				mBuilder.setOngoing(false);
 				mNotification = mBuilder.getNotification();
 				mNotification.contentIntent = mPendingIntent;
 
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
 
+				m_isRunning = false;
 				stopService(mUpdateIntent);
 				break;
 			case DOWN_IN_PROGRESS:
@@ -97,6 +108,8 @@ public class UpdateService extends Service {
 				mBuilder.setAutoCancel(true);
 				mNotification = mBuilder.getNotification();
 				mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+
+				m_isRunning = false;
 				stopService(mUpdateIntent);
 				break;
 			default:
@@ -112,7 +125,6 @@ public class UpdateService extends Service {
 	 */
 	public void createThread() {
 
-		final Message message = new Message();
 
 		new Thread(new Runnable() {
 			@Override
@@ -122,11 +134,13 @@ public class UpdateService extends Service {
 					long downloadSize = downloadUpdateFile(APK_URL, FileUtil.updateFile.toString());
 					if (downloadSize > 0) {
 						// 下载成功
+						final Message message = new Message();
 						message.what = DOWN_OK;
 						handler.sendMessage(message);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
+					final Message message = new Message();
 					message.what = DOWN_ERROR;
 					handler.sendMessage(message);
 				}
@@ -185,7 +199,6 @@ public class UpdateService extends Service {
 		outputStream = new FileOutputStream(file, false);// 文件存在则覆盖掉
 		byte buffer[] = new byte[1024];
 		int readsize = 0;
-		final Message message = new Message();
 		while ((readsize = inputStream.read(buffer)) != -1) {
 			outputStream.write(buffer, 0, readsize);
 			downloadCount += readsize;// 时时获取下载到的大小
@@ -196,6 +209,7 @@ public class UpdateService extends Service {
 				updateCount += down_step;
 
 				// call handler to upgrade progress bar
+				final Message message = new Message();
 				message.what = DOWN_IN_PROGRESS;
 				message.arg1 = updateCount;
 				handler.sendMessage(message);
