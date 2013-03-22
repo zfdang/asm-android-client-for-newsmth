@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import com.athena.asm.MailListActivity;
 import com.athena.asm.R;
@@ -108,18 +109,16 @@ public class CheckMessageService extends Service {
 	
 	private void showNotification(PendingIntent intent, int notificationId,
 			int notifyIconId, String tickerText, String title, String text) {
-		Notification notification = new Notification(notifyIconId, tickerText,
-				System.currentTimeMillis());
-		
-		notification.setLatestEventInfo(this, title, text, intent);
 
-		notification.flags = Notification.FLAG_AUTO_CANCEL
-				| Notification.FLAG_ONLY_ALERT_ONCE;
-
+	    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(notifyIconId).setTicker(tickerText).setWhen(System.currentTimeMillis())
+                .setContentTitle(title).setContentText(text).setContentIntent(intent).setAutoCancel(true)
+                .setOnlyAlertOnce(true);
 		if (aSMApplication.getCurrentApplication().isUseVibrate()) {
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		    builder.setDefaults(Notification.DEFAULT_VIBRATE);
 		}
 
+		Notification notification = builder.build();
 		m_NotificationManager.notify(notificationId, notification);
 	}
 	
@@ -141,7 +140,7 @@ public class CheckMessageService extends Service {
 				String text = "";
 				if (m_result.contains("信件")) {
 					title = "新来信";
-					text = "您有新信件，收查收";
+					text = "您有新信件，快去看看吧";
 					boxType = 0;
 				} else if (m_result.contains("@")) {
 					title = "新@";

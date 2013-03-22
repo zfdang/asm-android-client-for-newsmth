@@ -90,7 +90,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 
 		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
@@ -555,45 +555,35 @@ public class HomeActivity extends SherlockFragmentActivity
 			}
 			break;
 		case NIGHT_THEME:
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, true);
-			SharedPreferences.Editor editor = settings.edit();
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, true);
+            SharedPreferences.Editor editor = settings.edit();
 
-//			change night_theme settings
-			if (b_night_theme)
-			{
-//				switch to day mode
-				aSMApplication.THEME = R.style.Theme_Sherlock_Light;
-				editor.putBoolean(Preferences.NIGHT_THEME, false);
-				editor.commit();
-			} else {
-//				switch to night mode
-				aSMApplication.THEME = R.style.Theme_Sherlock;
-				editor.putBoolean(Preferences.NIGHT_THEME, true);
-				editor.commit();
-			}
+            // change night_theme settings
+            if (b_night_theme) {
+                // switch to day mode
+                editor.putBoolean(Preferences.NIGHT_THEME, false);
+                editor.commit();
+            } else {
+                // switch to night mode
+                editor.putBoolean(Preferences.NIGHT_THEME, true);
+                editor.commit();
+            }
 
-//			refresh current view
-//			m_viewPager.invalidate();
-//			we destroy current activity, and create a new one
-//			it's a very heavy process and should be improved later
-			finish();
-			aSMApplication.getCurrentApplication().initPreferences();
-			Intent homeIntent = new Intent(this, HomeActivity.class);
-			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(homeIntent);
-			
-//			show toast for the switch
-			if (b_night_theme)
-			{
-				Toast.makeText(getApplicationContext(), "已切换至日光模式",
-					Toast.LENGTH_SHORT).show();
-			}
-			else{
-				Toast.makeText(getApplicationContext(), "已切换至夜间模式",
-						Toast.LENGTH_SHORT).show();
-			}
-			break;
+            // refresh current view
+            // we destroy current activity, and create a new one
+            // it's a very heavy process and should be improved later
+            Intent tempIntent = getIntent();
+            finish();
+            startActivity(tempIntent);
+
+            // show toast for the switch
+            if (b_night_theme) {
+                Toast.makeText(getApplicationContext(), "已切换至日光模式", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "已切换至夜间模式", Toast.LENGTH_SHORT).show();
+            }
+            break;
 		case CLEAN:
 			UrlImageViewHelper.cleanup(this, 0);
 			Toast.makeText(getApplicationContext(), "已清空图片缓存",

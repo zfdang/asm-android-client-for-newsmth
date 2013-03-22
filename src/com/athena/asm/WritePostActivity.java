@@ -287,6 +287,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
         this.finish();
     }
 
+    @SuppressWarnings("deprecation")
     public void showFailedToast() {
         ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clip.setText(m_viewModel.getPostContent());
