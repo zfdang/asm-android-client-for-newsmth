@@ -113,10 +113,10 @@
 	<string name="setting_use_vibrate_details">有新消息时将振动提示</string>
 	<string name="setting_check_interval">检查消息频率</string>
 	<string name="setting_check_interval_details">选择检查消息的间隔时间</string>
-	<string name="setting_guidance_font_size">导读收藏目录邮箱分类字体大小</string>
-	<string name="setting_guidance_second_font_size">导读二级收藏版面邮件字体大小</string>
-	<string name="setting_subject_font_size">版面帖子标题字体大小</string>
-	<string name="setting_post_font_size">帖子内容读字体大小</string>
+	<string name="setting_guidance_font_size">导读/收藏目录/邮箱分类字体大小</string>
+	<string name="setting_guidance_second_font_size">导读二级/收藏版面/邮件字体大小</string>
+	<string name="setting_subject_font_size">版面帖子列表字体大小</string>
+	<string name="setting_post_font_size">帖子内容字体大小</string>
 	<string name="setting_auto_optimize">根据WIFI自动优化</string>
 	<string name="setting_auto_optimize_details">开启后WIFI时不限制，无WIFI时根据下面阈值下载图片</string>
 	<string name="setting_image_size_threshold">自动下载图片大小阈值</string>
@@ -131,6 +131,9 @@
     <string name="setting_touch_swipe_back">右划返回</string>
     <string name="setting_touch_swipe_back_details_on">在首页向右划动时返回</string>
     <string name="setting_touch_swipe_back_details_off">禁止右划返回</string>
+    <string name="setting_touch_hint">手势操作结果提示</string>
+    <string name="setting_touch_hint_details_on">手势结束后提示操作结果</string>
+    <string name="setting_touch_hint_details_off">不提示操作结果</string>
 	<string name="setting_night_theme">夜间模式</string>
 	<string name="setting_night_theme_details">启用夜间模式</string>
 	<string name="setting_orientation">屏幕方向</string>

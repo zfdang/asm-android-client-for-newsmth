@@ -82,6 +82,7 @@ public class aSMApplication extends Application {
 	private boolean isTouchScroll = true;
 	private boolean isTouchSwipe = true;
     private boolean isTouchSwipeBack = true;
+    private boolean isTouchHint = true;
     private boolean isHidePinSubject = false;
 	private boolean isNightTheme = true;
 
@@ -292,6 +293,12 @@ public class aSMApplication extends Application {
 			editor.putBoolean(Preferences.TOUCH_SWIPE_BACK, true);
 		} else {
 			isTouchSwipeBack = settings.getBoolean(Preferences.TOUCH_SWIPE_BACK, true);
+		}
+
+		if (!settings.contains(Preferences.TOUCH_HINT)) {
+			editor.putBoolean(Preferences.TOUCH_HINT, true);
+		} else {
+			isTouchHint = settings.getBoolean(Preferences.TOUCH_HINT, true);
 		}
 
 		if (!settings.contains(Preferences.HIDE_PIN_SUBJECT)) {
@@ -608,6 +615,10 @@ public class aSMApplication extends Application {
 
     public boolean isTouchSwipeBack() {
         return isTouchSwipeBack;
+    }
+
+    public boolean isTouchHint() {
+        return isTouchHint;
     }
 
 	public void setTouchScroll(boolean isTouchScroll) {

@@ -105,6 +105,10 @@ public class PostListViewModel extends BaseViewModel {
 		return nextPageNumber;
 	}
 	
+    public int getTotalPageNumber() {
+        return m_currentSubject.getTotalPageNo();
+    }
+
 	public void gotoFirstPage() {
 		m_currentPageNo = 1;
 	}

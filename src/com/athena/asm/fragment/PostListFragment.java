@@ -156,11 +156,13 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // right to left swipe
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-                        Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint())
+                            Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
                         m_nextButton.performClick();
                         return true;
                     } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        Toast.makeText(getActivity(), "同主题下一篇", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint())
+                            Toast.makeText(getActivity(), "同主题下一篇", Toast.LENGTH_SHORT).show();
                         m_nextButton.performClick();
                         return true;
                     }
@@ -169,16 +171,19 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
                         if (aSMApplication.getCurrentApplication().isTouchSwipeBack()
                                 && m_viewModel.getCurrentPageNumber() == 1) {
-                            Toast.makeText(getActivity(), "返回", Toast.LENGTH_SHORT).show();
+                            if(aSMApplication.getCurrentApplication().isTouchHint())
+                                Toast.makeText(getActivity(), "返回", Toast.LENGTH_SHORT).show();
                             getActivity().onBackPressed();
                             return true;
                         } else {
-                            Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+                            if(aSMApplication.getCurrentApplication().isTouchHint())
+                                Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
                             m_preButton.performClick();
                             return true;
                         }
                     } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        Toast.makeText(getActivity(), "同主题上一篇", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint())
+                            Toast.makeText(getActivity(), "同主题上一篇", Toast.LENGTH_SHORT).show();
                         m_preButton.performClick();
                         return true;
                     }
@@ -403,8 +408,16 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // this button is hidden, so this code can never be reached
                 m_viewModel.gotoLastPage();
             } else if (view.getId() == R.id.btn_pre_page) {
+                if(m_viewModel.getCurrentPageNumber() == 1) {
+                    Toast.makeText(getActivity(), "已是第一页", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 m_viewModel.gotoPrevPage();
             } else if (view.getId() == R.id.btn_next_page) {
+                if(m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
+                    Toast.makeText(getActivity(), "已是最后一页", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 m_viewModel.gotoNextPage();
                 isNext = true;
             } else if (view.getId() == R.id.btn_go_page) {

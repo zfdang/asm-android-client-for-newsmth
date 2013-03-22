@@ -128,6 +128,12 @@
             android:defaultValue="true"
             android:title="@string/setting_touch_swipe_back" />
         <CheckBoxPreference
+            android:key="touch_hint"
+            android:summaryOn="@string/setting_touch_hint_details_on"
+            android:summaryOff="@string/setting_touch_hint_details_off"
+            android:defaultValue="true"
+            android:title="@string/setting_touch_hint" />
+        <CheckBoxPreference
             android:key="hide_pin_subject"
             android:summary="@string/setting_hide_pin_subject_details"
             android:title="@string/setting_hide_pin_subject" />
