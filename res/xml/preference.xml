@@ -121,6 +121,7 @@
             android:defaultValue="true"
             android:title="@string/setting_touch_swipe" />
         <CheckBoxPreference
+            android:dependency="touch_swipe"
             android:key="touch_swipe_back"
             android:summaryOn="@string/setting_touch_swipe_back_details_on"
             android:summaryOff="@string/setting_touch_swipe_back_details_off"
