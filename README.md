@@ -9,7 +9,7 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-03-23.
+Build Date: 2013-03-24.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
@@ -19,6 +19,7 @@ Build Date: 2013-03-23.
 2013-03-23:
 ------------------------------
 1. 重构了部分代码
+2. 修正了全屏看图在android 4.0之前无法正常工作的bug
 
 2013-03-22:
 ------------------------------
