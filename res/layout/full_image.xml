@@ -6,8 +6,8 @@
     android:orientation="vertical" >
 
     <!-- Image -->
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <com.athena.asm.view.MyViewPager
+        android:id="@+id/myviewpager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

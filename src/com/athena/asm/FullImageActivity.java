@@ -19,7 +19,6 @@ import android.content.pm.ActivityInfo;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,12 +35,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.view.MyViewPager;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class FullImageActivity extends SherlockActivity
 	implements OnLongClickListener, OnPageChangeListener {
 
-	private ViewPager vp;
+	private MyViewPager vp;
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
@@ -69,7 +69,7 @@ public class FullImageActivity extends SherlockActivity
 		m_imageUrls = getIntent().getStringArrayListExtra (StringUtility.IMAGE_URL);
 		m_imageIdx = getIntent().getIntExtra(StringUtility.IMAGE_INDEX, 0);
 
-        vp = (ViewPager) findViewById(R.id.viewpager);
+        vp = (MyViewPager) findViewById(R.id.myviewpager);
         vpAdapter = new ViewPagerAdapter(m_imageUrls, this);
         vp.setAdapter(vpAdapter);
         vp.setOnPageChangeListener(this);
