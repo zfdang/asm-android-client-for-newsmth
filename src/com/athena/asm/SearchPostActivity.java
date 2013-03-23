@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.data.Subject;

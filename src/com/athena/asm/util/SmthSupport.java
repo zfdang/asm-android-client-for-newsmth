@@ -15,7 +15,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.text.Html;
-import android.util.Log;
 
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Attachment;
