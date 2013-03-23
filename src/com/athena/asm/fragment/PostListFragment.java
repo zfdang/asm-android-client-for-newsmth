@@ -75,6 +75,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     Button m_preButton;
     Button m_goButton;
     Button m_nextButton;
+    private Toast myToast;
 
     private boolean m_isPageNumberEditTextTouched = false;
 
@@ -155,13 +156,17 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // right to left swipe
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-                        if(aSMApplication.getCurrentApplication().isTouchHint())
-                            Toast.makeText(getActivity(), "下一页", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                            myToast.setText("下一页");
+                            myToast.show();
+                        }
                         m_nextButton.performClick();
                         return true;
                     } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        if(aSMApplication.getCurrentApplication().isTouchHint())
-                            Toast.makeText(getActivity(), "同主题下一篇", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                            myToast.setText("同主题下一篇");
+                            myToast.show();
+                        }
                         m_nextButton.performClick();
                         return true;
                     }
@@ -170,19 +175,25 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
                         if (aSMApplication.getCurrentApplication().isTouchSwipeBack()
                                 && m_viewModel.getCurrentPageNumber() == 1) {
-                            if(aSMApplication.getCurrentApplication().isTouchHint())
-                                Toast.makeText(getActivity(), "返回", Toast.LENGTH_SHORT).show();
+                            if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                                myToast.setText("返回");
+                                myToast.show();
+                            }
                             getActivity().onBackPressed();
                             return true;
                         } else {
-                            if(aSMApplication.getCurrentApplication().isTouchHint())
-                                Toast.makeText(getActivity(), "上一页", Toast.LENGTH_SHORT).show();
+                            if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                                myToast.setText("上一页");
+                                myToast.show();
+                            }
                             m_preButton.performClick();
                             return true;
                         }
                     } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        if(aSMApplication.getCurrentApplication().isTouchHint())
-                            Toast.makeText(getActivity(), "同主题上一篇", Toast.LENGTH_SHORT).show();
+                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                            myToast.setText("同主题上一篇");
+                            myToast.show();
+                        }
                         m_preButton.performClick();
                         return true;
                     }
@@ -200,6 +211,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        myToast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
 
         setRetainInstance(true);
         m_isNewInstance = true;
@@ -403,19 +416,26 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         if (m_viewModel.getBoardType() == 0) {
             // 同主题导航
             if (view.getId() == R.id.btn_first_page) {
+                if(m_viewModel.getCurrentPageNumber() == 1) {
+                    myToast.setText("已在第一页");
+                    myToast.show();
+                    return;
+                }
                 m_viewModel.gotoFirstPage();
             } else if (view.getId() == R.id.btn_last_page) {
                 // this button is hidden, so this code can never be reached
                 m_viewModel.gotoLastPage();
             } else if (view.getId() == R.id.btn_pre_page) {
                 if(m_viewModel.getCurrentPageNumber() == 1) {
-                    Toast.makeText(getActivity(), "已是第一页", Toast.LENGTH_SHORT).show();
+                    myToast.setText("已在第一页");
+                    myToast.show();
                     return;
                 }
                 m_viewModel.gotoPrevPage();
             } else if (view.getId() == R.id.btn_next_page) {
                 if(m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
-                    Toast.makeText(getActivity(), "已是最后一页", Toast.LENGTH_SHORT).show();
+                    myToast.setText("已在最后一页");
+                    myToast.show();
                     return;
                 }
                 m_viewModel.gotoNextPage();
@@ -423,9 +443,22 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             } else if (view.getId() == R.id.btn_go_page) {
                 // 如果未按过编辑框，GO的功能为末页。否则为GO
                 if (m_isPageNumberEditTextTouched) {
+                    // jump to the page number
                     int pageSet = Integer.parseInt(m_pageNumberEditText.getText().toString());
+                    if(m_viewModel.getCurrentPageNumber() == pageSet) {
+                        String hint = String.format("已在第%d页, 请输入新页码！", pageSet);
+                        myToast.setText(hint);
+                        myToast.show();
+                        return;
+                    }
                     m_viewModel.setCurrentPageNumber(pageSet);
                 } else {
+                    // go to last page
+                    if(m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
+                        myToast.setText("已在最后一页");
+                        myToast.show();
+                        return;
+                    }
                     m_viewModel.gotoLastPage();
                 }
             }
