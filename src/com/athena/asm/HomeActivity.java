@@ -10,9 +10,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
@@ -90,7 +92,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 
 		boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
@@ -559,31 +561,32 @@ public class HomeActivity extends SherlockFragmentActivity
 			boolean b_night_theme = settings.getBoolean(Preferences.NIGHT_THEME, true);
 			SharedPreferences.Editor editor = settings.edit();
 
-//			change night_theme settings
+			// change night_theme settings
 			if (b_night_theme)
 			{
-//				switch to day mode
-				aSMApplication.THEME = R.style.Theme_Sherlock_Light;
+				// switch to day mode
 				editor.putBoolean(Preferences.NIGHT_THEME, false);
 				editor.commit();
 			} else {
-//				switch to night mode
-				aSMApplication.THEME = R.style.Theme_Sherlock;
+				// switch to night mode
 				editor.putBoolean(Preferences.NIGHT_THEME, true);
 				editor.commit();
 			}
-
-//			refresh current view
-//			m_viewPager.invalidate();
-//			we destroy current activity, and create a new one
-//			it's a very heavy process and should be improved later
-			finish();
 			aSMApplication.getCurrentApplication().initPreferences();
-			Intent homeIntent = new Intent(this, HomeActivity.class);
-			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(homeIntent);
 			
-//			show toast for the switch
+			// we destroy current activity, and create a new one
+			// it's a very heavy process and should be improved later
+			Intent tempIntent = getIntent();
+			// finish();
+			tempIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			startActivity(tempIntent);
+
+            if( Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH ){
+                // actionbar might disappear in old system, sleep to solve this issue
+                SystemClock.sleep(500);
+            }
+
+			// show toast for the switch
 			if (b_night_theme)
 			{
 				Toast.makeText(getApplicationContext(), "已切换至日光模式",
