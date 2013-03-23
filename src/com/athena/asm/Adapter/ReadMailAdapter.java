@@ -80,7 +80,8 @@ public class ReadMailAdapter extends BaseAdapter {
 					builder.setTitle(R.string.post_alert_title);
 					builder.setItems(items,
 							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
+								@SuppressWarnings("deprecation")
+                                public void onClick(DialogInterface dialog,
 										int item) {
 									switch (item) {
 									case 0:

@@ -40,7 +40,8 @@ public class SearchPostActivity extends SherlockActivity implements
 
 	private SearchPostViewModel m_viewModel;
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(aSMApplication.THEME);
 		super.onCreate(savedInstanceState);

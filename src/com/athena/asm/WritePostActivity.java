@@ -50,6 +50,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 
     private WritePostViewModel m_viewModel = null;
 
+    @SuppressWarnings({ "deprecation" })
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setTheme(aSMApplication.THEME);
@@ -287,6 +288,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
         this.finish();
     }
 
+    @SuppressWarnings("deprecation")
     public void showFailedToast() {
         ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clip.setText(m_viewModel.getPostContent());

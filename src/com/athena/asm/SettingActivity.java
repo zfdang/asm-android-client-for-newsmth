@@ -19,7 +19,8 @@ public class SettingActivity extends PreferenceActivity implements
 	private CheckBoxPreference m_autoLogin;
 	private ListPreference m_defaultTab;
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preference);

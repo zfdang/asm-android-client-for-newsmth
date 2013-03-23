@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.ClipboardManager;
 import android.text.Editable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -212,6 +211,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         SWIPE_THRESHOLD_VELOCITY = (int) (150.0f * dm.densityDpi / 160.0f + 0.5);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         m_inflater = inflater;
@@ -524,6 +524,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.post_alert_title);
             builder.setItems(items, new DialogInterface.OnClickListener() {
+                @SuppressWarnings("deprecation")
                 public void onClick(DialogInterface dialog, int item) {
                     switch (item) {
                     case 0:
@@ -564,15 +565,16 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                         break;
                     case 3:
                         // post_copy_author
-                        ClipboardManager clip = (ClipboardManager) getActivity().getSystemService(
-                                Context.CLIPBOARD_SERVICE);
+                        // http://stackoverflow.com/questions/14189544/copy-with-clipboard-manager-that-supports-old-and-new-android-versions
+                        android.text.ClipboardManager clip = (android.text.ClipboardManager) getActivity()
+                                .getSystemService(Context.CLIPBOARD_SERVICE);
                         clip.setText(authorID);
                         Toast.makeText(getActivity(), "ID ： " + authorID + "已复制到剪贴板", Toast.LENGTH_SHORT).show();
                         break;
                     case 4:
                         // post_copy_content
-                        ClipboardManager clip2 = (ClipboardManager) getActivity().getSystemService(
-                                Context.CLIPBOARD_SERVICE);
+                        android.text.ClipboardManager clip2 = (android.text.ClipboardManager) getActivity()
+                                .getSystemService(Context.CLIPBOARD_SERVICE);
                         clip2.setText(post.getTextContent());
                         Toast.makeText(getActivity(), "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
                         break;
