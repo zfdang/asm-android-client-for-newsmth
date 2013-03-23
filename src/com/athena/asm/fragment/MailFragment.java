@@ -118,7 +118,7 @@ public class MailFragment extends SherlockFragment implements
 				});
 			}
 		} else {
-			Toast.makeText(getActivity().getApplicationContext(), "请登陆后再使用.",
+			Toast.makeText(getActivity().getApplicationContext(), "请登录后再使用.",
 					Toast.LENGTH_SHORT).show();
 		}
 	}

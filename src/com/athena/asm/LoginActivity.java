@@ -102,7 +102,7 @@ public class LoginActivity extends SherlockFragmentActivity implements
 
 			// login
 			final ProgressDialog pdialog = new ProgressDialog(this);
-			pdialog.setMessage("登陆中...");
+			pdialog.setMessage("登录中...");
 			// pdialog.setMax(1);
 			// pdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			pdialog.show();
@@ -141,7 +141,7 @@ public class LoginActivity extends SherlockFragmentActivity implements
 		} else if (view.getId() == R.id.guest_button) {
 			// login with userid = "guest"
 			final ProgressDialog pdialog = new ProgressDialog(this);
-			pdialog.setMessage("匿名登陆中...");
+			pdialog.setMessage("匿名登录中...");
 			// pdialog.setMax(1);
 			// pdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			pdialog.show();

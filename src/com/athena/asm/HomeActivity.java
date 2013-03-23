@@ -139,22 +139,22 @@ public class HomeActivity extends SherlockFragmentActivity
 					.get(StringUtility.GUEST_LOGINED));
 		}
 
-		// 如果已从login页面登陆过来
+		// 如果已从login页面登录过来
 		if (m_viewModel.isLogined()) {
 			init();
 		}
-		// 如果是从login页面用guest登陆过来
+		// 如果是从login页面用guest登录过来
 		else if (m_viewModel.isGuestLogined()) {
 			init();
 		}
-		// 如果是第一次启动且保存了自动登陆
+		// 如果是第一次启动且保存了自动登录
 		else if (isAutoLogin) {
 			m_viewModel.restorSmthSupport();
 
 			String userName = application.getAutoUserName();
 			String password = application.getAutoPassword();
 
-			showProgressDialog("自动登陆中...");
+			showProgressDialog("自动登录中...");
 			
 			// LoginTask.doInBackground --> HomeViewModel.login --> SmthSupport.login
 			// loginTask.onPostExecute --> HomeViewModel.notifyLoginChanged 
@@ -163,7 +163,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			LoginTask loginTask = new LoginTask(m_viewModel, userName, password);
 			loginTask.execute();
 		}
-		// 如果是第一次启动且没有自动登陆
+		// 如果是第一次启动且没有自动登录
 		else {
 			Intent intent = new Intent();
 			intent.setClassName("com.athena.asm",
