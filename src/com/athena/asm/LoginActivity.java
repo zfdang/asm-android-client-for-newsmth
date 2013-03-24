@@ -47,6 +47,9 @@ public class LoginActivity extends SherlockFragmentActivity implements
 		TextView registerLink = (TextView) findViewById(R.id.register_link);
 		registerLink.setMovementMethod(LinkMovementMethod.getInstance());
 
+		TextView asmHelpLink = (TextView) findViewById(R.id.asm_help_link);
+		asmHelpLink.setMovementMethod(LinkMovementMethod.getInstance());
+
 		Button button = (Button) findViewById(R.id.signin_button);
 		button.setOnClickListener(this);
 
