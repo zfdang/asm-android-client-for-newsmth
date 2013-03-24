@@ -541,13 +541,13 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             List<String> itemList = new ArrayList<String>();
             itemList.add(getString(R.string.post_reply_post));
             itemList.add(getString(R.string.post_reply_mail));
+            itemList.add(getString(R.string.post_view_in_browser));
             itemList.add(getString(R.string.post_query_author));
             itemList.add(getString(R.string.post_copy_author));
             itemList.add(getString(R.string.post_copy_content));
             itemList.add(getString(R.string.post_foward_self));
             itemList.add(getString(R.string.post_foward_external));
             itemList.add(getString(R.string.post_group_foward_external));
-            itemList.add(getString(R.string.post_view_in_browser));
             if (authorID.compareToIgnoreCase(m_viewModel.getSmthSupport().userid) == 0) {
                 itemList.add(getString(R.string.post_edit_post));
                 itemList.add(getString(R.string.post_delete_post));
@@ -588,46 +588,14 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
                         break;
                     case 2:
-                        // post_query_author
-                        if (m_onOpenActivityFragmentListener != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(StringUtility.USERID, authorID);
-                            m_onOpenActivityFragmentListener.onOpenActivityOrFragment(
-                                    ActivityFragmentTargets.VIEW_PROFILE, bundle);
-                        }
-                        break;
-                    case 3:
-                        // post_copy_author
-                        // http://stackoverflow.com/questions/14189544/copy-with-clipboard-manager-that-supports-old-and-new-android-versions
-                        android.text.ClipboardManager clip = (android.text.ClipboardManager) getActivity()
-                                .getSystemService(Context.CLIPBOARD_SERVICE);
-                        clip.setText(authorID);
-                        Toast.makeText(getActivity(), "ID ： " + authorID + "已复制到剪贴板", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 4:
-                        // post_copy_content
-                        android.text.ClipboardManager clip2 = (android.text.ClipboardManager) getActivity()
-                                .getSystemService(Context.CLIPBOARD_SERVICE);
-                        clip2.setText(post.getTextContent());
-                        Toast.makeText(getActivity(), "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 5:
-                        // post_foward_self
-                        ForwardPostToMailTask task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
-                                ForwardPostToMailTask.FORWARD_TO_SELF, "");
-                        task.execute();
-                        break;
-                    case 6:
-                        // post_foward_external
-                        forwardToEmail(post, false);
-                        break;
-                    case 7:
-                        // post_group_foward_external
-                        forwardToEmail(firstPost, true);
-                        break;
-                    case 8:
                         // post_view_in_browser
                         // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
+                        if(post.getSubjectID() == null) {
+                            // subjectID extracted from <a href="/article/FamilyLife/post/1752675592">回复</a>
+                            myToast.setText("此功能只有登录后才有效！");
+                            myToast.show();
+                            return;
+                        }
                         String boardID = post.getBoardID();
                         if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
                             OpenPostInBrowserTask browserTask = new OpenPostInBrowserTask(getActivity(), post);
@@ -638,6 +606,44 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                             Uri uri = Uri.parse(weburl);
                             startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         }
+                        break;
+                    case 3:
+                        // post_query_author
+                        if (m_onOpenActivityFragmentListener != null) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(StringUtility.USERID, authorID);
+                            m_onOpenActivityFragmentListener.onOpenActivityOrFragment(
+                                    ActivityFragmentTargets.VIEW_PROFILE, bundle);
+                        }
+                        break;
+                    case 4:
+                        // post_copy_author
+                        // http://stackoverflow.com/questions/14189544/copy-with-clipboard-manager-that-supports-old-and-new-android-versions
+                        android.text.ClipboardManager clip = (android.text.ClipboardManager) getActivity()
+                                .getSystemService(Context.CLIPBOARD_SERVICE);
+                        clip.setText(authorID);
+                        Toast.makeText(getActivity(), "ID ： " + authorID + "已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        // post_copy_content
+                        android.text.ClipboardManager clip2 = (android.text.ClipboardManager) getActivity()
+                                .getSystemService(Context.CLIPBOARD_SERVICE);
+                        clip2.setText(post.getTextContent());
+                        Toast.makeText(getActivity(), "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6:
+                        // post_foward_self
+                        ForwardPostToMailTask task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
+                                ForwardPostToMailTask.FORWARD_TO_SELF, "");
+                        task.execute();
+                        break;
+                    case 7:
+                        // post_foward_external
+                        forwardToEmail(post, false);
+                        break;
+                    case 8:
+                        // post_group_foward_external
+                        forwardToEmail(firstPost, true);
                         break;
                     case 9:
                         // post_edit_post
@@ -705,9 +711,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         menu.add(0, REFRESH_SUBJECTLIST, Menu.NONE, "刷新")
                 .setIcon(isLight ? R.drawable.refresh_inverse : R.drawable.refresh)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0, GO_TO_BOARD, Menu.NONE, "返回版面").setIcon(isLight ? R.drawable.toboard_inverse : R.drawable.toboard)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);
         m_actionProvider = (ShareActionProvider) actionItem.getActionProvider();

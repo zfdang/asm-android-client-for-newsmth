@@ -1197,6 +1197,7 @@ public class SmthSupport {
 		}
 
 		// <a href="/article/NewExpress/post/11111">回复
+		// only logined user has this option. guest user will have subjectID = null
 		Pattern subjectPattern = Pattern.compile("<a href=\"/article/" + subject.getBoardEngName() + "/post/(\\d+)\"");
 		Matcher subjectMatcher = subjectPattern.matcher(result);
 		int index = 0;
