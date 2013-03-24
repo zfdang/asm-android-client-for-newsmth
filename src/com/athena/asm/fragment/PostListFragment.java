@@ -589,22 +589,29 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                         break;
                     case 2:
                         // post_view_in_browser
-                        // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
                         if(post.getSubjectID() == null) {
                             // subjectID extracted from <a href="/article/FamilyLife/post/1752675592">回复</a>
-                            myToast.setText("此功能只有登录后才有效！");
-                            myToast.show();
-                            return;
-                        }
-                        String boardID = post.getBoardID();
-                        if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
-                            OpenPostInBrowserTask browserTask = new OpenPostInBrowserTask(getActivity(), post);
-                            browserTask.execute();
-                        } else {
-                            String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", boardID,
-                                    post.getSubjectID());
+                            // so guest user can't get postid, open topic list as a workaround
+                            // http://m.newsmth.net/article/Love/5528596?p=1
+                            String weburl = String.format("http://m.newsmth.net/article/%s/%s?p=%d", post.getBoard(),
+                                    post.getTopicSubjectID(), m_viewModel.getCurrentPageNumber());
                             Uri uri = Uri.parse(weburl);
                             startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        } else {
+                            // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
+                            // check boardID, if user comes from guidance boardID might be null or "fake"
+                            String boardID = post.getBoardID();
+                            if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
+                                // we will look up boardID by boardName in this Async task then open the post
+                                OpenPostInBrowserTask browserTask = new OpenPostInBrowserTask(getActivity(), post);
+                                browserTask.execute();
+                            } else {
+                                // open post directly
+                                String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", boardID,
+                                        post.getSubjectID());
+                                Uri uri = Uri.parse(weburl);
+                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                            }
                         }
                         break;
                     case 3:

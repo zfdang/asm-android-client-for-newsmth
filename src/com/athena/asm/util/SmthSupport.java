@@ -1185,6 +1185,7 @@ public class SmthSupport {
 			post.setBoard(subject.getBoardEngName());
 			String author = userIDMatcher.group(1);
 			post.setAuthor(author);
+			post.setTopicSubjectID(subject.getSubjectID());
 
 			if (flag) {
 				flag = false;
