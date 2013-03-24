@@ -9,3 +9,5 @@ local.properties
 /libs/aFileChooser/gen
 /libs/ActionBarSherlock/bin
 /libs/ActionBarSherlock/gen
+/libs/ViewPagerIndicator/bin
+/libs/ViewPagerIndicator/gen
