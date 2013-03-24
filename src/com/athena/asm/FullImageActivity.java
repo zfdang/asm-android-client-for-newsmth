@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -21,7 +22,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -30,18 +34,16 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.view.MyViewPager;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class FullImageActivity extends SherlockActivity
+public class FullImageActivity extends Activity
 	implements OnLongClickListener, OnPageChangeListener {
 
-	private MyViewPager vp;
+    private MyViewPager vp;
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
@@ -55,11 +57,12 @@ public class FullImageActivity extends SherlockActivity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        setTheme(android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		setTheme(aSMApplication.THEME);
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.full_image);
 
         // get page indicator textview
@@ -84,32 +87,6 @@ public class FullImageActivity extends SherlockActivity
 	public static final int MENU_SAVE = Menu.FIRST + 1;
 	public static final int MENU_BACK = Menu.FIRST + 2;
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_EXIF, Menu.NONE, getString(R.string.full_image_information));
-		menu.add(0, MENU_SAVE, Menu.NONE, getString(R.string.full_image_save));
-		menu.add(0, MENU_BACK, Menu.NONE, getString(R.string.full_image_back));
-
-		return super.onCreateOptionsMenu(menu);
-    }
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		updateImageInfoByIndex();
-
-		switch (item.getItemId()) {
-		case MENU_EXIF:
-			showExifDialog();
-			break;
-		case MENU_SAVE:
-			saveImage();
-			break;
-		case MENU_BACK:
-			onBackPressed();
-			break;
-		}
-		return true;
-	}
 
     /**
      * set current page indicator "N/M"
@@ -411,6 +388,32 @@ public class FullImageActivity extends SherlockActivity
 	}
 
 	@Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        menu.add(0, MENU_EXIF, Menu.NONE, getString(R.string.full_image_information));
+        menu.add(0, MENU_SAVE, Menu.NONE, getString(R.string.full_image_save));
+        menu.add(0, MENU_BACK, Menu.NONE, getString(R.string.full_image_back));
+	    return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        updateImageInfoByIndex();
+
+        switch (item.getItemId()) {
+        case MENU_EXIF:
+            showExifDialog();
+            break;
+        case MENU_SAVE:
+            saveImage();
+            break;
+        case MENU_BACK:
+            onBackPressed();
+            break;
+        }
+        return true;
+    }
+
+    @Override
 	public void onPageSelected(int arg0) {
 		setCurIndicator(arg0);
 	}
