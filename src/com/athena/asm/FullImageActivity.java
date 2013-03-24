@@ -27,8 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +35,8 @@ import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.view.MyViewPager;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.viewpagerindicator.LinePageIndicator;
+import com.viewpagerindicator.PageIndicator;
 
 public class FullImageActivity extends Activity
 	implements OnLongClickListener, OnPageChangeListener {
@@ -45,7 +45,7 @@ public class FullImageActivity extends Activity
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
-	private TextView m_tv;
+    PageIndicator mIndicator;
 	private int m_imageIdx;
 
     private ArrayList<String> m_imageNames;
@@ -58,13 +58,7 @@ public class FullImageActivity extends Activity
         setTheme(android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		setContentView(R.layout.full_image);
-
-        // get page indicator textview
-        m_tv = (TextView) findViewById(R.id.full_image_indicator);
 
 		m_imageNames = getIntent().getStringArrayListExtra (StringUtility.IMAGE_NAME);
 		m_imageUrls = getIntent().getStringArrayListExtra (StringUtility.IMAGE_URL);
@@ -75,26 +69,19 @@ public class FullImageActivity extends Activity
         vp.setAdapter(vpAdapter);
         vp.setOnPageChangeListener(this);
         vp.setCurrentItem(m_imageIdx);
-        setCurIndicator(m_imageIdx);
 
-//		setRequestedOrientation(aSMApplication.ORIENTATION);
+        mIndicator = (LinePageIndicator)findViewById(R.id.indicator);
+        mIndicator.setViewPager(vp);
+        mIndicator.setCurrentItem(m_imageIdx);
+
+		// setRequestedOrientation(aSMApplication.ORIENTATION);
+        // use senor's orientation
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
 	public static final int MENU_EXIF = Menu.FIRST;
 	public static final int MENU_SAVE = Menu.FIRST + 1;
 	public static final int MENU_BACK = Menu.FIRST + 2;
-
-
-    /**
-     * set current page indicator "N/M"
-     */
-    private void setCurIndicator(int position)
-    {
-		m_imageIdx = position;
-		String pos = String.format("%s/%s", position+1, m_imageUrls.size());
-		m_tv.setText(pos);
-    }
 
 	// get image attribute from exif
 	private void setImageAttributeFromExif(View layout, int tv_id, ExifInterface exif, String attr){
@@ -413,6 +400,6 @@ public class FullImageActivity extends Activity
 
     @Override
 	public void onPageSelected(int arg0) {
-		setCurIndicator(arg0);
+        m_imageIdx = arg0;
 	}
 }

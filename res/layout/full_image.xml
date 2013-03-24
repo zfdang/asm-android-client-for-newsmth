@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/full_image_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Image -->
+    <!-- customized ViewPager -->
+
     <com.athena.asm.view.MyViewPager
         android:id="@+id/myviewpager"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <!-- Page indicator "N/M" -->
-    <TextView
-        android:id="@+id/full_image_indicator"
-        android:layout_width="wrap_content"
+    <!-- https://github.com/JakeWharton/Android-ViewPagerIndicator -->
+
+    <com.viewpagerindicator.LinePageIndicator
+        android:id="@+id/indicator"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:text="2/20" />
-</FrameLayout>
+        android:padding="5dip" />
+
+</LinearLayout>

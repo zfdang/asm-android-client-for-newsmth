@@ -538,6 +538,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
                 canvas.drawPath(mPath, mPaintFooterIndicator);
                 mPaintFooterIndicator.setAlpha(0xFF);
                 break;
+        default:
+            break;
         }
     }
 
@@ -846,7 +848,6 @@ public class TitlePageIndicator extends View implements PageIndicator {
             dest.writeInt(currentPage);
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel in) {
