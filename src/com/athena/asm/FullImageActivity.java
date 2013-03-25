@@ -20,7 +20,6 @@ import android.content.pm.ActivityInfo;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,9 +38,9 @@ import com.viewpagerindicator.LinePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
 public class FullImageActivity extends Activity
-	implements OnLongClickListener, OnPageChangeListener {
+	implements OnLongClickListener {
 
-    private MyViewPager vp;
+    private MyViewPager mViewPager;
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
@@ -64,14 +63,13 @@ public class FullImageActivity extends Activity
 		m_imageUrls = getIntent().getStringArrayListExtra (StringUtility.IMAGE_URL);
 		m_imageIdx = getIntent().getIntExtra(StringUtility.IMAGE_INDEX, 0);
 
-        vp = (MyViewPager) findViewById(R.id.myviewpager);
+        mViewPager = (MyViewPager) findViewById(R.id.myviewpager);
         vpAdapter = new ViewPagerAdapter(m_imageUrls, this);
-        vp.setAdapter(vpAdapter);
-        vp.setOnPageChangeListener(this);
-        vp.setCurrentItem(m_imageIdx);
+        mViewPager.setAdapter(vpAdapter);
+        mViewPager.setCurrentItem(m_imageIdx);
 
         mIndicator = (LinePageIndicator)findViewById(R.id.indicator);
-        mIndicator.setViewPager(vp);
+        mIndicator.setViewPager(mViewPager);
         mIndicator.setCurrentItem(m_imageIdx);
 
 		// setRequestedOrientation(aSMApplication.ORIENTATION);
@@ -305,6 +303,7 @@ public class FullImageActivity extends Activity
 
 	void updateImageInfoByIndex(){
 		// update imageName and imageURL
+	    m_imageIdx = mViewPager.getCurrentItem();
 		m_imageName = m_imageNames.get(m_imageIdx);
         if (m_imageName.trim().length() == 0) {
             m_imageName = "未命名";
@@ -359,19 +358,6 @@ public class FullImageActivity extends Activity
 		super.onBackPressed();
 	}
 
-	/*
-	 * three methods from OnPageChangeListener
-	 */
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-	}
-
 	@Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         menu.add(0, MENU_EXIF, Menu.NONE, getString(R.string.full_image_information));
@@ -397,9 +383,4 @@ public class FullImageActivity extends Activity
         }
         return true;
     }
-
-    @Override
-	public void onPageSelected(int arg0) {
-        m_imageIdx = arg0;
-	}
 }
