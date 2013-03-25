@@ -157,6 +157,7 @@
 	<string name="action_bar_share_with">分享</string>
 	
     <string name="image_info_basic">基本信息:</string>
+    <string name="image_info_filename">图片名称</string>
     <string name="image_info_datetime">时间</string>
     <string name="image_info_width">宽度</string>
     <string name="image_info_height">高度</string>

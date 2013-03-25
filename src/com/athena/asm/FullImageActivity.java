@@ -227,6 +227,8 @@ public class FullImageActivity extends Activity
 
 			ExifInterface exif = new ExifInterface(sFileName);
 			// basic information
+			TextView tvFilename = (TextView) layout.findViewById(R.id.ii_filename);
+			tvFilename.setText(m_imageName);
 			setImageAttributeFromExif(layout, R.id.ii_datetime, exif, ExifInterface.TAG_DATETIME);
 			setImageAttributeFromExif(layout, R.id.ii_width, exif, ExifInterface.TAG_IMAGE_WIDTH);
 			setImageAttributeFromExif(layout, R.id.ii_height, exif, ExifInterface.TAG_IMAGE_LENGTH);

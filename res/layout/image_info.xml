@@ -28,6 +28,12 @@
                     android:text="@string/image_info_basic" />
 
                 <TextView
+                    android:id="@+id/ii_filename_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_info_filename" />
+
+                <TextView
                     android:id="@+id/ii_datetime_key"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,6 +69,13 @@
                     android:id="@+id/ii_basic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ii_filename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
 
                 <TextView
                     android:id="@+id/ii_datetime"
