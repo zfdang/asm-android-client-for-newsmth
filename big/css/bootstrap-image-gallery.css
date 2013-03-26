@@ -23,7 +23,7 @@
 }
 .modal-gallery .modal-title {
   display: inline-block;
-  max-height: 54px;
+  max-height: 80px;
   overflow: hidden;
 }
 .modal-gallery .modal-image {
