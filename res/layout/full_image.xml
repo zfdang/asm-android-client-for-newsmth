@@ -15,7 +15,7 @@
 
     <!-- https://github.com/JakeWharton/Android-ViewPagerIndicator -->
 
-    <com.viewpagerindicator.LinePageIndicator
+    <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

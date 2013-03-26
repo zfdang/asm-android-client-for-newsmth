@@ -11,3 +11,5 @@ local.properties
 /libs/ActionBarSherlock/gen
 /libs/ViewPagerIndicator/bin
 /libs/ViewPagerIndicator/gen
+/libs/metadata-extractor/bin
+/libs/metadata-extractor/gen

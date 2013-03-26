@@ -34,8 +34,7 @@ import com.athena.asm.Adapter.ViewPagerAdapter;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.view.MyViewPager;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import com.viewpagerindicator.LinePageIndicator;
-import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class FullImageActivity extends Activity
 	implements OnLongClickListener {
@@ -44,7 +43,7 @@ public class FullImageActivity extends Activity
     private ViewPagerAdapter vpAdapter;
 
     // pagination navigator current position
-    PageIndicator mIndicator;
+    CirclePageIndicator mIndicator;
 	private int m_imageIdx;
 
     private ArrayList<String> m_imageNames;
@@ -68,7 +67,7 @@ public class FullImageActivity extends Activity
         mViewPager.setAdapter(vpAdapter);
         mViewPager.setCurrentItem(m_imageIdx);
 
-        mIndicator = (LinePageIndicator)findViewById(R.id.indicator);
+        mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
         mIndicator.setViewPager(mViewPager);
         mIndicator.setCurrentItem(m_imageIdx);
 
