@@ -199,7 +199,7 @@ public class FavoriteListFragment extends SherlockFragment implements
                         builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), board.getEngName(), board
+                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel, board.getEngName(), board
                                         .getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
                                 task.execute();
                                 dialog.dismiss();

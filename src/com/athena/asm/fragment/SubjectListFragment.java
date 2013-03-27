@@ -36,6 +36,7 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.EditFavoriteTask;
 import com.athena.asm.util.task.LoadSubjectTask;
 import com.athena.asm.viewmodel.BaseViewModel;
+import com.athena.asm.viewmodel.HomeViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
@@ -315,7 +316,8 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
             break;
         case ADD_TO_FAVORITE:
             Board board = m_viewModel.getCurrentBoard();
-            EditFavoriteTask task = new EditFavoriteTask(getActivity(), board.getEngName(), board.getBoardID(),
+            HomeViewModel viewModel = aSMApplication.getCurrentApplication().getHomeViewModel();
+            EditFavoriteTask task = new EditFavoriteTask(getActivity(), viewModel, board.getEngName(), board.getBoardID(),
                     EditFavoriteTask.FAVORITE_ADD);
             task.execute();
             break;
