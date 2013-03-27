@@ -5,10 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
@@ -22,6 +27,7 @@ import com.athena.asm.data.Board;
 import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.util.ListViewUtil;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.task.EditFavoriteTask;
 import com.athena.asm.util.task.LoadFavoriteTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
@@ -34,6 +40,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 	private LayoutInflater m_inflater;
 
 	private ExpandableListView m_listView;
+	FavoriteListAdapter m_favoriteListAdapter;
 
 	private boolean m_isLoaded;
 	
@@ -75,7 +82,7 @@ public class FavoriteListFragment extends SherlockFragment implements
 		if (m_viewModel.getCurrentTab() != null
 				&& m_viewModel.getCurrentTab().equals(
 						StringUtility.TAB_FAVORITE)) {
-			reloadFavorite();
+            reloadFavorite();
 		}
 	}
 
@@ -151,9 +158,9 @@ public class FavoriteListFragment extends SherlockFragment implements
 				listOfBoardList.add(0, rootBoardList);
 			}
 
-			final FavoriteListAdapter favoriteListAdapter = new FavoriteListAdapter(
+			m_favoriteListAdapter = new FavoriteListAdapter(
 					m_inflater, directoryList, listOfBoardList);
-			m_listView.setAdapter(favoriteListAdapter);
+			m_listView.setAdapter(m_favoriteListAdapter);
 
 			// expand special 'root' directory by default
 			m_listView.expandGroup(0);
@@ -173,6 +180,45 @@ public class FavoriteListFragment extends SherlockFragment implements
 					return false;
 				}
 			});
+
+            m_listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+                    if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                        // get selected board
+                        int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+                        int childPosition = ExpandableListView.getPackedPositionChild(id);
+                        List<List<Board>> m_boards = m_favoriteListAdapter.getFavoriteBoards();
+                        final Board board = m_boards.get(groupPosition).get(childPosition);
+
+                        // confirm dialog
+                        Builder builder = new AlertDialog.Builder(getActivity());
+                        String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getChsName());
+                        builder.setTitle("收藏夹操作").setMessage(title);
+
+                        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), board.getEngName(), board
+                                        .getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
+                                task.execute();
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog noticeDialog = builder.create();
+                        noticeDialog.show();
+
+                        return true;
+                    }
+                    return false;
+                }
+            });
 		}
 	}
 

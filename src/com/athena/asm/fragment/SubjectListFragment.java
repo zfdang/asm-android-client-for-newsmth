@@ -33,6 +33,7 @@ import com.athena.asm.data.Board;
 import com.athena.asm.data.Subject;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.task.EditFavoriteTask;
 import com.athena.asm.util.task.LoadSubjectTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
@@ -224,9 +225,10 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     public static final int SWITCH_BOARD_TYPE = Menu.FIRST;
     public static final int REFRESH_SUBJECTLIST = Menu.FIRST + 1;
     public static final int SEARCH_POST = Menu.FIRST + 2;
-    public static final int CREATE_ID = Menu.FIRST + 3;
+    public static final int NEW_POST = Menu.FIRST + 3;
     public static final int QUICK_SWITCH_BOARD_TYPE = Menu.FIRST + 4;
     public static final int SWITCH_STICKY = Menu.FIRST + 5;
+    public static final int ADD_TO_FAVORITE = Menu.FIRST + 6;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -234,7 +236,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         boolean isLight = aSMApplication.THEME == R.style.Theme_Sherlock_Light;
 
         if (SmthSupport.getInstance().getLoginStatus()) {
-            menu.add(0, CREATE_ID, Menu.NONE, "发新贴").setIcon(isLight ? R.drawable.write_inverse : R.drawable.write)
+            menu.add(0, NEW_POST, Menu.NONE, "发新贴").setIcon(isLight ? R.drawable.write_inverse : R.drawable.write)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         menu.add(0, QUICK_SWITCH_BOARD_TYPE, Menu.NONE, "模式切换")
@@ -248,6 +250,8 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                 .setIcon(isLight ? R.drawable.refresh_inverse : R.drawable.refresh)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(0, SWITCH_BOARD_TYPE, Menu.NONE, "切换到...").setShowAsAction(
+                MenuItem.SHOW_AS_ACTION_NEVER | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, ADD_TO_FAVORITE, Menu.NONE, "收藏版面").setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_NEVER | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
@@ -299,7 +303,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
             postIntent.putExtra(StringUtility.BID, m_viewModel.getCurrentBoard().getBoardID());
             startActivity(postIntent);
             break;
-        case CREATE_ID:
+        case NEW_POST:
             Intent writeIntent = new Intent();
             writeIntent.setClassName("com.athena.asm", "com.athena.asm.WritePostActivity");
             writeIntent.putExtra(StringUtility.URL, "http://www.newsmth.net/bbspst.php?board="
@@ -308,6 +312,12 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
             writeIntent.putExtra(StringUtility.IS_REPLY, false);
             // startActivity(intent);
             startActivityForResult(writeIntent, 0);
+            break;
+        case ADD_TO_FAVORITE:
+            Board board = m_viewModel.getCurrentBoard();
+            EditFavoriteTask task = new EditFavoriteTask(getActivity(), board.getEngName(), board.getBoardID(),
+                    EditFavoriteTask.FAVORITE_ADD);
+            task.execute();
             break;
         default:
             break;

@@ -19,7 +19,11 @@ public class FavoriteListAdapter extends BaseExpandableListAdapter {
 	private List<String> m_directories;
 	private List<List<Board>> m_boards;
 
-	static class ChildViewHolder{
+	public List<List<Board>> getFavoriteBoards() {
+        return m_boards;
+    }
+
+    static class ChildViewHolder{
 		TextView categoryNameTextView;
 		TextView moderatorIDTextView;
 		TextView boardNameTextView;

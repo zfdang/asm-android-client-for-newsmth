@@ -1372,7 +1372,43 @@ public class SmthSupport {
 		}
 	}
 
-	/**
+    public Boolean addBoardToFavorite(String boardname) {
+        // http://www.newsmth.net/bbsfav.php?bname=SecondComputer&select=0
+        // return new favorite list: if the boardname is returned, operation success
+        String url = "http://www.newsmth.net/bbsfav.php?select=0&bname=" + boardname;
+        String content = crawler.getUrlContent(url);
+        if (content == null) {
+            return false;
+        }
+        if (content.contains(boardname)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean removeBoardFromFavorite(String boardname, String boardid) {
+        // http://www.newsmth.net/bbsfav.php?select=0&delete=674
+        // return new favorite list: if the boardname is not returned, operation success
+        if(boardid == null && boardname != null) {
+            boardid = getBoardIDFromName(boardname);
+        }
+        // o.o(false,1,1029,1441174,'[数码]','PocketLife','掌上智能','leavesnow earthmouse wedf',372363,1028,644);
+        // it's strange there value of delete is not boardid, but boardid-1
+        int bid = Integer.parseInt(boardid) - 1;
+        String url = "http://www.newsmth.net/bbsfav.php?select=0&delete=" + bid;
+        String content = crawler.getUrlContent(url);
+        if (content == null) {
+            return false;
+        }
+        if (! content.contains(boardname)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
 	 * 获得个人信息
 	 * 
 	 * @param userID
