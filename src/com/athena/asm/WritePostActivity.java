@@ -93,6 +93,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
             }
 
         } else if (m_viewModel.getWriteType() == TYPE_MAIL) {
+            sendButton.setText("发信");
             m_attachButton.setVisibility(View.GONE);
             m_useridEditText.setText((getIntent().getStringExtra(StringUtility.USERID)));
             setTitle("写  信");
@@ -108,6 +109,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
             LinearLayout layout = (LinearLayout) findViewById(R.id.post_second_layout);
             layout.addView(sendButton);
             setTitle("修改帖子");
+            sendButton.setText("修改");
 
             m_viewModel.setPostTitile(getIntent().getStringExtra(StringUtility.TITLE));
             m_titleEditText.setText(m_viewModel.getPostTitle());

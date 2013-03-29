@@ -1,9 +1,12 @@
 package com.athena.asm;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -39,13 +42,30 @@ public class ViewProfileActivity extends SherlockActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    public void reloadProfile(Profile profile) {
+    public void reloadProfile(final Profile profile) {
         if (profile != null) {
             ImageButton searchButton = (ImageButton) findViewById(R.id.btn_search);
             ((RelativeLayout) searchButton.getParent()).setVisibility(View.GONE);
 
             Button msgButton = (Button) findViewById(R.id.btn_send_mail);
-            msgButton.setVisibility(View.GONE);
+            msgButton.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(StringUtility.URL, "http://www.newsmth.net/bbspstmail.php");
+                    bundle.putSerializable(StringUtility.WRITE_TYPE, 1);
+                    bundle.putSerializable(StringUtility.IS_REPLY, false);
+                    bundle.putSerializable(StringUtility.USERID, profile.getUserID());
+
+                    Intent intent = new Intent();
+                    intent.putExtras(bundle);
+                    intent.setClassName("com.athena.asm", WritePostActivity.class.getName());
+                    startActivity(intent);
+                }
+            });
+
+
 
             TextView userIDTextView = (TextView) findViewById(R.id.profile_userid);
             userIDTextView.setText(profile.getUserIDNickName());

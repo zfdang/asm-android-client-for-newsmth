@@ -123,7 +123,6 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
                         onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
                                 bundle);
                     }
-
                 }
             });
 
