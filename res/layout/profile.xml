@@ -31,6 +31,8 @@
                     android:id="@+id/profile_userid"
                     style="@style/LinkText.Bold.Huge"
                     android:layout_width="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_height="wrap_content" >
                 </TextView>
 
@@ -300,6 +302,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dip"
                     android:layout_toLeftOf="@+id/btn_search"
+                    android:selectAllOnFocus="true"
                     android:hint="查询网友" />
             </RelativeLayout>
         </LinearLayout>

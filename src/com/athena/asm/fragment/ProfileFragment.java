@@ -128,6 +128,7 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
 
             TextView userIDTextView = (TextView) m_layout.findViewById(R.id.profile_userid);
             userIDTextView.setText(m_currentProfile.getUserIDNickName());
+            userIDTextView.requestFocus();
 
             TextView userScoreTextView = (TextView) m_layout.findViewById(R.id.profile_user_score);
             if (m_currentProfile.getScore() != 0) {
