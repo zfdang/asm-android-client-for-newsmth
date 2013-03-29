@@ -489,7 +489,12 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // expand subject from this post
                 m_viewModel.setSubjectExpand(true);
                 m_viewModel.setBoardType(0);
-                m_startNumber = Integer.parseInt(m_viewModel.getCurrentSubject().getSubjectID());
+                try {
+                    m_startNumber = Integer.parseInt(m_viewModel.getCurrentSubject().getSubjectID());
+                } catch (NumberFormatException e) {
+                    Log.d("PostListFragment", e.toString());
+                    return;
+                }
                 m_viewModel.updateSubjectIDFromTopicSubjectID();
                 m_viewModel.setSubjectCurrentPageNumber(1);
             }
