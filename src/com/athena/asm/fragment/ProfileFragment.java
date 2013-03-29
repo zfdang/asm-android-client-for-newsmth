@@ -1,5 +1,6 @@
 package com.athena.asm.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.athena.asm.ActivityFragmentTargets;
+import com.athena.asm.OnOpenActivityFragmentListener;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Profile;
@@ -95,6 +99,29 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
                     if (idString.length() > 0) {
                         LoadProfileTask profileTask = new LoadProfileTask(getActivity(), m_viewModel, idString);
                         profileTask.execute();
+                    }
+
+                }
+            });
+
+            Button msgButton = (Button) m_layout.findViewById(R.id.btn_send_mail);
+            msgButton.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    OnOpenActivityFragmentListener onOpenActivityFragmentListener = null;
+                    Activity parentActivity = getSherlockActivity();
+                    if (parentActivity instanceof OnOpenActivityFragmentListener) {
+                        onOpenActivityFragmentListener = (OnOpenActivityFragmentListener) parentActivity;
+                    }
+                    if (onOpenActivityFragmentListener != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(StringUtility.URL, "http://www.newsmth.net/bbspstmail.php");
+                        bundle.putSerializable(StringUtility.WRITE_TYPE, 1);
+                        bundle.putSerializable(StringUtility.IS_REPLY, false);
+                        bundle.putSerializable(StringUtility.USERID, m_currentProfile.getUserID());
+                        onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.WRITE_POST,
+                                bundle);
                     }
 
                 }

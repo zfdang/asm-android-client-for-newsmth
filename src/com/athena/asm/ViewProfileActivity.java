@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +43,9 @@ public class ViewProfileActivity extends SherlockActivity {
         if (profile != null) {
             ImageButton searchButton = (ImageButton) findViewById(R.id.btn_search);
             ((RelativeLayout) searchButton.getParent()).setVisibility(View.GONE);
+
+            Button msgButton = (Button) findViewById(R.id.btn_send_mail);
+            msgButton.setVisibility(View.GONE);
 
             TextView userIDTextView = (TextView) findViewById(R.id.profile_userid);
             userIDTextView.setText(profile.getUserIDNickName());

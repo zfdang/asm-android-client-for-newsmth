@@ -94,6 +94,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
 
         } else if (m_viewModel.getWriteType() == TYPE_MAIL) {
             m_attachButton.setVisibility(View.GONE);
+            m_useridEditText.setText((getIntent().getStringExtra(StringUtility.USERID)));
             setTitle("写  信");
             if (isNewActivity) {
                 new LoadWritePostTask(this, m_viewModel).execute();
