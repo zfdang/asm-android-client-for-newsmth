@@ -44,17 +44,17 @@ public class ViewProfileActivity extends SherlockActivity {
             ((RelativeLayout) searchButton.getParent()).setVisibility(View.GONE);
 
             TextView userIDTextView = (TextView) findViewById(R.id.profile_userid);
-            userIDTextView.setText(profile.getUserID());
+            userIDTextView.setText(profile.getUserIDNickName());
 
             TextView userScoreTextView = (TextView) findViewById(R.id.profile_user_score);
             if (profile.getScore() != 0) {
-                userScoreTextView.setText("积分：" + profile.getScore());
+                userScoreTextView.setText("积分:" + profile.getScore());
             } else {
                 userScoreTextView.setVisibility(View.GONE);
             }
 
-            TextView userNicknameTextView = (TextView) findViewById(R.id.profile_user_nickname);
-            userNicknameTextView.setText(profile.getNickName());
+            TextView userIpTextView = (TextView) findViewById(R.id.profile_user_ip);
+            userIpTextView.setText("来自:" + profile.getIp());
 
             TextView descTextView = (TextView) findViewById(R.id.profile_user_desc);
             descTextView.setText(Html.fromHtml(profile.getDescription()));

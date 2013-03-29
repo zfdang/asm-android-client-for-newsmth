@@ -42,7 +42,7 @@
 	<string name="profile_alive_number">生命力</string>
 	<string name="profile_login_count">上站</string>
 	<string name="profile_post_count">发表</string>
-	<string name="profile_online_status">在线</string>
+	<string name="profile_online_status">状态</string>
 	 <!-- 标题栏文字 -->
 	<string name="title_guidance">首页导读</string>
 	<string name="title_favorite">我的收藏夹</string>

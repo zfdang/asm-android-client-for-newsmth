@@ -4,7 +4,9 @@ public class Profile {
 	private String userID;
 	private String nickName;
 	private String description;
-	private int aliveness;
+	private String ip;
+
+    private int aliveness;
 	private int loginTime;
 	private int postNumber;
 	private int onlineStatus; // 0, 离线; 1, 未知； 2， 在线
@@ -17,6 +19,18 @@ public class Profile {
 	public String getUserID() {
 		return userID;
 	}
+
+	public String getUserIDNickName(){
+	    return userID + " (" + nickName + ")";
+	}
+
+	public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;

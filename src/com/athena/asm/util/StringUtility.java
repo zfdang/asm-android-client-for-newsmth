@@ -108,6 +108,9 @@ public class StringUtility {
         return Integer.parseInt(content.substring(start, end).trim());
     }
 
+    //elito (CMCC) 共上站 1072 次，发表过 396 篇文章
+    //上次在  [Fri Mar 29 07:35:05 2013] 从 [117.136.0.*] 到本站一游。
+    //离线时间[Fri Mar 29 07:35:36 2013] 信箱: [信] 生命力: [180] 身份: [用户]。
     public static Profile parseProfile(String content) {
         Profile profile = new Profile();
         int begin = content.indexOf("(") - 1;
@@ -141,6 +144,18 @@ public class StringUtility {
             profile.setOnlineStatus(1);
         } else {
             profile.setOnlineStatus(0);
+        }
+
+        // extract IP address
+        Pattern myipPattern = Pattern.compile("\\[(\\d{1,3}.\\d{1,3}.\\d{1,3}.[\\d\\*]+)\\]");
+        Matcher myipMatcher = myipPattern.matcher(content);
+        if (myipMatcher.find()) {
+            String ip = myipMatcher.group(1);
+            if (aSMApplication.getCurrentApplication().isShowIp()) {
+                String _ip = ip.replace('*', '1');
+                ip = ip + "(" + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(_ip)) + ")";
+            }
+            profile.setIp(ip);
         }
 
         return profile;

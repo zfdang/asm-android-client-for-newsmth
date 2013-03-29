@@ -33,22 +33,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
                 </TextView>
-                <!-- 用户昵称 -->
+
+                <!-- 用户积分 -->
 
                 <TextView
                     android:id="@+id/profile_user_score"
-                    style="@style/LinkText.Bold.Huge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/profile_userid" />
-                <!-- 用户昵称 -->
+
+                <!-- 用户IP -->
 
                 <TextView
-                    android:id="@+id/profile_user_nickname"
-                    style="@style/LinkText.Bold.Huge"
+                    android:id="@+id/profile_user_ip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/profile_user_score" />
+                    android:layout_below="@id/profile_user_score"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -64,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10.0dip"
                         android:text="@string/profile_send_mail"
-                        android:visibility="gone" />
+                        />
                 </LinearLayout>
             </RelativeLayout>
 

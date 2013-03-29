@@ -101,17 +101,17 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
             });
 
             TextView userIDTextView = (TextView) m_layout.findViewById(R.id.profile_userid);
-            userIDTextView.setText(m_currentProfile.getUserID());
+            userIDTextView.setText(m_currentProfile.getUserIDNickName());
 
             TextView userScoreTextView = (TextView) m_layout.findViewById(R.id.profile_user_score);
             if (m_currentProfile.getScore() != 0) {
-                userScoreTextView.setText("积分：" + m_currentProfile.getScore());
+                userScoreTextView.setText("积分:" + m_currentProfile.getScore());
             } else {
                 userScoreTextView.setVisibility(View.GONE);
             }
 
-            TextView userNicknameTextView = (TextView) m_layout.findViewById(R.id.profile_user_nickname);
-            userNicknameTextView.setText(m_currentProfile.getNickName());
+            TextView userIpTextView = (TextView) m_layout.findViewById(R.id.profile_user_ip);
+            userIpTextView.setText("来自:" + m_currentProfile.getIp());
 
             TextView descTextView = (TextView) m_layout.findViewById(R.id.profile_user_desc);
             descTextView.setText(Html.fromHtml(m_currentProfile.getDescription()));
@@ -140,8 +140,9 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
 
             if (aSMApplication.getCurrentApplication().isNightTheme()) {
                 userIDTextView.setTextColor(m_layout.getResources().getColor(R.color.blue_text_night));
-                userScoreTextView.setTextColor(m_layout.getResources().getColor(R.color.blue_text_night));
-                userNicknameTextView.setTextColor(m_layout.getResources().getColor(R.color.blue_text_night));
+                searchButton.setImageResource(R.drawable.search);
+            } else {
+                searchButton.setImageResource(R.drawable.search_inverse);
             }
 
         }
