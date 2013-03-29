@@ -1435,7 +1435,11 @@ public class SmthSupport {
 		Matcher desMatcher = desPattern.matcher(content);
 		if (desMatcher.find()) {
 			String descriptionString = desMatcher.group(1);
-			descriptionString = descriptionString.replaceAll("[\\\\n]", "<br/>");
+			descriptionString = descriptionString.replaceAll("\\\\/", "/"); // \/ ==> /
+			descriptionString = descriptionString.replaceAll("\\\\\\\\", "\\\\"); // \\ ==> \
+			descriptionString = descriptionString.replaceAll("\\\\\"", "\""); // \" ==> "
+			descriptionString = descriptionString.replaceAll("\\\\'", "'"); // \' ==> '
+			descriptionString = descriptionString.replaceAll("\\\\n", "<br/>"); // \n ==> <br/>
 			profile.setDescription(descriptionString);
 		} else {
 			profile.setDescription("这家伙很懒，啥也没留下");
