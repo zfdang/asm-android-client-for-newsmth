@@ -9,57 +9,55 @@ import com.athena.asm.data.Profile;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoadProfileTask extends AsyncTask<String, Integer, String> {
-	private ViewProfileActivity viewProfileActivity = null;
-	private String userID;
-	private Profile profile;
-	private int type;
-	private ProgressDialog pdialog;
-	
-	private HomeViewModel m_viewModel;
+    private ViewProfileActivity viewProfileActivity = null;
+    private String userID;
+    private Profile profile;
+    private int type;
+    private ProgressDialog pdialog;
 
-	public LoadProfileTask(Context ctx, HomeViewModel viewModel, String userID) {
-		this.userID = userID;
-		type = 0;
-		m_viewModel = viewModel;
-		pdialog = new ProgressDialog(ctx);
-	}
-	
-	public LoadProfileTask(ViewProfileActivity activity, String userID) {
-		this.viewProfileActivity = activity;
-		this.userID = userID;
-		type = 1;
-		pdialog = new ProgressDialog(activity);
-	}
+    private HomeViewModel m_viewModel;
 
-	@Override
-	protected void onPreExecute() {
-		if(m_viewModel != null)
-			m_viewModel.m_isLoadingInProgress = true;
-		pdialog.setMessage("加载用户信息中...");
-		pdialog.show();
-	}
+    public LoadProfileTask(Context ctx, HomeViewModel viewModel, String userID) {
+        this.userID = userID;
+        type = 0;
+        m_viewModel = viewModel;
+        pdialog = new ProgressDialog(ctx);
+    }
 
-	@Override
-	protected String doInBackground(String... params) {
-		if (type == 0) {
-			profile = m_viewModel.getProfile(userID);
-		}
-		else {
-			profile = viewProfileActivity.m_smthSupport.getProfile(userID);
-		}
-		pdialog.cancel();
-		return null;
-	}
+    public LoadProfileTask(ViewProfileActivity activity, String userID) {
+        this.viewProfileActivity = activity;
+        this.userID = userID;
+        type = 1;
+        pdialog = new ProgressDialog(activity);
+    }
 
-	@Override
-	protected void onPostExecute(String result) {
-		if (type == 0) {
-			m_viewModel.notifyProfileChanged(profile);
-		}
-		else {
-			viewProfileActivity.reloadProfile(profile);
-		}
-		if(m_viewModel != null)
-			m_viewModel.m_isLoadingInProgress = false;
-	}
+    @Override
+    protected void onPreExecute() {
+        if (m_viewModel != null)
+            m_viewModel.m_isLoadingInProgress = true;
+        pdialog.setMessage("加载用户信息中...");
+        pdialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        if (type == 0) {
+            profile = m_viewModel.getProfile(userID);
+        } else {
+            profile = viewProfileActivity.m_smthSupport.getProfile(userID);
+        }
+        pdialog.cancel();
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        if (type == 0) {
+            m_viewModel.notifyProfileChanged(profile);
+        } else {
+            viewProfileActivity.reloadProfile(profile);
+        }
+        if (m_viewModel != null)
+            m_viewModel.m_isLoadingInProgress = false;
+    }
 }
