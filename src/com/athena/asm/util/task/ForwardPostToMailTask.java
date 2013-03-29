@@ -21,19 +21,19 @@ public class ForwardPostToMailTask extends AsyncTask<String, Integer, String> {
 	
 	private int m_type;
 	
-	private String m_email;
+	private String m_emailOrID;
 	
 	public static int FORWARD_TO_SELF = 0;
 	public static int FORWARD_TO_EMAIL = 1;
 	public static int FORWARD_TO_EMAIL_GROUP = 2;
 
-	public ForwardPostToMailTask(Context ctx, PostListViewModel viewModel, Post post, int type, String email) {
+	public ForwardPostToMailTask(Context ctx, PostListViewModel viewModel, Post post, int type, String recipient) {
 		m_viewModel = viewModel;
 		m_context = ctx;
 		pdialog = new ProgressDialog(ctx);
 		m_post = post;
 		m_type = type;
-		m_email = email;
+		m_emailOrID = recipient;
 	}
 
 	@Override
@@ -47,22 +47,23 @@ public class ForwardPostToMailTask extends AsyncTask<String, Integer, String> {
 		if (m_type == FORWARD_TO_SELF) {
 			m_result = m_viewModel.getSmthSupport().forwardPostToMailBox(m_post);
 		} else if (m_type == FORWARD_TO_EMAIL) {
-			m_result = m_viewModel.getSmthSupport().forwardPostToExternalMail(m_post, m_email);
+			m_result = m_viewModel.getSmthSupport().forwardPostToExternalMail(m_post, m_emailOrID);
 		} else {
-			m_result = m_viewModel.getSmthSupport().forwardGroupPostToExternalMail(m_post, m_email) ;
+			m_result = m_viewModel.getSmthSupport().forwardGroupPostToExternalMail(m_post, m_emailOrID) ;
 		}
 		pdialog.cancel();
 		return null;
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
-		if (m_result) {
-			Toast.makeText(m_context, "已转寄成功",
-					Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(m_context, "可耻滴失败了",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
+    protected void onPostExecute(String result) {
+	    if(m_emailOrID == null || m_emailOrID == ""){
+	        m_emailOrID = "自己";
+	    }
+	    if (m_result) {
+            Toast.makeText(m_context, "转寄成功! (To:" + m_emailOrID + ")", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(m_context, "转寄失败.. (To:" + m_emailOrID + ")", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

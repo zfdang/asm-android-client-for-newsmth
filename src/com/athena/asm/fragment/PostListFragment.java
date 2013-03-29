@@ -220,8 +220,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         // use density-aware measurements.
         DisplayMetrics dm = getResources().getDisplayMetrics();
         SWIPE_MIN_DISTANCE = (int) (120.0f * dm.densityDpi / 160.0f + 0.5);
-        SWIPE_MAX_OFF_PATH = (int) (150.0f * dm.densityDpi / 160.0f + 0.5);
-        SWIPE_THRESHOLD_VELOCITY = (int) (200.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_MAX_OFF_PATH = (int) (200.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_THRESHOLD_VELOCITY = (int) (150.0f * dm.densityDpi / 160.0f + 0.5);
     }
 
     @SuppressWarnings("deprecation")
@@ -796,41 +796,33 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_isPageNumberEditTextTouched = true;
     }
 
+    // this method can forward post to external email or other user
     private void forwardToEmail(final Post post, final boolean group) {
         String email = aSMApplication.getCurrentApplication().getForwardEmailAddr();
-        if (email == "") {
-            final EditText input = new EditText(getActivity());
+        final EditText input = new EditText(getActivity());
+        input.setText(email);
 
-            new AlertDialog.Builder(getActivity()).setTitle("设置转寄邮箱").setMessage("您还没有设置转寄邮箱，请先设置。如需更改，请至设置页面")
-                    .setView(input).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Editable value = input.getText();
-                            aSMApplication.getCurrentApplication().updateForwardEmailAddr(value.toString());
+        new AlertDialog.Builder(getActivity()).setTitle("设置转寄的收件人/外部邮箱")
+                .setMessage("输入ID可转寄给站内用户，输入EMAIL可转寄到外部邮箱").setView(input)
+                .setPositiveButton("转寄", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Editable value = input.getText();
+                        aSMApplication.getCurrentApplication().updateForwardEmailAddr(value.toString());
 
-                            ForwardPostToMailTask task;
-                            if (group)
-                                task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
-                                        ForwardPostToMailTask.FORWARD_TO_EMAIL_GROUP, value.toString());
-                            else
-                                task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
-                                        ForwardPostToMailTask.FORWARD_TO_EMAIL, value.toString());
-                            task.execute();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Do nothing.
-                        }
-                    }).show();
-        } else {
-            ForwardPostToMailTask task;
-            if (group)
-                task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
-                        ForwardPostToMailTask.FORWARD_TO_EMAIL_GROUP, email);
-            else
-                task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
-                        ForwardPostToMailTask.FORWARD_TO_EMAIL, email);
-            task.execute();
-        }
+                        ForwardPostToMailTask task;
+                        if (group)
+                            task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
+                                    ForwardPostToMailTask.FORWARD_TO_EMAIL_GROUP, value.toString());
+                        else
+                            task = new ForwardPostToMailTask(getActivity(), m_viewModel, post,
+                                    ForwardPostToMailTask.FORWARD_TO_EMAIL, value.toString());
+                        task.execute();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
 
         return;
     }
