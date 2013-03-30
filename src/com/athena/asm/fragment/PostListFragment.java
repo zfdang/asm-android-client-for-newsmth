@@ -219,7 +219,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         // use density-aware measurements.
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        SWIPE_MIN_DISTANCE = (int) (120.0f * dm.densityDpi / 160.0f + 0.5);
+        SWIPE_MIN_DISTANCE = (int) (100.0f * dm.densityDpi / 160.0f + 0.5);
         SWIPE_MAX_OFF_PATH = (int) (200.0f * dm.densityDpi / 160.0f + 0.5);
         SWIPE_THRESHOLD_VELOCITY = (int) (150.0f * dm.densityDpi / 160.0f + 0.5);
     }

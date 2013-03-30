@@ -9,12 +9,16 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-03-29.
+Build Date: 2013-03-30.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2013-03-30:
+------------------------------
+1. 修复了一个crash的bug
 
 2013-03-29:
 ------------------------------
