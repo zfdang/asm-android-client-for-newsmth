@@ -3,10 +3,13 @@ package com.athena.asm;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +22,7 @@ import com.athena.asm.Adapter.AttachListAdapter;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.UploadAttachFilesTask;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 
 public class AttachUploadActivity extends SherlockActivity implements
 		OnClickListener {
@@ -102,14 +106,24 @@ public class AttachUploadActivity extends SherlockActivity implements
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.btn_select_file) {
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setClassName("com.athena.asm",
-					"com.athena.asm.FileChooserActivity");
-			startActivityForResult(intent, SELECT_FILE_REQUEST);
+			showChooser();
 		} else if (v.getId() == R.id.btn_start_upload_attach) {
 			UploadAttachFilesTask uploadAttachFilesTask = new UploadAttachFilesTask(
 					this);
 			uploadAttachFilesTask.execute();
+		}
+	}
+
+	private void showChooser() {
+		// Use the GET_CONTENT intent from the utility class
+		Intent target = FileUtils.createGetContentIntent();
+		// Create the chooser Intent
+		Intent intent = Intent.createChooser(
+				target, getString(R.string.upload_file_title));
+		try {
+			startActivityForResult(intent, SELECT_FILE_REQUEST);
+		} catch (ActivityNotFoundException e) {
+			// The reason for the existence of aFileChooser
 		}
 	}
 
@@ -127,13 +141,24 @@ public class AttachUploadActivity extends SherlockActivity implements
 		finish();
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == SELECT_FILE_REQUEST) {
-			if (resultCode == RESULT_OK) {
-				m_attachArrayList.add((File) data
-						.getSerializableExtra(StringUtility.SELECTED_FILE));
-				m_attachListAdapter.notifyDataSetChanged();
-			}
-		}
-	}
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_FILE_REQUEST) {
+            // If the file selection was successful
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    // Get the URI of the selected file
+                    final Uri uri = data.getData();
+
+                    try {
+                        // Create a file instance from the URI
+                        final File myFile = FileUtils.getFile(uri);
+                        m_attachArrayList.add(myFile);
+                        m_attachListAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        Log.e("FileSelectorTestActivity", "File select error", e);
+                    }
+                }
+            }
+        }
+    }
 }
