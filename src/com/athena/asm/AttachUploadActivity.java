@@ -95,7 +95,8 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
         @Override
         protected void onPostExecute(String result) {
-            // 选择需要上传的文件后点上传：(<a id="idAllAtt" style="display:none;" href="javascript:...
+            // 选择需要上传的文件后点上传：(<a id="idAllAtt" style="display:none;"
+            // href="javascript:...
             if (m_content.contains("选择需要上传的文件后点上传")) {
                 m_addAttachButton.setEnabled(true);
                 m_uploadButton.setEnabled(true);
@@ -107,7 +108,7 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
     @Override
     public void onBackPressed() {
-        if( m_attachArrayList.size() > 0 ){
+        if (m_attachArrayList.size() > 0) {
             // there are files not uploaded, alert users
             Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("放弃附件").setMessage("选择的附件尚未上载，放弃附件么？");
@@ -179,7 +180,7 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
     }
 
     public void uploadFinish(boolean result) {
-        if(result) {
+        if (result) {
             Toast.makeText(getApplicationContext(), "附件已上传.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.putExtra(StringUtility.STATUS_OK, "OK");
