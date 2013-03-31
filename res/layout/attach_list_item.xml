@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:gravity="center_vertical"
-        android:text="文件的名称"
         android:textSize="20dp" />
 
     <TextView
@@ -27,7 +26,6 @@
         android:layout_below="@+id/attach_title"
         android:gravity="center_vertical"
         android:paddingTop="4dp"
-        android:text="文件的大小"
         android:textSize="18dp" />
 
     <Button
