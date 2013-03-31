@@ -103,7 +103,8 @@ public class Board implements Externalizable {
 		return childBoards;
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public void readExternal(ObjectInput input) throws IOException,
 			ClassNotFoundException {
 		boardID = (String) input.readObject();
