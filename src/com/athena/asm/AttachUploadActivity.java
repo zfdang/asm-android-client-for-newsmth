@@ -26,7 +26,7 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 
 public class AttachUploadActivity extends SherlockActivity implements OnClickListener {
 
-    static final int SELECT_FILE_REQUEST = 0;
+    static final int SELECT_FILE_REQUEST = 8763;
 
     public SmthSupport m_smthSupport;
 
@@ -37,6 +37,7 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
     private Button m_addAttachButton;
     private Button m_uploadButton;
+    private Button m_doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +55,20 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
         m_addAttachButton = (Button) findViewById(R.id.btn_select_file);
         m_addAttachButton.setOnClickListener(this);
-        m_addAttachButton.setEnabled(false);
+        m_addAttachButton.setEnabled(true);
 
         m_uploadButton = (Button) findViewById(R.id.btn_start_upload_attach);
         m_uploadButton.setOnClickListener(this);
         m_uploadButton.setEnabled(false);
 
+        m_doneButton = (Button) findViewById(R.id.btn_upload_done);
+        m_doneButton.setOnClickListener(this);
+        m_doneButton.setEnabled(true);
+
         m_attachListAdapter = new AttachListAdapter(this, m_inflater);
 
         ListView listView = (ListView) findViewById(R.id.attach_list);
         listView.setAdapter(m_attachListAdapter);
-
-        new LoadUploadInfoTask().execute();
-
     }
 
     class LoadUploadInfoTask extends AsyncTask<String, Integer, String> {
@@ -108,6 +110,8 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
         } else if (v.getId() == R.id.btn_start_upload_attach) {
             UploadAttachFilesTask uploadAttachFilesTask = new UploadAttachFilesTask(this);
             uploadAttachFilesTask.execute();
+        } else if (v.getId() == R.id.btn_upload_done) {
+            onBackPressed();
         }
     }
 

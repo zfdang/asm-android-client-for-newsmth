@@ -83,9 +83,11 @@
 	<string name="search_tip11">开始查询</string>
 	 <!-- 附件 -->
 	<string name="attach_resize">压缩图片</string>
+    <string name="upload_file_title">选择要上传的文件...</string>
 	<string name="attach_add">添加</string>
 	<string name="attach_upload">上传</string>
-	<string name="attach_delete">删除</string>
+	<string name="attach_done">完成</string>
+    <string name="attach_delete">删除</string>
 	 <!-- 关于 -->
 	<string name="about_title">关于aSM</string>
 	<string name="about_content">Build: %s.\naSM是水木社区(newsmth.net)的一个Android客户端程序。\n\n获取更新和使用说明:\nhttp://asm.zfdang.com\n\nBY leo18, r7000@SMTH\nModified by zfdang</string>
@@ -179,7 +181,6 @@
     <string name="update_service_ticker_start">aSM - 开始下载最新版APK...</string>
     <string name="update_service_ticker_end">aSM - APK下载成功，点击安装...</string>
     
-    <string name="upload_file_title">选择要上传的文件...</string>
 
 </resources>
 
