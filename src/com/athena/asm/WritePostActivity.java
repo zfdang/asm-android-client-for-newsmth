@@ -278,9 +278,9 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
             public void run() {
                 if (m_viewModel.getWriteType() == TYPE_POST) {
                     Toast.makeText(getApplicationContext(), "发表成功.", Toast.LENGTH_SHORT).show();
-                } else if(m_viewModel.getWriteType() == TYPE_MAIL) {
+                } else if (m_viewModel.getWriteType() == TYPE_MAIL) {
                     Toast.makeText(getApplicationContext(), "发信成功.", Toast.LENGTH_SHORT).show();
-                } else if(m_viewModel.getWriteType() == TYPE_POST_EDIT) {
+                } else if (m_viewModel.getWriteType() == TYPE_POST_EDIT) {
                     Toast.makeText(getApplicationContext(), "修改成功.", Toast.LENGTH_SHORT).show();
                 }
             }
