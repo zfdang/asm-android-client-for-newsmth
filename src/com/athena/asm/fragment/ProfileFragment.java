@@ -132,6 +132,7 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
 
             TextView userScoreTextView = (TextView) m_layout.findViewById(R.id.profile_user_score);
             if (m_currentProfile.getScore() != 0) {
+                userScoreTextView.setVisibility(View.VISIBLE);
                 userScoreTextView.setText("积分:" + m_currentProfile.getScore());
             } else {
                 userScoreTextView.setVisibility(View.GONE);
