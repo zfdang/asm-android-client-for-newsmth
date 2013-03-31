@@ -1,5 +1,9 @@
 package com.athena.asm.Adapter;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,9 +34,14 @@ public class AttachListAdapter extends BaseAdapter implements OnClickListener {
 			layout = inflater.inflate(R.layout.attach_list_item, null);
 		}
 		
+		File file = activity.m_attachArrayList.get(position);
 		TextView titleTextView = (TextView) layout.findViewById(R.id.attach_title);
-		titleTextView.setText(activity.m_attachArrayList.get(position).getName());
-		Button deleteButton = (Button) layout.findViewById(R.id.btn_delete_attach);
+		titleTextView.setText(file.getName());
+
+        TextView sizeTextView = (TextView) layout.findViewById(R.id.attach_size);
+        sizeTextView.setText("文件大小:" + FileUtils.byteCountToDisplaySize(file.length()));
+
+        Button deleteButton = (Button) layout.findViewById(R.id.btn_delete_attach);
 		deleteButton.setOnClickListener(this);
 		deleteButton.setTag(position);
 		

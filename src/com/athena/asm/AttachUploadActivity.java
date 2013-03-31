@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 
 public class AttachUploadActivity extends SherlockActivity implements OnClickListener {
 
-    static final int SELECT_FILE_REQUEST = 8763;
+    static final int SELECT_FILE_REQUEST = 0;
 
     public SmthSupport m_smthSupport;
 
@@ -45,17 +45,11 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attach_list);
 
-        m_smthSupport = SmthSupport.getInstance();
-
-        m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        m_attachArrayList = new ArrayList<File>();
-
         setTitle("上传附件");
 
         m_addAttachButton = (Button) findViewById(R.id.btn_select_file);
         m_addAttachButton.setOnClickListener(this);
-        m_addAttachButton.setEnabled(true);
+        m_addAttachButton.setEnabled(false);
 
         m_uploadButton = (Button) findViewById(R.id.btn_start_upload_attach);
         m_uploadButton.setOnClickListener(this);
@@ -63,17 +57,32 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
         m_doneButton = (Button) findViewById(R.id.btn_upload_done);
         m_doneButton.setOnClickListener(this);
-        m_doneButton.setEnabled(true);
 
+        m_smthSupport = SmthSupport.getInstance();
+        m_inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        m_attachArrayList = new ArrayList<File>();
         m_attachListAdapter = new AttachListAdapter(this, m_inflater);
-
         ListView listView = (ListView) findViewById(R.id.attach_list);
         listView.setAdapter(m_attachListAdapter);
+
+        // this task will decide whether we can upload attachments now
+        new CheckUploadCapabilityTask(this).execute();
     }
 
-    class LoadUploadInfoTask extends AsyncTask<String, Integer, String> {
-
+    /*
+     * this task load the upload page, and check whether we can upload
+     * attachments at the moment this task is not responsible for uploading
+     * attachments UploadAttachFilesTask.java is for uploading attachments
+     */
+    class CheckUploadCapabilityTask extends AsyncTask<String, Integer, String> {
+        private Context m_context;
         private String m_content;
+
+        public CheckUploadCapabilityTask(Context context) {
+            super();
+            m_context = context;
+        }
 
         @Override
         protected String doInBackground(String... arg0) {
@@ -83,24 +92,14 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
 
         @Override
         protected void onPostExecute(String result) {
-            parseUploadInfo(m_content);
+            // 选择需要上传的文件后点上传：(<a id="idAllAtt" style="display:none;" href="javascript:...
+            if (m_content.contains("选择需要上传的文件后点上传")) {
+                m_addAttachButton.setEnabled(true);
+                m_uploadButton.setEnabled(true);
+            } else {
+                Toast.makeText(m_context, "无法上传，请重新登录后再试", Toast.LENGTH_SHORT).show();
+            }
         }
-
-    }
-
-    public void parseUploadInfo(String content) {
-        if (content.contains("选择需要上传的文件后点上传")) {
-            m_addAttachButton.setEnabled(true);
-            m_uploadButton.setEnabled(true);
-        } else {
-            Toast.makeText(this, "无法上传，请退出重试", Toast.LENGTH_SHORT);
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // do nothing to stop onCreated
-        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -127,6 +126,28 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
         }
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_FILE_REQUEST) {
+            // If the file selection was successful
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    // Get the URI of the selected file
+                    final Uri uri = data.getData();
+
+                    try {
+                        // Create a file instance from the URI
+                        String filename = FileUtils.getFilenameFromUri(this, uri);
+                        final File myFile = new File(filename);
+                        m_attachArrayList.add(myFile);
+                        m_attachListAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        Log.e("FileSelectorTestActivity", "File select error", e);
+                    }
+                }
+            }
+        }
+    }
+
     public void uploadFinish() {
         // uploadButton.setText("完成");
         // uploadButton.setEnabled(false);
@@ -140,24 +161,4 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
         finish();
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SELECT_FILE_REQUEST) {
-            // If the file selection was successful
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    // Get the URI of the selected file
-                    final Uri uri = data.getData();
-
-                    try {
-                        // Create a file instance from the URI
-                        final File myFile = FileUtils.getFile(uri);
-                        m_attachArrayList.add(myFile);
-                        m_attachListAdapter.notifyDataSetChanged();
-                    } catch (Exception e) {
-                        Log.e("FileSelectorTestActivity", "File select error", e);
-                    }
-                }
-            }
-        }
-    }
 }

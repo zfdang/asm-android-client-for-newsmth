@@ -225,8 +225,7 @@ public class FileUtils {
 
 			try {
 				cursor = context.getContentResolver().query(uri, projection, null, null, null);
-				int column_index = cursor
-				.getColumnIndexOrThrow("_data");
+				int column_index = cursor.getColumnIndexOrThrow("_data");
 				if (cursor.moveToFirst()) {
 					return cursor.getString(column_index);
 				}
@@ -241,6 +240,31 @@ public class FileUtils {
 
 		return null;
 	}
+
+    public static String getFilenameFromUri(Context context, Uri uri) {
+        String fileName = "";
+        String scheme = uri.getScheme();
+        if (scheme.equals("file")) {
+            fileName = uri.getLastPathSegment();
+        } else if (scheme.equals("content")) {
+            String[] proj = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.DISPLAY_NAME };
+            Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            if (cursor != null && cursor.getCount() != 0) {
+                // http://developer.android.com/reference/android/provider/MediaStore.Images.Media.html
+                int columnIndex = 0;
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                fileName = cursor.getString(columnIndex);
+                // Log.d("DATA", fileName);
+
+                // cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+                // cursor.moveToFirst();
+                // fileName = cursor.getString(columnIndex);
+                // Log.d("DISPLAY_NAME", fileName);
+            }
+        }
+        return fileName;
+    }
 
 	/**
 	 * Get the file size in a human-readable string.
