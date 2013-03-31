@@ -17,11 +17,17 @@
 package com.ipaulpro.afilechooser.utils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -42,13 +48,13 @@ import com.ipaulpro.afilechooser.R;
 public class FileUtils {
 	/** TAG for log messages. */
 	static final String TAG = "FileUtils";
+	private static final boolean DEBUG = false; // Set to true to enable logging
 
-	public static final String TYPE_AUDIO = "audio"; 
-	public static final String TYPE_DOC = "doc"; 
-	public static final String TYPE_IMAGE = "image"; 
-	public static final String TYPE_OTHER = "other"; 
-	public static final String TYPE_VIDEO = "video"; 
-	public static final String TYPE_APP = "app";
+	public static final String MIME_TYPE_AUDIO = "audio/*"; 
+	public static final String MIME_TYPE_TEXT = "text/*"; 
+	public static final String MIME_TYPE_IMAGE = "image/*"; 
+	public static final String MIME_TYPE_VIDEO = "video/*"; 
+	public static final String MIME_TYPE_APP = "application/*";
 
 	/**
 	 * Whether the filename is a video file.
@@ -105,11 +111,12 @@ public class FileUtils {
 	 * @param uri
 	 * @return
 	 */
-	public static boolean isMediaUri(String uri) {
-		if (uri.startsWith(Audio.Media.INTERNAL_CONTENT_URI.toString())
-				|| uri.startsWith(Audio.Media.EXTERNAL_CONTENT_URI.toString())
-				|| uri.startsWith(Video.Media.INTERNAL_CONTENT_URI.toString())
-				|| uri.startsWith(Video.Media.EXTERNAL_CONTENT_URI.toString())) {
+	public static boolean isMediaUri(Uri uri) {
+		String uriString = uri.toString();
+		if (uriString.startsWith(Audio.Media.INTERNAL_CONTENT_URI.toString())
+				|| uriString.startsWith(Audio.Media.EXTERNAL_CONTENT_URI.toString())
+				|| uriString.startsWith(Video.Media.INTERNAL_CONTENT_URI.toString())
+				|| uriString.startsWith(Video.Media.EXTERNAL_CONTENT_URI.toString())) {
 			return true;
 		} else {
 			return false;
@@ -190,9 +197,19 @@ public class FileUtils {
 	}
 
 
+	/**
+	 * Get a file path from a Uri.
+	 * 
+	 * @param context
+	 * @param uri
+	 * @return
+	 * @throws URISyntaxException
+	 * 
+	 * @author paulburke
+	 */
 	public static String getPath(Context context, Uri uri) throws URISyntaxException {
 
-		Log.d(TAG+" File -", 
+		if(DEBUG) Log.d(TAG+" File -", 
 				"Authority: " + uri.getAuthority() + 
 				", Fragment: " + uri.getFragment() + 
 				", Port: " + uri.getPort() +
@@ -225,6 +242,14 @@ public class FileUtils {
 		return null;
 	}
 
+	/**
+	 * Get the file size in a human-readable string.
+	 * 
+	 * @param size
+	 * @return
+	 * 
+	 * @author paulburke
+	 */
 	public static String getReadableFileSize(int size) {
 		final int BYTES_IN_KILOBYTES = 1024;
 		final DecimalFormat dec = new DecimalFormat("###.#");
@@ -250,10 +275,12 @@ public class FileUtils {
 	}
 
 	/**
+	 * Load MIME types from XML
+	 * 
 	 * @param context
 	 * @return
 	 */
-	public static MimeTypes getMimeTypes(Context context) {
+	private static MimeTypes getMimeTypes(Context context) {
 		MimeTypes mimeTypes = null;
 		final MimeTypeParser mtp = new MimeTypeParser();
 		final XmlResourceParser in = context.getResources().getXml(R.xml.mimetypes);
@@ -261,12 +288,14 @@ public class FileUtils {
 		try {
 			mimeTypes = mtp.fromXmlResource(in);
 		} catch (Exception e) {
-			Log.e(TAG, "getMimeTypes", e);
+			if(DEBUG) Log.e(TAG, "getMimeTypes", e);
 		}
 		return mimeTypes;
 	} 
 
 	/**
+	 * Get the file MIME type
+	 * 
 	 * @param context
 	 * @param file
 	 * @return
@@ -279,13 +308,55 @@ public class FileUtils {
 	}
 
 	/**
+	 * Attempt to retrieve the thumbnail of given File from the MediaStore.
+	 * 
+	 * This should not be called on the UI thread.
+	 * 
+	 * @param context
+	 * @param file
+	 * @return
+	 * 
+	 * @author paulburke
+	 */
+	public static Bitmap getThumbnail(Context context, File file) {
+		return getThumbnail(context, getUri(file), getMimeType(context, file));
+	}
+	
+	/**
+	 * Attempt to retrieve the thumbnail of given Uri from the MediaStore.
+	 * 
+	 * This should not be called on the UI thread.
+	 * 
+	 * @param context
+	 * @param uri
+	 * @return
+	 * 
+	 * @author paulburke
+	 */
+	public static Bitmap getThumbnail(Context context, Uri uri) {
+		return getThumbnail(context, uri, getMimeType(context, getFile(uri)));
+	}
+	
+	/**
+	 * Attempt to retrieve the thumbnail of given Uri from the MediaStore.
+	 * 
+	 * This should not be called on the UI thread.
+	 * 
 	 * @param context
 	 * @param uri
 	 * @param mimeType
 	 * @return
+	 * 
+	 * @author paulburke
 	 */
 	public static Bitmap getThumbnail(Context context, Uri uri, String mimeType) {
-		Log.d(TAG, "Attempting to get thumbnail");
+		if(DEBUG) Log.d(TAG, "Attempting to get thumbnail");
+		
+		if (isMediaUri(uri)) {
+			Log.e(TAG, "You can only retrieve thumbnails for images and videos.");
+			return null;
+		}
+		
 		Bitmap bm = null;
 		if (uri != null) {
 			final ContentResolver resolver = context.getContentResolver();
@@ -294,7 +365,7 @@ public class FileUtils {
 				cursor = resolver.query(uri, null, null,null, null); 
 				if (cursor.moveToFirst()) {
 					final int id = cursor.getInt(0);
-					Log.d(TAG, "Got thumb ID: "+id);					
+					if(DEBUG) Log.d(TAG, "Got thumb ID: "+id);					
 
 					if (mimeType.contains("video")) {
 						bm = MediaStore.Video.Thumbnails.getThumbnail(
@@ -303,7 +374,7 @@ public class FileUtils {
 								MediaStore.Video.Thumbnails.MINI_KIND, 
 								null);
 					} 
-					else if (mimeType.contains("image")) {
+					else if (mimeType.contains(FileUtils.MIME_TYPE_IMAGE)) {
 						bm = MediaStore.Images.Thumbnails.getThumbnail(
 								resolver, 
 								id, 
@@ -312,11 +383,105 @@ public class FileUtils {
 					}
 				}	
 			} catch (Exception e) {
-				Log.e(TAG, "getThumbnail", e);
+				if(DEBUG) Log.e(TAG, "getThumbnail", e);
 			} finally {
 				if (cursor != null) cursor.close();
 			}
 		}
 		return bm;
+	}
+	
+	private static final String HIDDEN_PREFIX = ".";
+
+	/**
+	 * File and folder comparator.
+	 * TODO Expose sorting option method 
+	 * 
+	 * @author paulburke
+	 */
+	private static Comparator<File> mComparator = new Comparator<File>() {
+		public int compare(File f1, File f2) {
+			// Sort alphabetically by lower case, which is much cleaner
+			return f1.getName().toLowerCase().compareTo(
+					f2.getName().toLowerCase());
+		}
+	};
+	
+	/**
+	 * File (not directories) filter.
+	 * 
+	 * @author paulburke
+	 */
+	private static FileFilter mFileFilter = new FileFilter() {
+		public boolean accept(File file) {
+			final String fileName = file.getName();
+			// Return files only (not directories) and skip hidden files
+			return file.isFile() && !fileName.startsWith(HIDDEN_PREFIX);
+		}
+	};
+	
+	/**
+	 * Folder (directories) filter.
+	 * 
+	 * @author paulburke
+	 */
+	private static FileFilter mDirFilter = new FileFilter() {
+		public boolean accept(File file) {
+			final String fileName = file.getName();
+			// Return directories only and skip hidden directories
+			return file.isDirectory() && !fileName.startsWith(HIDDEN_PREFIX);
+		}
+	};
+	
+	/**
+	 * Get a list of Files in the give path
+	 * 
+	 * @param path
+	 * @return Collection of files in give directory
+
+	 * @author paulburke
+	 */
+	public static List<File> getFileList(String path) {
+		ArrayList<File> list = new ArrayList<File>();
+
+		// Current directory File instance
+		final File pathDir = new File(path);
+		
+		// List file in this directory with the directory filter
+		final File[] dirs = pathDir.listFiles(mDirFilter);
+		if (dirs != null) {
+			// Sort the folders alphabetically
+			Arrays.sort(dirs, mComparator);
+			// Add each folder to the File list for the list adapter
+			for (File dir : dirs) list.add(dir);
+		}
+
+		// List file in this directory with the file filter
+		final File[] files = pathDir.listFiles(mFileFilter);
+		if (files != null) {
+			// Sort the files alphabetically
+			Arrays.sort(files, mComparator);
+			// Add each file to the File list for the list adapter
+			for (File file : files) list.add(file);
+		}		
+		
+		return list;
+	}
+
+	/**
+	 * Get the Intent for selecting content to be used in an Intent Chooser.
+	 * 
+	 * @return The intent for opening a file with Intent.createChooser()
+	 * 
+	 * @author paulburke
+	 */
+	public static Intent createGetContentIntent() {
+		// Implicitly allow the user to select a particular kind of data
+		final Intent intent = new Intent(Intent.ACTION_GET_CONTENT); 
+		// The MIME data type filter
+		intent.setType("*/*"); 
+		// Only return URIs that can be opened with ContentResolver
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		return intent;
 	}
 }
