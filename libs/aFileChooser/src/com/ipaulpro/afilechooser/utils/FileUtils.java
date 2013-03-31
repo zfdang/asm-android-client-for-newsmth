@@ -255,12 +255,8 @@ public class FileUtils {
                 cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 fileName = cursor.getString(columnIndex);
-                // Log.d("DATA", fileName);
 
-                // cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-                // cursor.moveToFirst();
-                // fileName = cursor.getString(columnIndex);
-                // Log.d("DISPLAY_NAME", fileName);
+                cursor.close();
             }
         }
         return fileName;

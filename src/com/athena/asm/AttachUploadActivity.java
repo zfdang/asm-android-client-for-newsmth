@@ -3,8 +3,11 @@ package com.athena.asm;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -103,6 +106,33 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        if( m_attachArrayList.size() > 0 ){
+            // there are files not uploaded, alert users
+            Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("放弃附件").setMessage("选择的附件尚未上载，放弃附件么？");
+            builder.setPositiveButton("放弃附件", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            builder.setNegativeButton("继续操作", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    return;
+                }
+            });
+            AlertDialog noticeDialog = builder.create();
+            noticeDialog.show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_select_file) {
             showChooser();
@@ -148,17 +178,15 @@ public class AttachUploadActivity extends SherlockActivity implements OnClickLis
         }
     }
 
-    public void uploadFinish() {
-        // uploadButton.setText("完成");
-        // uploadButton.setEnabled(false);
-        // addAttachButton.setEnabled(false);
-
-        Toast.makeText(getApplicationContext(), "附件已上传.", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent();
-        intent.putExtra(StringUtility.STATUS_OK, "OK");
-        setResult(RESULT_OK, intent);
-        finish();
+    public void uploadFinish(boolean result) {
+        if(result) {
+            Toast.makeText(getApplicationContext(), "附件已上传.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.putExtra(StringUtility.STATUS_OK, "OK");
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), "附件上传失败...", Toast.LENGTH_SHORT).show();
+        }
     }
-
 }
