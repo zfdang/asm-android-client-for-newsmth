@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="fill_parent"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="wrap_content" android:paddingBottom="4dp"
-	android:paddingLeft="6dp" android:paddingRight="6dp">
-	<TextView android:id="@+id/CategoryName" android:text="TextView01"
-		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:textColor="@color/status_text" />
-	<TextView android:id="@+id/ModeratorID" android:text="TextView02"
-		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:maxLength="25" android:textColor="@color/blue_text"
-		android:gravity="right" />
-	<TextView android:id="@+id/BoardName" android:text="TextView03"
-		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:layout_below="@+id/CategoryName" android:textColor="@color/status_text"
-		android:textSize="20dp" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="2dp"
+    android:paddingTop="2dp" >
+
+    <ImageView
+        android:id="@id/drag_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drag"
+        android:paddingRight="8dp" />
+
+    <TextView
+        android:id="@+id/CategoryName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/drag_handle"
+        android:text="类别名称"
+        android:textColor="@color/status_text" />
+
+    <TextView
+        android:id="@+id/ModeratorID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/drag_handle"
+        android:gravity="right"
+        android:maxLength="35"
+        android:text="版主"
+        android:textColor="@color/blue_text" />
+
+    <TextView
+        android:id="@+id/BoardName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/CategoryName"
+        android:layout_toRightOf="@id/drag_handle"
+        android:text="版面名称"
+        android:textColor="@color/status_text"
+        android:textSize="20dp" />
+
 </RelativeLayout>

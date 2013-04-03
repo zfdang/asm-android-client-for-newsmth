@@ -13,16 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
-import com.athena.asm.Adapter.FavoriteListAdapter;
+import com.athena.asm.Adapter.NFavoriteListAdapter;
 import com.athena.asm.data.Board;
 import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.util.ListViewUtil;
@@ -31,6 +31,7 @@ import com.athena.asm.util.task.EditFavoriteTask;
 import com.athena.asm.util.task.LoadFavoriteTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
+import com.mobeta.android.dslv.DragSortListView;
 
 public class FavoriteListFragment extends SherlockFragment implements
 		BaseViewModel.OnViewModelChangObserver, OnKeyDownListener {
@@ -39,8 +40,23 @@ public class FavoriteListFragment extends SherlockFragment implements
 
 	private LayoutInflater m_inflater;
 
-	private ExpandableListView m_listView;
-	FavoriteListAdapter m_favoriteListAdapter;
+	NFavoriteListAdapter m_favoriteListAdapter;
+	private DragSortListView m_listView;
+    private DragSortListView.DropListener onDrop =
+            new DragSortListView.DropListener() {
+                @Override
+                public void drop(int from, int to) {
+                    m_favoriteListAdapter.moveItem(from, to);
+                }
+            };
+
+    private DragSortListView.RemoveListener onRemove =
+        new DragSortListView.RemoveListener() {
+            @Override
+            public void remove(int which) {
+                // do nothing here, code in setOnItemLongClickListener
+            }
+        };
 
 	private boolean m_isLoaded;
 	
@@ -58,7 +74,9 @@ public class FavoriteListFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		m_inflater = inflater;
 		View layout = m_inflater.inflate(R.layout.favorite, null);
-		m_listView = (ExpandableListView) layout.findViewById(R.id.favorite_list);
+		m_listView = (DragSortListView) layout.findViewById(R.id.favorite_list);
+		m_listView.setDropListener(onDrop);
+		m_listView.setRemoveListener(onRemove);
 
 		aSMApplication application = (aSMApplication) getActivity()
 				.getApplication();
@@ -158,68 +176,61 @@ public class FavoriteListFragment extends SherlockFragment implements
 				listOfBoardList.add(0, rootBoardList);
 			}
 
-			m_favoriteListAdapter = new FavoriteListAdapter(
+			m_favoriteListAdapter = new NFavoriteListAdapter(
 					m_inflater, directoryList, listOfBoardList);
 			m_listView.setAdapter(m_favoriteListAdapter);
 
-			// expand special 'root' directory by default
-			m_listView.expandGroup(0);
-			m_listView.setOnChildClickListener(new OnChildClickListener() {
+			// click to open board
+            m_listView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
+                    Bundle bundle = new Bundle();
+                    Board board = m_favoriteListAdapter.getFavoriteBoards().get(pos);
+                    bundle.putSerializable(StringUtility.BOARD, board);
+                    aSMApplication.getCurrentApplication().addRecentBoard(board);
 
-				@Override
-				public boolean onChildClick(ExpandableListView parent,
-						View view, int groupPosition, int childPosition, long id) {
-					Bundle bundle = new Bundle();
-					bundle.putSerializable(StringUtility.BOARD, (Board) view.getTag(R.id.tag_second));
-					aSMApplication.getCurrentApplication().addRecentBoard((Board) view
-							.getTag(R.id.tag_second));
+                    if (m_onOpenActivityFragmentListener != null) {
+                        m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST,
+                                bundle);
+                    }
+                    return;
+                }
+            });
 
-					if (m_onOpenActivityFragmentListener != null) {
-						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
-					}
-					return false;
-				}
-			});
-
+            // long click to remove it from favorite
             m_listView.setOnItemLongClickListener(new OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
-                    if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-                        // get selected board
-                        int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-                        int childPosition = ExpandableListView.getPackedPositionChild(id);
-                        List<List<Board>> m_boards = m_favoriteListAdapter.getFavoriteBoards();
-                        final Board board = m_boards.get(groupPosition).get(childPosition);
+                    // get selected board
+                    final Board board = m_favoriteListAdapter.getFavoriteBoards().get(pos);
 
-                        // confirm dialog
-                        Builder builder = new AlertDialog.Builder(getActivity());
-                        String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getChsName());
-                        builder.setTitle("收藏夹操作").setMessage(title);
+                    // confirm dialog
+                    Builder builder = new AlertDialog.Builder(getActivity());
+                    String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getChsName());
+                    builder.setTitle("收藏夹操作").setMessage(title);
 
-                        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel, board.getEngName(), board
-                                        .getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
-                                task.execute();
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        AlertDialog noticeDialog = builder.create();
-                        noticeDialog.show();
+                    builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel,
+                                    board.getEngName(), board.getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
+                            task.execute();
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog noticeDialog = builder.create();
+                    noticeDialog.show();
 
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
             });
-		}
+        }
 	}
 
 	@Override
