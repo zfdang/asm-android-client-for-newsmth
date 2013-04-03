@@ -31,7 +31,7 @@ public class NFavoriteListAdapter extends BaseAdapter {
     public List<Board> getFavoriteBoards() {
         return m_favorites;
     }
-    
+
     public boolean moveItem(int from, int to) {
         Board board = m_favorites.get(from);
         m_favorites.remove(board);
