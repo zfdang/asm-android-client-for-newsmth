@@ -3,6 +3,7 @@ package com.athena.asm.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -131,11 +132,10 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         public boolean onSingleTapUp(MotionEvent e) {
             if (aSMApplication.getCurrentApplication().isTouchScroll()) {
                 int touchY = (int) e.getRawY();
-                float scale = (float) (m_screenHeight / 800.0);
-                if (touchY > 60 * scale && touchY < 390 * scale) {
+                if (touchY < m_screenHeight * 0.45) {
                     setListOffsetByPage(-1);
                     return true;
-                } else if (touchY > 410 * scale && touchY < 740 * scale) {
+                } else if (touchY > m_screenHeight * 0.55) {
                     setListOffsetByPage(1);
                     return true;
                 }
@@ -207,6 +207,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         }
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
