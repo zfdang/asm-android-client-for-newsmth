@@ -16,17 +16,19 @@ public class EditFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	private HomeViewModel m_viewModel;
     private Context m_context;
-	private String m_boardName;
+	private String m_groupID;
+    private String m_boardName;
 	private String m_boardID;
 	private int m_action;
 
 	private boolean m_result;
 
-	public EditFavoriteTask(Context ctx, HomeViewModel viewModel, String boardname, String boardid, int action) {
+	public EditFavoriteTask(Context ctx, HomeViewModel viewModel, String groupid, String boardname, String boardid, int action) {
 		m_context = ctx;
 		m_viewModel = viewModel;
 		pdialog = new ProgressDialog(ctx);
 
+		m_groupID = groupid;
 		m_boardName = boardname;
 		m_boardID = boardid;
 		
@@ -43,9 +45,9 @@ public class EditFavoriteTask extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... params) {
 	    SmthSupport smthSupport = SmthSupport.getInstance();
 	    if( m_action == FAVORITE_ADD){
-	        m_result = smthSupport.addBoardToFavorite(m_boardName);
+	        m_result = smthSupport.addBoardToFavorite(m_groupID, m_boardName);
 	    } else if (m_action == FAVORITE_DELETE ){
-            m_result = smthSupport.removeBoardFromFavorite(m_boardName, m_boardID);
+            m_result = smthSupport.removeBoardFromFavorite(m_groupID, m_boardName, m_boardID);
 	    }
 	    pdialog.cancel();
 		return null;

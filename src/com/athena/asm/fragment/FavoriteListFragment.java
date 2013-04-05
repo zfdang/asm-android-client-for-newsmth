@@ -186,8 +186,8 @@ public class FavoriteListFragment extends SherlockFragment implements
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
                     if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
                         // get selected board
-                        int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-                        int childPosition = ExpandableListView.getPackedPositionChild(id);
+                        final int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+                        final int childPosition = ExpandableListView.getPackedPositionChild(id);
                         List<List<Board>> m_boards = m_favoriteListAdapter.getFavoriteBoards();
                         final Board board = m_boards.get(groupPosition).get(childPosition);
 
@@ -199,8 +199,9 @@ public class FavoriteListFragment extends SherlockFragment implements
                         builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel, board.getEngName(), board
-                                        .getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
+                                String groupid = Integer.toString(groupPosition);
+                                EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel, groupid, board
+                                        .getEngName(), board.getBoardID(), EditFavoriteTask.FAVORITE_DELETE);
                                 task.execute();
                                 dialog.dismiss();
                             }

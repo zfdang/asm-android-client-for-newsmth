@@ -317,7 +317,8 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         case ADD_TO_FAVORITE:
             Board board = m_viewModel.getCurrentBoard();
             HomeViewModel viewModel = aSMApplication.getCurrentApplication().getHomeViewModel();
-            EditFavoriteTask task = new EditFavoriteTask(getActivity(), viewModel, board.getEngName(), board.getBoardID(),
+            // groupid = "0", we always add the board to root group
+            EditFavoriteTask task = new EditFavoriteTask(getActivity(), viewModel, "0", board.getEngName(), board.getBoardID(),
                     EditFavoriteTask.FAVORITE_ADD);
             task.execute();
             break;
