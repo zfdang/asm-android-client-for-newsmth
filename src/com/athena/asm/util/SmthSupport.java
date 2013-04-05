@@ -1394,7 +1394,7 @@ public class SmthSupport {
             boardid = getBoardIDFromName(boardname);
         }
         // o.o(false,1,1029,1441174,'[数码]','PocketLife','掌上智能','leavesnow earthmouse wedf',372363,1028,644);
-        // it's strange there value of delete is not boardid, but boardid-1
+        // it's strange the value of delete parameter is not boardid, but boardid-1
         int bid = Integer.parseInt(boardid) - 1;
         String url = "http://www.newsmth.net/bbsfav.php?select=" + groupid + "&delete=" + bid;
         String content = crawler.getUrlContent(url);
