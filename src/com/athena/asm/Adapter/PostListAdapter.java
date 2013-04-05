@@ -135,7 +135,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		}
 
 		holder.contentTextView.setText(post.getContent());
-		Linkify.addLinks(holder.contentTextView, Linkify.WEB_URLS);
+        Linkify.addLinks(holder.contentTextView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
