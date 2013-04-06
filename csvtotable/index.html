@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>jQuery CSVToTable</title>
+
+	<link rel="stylesheet" href="css/csvtable.css" type="text/css" />
+
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery.csvToTable.js"></script>
+</head>
+<body>
+
+<div id="CSVTable"></div>
+
+<script>
+$(function() {
+  $('#CSVTable').CSVToTable('test.csv');
+});
+</script>
+
+</body>
+</html>
