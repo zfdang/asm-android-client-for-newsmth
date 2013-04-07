@@ -354,6 +354,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         m_viewModel.updateCurrentPageNumberFromSubject();
         m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+        m_isPageNumberEditTextTouched = false;
         m_listView.requestFocus();
 
         m_viewModel.setIsPreloadFinished(false);
@@ -466,6 +467,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
             m_viewModel.updateSubjectCurrentPageNumberFromCurrentPageNumber();
             m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+            m_isPageNumberEditTextTouched = false;
+
             if (view.getParent() != null) {
                 ((View) view.getParent()).requestFocus();
             }
