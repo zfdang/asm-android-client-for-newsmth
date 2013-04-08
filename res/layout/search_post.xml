@@ -7,7 +7,7 @@
     <include layout="@layout/header" />-->
     
     <!-- 防止默认焦点为edittext -->
-    <LinearLayout android:focusable="true" android:focusableInTouchMode="true" android:layout_width="0px" android:layout_height="0px"/> 
+    <LinearLayout android:layout_width="0px" android:layout_height="0px"/>
 
     <!-- Body -->
 
