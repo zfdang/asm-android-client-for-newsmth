@@ -277,6 +277,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_gestureDetector = new GestureDetector(m_listView.getContext(), new MyGestureDetector());
         m_listView.setOnTouchListener(this);
 
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         return postListView;
     }
 
@@ -749,6 +750,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         // super.onOptionsItemSelected(item);
         if (!m_isFromReplyOrAt) {
             switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
             case REFRESH_SUBJECTLIST:
                 refreshPostList();
                 break;

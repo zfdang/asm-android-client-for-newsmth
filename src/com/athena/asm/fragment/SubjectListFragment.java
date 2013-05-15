@@ -102,6 +102,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         // subjectListView.findViewById(R.id.switchBoardMode);
         // switchModeImageButton.setOnClickListener(this);
 
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         return subjectListView;
     }
 
@@ -261,9 +262,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         // super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
         case android.R.id.home:
-            Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(homeIntent);
+            getActivity().onBackPressed();
             break;
         case QUICK_SWITCH_BOARD_TYPE:
             m_viewModel.toggleBoardType();
