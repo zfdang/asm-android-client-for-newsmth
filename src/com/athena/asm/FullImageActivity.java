@@ -21,6 +21,7 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,29 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class FullImageActivity extends Activity
 	implements OnLongClickListener {
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // http://stackoverflow.com/questions/4500354/control-volume-keys
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // disable the beep sound when volume up/down is pressed
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+           return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 
     private MyViewPager mViewPager;
     private ViewPagerAdapter vpAdapter;
