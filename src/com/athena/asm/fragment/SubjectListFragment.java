@@ -102,6 +102,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         // subjectListView.findViewById(R.id.switchBoardMode);
         // switchModeImageButton.setOnClickListener(this);
 
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         return subjectListView;
     }
 
@@ -261,9 +262,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         // super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
         case android.R.id.home:
-            Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(homeIntent);
+            getActivity().onBackPressed();
             break;
         case QUICK_SWITCH_BOARD_TYPE:
             m_viewModel.toggleBoardType();
@@ -317,7 +316,8 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         case ADD_TO_FAVORITE:
             Board board = m_viewModel.getCurrentBoard();
             HomeViewModel viewModel = aSMApplication.getCurrentApplication().getHomeViewModel();
-            EditFavoriteTask task = new EditFavoriteTask(getActivity(), viewModel, board.getEngName(), board.getBoardID(),
+            // groupid = "0", we always add the board to root group
+            EditFavoriteTask task = new EditFavoriteTask(getActivity(), viewModel, "0", board.getEngName(), board.getBoardID(),
                     EditFavoriteTask.FAVORITE_ADD);
             task.execute();
             break;

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -74,6 +75,10 @@ public class MailListActivity extends SherlockActivity implements
 			reloadMailList();
 		}
 
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
 	}
 
 	@Override
@@ -172,6 +177,9 @@ public class MailListActivity extends SherlockActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
+        case android.R.id.home:
+            onBackPressed();
+            break;
 		case REFRESH_MAILLIST:
 			m_viewModel.setMailList(null);
 			LoadMailListTask loadMailListTask = new LoadMailListTask(this,

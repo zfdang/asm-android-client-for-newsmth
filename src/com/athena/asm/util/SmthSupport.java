@@ -203,6 +203,7 @@ public class SmthSupport {
             board.setChsName(chsName);
 			board.setCategoryName(category);
 			board.setDirectoryName(path);
+			board.setDirectoryID(id); // this id will be used while removing board from favorite
 			board.setModerator(moderator);
 
 			boardList.add(board);
@@ -1364,10 +1365,10 @@ public class SmthSupport {
 		}
 	}
 
-    public Boolean addBoardToFavorite(String boardname) {
-        // http://www.newsmth.net/bbsfav.php?bname=SecondComputer&select=0
+    public Boolean addBoardToFavorite(String groupid, String boardname) {
+        // http://www.newsmth.net/bbsfav.php?bname=<boardname>&select=<groupid>
         // return new favorite list: if the boardname is returned, operation success
-        String url = "http://www.newsmth.net/bbsfav.php?select=0&bname=" + boardname;
+        String url = "http://www.newsmth.net/bbsfav.php?select=" + groupid + "&bname=" + boardname;
         String content = crawler.getUrlContent(url);
         if (content == null) {
             return false;
@@ -1379,16 +1380,16 @@ public class SmthSupport {
         }
     }
 
-    public Boolean removeBoardFromFavorite(String boardname, String boardid) {
-        // http://www.newsmth.net/bbsfav.php?select=0&delete=674
+    public Boolean removeBoardFromFavorite(String groupid, String boardname, String boardid) {
+        // http://www.newsmth.net/bbsfav.php?select=<groupid>&delete=<boardid-1>
         // return new favorite list: if the boardname is not returned, operation success
         if(boardid == null && boardname != null) {
             boardid = getBoardIDFromName(boardname);
         }
         // o.o(false,1,1029,1441174,'[数码]','PocketLife','掌上智能','leavesnow earthmouse wedf',372363,1028,644);
-        // it's strange there value of delete is not boardid, but boardid-1
+        // it's strange the value of delete parameter is not boardid, but boardid-1
         int bid = Integer.parseInt(boardid) - 1;
-        String url = "http://www.newsmth.net/bbsfav.php?select=0&delete=" + bid;
+        String url = "http://www.newsmth.net/bbsfav.php?select=" + groupid + "&delete=" + bid;
         String content = crawler.getUrlContent(url);
         if (content == null) {
             return false;

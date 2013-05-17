@@ -2,6 +2,8 @@ package com.athena.asm;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -61,6 +64,17 @@ public class SearchPostActivity extends SherlockActivity implements
 		setTitle(m_viewModel.getTitleText());
 
 		m_titleEditText = (EditText) findViewById(R.id.edittext_title);
+		// turn on IME automatically
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+
+        }, 300);
+
 		m_title2EditText = (EditText) findViewById(R.id.edittext_title2);
 		m_title3EditText = (EditText) findViewById(R.id.edittext_title3);
 		m_useridEditText = (EditText) findViewById(R.id.edittext_userid);

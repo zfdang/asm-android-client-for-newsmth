@@ -3,6 +3,7 @@ package com.athena.asm.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -131,11 +132,10 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         public boolean onSingleTapUp(MotionEvent e) {
             if (aSMApplication.getCurrentApplication().isTouchScroll()) {
                 int touchY = (int) e.getRawY();
-                float scale = (float) (m_screenHeight / 800.0);
-                if (touchY > 60 * scale && touchY < 390 * scale) {
+                if (touchY < m_screenHeight * 0.45) {
                     setListOffsetByPage(-1);
                     return true;
-                } else if (touchY > 410 * scale && touchY < 740 * scale) {
+                } else if (touchY > m_screenHeight * 0.55) {
                     setListOffsetByPage(1);
                     return true;
                 }
@@ -156,14 +156,15 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // right to left swipe
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
-                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                        if (aSMApplication.getCurrentApplication().isTouchHint()) {
                             myToast.setText("下一页");
                             myToast.show();
                         }
                         m_nextButton.performClick();
                         return true;
-                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL
+                            && !m_isFromReplyOrAt) {
+                        if (aSMApplication.getCurrentApplication().isTouchHint()) {
                             myToast.setText("同主题下一篇");
                             myToast.show();
                         }
@@ -175,22 +176,23 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                     if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_SUBJECT) {
                         if (aSMApplication.getCurrentApplication().isTouchSwipeBack()
                                 && m_viewModel.getCurrentPageNumber() == 1) {
-                            if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                            if (aSMApplication.getCurrentApplication().isTouchHint()) {
                                 myToast.setText("返回");
                                 myToast.show();
                             }
                             getActivity().onBackPressed();
                             return true;
                         } else {
-                            if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                            if (aSMApplication.getCurrentApplication().isTouchHint()) {
                                 myToast.setText("上一页");
                                 myToast.show();
                             }
                             m_preButton.performClick();
                             return true;
                         }
-                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL && !m_isFromReplyOrAt){
-                        if(aSMApplication.getCurrentApplication().isTouchHint()) {
+                    } else if (m_viewModel.getBoardType() == SubjectListFragment.BOARD_TYPE_NORMAL
+                            && !m_isFromReplyOrAt) {
+                        if (aSMApplication.getCurrentApplication().isTouchHint()) {
                             myToast.setText("同主题上一篇");
                             myToast.show();
                         }
@@ -207,6 +209,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         }
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,9 +238,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_viewModel.registerViewModelChangeObserver(this);
 
         // http://stackoverflow.com/questions/1016896/android-how-to-get-screen-dimensions
-//        Point size = new Point();
-//        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
-//        this.m_screenHeight = size.y;
+        // Point size = new Point();
+        // getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        // this.m_screenHeight = size.y;
         // issue 2
         this.m_screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 
@@ -274,6 +277,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_gestureDetector = new GestureDetector(m_listView.getContext(), new MyGestureDetector());
         m_listView.setOnTouchListener(this);
 
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         return postListView;
     }
 
@@ -353,6 +357,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
         m_viewModel.updateCurrentPageNumberFromSubject();
         m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+        m_isPageNumberEditTextTouched = false;
         m_listView.requestFocus();
 
         m_viewModel.setIsPreloadFinished(false);
@@ -416,7 +421,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         if (m_viewModel.getBoardType() == 0) {
             // 同主题导航
             if (view.getId() == R.id.btn_first_page) {
-                if(m_viewModel.getCurrentPageNumber() == 1) {
+                if (m_viewModel.getCurrentPageNumber() == 1) {
                     myToast.setText("已在第一页");
                     myToast.show();
                     return;
@@ -426,14 +431,14 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 // this button is hidden, so this code can never be reached
                 m_viewModel.gotoLastPage();
             } else if (view.getId() == R.id.btn_pre_page) {
-                if(m_viewModel.getCurrentPageNumber() == 1) {
+                if (m_viewModel.getCurrentPageNumber() == 1) {
                     myToast.setText("已在第一页");
                     myToast.show();
                     return;
                 }
                 m_viewModel.gotoPrevPage();
             } else if (view.getId() == R.id.btn_next_page) {
-                if(m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
+                if (m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
                     myToast.setText("已在最后一页");
                     myToast.show();
                     return;
@@ -445,7 +450,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                 if (m_isPageNumberEditTextTouched) {
                     // jump to the page number
                     int pageSet = Integer.parseInt(m_pageNumberEditText.getText().toString());
-                    if(m_viewModel.getCurrentPageNumber() == pageSet) {
+                    if (m_viewModel.getCurrentPageNumber() == pageSet) {
                         String hint = String.format("已在第%d页, 请输入新页码！", pageSet);
                         myToast.setText(hint);
                         myToast.show();
@@ -454,7 +459,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                     m_viewModel.setCurrentPageNumber(pageSet);
                 } else {
                     // go to last page
-                    if(m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
+                    if (m_viewModel.getCurrentPageNumber() == m_viewModel.getTotalPageNumber()) {
                         myToast.setText("已在最后一页");
                         myToast.show();
                         return;
@@ -465,6 +470,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
 
             m_viewModel.updateSubjectCurrentPageNumberFromCurrentPageNumber();
             m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");
+            m_isPageNumberEditTextTouched = false;
+
             if (view.getParent() != null) {
                 ((View) view.getParent()).requestFocus();
             }
@@ -534,7 +541,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             m_listView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 
             final String authorID = post.getAuthor();
-            if(authorID == null || authorID.equals("guest")){
+            if (authorID == null || authorID.equals("guest")) {
                 // the post was not loaded successfully, return
                 Toast.makeText(getActivity(), "帖子异常，请返回！", Toast.LENGTH_SHORT).show();
                 return false;
@@ -594,9 +601,11 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                         break;
                     case 2:
                         // post_view_in_browser
-                        if(post.getSubjectID() == null) {
-                            // subjectID extracted from <a href="/article/FamilyLife/post/1752675592">回复</a>
-                            // so guest user can't get postid, open topic list as a workaround
+                        if (post.getSubjectID() == null) {
+                            // subjectID extracted from <a
+                            // href="/article/FamilyLife/post/1752675592">回复</a>
+                            // so guest user can't get postid, open topic list
+                            // as a workaround
                             // http://m.newsmth.net/article/Love/5528596?p=1
                             String weburl = String.format("http://m.newsmth.net/article/%s/%s?p=%d", post.getBoard(),
                                     post.getTopicSubjectID(), m_viewModel.getCurrentPageNumber());
@@ -604,16 +613,18 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
                             startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         } else {
                             // http://www.newsmth.net/bbscon.php?bid=647&id=930420291
-                            // check boardID, if user comes from guidance boardID might be null or "fake"
+                            // check boardID, if user comes from guidance
+                            // boardID might be null or "fake"
                             String boardID = post.getBoardID();
                             if (boardID == null || boardID.length() == 0 || boardID.equals("fake")) {
-                                // we will look up boardID by boardName in this Async task then open the post
+                                // we will look up boardID by boardName in this
+                                // Async task then open the post
                                 OpenPostInBrowserTask browserTask = new OpenPostInBrowserTask(getActivity(), post);
                                 browserTask.execute();
                             } else {
                                 // open post directly
-                                String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s", boardID,
-                                        post.getSubjectID());
+                                String weburl = String.format("http://www.newsmth.net/bbscon.php?bid=%s&id=%s",
+                                        boardID, post.getSubjectID());
                                 Uri uri = Uri.parse(weburl);
                                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                             }
@@ -739,6 +750,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         // super.onOptionsItemSelected(item);
         if (!m_isFromReplyOrAt) {
             switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
             case REFRESH_SUBJECTLIST:
                 refreshPostList();
                 break;
@@ -807,9 +821,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         final EditText input = new EditText(getActivity());
         input.setText(email);
 
-        new AlertDialog.Builder(getActivity()).setTitle("设置转寄的收件人/外部邮箱")
-                .setMessage("输入ID可转寄给站内用户，输入EMAIL可转寄到外部邮箱").setView(input)
-                .setPositiveButton("转寄", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(getActivity()).setTitle("设置转寄的收件人/外部邮箱").setMessage("输入ID可转寄给站内用户，输入EMAIL可转寄到外部邮箱")
+                .setView(input).setPositiveButton("转寄", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
                         aSMApplication.getCurrentApplication().updateForwardEmailAddr(value.toString());

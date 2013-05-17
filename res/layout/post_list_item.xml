@@ -18,11 +18,10 @@
 	<View android:id="@+id/SeperatorView" android:layout_width="fill_parent"
 		android:layout_height="0dp" android:background="?android:attr/listDivider"
 		android:layout_below="@+id/PostTitle" />
-	<TextView android:id="@+id/PostContent"
+	<com.athena.asm.view.LinkTextView android:id="@+id/PostContent"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
-		android:layout_below="@+id/SeperatorView" android:autoLink="web"
+		android:layout_below="@+id/SeperatorView"
 		android:paddingTop="8dp"
-		android:linksClickable="false"
 		android:textColor="@color/status_text" android:textSize="16dp" />
 	<TextView android:id="@+id/PostAttach"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"

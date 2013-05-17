@@ -14,22 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
-    android:orientation="horizontal" >
-
-    <ImageView
-        android:id="@+id/file_icon"
-        style="@style/fileChooserIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/file_name"
-        style="@style/fileChooserName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="fileChooserName">
+        <item name="android:layout_marginLeft">@dimen/list_item_padding</item>
+        <item name="android:layout_marginRight">@dimen/list_item_padding</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="fileChooserIcon">
+        <item name="android:layout_marginLeft">@dimen/list_item_padding</item>
+	</style>
+</resources>

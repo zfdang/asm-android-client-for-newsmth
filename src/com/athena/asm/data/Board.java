@@ -14,6 +14,7 @@ public class Board implements Externalizable {
 	private String moderator;
 	private boolean isDirectory;
 	private String directoryName;
+	private String directoryID;
 	private int currentPageNo;
 	private int totalPageNo;
 	private ArrayList<Board> childBoards = new ArrayList<Board>();
@@ -79,6 +80,14 @@ public class Board implements Externalizable {
 		return directoryName;
 	}
 
+	public void setDirectoryID(String directoryID) {
+		this.directoryID = directoryID;
+	}
+
+	public String getDirectoryID() {
+		return directoryID;
+	}
+
 	public void setCurrentPageNo(int currentPage) {
 		this.currentPageNo = currentPage;
 	}
@@ -103,7 +112,8 @@ public class Board implements Externalizable {
 		return childBoards;
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public void readExternal(ObjectInput input) throws IOException,
 			ClassNotFoundException {
 		boardID = (String) input.readObject();

@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.view.LinkTextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class PostListAdapter extends BaseAdapter implements OnClickListener {
@@ -41,7 +43,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		public TextView authorTextView;
 		public TextView titleTextView;
 		public View lineView;
-		public TextView contentTextView;
+		public LinkTextView contentTextView;
 		public TextView attachTextView;
 		public LinearLayout imageLayout;
 		public TextView dateTextView;
@@ -101,7 +103,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
 			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 			holder.lineView = (View) layout.findViewById(R.id.SeperatorView);
-			holder.contentTextView = (TextView) layout.findViewById(R.id.PostContent);
+			holder.contentTextView = (LinkTextView) layout.findViewById(R.id.PostContent);
 			holder.attachTextView = (TextView) layout.findViewById(R.id.PostAttach);
 			holder.imageLayout = (LinearLayout) layout.findViewById(R.id.imageLayout);
 			holder.dateTextView = (TextView) layout.findViewById(R.id.PostDate);
@@ -133,6 +135,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		}
 
 		holder.contentTextView.setText(post.getContent());
+        Linkify.addLinks(holder.contentTextView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		ArrayList<Attachment> attachments = post.getAttachFiles();
 		if (attachments != null) {

@@ -44,9 +44,7 @@ public class Attachment {
 		if (ext.length() >= 1) {
 			url += "." + ext; // TODO: ext need htmlize
 		}
-		if (cacheable) {
-			url = "http://att.newsmth.net/" + url;
-		}
+		url = "http://att.newsmth.net/" + url;
 		return url;
 	}
 
