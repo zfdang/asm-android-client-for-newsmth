@@ -42,8 +42,10 @@ public class EditFavoriteTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
-		pdialog.setMessage("修改收藏夹...");
-		pdialog.show();
+	    if(this.m_action != FAVORITE_SAVE){
+	        pdialog.setMessage("修改收藏夹...");
+	        pdialog.show();
+	    }
 	}
 
 	@Override
@@ -56,7 +58,9 @@ public class EditFavoriteTask extends AsyncTask<String, Integer, String> {
         } else if (m_action == FAVORITE_SAVE ){
             m_result = true;
         }
-	    pdialog.cancel();
+        if(this.m_action != FAVORITE_SAVE){
+            pdialog.cancel();
+        }
 		return null;
 	}
 
