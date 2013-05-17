@@ -174,41 +174,19 @@ public class SmthSupport {
 	 * 
 	 * @return
 	 */
-	public void getFavorite(String id, List<Board> boardList, int type) {
-		String url;
-		if (type == 0) {
-			url = "http://www.newsmth.net/bbsfav.php?select=" + id;
-		} else {
-			url = "http://www.newsmth.net/bbsdoc.php?board=" + id;
-		}
+	public void getFavorite(String id, List<Board> boardList, String path) {
+		String url = "http://www.newsmth.net/bbsfav.php?select=" + id;
 
 		String content = crawler.getUrlContent(url);
 		if (content == null) {
 			return;
 		}
 
-		// 先提取目录
-		String patternStr = "o\\.f\\((\\d+),'([^']+)',\\d+,''\\);";
+		// 先提取版面
+		// o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
+		String patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(content);
-		List<String> list = new ArrayList<String>();
-		while (matcher.find()) {
-			list.add(matcher.group(1));
-			Board board = new Board();
-			board.setDirectory(true);
-			board.setDirectoryName(matcher.group(2));
-			board.setCategoryName("目录");
-			boardList.add(board);
-		}
-
-		for (int i = 0; i < list.size(); i++) {
-			getFavorite(list.get(i), boardList.get(i).getChildBoards(), 0);
-		}
-
-		// o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
-		patternStr = "o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'([^']+)','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)";
-		pattern = Pattern.compile(patternStr);
-		matcher = pattern.matcher(content);
 		while (matcher.find()) {
 			String boardID = matcher.group(1);
 			String category = matcher.group(2);
@@ -221,16 +199,30 @@ public class SmthSupport {
 			Board board = new Board();
 			board.setDirectory(false);
 			board.setBoardID(boardID);
+            board.setEngName(engName);
+            board.setChsName(chsName);
 			board.setCategoryName(category);
-			board.setEngName(engName);
-			board.setChsName(chsName);
+			board.setDirectoryName(path);
 			board.setModerator(moderator);
-			if (moderator.contains("[目录]")) {
-				board.setDirectory(true);
-				board.setDirectoryName(chsName);
-				getFavorite(engName, board.getChildBoards(), 1);
-			}
+
 			boardList.add(board);
+		}
+
+		// 后提取目录
+		patternStr = "o\\.f\\((\\d+),'([^']+)',\\d+,''\\);";
+		pattern = Pattern.compile(patternStr);
+		matcher = pattern.matcher(content);
+		while (matcher.find()) {
+			String directoryID = matcher.group(1);
+			String directoryName = matcher.group(2).trim();
+			String directoryPath;
+			if(path == ""){
+			    directoryPath = directoryName;
+			} else {
+                directoryPath = path + "/" + directoryName;
+			}
+			// find boards in this directory recursively
+			getFavorite(directoryID, boardList, directoryPath);
 		}
 
 	}

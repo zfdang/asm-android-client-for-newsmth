@@ -176,7 +176,7 @@ public class HomeViewModel extends BaseViewModel {
 		else{
 			realFavList.clear();
 		}
-		m_smthSupport.getFavorite("0", realFavList, 0);
+		m_smthSupport.getFavorite("0", realFavList, "");
 		
 		// ArrayList<Board> favList = new ArrayList<Board>();
 		// favList.addAll(realFavList);

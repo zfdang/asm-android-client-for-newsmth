@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/drag_handle"
-        android:text="类别名称"
+        android:text="类别名称-收藏夹名称"
         android:textColor="@color/status_text" />
 
     <TextView

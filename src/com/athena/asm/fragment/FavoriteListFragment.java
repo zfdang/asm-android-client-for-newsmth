@@ -1,7 +1,5 @@
 package com.athena.asm.fragment;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,14 +13,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.athena.asm.ActivityFragmentTargets;
 import com.athena.asm.OnOpenActivityFragmentListener;
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
-import com.athena.asm.Adapter.NFavoriteListAdapter;
+import com.athena.asm.Adapter.FavoriteListAdapter;
 import com.athena.asm.data.Board;
 import com.athena.asm.listener.OnKeyDownListener;
 import com.athena.asm.util.ListViewUtil;
@@ -40,7 +37,7 @@ public class FavoriteListFragment extends SherlockFragment implements BaseViewMo
 
     private LayoutInflater m_inflater;
 
-    NFavoriteListAdapter m_favoriteListAdapter;
+    FavoriteListAdapter m_favoriteListAdapter;
     private DragSortListView m_listView;
     private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
         @Override
@@ -104,17 +101,6 @@ public class FavoriteListFragment extends SherlockFragment implements BaseViewMo
         super.onDestroy();
     }
 
-    private void extractSubDirectory(Board board, List<Board> currentBoardList) {
-        for (Iterator<Board> iterator = board.getChildBoards().iterator(); iterator.hasNext();) {
-            Board childBoard = iterator.next();
-            if (childBoard.isDirectory()) {
-                extractSubDirectory(childBoard, currentBoardList);
-            } else {
-                currentBoardList.add(childBoard);
-            }
-        }
-    }
-
     public void reloadFavorite() {
         if (m_viewModel.getFavList() == null) {
             if (m_viewModel.m_isLoadingInProgress)
@@ -124,54 +110,8 @@ public class FavoriteListFragment extends SherlockFragment implements BaseViewMo
         } else {
             m_isLoaded = true;
 
-            // list of directories
-            List<String> directoryList = new ArrayList<String>();
-            // list of boardlist, each boardlist is for a directory in
-            // directoryList
-            List<List<Board>> listOfBoardList = new ArrayList<List<Board>>();
-            // list of boards without parent directory, put it in special 'root'
-            // directory
-            List<Board> rootBoardList = new ArrayList<Board>();
-
-            // get local copy of favlist
-            ArrayList<Board> favList = new ArrayList<Board>();
-            favList.addAll(m_viewModel.getFavList());
-
-            // add faked directory for recently viewed boards
-            Board fakeBoard = new Board();
-            fakeBoard.setDirectory(true);
-            fakeBoard.setDirectoryName("最近访问版面");
-            fakeBoard.setCategoryName("目录");
-            favList.add(fakeBoard);
-
-            for (Iterator<Board> iterator = favList.iterator(); iterator.hasNext();) {
-                Board board = iterator.next();
-                if (board.isDirectory()) {
-                    // directory
-                    directoryList.add(board.getDirectoryName());
-                    if (board.getDirectoryName().equals("最近访问版面")) {
-                        // special directory for recently viewed boards
-                        listOfBoardList.add(new ArrayList<Board>(aSMApplication.getCurrentApplication()
-                                .getRecentBoards()));
-                    } else {
-                        // normal directory, find child boards
-                        List<Board> childBoardList = new ArrayList<Board>();
-                        extractSubDirectory(board, childBoardList);
-                        listOfBoardList.add(childBoardList);
-                    }
-                } else {
-                    // board without parent, add it to rootBoardList
-                    rootBoardList.add(board);
-                }
-            }
-
-            if (listOfBoardList.size() > 0) {
-                // add special 'root' directory
-                directoryList.add(0, "我的收藏夹");
-                listOfBoardList.add(0, rootBoardList);
-            }
-
-            m_favoriteListAdapter = new NFavoriteListAdapter(m_inflater, directoryList, listOfBoardList);
+            List<Board> favList = m_viewModel.getFavList();
+            m_favoriteListAdapter = new FavoriteListAdapter(m_inflater, favList);
             m_listView.setAdapter(m_favoriteListAdapter);
 
             // click to open board

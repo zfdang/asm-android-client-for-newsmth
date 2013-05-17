@@ -6,130 +6,95 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 
-public class FavoriteListAdapter extends BaseExpandableListAdapter {
 
-	private LayoutInflater m_inflater;
-	private List<String> m_directories;
-	private List<List<Board>> m_boards;
-
-	public List<List<Board>> getFavoriteBoards() {
-        return m_boards;
+public class FavoriteListAdapter extends BaseAdapter {
+    private LayoutInflater m_inflater;
+    private List<Board> m_favorites;
+    class ChildViewHolder{
+        TextView categoryNameTextView;
+        TextView moderatorIDTextView;
+        TextView boardNameTextView;
     }
 
-    static class ChildViewHolder{
-		TextView categoryNameTextView;
-		TextView moderatorIDTextView;
-		TextView boardNameTextView;
-	}
-
-	static class GroupViewHolder{
-		TextView boardNameTextView;
-	}
-
-	public FavoriteListAdapter(LayoutInflater inflater, 
-			List<String> directoryList, List<List<Board>> boardList) {
-		this.m_inflater = inflater;
-		this.m_directories = directoryList;
-		this.m_boards = boardList;
-	}
-
-	public Object getChild(int groupPosition, int childPosition) {
-        return m_boards.get(groupPosition).get(childPosition);
+    public FavoriteListAdapter(LayoutInflater inflater, List<Board> boards) {
+        super();
+        this.m_inflater = inflater;
+        this.m_favorites = boards;
     }
 
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+    public List<Board> getFavoriteBoards() {
+        return m_favorites;
     }
 
-	@Override
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-            View convertView, ViewGroup parent) {
-		Board board = m_boards.get(groupPosition).get(childPosition);
+    public boolean moveItem(int from, int to) {
+        Board board = m_favorites.get(from);
+        m_favorites.remove(board);
+        m_favorites.add(to, board);
+        notifyDataSetChanged();
 
-		ChildViewHolder holder;
-		if (convertView == null) {
-			convertView = m_inflater.inflate(R.layout.favorite_list_item, null);
+        // TODO: save ordered list to file
+        return true;
+    }
 
-			holder = new ChildViewHolder();
-			holder.categoryNameTextView = (TextView) convertView.findViewById(R.id.CategoryName);
-			holder.moderatorIDTextView = (TextView) convertView.findViewById(R.id.ModeratorID);
-			holder.boardNameTextView = (TextView) convertView.findViewById(R.id.BoardName);
-			convertView.setTag(R.id.tag_first, holder);
-		} else {
-			holder = (ChildViewHolder) convertView.getTag(R.id.tag_first);
-		}
-		holder.categoryNameTextView.setText(board.getCategoryName());
-		holder.moderatorIDTextView.setText(board.getModerator());
-		holder.boardNameTextView.setText("[" + board.getEngName() + "]"
-				+ board.getChsName());
-		holder.boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getGuidanceSecondFontSize());
+    @Override
+    public int getCount() {
+        return m_favorites.size();
+    }
 
-		convertView.setTag(R.id.tag_second, board);
+    @Override
+    public Object getItem(int position) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			holder.categoryNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
-			holder.moderatorIDTextView.setTextColor(convertView.getResources().getColor(R.color.blue_text_night));
-			holder.boardNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
-		}
-		return convertView;
-	}
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public int getChildrenCount(int groupPosition) {
-		return m_boards.get(groupPosition).size();
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Board board = m_favorites.get(position);
 
-	@Override
-	public Object getGroup(int groupPosition) {
-		return m_directories.get(groupPosition);
-	}
+        ChildViewHolder holder;
+        if (convertView == null) {
+            convertView = m_inflater.inflate(R.layout.favorite_list_item, null);
 
-	@Override
-	public int getGroupCount() {
-		return m_directories.size();
-	}
+            holder = new ChildViewHolder();
+            holder.categoryNameTextView = (TextView) convertView.findViewById(R.id.CategoryName);
+            holder.moderatorIDTextView = (TextView) convertView.findViewById(R.id.ModeratorID);
+            holder.boardNameTextView = (TextView) convertView.findViewById(R.id.BoardName);
+            convertView.setTag(R.id.tag_first, holder);
+        } else {
+            holder = (ChildViewHolder) convertView.getTag(R.id.tag_first);
+        }
+        String directoryName = board.getDirectoryName();
+        if (directoryName == null || directoryName == "") {
+            holder.categoryNameTextView.setText("[" + board.getCategoryName() + "]");
+        } else {
+            holder.categoryNameTextView.setText(directoryName + " - [" + board.getCategoryName() + "]");
+        }
+        holder.moderatorIDTextView.setText(board.getModerator());
+        holder.boardNameTextView.setText("[" + board.getEngName() + "]" + board.getChsName());
+        holder.boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication()
+                .getGuidanceSecondFontSize());
 
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
+        convertView.setTag(R.id.tag_second, board);
 
-	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded,
-			View convertView, ViewGroup parent) {
-		GroupViewHolder holder;
-		if(convertView == null){
-			convertView = m_inflater.inflate(R.layout.favorite_list_section_header, null);
+        if (aSMApplication.getCurrentApplication().isNightTheme()) {
+            holder.categoryNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
+            holder.moderatorIDTextView.setTextColor(convertView.getResources().getColor(R.color.blue_text_night));
+            holder.boardNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
+        }
+        return convertView;
+    }
 
-			holder = new GroupViewHolder();
-			holder.boardNameTextView = (TextView) convertView.findViewById(R.id.BoardName);
-			convertView.setTag(holder);
-		} else {
-			holder = (GroupViewHolder) convertView.getTag();
-		}
-		holder.boardNameTextView.setText(m_directories.get(groupPosition));
-		holder.boardNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-				aSMApplication.getCurrentApplication().getGuidanceFontSize());
-		if (aSMApplication.getCurrentApplication().isNightTheme()) {
-			holder.boardNameTextView.setTextColor(convertView.getResources().getColor(R.color.status_text_night));
-		}
-		return convertView;
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
-
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
-	}
 }
