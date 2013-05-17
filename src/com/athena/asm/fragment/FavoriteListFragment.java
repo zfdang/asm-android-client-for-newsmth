@@ -43,6 +43,10 @@ public class FavoriteListFragment extends SherlockFragment implements BaseViewMo
         @Override
         public void drop(int from, int to) {
             m_favoriteListAdapter.moveItem(from, to);
+            Board board = m_viewModel.getFavList().get(to);
+            // save favorite list
+            EditFavoriteTask task = new EditFavoriteTask(getActivity(), m_viewModel, board.getDirectoryID(), board.getEngName(), board.getBoardID(), EditFavoriteTask.FAVORITE_SAVE);
+            task.execute();
         }
     };
 

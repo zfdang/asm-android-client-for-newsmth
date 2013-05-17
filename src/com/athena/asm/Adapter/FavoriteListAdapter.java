@@ -38,8 +38,6 @@ public class FavoriteListAdapter extends BaseAdapter {
         m_favorites.remove(board);
         m_favorites.add(to, board);
         notifyDataSetChanged();
-
-        // TODO: save ordered list to file
         return true;
     }
 
@@ -77,7 +75,7 @@ public class FavoriteListAdapter extends BaseAdapter {
             holder = (ChildViewHolder) convertView.getTag(R.id.tag_first);
         }
         String directoryName = board.getDirectoryName();
-        if (directoryName == null || directoryName == "") {
+        if (directoryName == null || directoryName.length() == 0) {
             holder.categoryNameTextView.setText("[" + board.getCategoryName() + "]");
         } else {
             holder.categoryNameTextView.setText(directoryName + " - [" + board.getCategoryName() + "]");

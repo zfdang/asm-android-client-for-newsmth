@@ -217,7 +217,7 @@ public class SmthSupport {
 			String directoryID = matcher.group(1);
 			String directoryName = matcher.group(2).trim();
 			String directoryPath;
-			if(path == ""){
+			if(path.length() == 0){
 			    directoryPath = directoryName;
 			} else {
                 directoryPath = path + "/" + directoryName;

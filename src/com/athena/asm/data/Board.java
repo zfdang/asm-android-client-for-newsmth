@@ -123,6 +123,7 @@ public class Board implements Externalizable {
 		moderator = (String) input.readObject();
 		isDirectory = input.readBoolean();
 		directoryName = (String) input.readObject();
+        directoryID = (String) input.readObject();
 		currentPageNo = input.readInt();
 		totalPageNo = input.readInt();
 		childBoards = (ArrayList<Board>) input.readObject();
@@ -137,6 +138,7 @@ public class Board implements Externalizable {
 		output.writeObject(moderator);
 		output.writeBoolean(isDirectory);
 		output.writeObject(directoryName);
+		output.writeObject(directoryID);
 		output.writeInt(currentPageNo);
 		output.writeInt(totalPageNo);
 		output.writeObject(childBoards);
