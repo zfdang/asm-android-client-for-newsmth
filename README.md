@@ -9,17 +9,21 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-05-15.
+Build Date: 2013-06-13.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
 
+2013-06-13:
+------------------------------
+1. 在设置里可以选择全屏看图时的屏幕方向：系统默认，或者跟随重力感应
+
 2013-05-17:
 ------------------------------
-1. 在branch实现了允许用户手工调整收藏夹版面的功能
-
+1. 在branch实现了允许用户手工调整收藏夹版面的功能, 没有merge到master.
+下载地址：https://github.com/zfdang/asm-android-client-for-newsmth/raw/favorite/dist/aSM.apk
 
 2013-05-15:
 ------------------------------
