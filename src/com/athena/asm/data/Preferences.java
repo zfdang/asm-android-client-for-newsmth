@@ -28,6 +28,7 @@ public class Preferences {
 	public static final String IMAGE_SIZE_THRESHOLD = "image_size_threshold";
 
 	public static final String DEFAULT_ORIENTATION = "default_orientation";
+	public static final String DEFAULT_IMAGE_ORIENTATION = "default_image_orientation";
 	public static final String TOUCH_SCROLL = "touch_scroll";
 	public static final String TOUCH_SWIPE = "touch_swipe";
 	public static final String TOUCH_SWIPE_BACK = "touch_swipe_back";
