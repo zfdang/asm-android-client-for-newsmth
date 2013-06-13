@@ -145,12 +145,20 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="其他" >
         <ListPreference
-            android:dialogTitle="选择"
+            android:dialogTitle="屏幕方向选择"
             android:entries="@array/orientation_name"
             android:entryValues="@array/orientation_value"
             android:key="default_orientation"
             android:summary="@string/setting_orientation_details"
             android:title="@string/setting_orientation" >
+        </ListPreference>
+        <ListPreference
+            android:dialogTitle="全屏看图时屏幕方向选择"
+            android:entries="@array/image_orientation_name"
+            android:entryValues="@array/image_orientation_value"
+            android:key="default_image_orientation"
+            android:summary="@string/setting_image_orientation_details"
+            android:title="@string/setting_image_orientation" >
         </ListPreference>
         <CheckBoxPreference
             android:key="promotion_show"

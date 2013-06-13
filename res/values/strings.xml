@@ -140,7 +140,9 @@
 	<string name="setting_night_theme">夜间模式</string>
 	<string name="setting_night_theme_details">启用夜间模式</string>
 	<string name="setting_orientation">屏幕方向</string>
-	<string name="setting_orientation_details">选择采用系统默认或是锁定方向</string>
+	<string name="setting_orientation_details">选择系统默认或锁定方向</string>
+    <string name="setting_image_orientation">全屏看图时屏幕方向</string>
+    <string name="setting_image_orientation_details">选择系统默认或重力感应</string>
 	<string name="setting_black_list">黑名单</string>
 	<string name="setting_black_list_details">请以空格隔开ID</string>
 	<string name="setting_forward_email">外部邮箱地址</string>

@@ -44,4 +44,12 @@
 		<item>1</item>
 		<item>2</item>
 	</string-array>
+	<string-array name="image_orientation_name">
+		<item>系统默认</item>
+		<item>重力感应</item>
+	</string-array>
+	<string-array name="image_orientation_value">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
 </resources>

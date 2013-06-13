@@ -37,7 +37,8 @@ public class aSMApplication extends Application {
 
     private static aSMApplication m_application;
     public static int THEME = R.style.Theme_Sherlock;
-    public static int ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+    public static int ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+    public static int IMAGE_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
     private boolean m_isFirstLaunch = false;
     private boolean m_isLoadDefaultCategoryFile = false;
@@ -86,6 +87,7 @@ public class aSMApplication extends Application {
     private boolean isNightTheme = true;
 
     private int defaultOrientation = 0;
+    private int defaultImageOrientation = 0;
     private boolean isPromotionShow = true;
     private String promotionContent = "";
 
@@ -307,6 +309,13 @@ public class aSMApplication extends Application {
                     .filterUnNumber(settings.getString(Preferences.DEFAULT_ORIENTATION, "0")));
         }
 
+        if (!settings.contains(Preferences.DEFAULT_IMAGE_ORIENTATION)) {
+            editor.putString(Preferences.DEFAULT_IMAGE_ORIENTATION, "0");
+        } else {
+            setDefaultImageOrientation(StringUtility
+                    .filterUnNumber(settings.getString(Preferences.DEFAULT_IMAGE_ORIENTATION, "0")));
+        }
+
         if (!settings.contains(Preferences.PROMOTION_SHOW)) {
             editor.putBoolean(Preferences.PROMOTION_SHOW, true);
         } else {
@@ -432,6 +441,18 @@ public class aSMApplication extends Application {
             break;
         case 2:
             ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            break;
+        default:
+            break;
+        }
+
+        switch (defaultImageOrientation) {
+        case 0:
+            // http://developer.android.com/reference/android/R.attr.html#screenOrientation
+            IMAGE_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+            break;
+        case 1:
+            IMAGE_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
             break;
         default:
             break;
@@ -736,6 +757,14 @@ public class aSMApplication extends Application {
 
     public void setDefaultOrientation(int defaultOrientation) {
         this.defaultOrientation = defaultOrientation;
+    }
+
+    public int getDefaultImageOrientation() {
+        return defaultImageOrientation;
+    }
+
+    public void setDefaultImageOrientation(int defaultImageOrientation) {
+        this.defaultImageOrientation = defaultImageOrientation;
     }
 
 }

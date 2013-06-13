@@ -16,7 +16,6 @@ import org.apache.commons.io.FileUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.ActivityInfo;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -95,9 +94,7 @@ public class FullImageActivity extends Activity
         mIndicator.setViewPager(mViewPager);
         mIndicator.setCurrentItem(m_imageIdx);
 
-		// setRequestedOrientation(aSMApplication.ORIENTATION);
-        // use senor's orientation
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        setRequestedOrientation(aSMApplication.IMAGE_ORIENTATION);
 	}
 
 	public static final int MENU_EXIF = Menu.FIRST;
