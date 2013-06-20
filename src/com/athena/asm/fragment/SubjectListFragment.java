@@ -101,7 +101,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         // subjectListView.findViewById(R.id.switchBoardMode);
         // switchModeImageButton.setOnClickListener(this);
 
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return subjectListView;
     }
 

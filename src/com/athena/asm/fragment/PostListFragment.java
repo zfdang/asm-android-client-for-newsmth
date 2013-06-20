@@ -277,7 +277,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_gestureDetector = new GestureDetector(m_listView.getContext(), new MyGestureDetector());
         m_listView.setOnTouchListener(this);
 
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return postListView;
     }
 
