@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.app.AlertDialog;
-import android.content.ClipboardManager;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +26,7 @@ import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
 
+@SuppressWarnings("deprecation")
 public class ReadMailAdapter extends BaseAdapter {
 	private ReadMailActivity activity;
 	private LayoutInflater inflater;

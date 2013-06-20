@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.ProgressDialog;
-import android.content.ClipboardManager;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -31,6 +31,7 @@ import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadWritePostTask;
 import com.athena.asm.viewmodel.WritePostViewModel;
 
+@SuppressWarnings("deprecation")
 public class WritePostActivity extends SherlockActivity implements OnClickListener, OnItemSelectedListener {
     static final int ATTACH_REQUST = 0;
 
