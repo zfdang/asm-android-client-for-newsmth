@@ -169,6 +169,9 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
                     view.setLayoutParams(layoutParams);
                     view.setTag(R.id.tag_first, i);
                     view.setTag(R.id.tag_second, attachments);
+                    // http://stackoverflow.com/questions/3916330/android-webview-webpage-should-fit-the-device-screen
+                    view.getSettings().setLoadWithOverviewMode(true);
+                    view.getSettings().setUseWideViewPort(true);
                     holder.imageLayout.addView(view);
                     view.setOnClickListener(this);
 				} else if (fileType.endsWith("jpg")
