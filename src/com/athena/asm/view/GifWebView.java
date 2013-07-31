@@ -8,6 +8,7 @@ public class GifWebView extends WebView {
     public GifWebView(Context context, String path) {
         super(context);        
         
-        loadUrl(path);
+        String content = "<html><body><img src=" + path + " width=100%></body></html>";
+        loadData(content, "text/html", null);
     }
 }
