@@ -28,6 +28,7 @@ import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.view.GifWebView;
 import com.athena.asm.view.LinkTextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -158,10 +159,21 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 				contentBuilder.append("<a href='").append(attachUrl).append("'>");
 				contentBuilder.append(attachments.get(i).getName()).append("</a><br/>");
 				String fileType = attachments.get(i).getName().toLowerCase();
-				if (fileType.endsWith("jpg")
+				if(fileType.endsWith("gif")){
+                    // Log.d("image", attachUrl);
+				    GifWebView view = new GifWebView(m_fragment.getActivity(), attachUrl);
+                    LayoutParams layoutParams = new LayoutParams(
+                            LayoutParams.WRAP_CONTENT,
+                            LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(1, 1, 1, 1);
+                    view.setLayoutParams(layoutParams);
+                    view.setTag(R.id.tag_first, i);
+                    view.setTag(R.id.tag_second, attachments);
+                    holder.imageLayout.addView(view);
+                    view.setOnClickListener(this);
+				} else if (fileType.endsWith("jpg")
 						|| fileType.endsWith("jpeg")
-						|| fileType.endsWith("png") || fileType.endsWith("bmp")
-						|| fileType.endsWith("gif")) {
+						|| fileType.endsWith("png") || fileType.endsWith("bmp")) {
 					// Log.d("image", attachUrl);
 					ImageView imageView = new ImageView(m_fragment.getActivity());
 					LayoutParams layoutParams = new LayoutParams(

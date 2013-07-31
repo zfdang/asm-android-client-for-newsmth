@@ -931,14 +931,18 @@ public class SmthSupport {
 				Attachment innerAtt = new Attachment();
 
 				if (attach.contains("<img")) {
+				    // this attachment is an image
 					Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						String urlString = urlMatcher.group(1);
+						// find image content type from HTTP stream
+						String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
-						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + ".jpg");
+						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + "." + content_type);
 					}
 				} else {
+				    // other attachment, shown as downloadable link
 					Pattern urlPattern = Pattern.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
@@ -1283,14 +1287,18 @@ public class SmthSupport {
 				Attachment innerAtt = new Attachment();
 
 				if (attach.contains("<img")) {
+				    // this attachment is an image
 					Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						String urlString = urlMatcher.group(1);
+                        // find image content type from HTTP stream
+                        String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
-						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + ".jpg");
+						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + "." + content_type);
 					}
 				} else {
+				    // other attachment, shown as downloadable link
 					Pattern urlPattern = Pattern.compile("<a href=\"([^<>]+)\">([^<>]+)</a>");
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {

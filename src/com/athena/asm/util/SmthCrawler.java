@@ -308,6 +308,33 @@ public class SmthCrawler {
 		return content;
 	}
 
+    public String fetchContentType(String url) {
+        HttpGet httpget = new HttpGet(url);
+        httpget.setHeader("User-Agent", userAgent);
+        httpget.addHeader("Accept-Encoding", "gzip, deflate");
+        String content_type = "unknown";
+        try {
+            HttpResponse response = httpClient.execute(httpget);
+            Header[] headers = response.getHeaders("Content-Type");
+            if (headers != null && headers.length != 0) {
+                for (Header header : headers) {
+                    String s = header.getValue();
+                    if (s.contains("image/")) {
+                        String[] results = s.split("/");
+                        if(results.length == 2){
+                            content_type = results[1];
+                            // Log.d("fetchContentType", url + content_type);
+                            return content_type.toLowerCase();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("Crawler:fetchContent", "get url failed,", e);
+        }
+        return content_type;
+    }
+
 	public String getUrlContentFromMobile(String url) {
 		return fetchContent(url, mobileSMTHEncoding);
 	}
