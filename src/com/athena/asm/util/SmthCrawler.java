@@ -23,6 +23,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
@@ -309,12 +310,11 @@ public class SmthCrawler {
 	}
 
     public String fetchContentType(String url) {
-        HttpGet httpget = new HttpGet(url);
-        httpget.setHeader("User-Agent", userAgent);
-        httpget.addHeader("Accept-Encoding", "gzip, deflate");
+        HttpHead httphead = new HttpHead(url);
+        httphead.setHeader("User-Agent", userAgent);
         String content_type = "unknown";
         try {
-            HttpResponse response = httpClient.execute(httpget);
+            HttpResponse response = httpClient.execute(httphead);
             Header[] headers = response.getHeaders("Content-Type");
             if (headers != null && headers.length != 0) {
                 for (Header header : headers) {
