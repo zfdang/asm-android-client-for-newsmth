@@ -45,10 +45,29 @@ import com.athena.asm.util.task.CheckUpdateAsyncTask;
 import com.athena.asm.util.task.LoginTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class HomeActivity extends SherlockFragmentActivity implements OnOpenActivityFragmentListener,
         BaseViewModel.OnViewModelChangObserver {
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        
+        // stop EasyTracker methods
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        
+        // Adding EasyTracker methods
+        EasyTracker.getInstance().activityStart(this);
+    }
 
     private HomeViewModel m_viewModel;
 
