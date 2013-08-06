@@ -77,7 +77,8 @@ public class SmthSupport {
 	 * 退出登录，并关闭httpclient
 	 */
 	public void destory() {
-		logout();
+		// skip the step to logout normally, to accelerate logout
+		// logout();
 		crawler.destroy();
 	}
 
