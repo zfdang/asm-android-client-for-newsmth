@@ -155,13 +155,14 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 
 			// TODO: pass screen orientation to UrlImageViewHelper
 			for (int i = 0; i < attachments.size(); i++) {
-				String attachUrl = attachments.get(i).getAttachUrl();
+				Attachment attachment = attachments.get(i);
+                String attachUrl = attachment.getAttachUrl();
 				contentBuilder.append("<a href='").append(attachUrl).append("'>");
-				contentBuilder.append(attachments.get(i).getName()).append("</a><br/>");
-				String fileType = attachments.get(i).getName().toLowerCase();
+				contentBuilder.append(attachment.getName()).append("</a><br/>");
+				String fileType = attachment.getName().toLowerCase();
 				if(fileType.endsWith("gif")){
                     // Log.d("image", attachUrl);
-				    GifWebView view = new GifWebView(m_fragment.getActivity(), attachUrl);
+				    GifWebView view = new GifWebView(m_fragment.getActivity(), attachUrl, attachment.getName());
                     LayoutParams layoutParams = new LayoutParams(
                             LayoutParams.WRAP_CONTENT,
                             LayoutParams.WRAP_CONTENT);
