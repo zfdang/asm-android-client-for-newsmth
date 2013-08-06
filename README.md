@@ -9,12 +9,16 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-08-05.
+Build Date: 2013-08-06.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2013-08-06:
+------------------------------
+1. 长按GIF图片，将弹出保存图片到本地的选项
 
 2013-08-05:
 ------------------------------
