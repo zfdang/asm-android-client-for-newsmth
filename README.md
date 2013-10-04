@@ -9,12 +9,16 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-08-06.
+Build Date: 2013-10-04.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2013-10-04:
+------------------------------
+1. 帖子字体大小将控制帖子的作者、时间、正文、附件等文本
 
 2013-08-06:
 ------------------------------
