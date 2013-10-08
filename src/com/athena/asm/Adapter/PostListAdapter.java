@@ -110,16 +110,12 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.dateTextView = (TextView) layout.findViewById(R.id.PostDate);
 			holder.post = post;
 			
-			holder.authorTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					aSMApplication.getCurrentApplication().getPostFontSize());
-			holder.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					aSMApplication.getCurrentApplication().getPostFontSize());
-			holder.dateTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					aSMApplication.getCurrentApplication().getPostFontSize());
-			holder.contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					aSMApplication.getCurrentApplication().getPostFontSize());
-			holder.attachTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-					aSMApplication.getCurrentApplication().getPostFontSize());
+			int fontSize = aSMApplication.getCurrentApplication().getPostFontSize();
+			holder.authorTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
+			holder.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
+			holder.dateTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
+			holder.contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+			holder.attachTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
 			
 			layout.setTag(holder);
 		}
