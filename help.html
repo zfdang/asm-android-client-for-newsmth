@@ -6,16 +6,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
-  <!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="blueimp/css/blueimp-gallery.min.css">
   <link rel="stylesheet" href="big/css/bootstrap-image-gallery.css">
+  
   <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
   <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-  <script type="text/javascript" src="javascripts/jquery-1.9.1.min.js"></script>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript" src="javascripts/script.js"></script>
-  <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
-  <script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
-  <script src="big/js/bootstrap-image-gallery.js"></script>
 
   <title>aSM 水木清华BBS的android客户端 | 帮助</title>
   <meta name="keywords" content="aSM,android,client,newsmth,水木,水木社区,水木清华,BBS,安卓,客户端" />
@@ -38,83 +37,103 @@
 <h3>使用说明</h3>
 <p>点击图片看屏幕截图和相关说明</p>
 <br>
-<div id="gallery" data-toggle="modal-gallery" data-target="#modal-gallery">
-<a data-gallery="gallery" href="screenshots/guidance.png" title="全站热点。下面的图标分别为：清空图片缓存、设置、刷新当前内容、切换日夜模式、关于(可在线更新)。音量键滚屏">
-  <img src="screenshots/guidance.png" class="thumb"></a>
 
-<a data-gallery="gallery" href="screenshots/exit.png" title="退出程序：在主界面连续按两次返回键">
-  <img src="screenshots/exit.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/favorite.png" title="我的收藏夹：下面有最近访问版面列表;如有版面不全请按'刷新'强制更新;音量键滚屏;长按版面可从收藏夹中删除">
-  <img src="screenshots/favorite.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/category.png" title="所有版面列表：输入版面中英文，可以自动提示补全;如有版面不全请按'刷新'强制更新;音量键滚屏">
-  <img src="screenshots/category.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/subject_list.png" title="文章列表：向下拖动列表可刷新; 图标分别为：写文章、切换同主题/普通模式、切换置底、搜索；按菜单键可有更多选项">
-  <img src="screenshots/subject_list.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/subject_list_menu.png" title="文章列表：菜单选项; 可将版面加入收藏夹">
-  <img src="screenshots/subject_list_menu.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/search.png" title="文章列表：搜索帖子；按放大镜或按钮开始搜索">
-  <img src="screenshots/search.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/post.png" title="同主题阅读模式：点击屏幕上下部或按音量键可滚屏；左右划动可翻页(首页右划返回版面)；长按出菜单">
-  <img src="screenshots/post.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/post_normal.png" title="正常阅读模式：点击屏幕上下部或按音量键可滚屏；左右划动在同主题的帖子里切换；长按出菜单">
-  <img src="screenshots/post_normal.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/post_action.png" title="帖子操作：长按帖子后弹出菜单；可编辑、删除自己的帖子；可在浏览器里打开帖子">
-<img src="screenshots/post_action.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/image.png" title="附件照片的展示：点击图片可进入全屏看图模式">
-  <img src="screenshots/image.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/image_fullscreen.png" title="全屏看图模式：左右划动切换图片；双指缩放；长按/按Menu键出菜单；屏幕可根据重力旋转; 下部指示器不可点">
-  <img src="screenshots/image_fullscreen.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/image_fullscreen_action.png" title="全屏看图模式：长按弹出的菜单">
-  <img src="screenshots/image_fullscreen_action.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/image_fullscreen_action_menu.png" title="全屏看图模式：按menu键弹出的菜单">
-  <img src="screenshots/image_fullscreen_action_menu.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/exif.png" title="全屏看图模式：查看EXIF信息">
-  <img src="screenshots/exif.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/settings.png" title="设置: 手势操作可在此处禁用；永久改变‘显示置底’；">
-  <img src="screenshots/settings.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/about.png" title="关于：可手动检查更新">
-  <img src="screenshots/about.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/upgrade_confirm.png" title="确认更新">
-  <img src="screenshots/upgrade_confirm.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/upgrade_downloading.png" title="下载APK">
-  <img src="screenshots/upgrade_downloading.png" class="thumb"></a>
-
-<a data-gallery="gallery" href="screenshots/upgrade_install.png" title="APK下载完成，点击安装">
-  <img src="screenshots/upgrade_install.png" class="thumb"></a>
-
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body next"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<!-- modal-gallery is the modal dialog used for the image gallery -->
-<div id="modal-gallery" class="modal modal-gallery hide fade" tabindex="-1">
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <p class="modal-title"></p>
-    </div>
-    <div class="modal-body"><div class="modal-image"></div></div>
-    <div class="modal-footer">
-        <a class="btn btn-primary modal-next">Next <i class="icon-arrow-right icon-white"></i></a>
-        <a class="btn btn-info modal-prev"><i class="icon-arrow-left icon-white"></i> Previous</a>
-        <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000"><i class="icon-play icon-white"></i> Slideshow</a>
-        <a class="btn modal-download" target="_blank"><i class="icon-download"></i> Download</a>
-    </div>
+<div id="links">
+  <a href="screenshots/guidance.png" title="全站热点。下面的图标分别为：清空图片缓存、设置、刷新当前内容、切换日夜模式、关于(可在线更新)。音量键滚屏"  data-gallery>
+    <img src="screenshots/guidance.png" class="thumb"></a>
+
+  <a href="screenshots/exit.png" title="退出程序：在主界面连续按两次返回键"  data-gallery>
+    <img src="screenshots/exit.png" class="thumb"></a>
+
+  <a href="screenshots/favorite.png" title="我的收藏夹：下面有最近访问版面列表;如有版面不全请按'刷新'强制更新;音量键滚屏;长按版面可从收藏夹中删除"  data-gallery>
+    <img src="screenshots/favorite.png" class="thumb"></a>
+
+  <a href="screenshots/category.png" title="所有版面列表：输入版面中英文，可以自动提示补全;如有版面不全请按'刷新'强制更新;音量键滚屏"  data-gallery>
+    <img src="screenshots/category.png" class="thumb"></a>
+
+  <a href="screenshots/subject_list.png" title="文章列表：向下拖动列表可刷新; 图标分别为：写文章、切换同主题/普通模式、切换置底、搜索；按菜单键可有更多选项"  data-gallery>
+    <img src="screenshots/subject_list.png" class="thumb"></a>
+
+  <a href="screenshots/subject_list_menu.png" title="文章列表：菜单选项; 可将版面加入收藏夹"  data-gallery>
+    <img src="screenshots/subject_list_menu.png" class="thumb"></a>
+
+  <a href="screenshots/search.png" title="文章列表：搜索帖子；按放大镜或按钮开始搜索"  data-gallery>
+    <img src="screenshots/search.png" class="thumb"></a>
+
+  <a href="screenshots/post.png" title="同主题阅读模式：点击屏幕上下部或按音量键可滚屏；左右划动可翻页(首页右划返回版面)；长按出菜单"  data-gallery>
+    <img src="screenshots/post.png" class="thumb"></a>
+
+  <a href="screenshots/post_normal.png" title="正常阅读模式：点击屏幕上下部或按音量键可滚屏；左右划动在同主题的帖子里切换；长按出菜单"  data-gallery>
+    <img src="screenshots/post_normal.png" class="thumb"></a>
+
+  <a href="screenshots/post_action.png" title="帖子操作：长按帖子后弹出菜单；可编辑、删除自己的帖子；可在浏览器里打开帖  data-gallery子">
+  <img src="screenshots/post_action.png" class="thumb"></a>
+
+  <a href="screenshots/image.png" title="附件照片的展示：点击图片可进入全屏看图模式"  data-gallery>
+    <img src="screenshots/image.png" class="thumb"></a>
+
+  <a href="screenshots/image_fullscreen.png" title="全屏看图模式：左右划动切换图片；双指缩放；长按/按Menu键出菜单；屏幕可根据重力旋转; 下部指示器不可点"  data-gallery>
+    <img src="screenshots/image_fullscreen.png" class="thumb"></a>
+
+  <a href="screenshots/image_fullscreen_action.png" title="全屏看图模式：长按弹出的菜单"  data-gallery>
+    <img src="screenshots/image_fullscreen_action.png" class="thumb"></a>
+
+  <a href="screenshots/image_fullscreen_action_menu.png" title="全屏看图模式：按menu键弹出的菜单"  data-gallery>
+    <img src="screenshots/image_fullscreen_action_menu.png" class="thumb"></a>
+
+  <a href="screenshots/exif.png" title="全屏看图模式：查看EXIF信息"  data-gallery>
+    <img src="screenshots/exif.png" class="thumb"></a>
+
+  <a href="screenshots/settings.png" title="设置: 手势操作可在此处禁用；永久改变‘显示置底’；"  data-gallery>
+    <img src="screenshots/settings.png" class="thumb"></a>
+
+  <a href="screenshots/about.png" title="关于：可手动检查更新"  data-gallery>
+    <img src="screenshots/about.png" class="thumb"></a>
+
+  <a href="screenshots/upgrade_confirm.png" title="确认更新"  data-gallery>
+    <img src="screenshots/upgrade_confirm.png" class="thumb"></a>
+
+  <a href="screenshots/upgrade_downloading.png" title="下载APK"  data-gallery>
+    <img src="screenshots/upgrade_downloading.png" class="thumb"></a>
+
+  <a href="screenshots/upgrade_install.png" title="APK下载完成，点击安装"  data-gallery>
+    <img src="screenshots/upgrade_install.png" class="thumb"></a>
 </div>
 
         </article>
@@ -124,7 +143,6 @@
     <footer>
       <div class="owner">
       <p><a href="https://github.com/zfdang" class="avatar"><img src="https://secure.gravatar.com/avatar/2b1ed73aa54d7c1fa643a47679d0406e?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/zfdang">zfdang</a> maintains <a href="https://github.com/zfdang/asm-android-client-for-newsmth">Asm-android-client-for-newsmth</a></p>
-
 
       </div>
       <div class="creds">
@@ -139,8 +157,11 @@
   </div>
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-<script type="text/javascript">
 
+<script src="blueimp/js/jquery.blueimp-gallery.min.js"></script>
+<script src="big/js/bootstrap-image-gallery.js"></script>
+
+<script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-6920954-6']);
   _gaq.push(['_trackPageview']);
@@ -150,7 +171,6 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
 </script>
 </body>
 </html>
