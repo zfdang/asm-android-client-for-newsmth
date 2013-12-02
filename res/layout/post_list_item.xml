@@ -5,8 +5,14 @@
 	android:paddingBottom="2dp" android:paddingLeft="6dp"
 	android:paddingRight="6dp" android:id="@+id/PostListLayout">
 	<TextView android:id="@+id/AuthorID"
-		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
 		android:textColor="@color/blue_text" android:textSize="15dp" />
+	<TextView android:id="@+id/PostAuthorSeprator"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="@color/grey_text" android:textSize="15dp" android:text="  " android:layout_toRightOf="@+id/AuthorID"/>
+	<TextView android:id="@+id/PostIndex"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="@color/grey_text" android:textSize="15dp" android:layout_toRightOf="@+id/PostAuthorSeprator" />
 	<TextView android:id="@+id/PostDate"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:gravity="right" android:textColor="@color/grey_text" android:textSize="16dp" />

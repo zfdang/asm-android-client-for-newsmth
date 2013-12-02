@@ -42,6 +42,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 	// use ViewHolder pattern
 	public class ViewHolder {
 		public TextView authorTextView;
+        public TextView indexTextView;
 		public TextView titleTextView;
 		public View lineView;
 		public LinkTextView contentTextView;
@@ -102,6 +103,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			layout = (RelativeLayout) m_inflater.inflate(R.layout.post_list_item, null);
 			holder = new ViewHolder();
 			holder.authorTextView = (TextView) layout.findViewById(R.id.AuthorID);
+			holder.indexTextView = (TextView) layout.findViewById(R.id.PostIndex);
 			holder.titleTextView = (TextView) layout.findViewById(R.id.PostTitle);
 			holder.lineView = (View) layout.findViewById(R.id.SeperatorView);
 			holder.contentTextView = (LinkTextView) layout.findViewById(R.id.PostContent);
@@ -111,6 +113,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.post = post;
 			
 			int fontSize = aSMApplication.getCurrentApplication().getPostFontSize();
+            holder.indexTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
 			holder.authorTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
 			holder.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
 			holder.dateTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize - 2);
@@ -131,7 +134,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			return layout;
 		}
 		
-		holder.authorTextView.setText(post.getAuthor());
+	    holder.authorTextView.setText(post.getAuthor());
+		holder.indexTextView.setText(post.getPostIndex());
 		holder.titleTextView.setText(post.getTitle());
 		if (post.getTitle() == null) {
 			holder.titleTextView.setHeight(0);
@@ -208,6 +212,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		
 		if (aSMApplication.getCurrentApplication().isNightTheme()) {
 			holder.titleTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
+			holder.indexTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.contentTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.attachTextView.setTextColor(layout.getResources().getColor(R.color.status_text_night));
 			holder.authorTextView.setTextColor(layout.getResources().getColor(R.color.blue_text_night));

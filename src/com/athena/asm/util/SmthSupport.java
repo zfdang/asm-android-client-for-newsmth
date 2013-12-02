@@ -1179,8 +1179,9 @@ public class SmthSupport {
 		List<Post> postList = new ArrayList<Post>();
 
 		boolean flag = true;
-		// <a userid href="/user/query/
-		Pattern userIDPattern = Pattern.compile("<a href=\"/user/query/([^<>]+)\"");
+		// <a class="plant">10楼</a>|<a href="/user/query/xiaojunxiao">xiaojunxiao</a>
+		// <a class="plant">楼主</a>|<a href="/user/query/vivianv">vivianv</a>
+		Pattern userIDPattern = Pattern.compile("<a class=\"plant\">((\\d+)楼|楼主)</a>\\|<a href=\"/user/query/([^<>]+)\"");
 		Matcher userIDMatcher = userIDPattern.matcher(result);
 
 		while (userIDMatcher.find()) {
@@ -1188,14 +1189,16 @@ public class SmthSupport {
 			post.setTopicSubjectID(subject.getTopicSubjectID());
 			post.setBoardID(subject.getBoardID());
 			post.setBoard(subject.getBoardEngName());
-			String author = userIDMatcher.group(1);
-			post.setAuthor(author);
+			String post_index = userIDMatcher.group(1);
+			post.setPostIndex(post_index);
+			String post_author = userIDMatcher.group(3);
+			post.setAuthor(post_author);
 			post.setTopicSubjectID(subject.getSubjectID());
 
 			if (flag) {
 				flag = false;
-				if (!StringUtility.isEmpty(author) && StringUtility.isEmpty(subject.getAuthor())) {
-					subject.setAuthor(author);
+				if (!StringUtility.isEmpty(post_author) && StringUtility.isEmpty(subject.getAuthor())) {
+					subject.setAuthor(post_author);
 				}
 			}
 

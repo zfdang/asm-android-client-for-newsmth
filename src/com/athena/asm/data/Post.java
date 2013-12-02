@@ -13,6 +13,7 @@ public class Post {
 	private String board;
 	private String boardID;
 	private Date date;
+	private String index;
 	private CharSequence content;
 	private ArrayList<Attachment> attachFiles;
 	
@@ -60,6 +61,14 @@ public class Post {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public String getPostIndex() {
+		return index;
+	}
+
+	public void setPostIndex(String index) {
+		this.index = index;
 	}
 
 	public String getBoard() {
