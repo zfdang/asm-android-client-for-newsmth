@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.athena.asm.data.Profile;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.data.Profile;
 
 public class StringUtility {
 
@@ -161,6 +161,12 @@ public class StringUtility {
         return profile;
     }
     
+    public static String handleHtmlStr(String content) {
+    	return content.replace("<br />", "\n").replace("<br/>", "\n").replace("<br>", "\n").replace("&nbsp;", " ")
+    			.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "'")
+    			.replace("&copy;", "©").replace("&reg;", "®").replace("&amp;", "&");
+    }
+    
     // parse content from m.newsmth.net
     // URL like: http://m.newsmth.net/article/Children/930419181?p=1
     public static Object[] parseMobilePostContent(String content) {
@@ -169,10 +175,12 @@ public class StringUtility {
     	}
 
 		if (aSMApplication.getCurrentApplication().isWeiboStyle()) {
+//            content = content.replaceAll("(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
+//                    "//<font color=\"#6A5ACD\">@$2<\\/font>: <font color=\"#708090\">$3<\\/font> <br \\/>FROM");
             content = content.replaceAll("(\\<br\\/\\>)+【 在 (\\S+?) .*?的大作中提到: 】<br\\/>:(.{1,20}).*?FROM",
-                    "//<font color=\"#6A5ACD\">@$2<\\/font>: <font color=\"#708090\">$3<\\/font> <br \\/>FROM");
-			content = content.replaceAll("--\\<br \\/\\>FROM", "<br \\/>FROM");
-			content = content.replaceAll("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\*)\\]", "<br \\/>");
+                    "//\\\\r[106090205#@$2\\\\r[m: \\\\r[112128144#$3\\\\r[m \nFROM");            
+			content = content.replaceAll("--\\<br \\/\\>FROM", "\nFROM");
+			content = content.replaceAll("FROM: (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\*)\\]", "\n");
 		}
 
 		if (aSMApplication.getCurrentApplication().isShowIp()) {
@@ -181,17 +189,18 @@ public class StringUtility {
 			while (myipMatcher.find()) {
 				String ipl = myipMatcher.group(1);
 				if (ipl.length() > 5) {
-                    ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-                            + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+                    ipl = "\\\\r[192192192#FROM $1\\*("
+                            + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")\\\\r[m";
 				} else {
-					ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
+					ipl = "\\\\r[192192192#FROM $1\\*\\\\r[m";
 				}
 				content = myipMatcher.replaceAll(ipl);
 			}
 		}
 
-    	content = content.replace("<br />", "<br/>");
-    	String[] lines = content.split("<br/>");
+    	content = handleHtmlStr(content);    	
+    	
+    	String[] lines = content.split("\n");
     	StringBuilder sb = new StringBuilder();
         int linebreak = 0;
         int linequote = 0;
@@ -222,7 +231,7 @@ public class StringUtility {
             } else {
                 if (seperator > 0) {
                     if (line.length() > 0) {
-                        line = "<font color=#33CC66>" + line + "</font>";
+                        line = "\\r[051204102#" + line + "\\r[m";
                     } else {
                         continue;
                     }
@@ -234,7 +243,7 @@ public class StringUtility {
                 if (linequote > 5) {
                     continue;
                 } else {
-                    line = "<font color=#006699>" + line + "</font>";
+                    line = "\\r[000102153#" + line + "\\r[m";
                 }
             } else {
                 linequote = 0;
@@ -261,7 +270,7 @@ public class StringUtility {
                 // we don't extract these lines from mobile content, duplicated information
                 continue;
             }
-            sb.append(line).append("<br />");
+            sb.append(line).append("\n");
         }
 
         String result = sb.toString().trim();
@@ -275,8 +284,9 @@ public class StringUtility {
         if (content == null) {
             return new Object[] { "", date };
         }
-        content = content.replace("\\n", "\n").replace("\\r", "\r")
-                .replace("\\/", "/").replace("\\\"", "\"").replace("\\'", "'");
+        content = content.replace("\\n", "\n")
+                .replace("\\/", "/").replace("\\\"", "\"").replace("\\'", "'");                
+        
         String[] lines = content.split("\n");
         StringBuilder sb = new StringBuilder();
         int linebreak = 0;
@@ -312,7 +322,7 @@ public class StringUtility {
             } else {
                 if (seperator > 0) {
                     if (line.length() > 0) {
-                        line = "<font color=#33CC66>" + line + "</font>";
+                        line = "\\r[051204102#" + line + "\\r[m";
                     } else {
                         continue;
                     }
@@ -324,7 +334,7 @@ public class StringUtility {
                 if (linequote > 5) {
                     continue;
                 } else {
-                    line = "<font color=#006699>" + line + "</font>";
+                    line = "\\r[000102153#" + line + "\\r[m";
                 }
             } else {
                 linequote = 0;
@@ -344,11 +354,11 @@ public class StringUtility {
             // ※ 来源:·水木社区 newsmth.net·[FROM: 119.6.200.*]
             if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
                 // remove ASCII control first
-                Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
+                /*Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
                 Matcher cMatcher = cPattern.matcher(line);
                 if(cMatcher.find()){
                     line = cMatcher.group(0);
-                }
+                }*/
 
                 if (aSMApplication.getCurrentApplication().isShowIp()) {
                     Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
@@ -356,16 +366,19 @@ public class StringUtility {
                     while (myipMatcher.find()) {
                         String ipl = myipMatcher.group(1);
                         if (ipl.length() > 5) {
-                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-                                    + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
+//                                    + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+                            ipl = "FROM $1\\*("
+                                    + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")";                            
                         } else {
-                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
+//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
+                            ipl = "FROM $1\\*";
                         }
                         line = myipMatcher.replaceAll(ipl);
                     }
                 }
             }
-            sb.append(line).append("<br />");
+            sb.append(line).append("\n");
         }
 
         String result = sb.toString().trim();

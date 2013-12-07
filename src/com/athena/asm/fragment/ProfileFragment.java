@@ -2,7 +2,6 @@ package com.athena.asm.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +22,7 @@ import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Profile;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadProfileTask;
+import com.athena.asm.util.vt100.Vt100TerminalModel;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 
@@ -142,7 +142,8 @@ public class ProfileFragment extends SherlockFragment implements BaseViewModel.O
             userIpTextView.setText("来自:" + m_currentProfile.getIp());
 
             TextView descTextView = (TextView) m_layout.findViewById(R.id.profile_user_desc);
-            descTextView.setText(Html.fromHtml(m_currentProfile.getDescription()));
+    		Vt100TerminalModel.handleContent(m_currentProfile.getDescription(), descTextView);		                        
+//            descTextView.setText(Html.fromHtml(m_currentProfile.getDescription()));
 
             TextView aliveTextView = (TextView) m_layout.findViewById(R.id.profile_aliveness);
             aliveTextView.setText(m_currentProfile.getAliveness() + "");
