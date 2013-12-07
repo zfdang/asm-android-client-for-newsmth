@@ -9,12 +9,16 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2013-12-02.
+Build Date: 2013-12-07.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2013-12-07:
+------------------------------
+1. 让asm像cterm那样支持颜色控制符等简单的ANSI控制符, by flash2
 
 2013-12-02:
 ------------------------------

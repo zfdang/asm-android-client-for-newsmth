@@ -270,6 +270,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         m_pageNumberEditText.setVisibility(View.GONE);
 
         m_listView = (ListView) postListView.findViewById(R.id.post_list);
+        m_listView.setFastScrollAlwaysVisible(true);
 
         m_viewModel.setBoardType(getActivity().getIntent().getIntExtra(StringUtility.BOARD_TYPE, 0));
         m_viewModel.setIsToRefreshBoard(false);
