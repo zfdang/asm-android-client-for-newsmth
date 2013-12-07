@@ -1451,7 +1451,9 @@ public class SmthSupport {
 			descriptionString = descriptionString.replaceAll("\\\\\\\\", "\\\\"); // \\ ==> \
 			descriptionString = descriptionString.replaceAll("\\\\\"", "\""); // \" ==> "
 			descriptionString = descriptionString.replaceAll("\\\\'", "'"); // \' ==> '
-			descriptionString = descriptionString.replaceAll("\\\\n", "<br/>"); // \n ==> <br/>
+//			descriptionString = descriptionString.replaceAll("\\\\n", "<br/>"); // \n ==> <br/>
+			descriptionString = descriptionString.replaceAll("\\\\n", "\n"); // \n ==> <br/>
+			descriptionString = StringUtility.handleHtmlStr(descriptionString);
 			profile.setDescription(descriptionString);
 		} else {
 			profile.setDescription("这家伙很懒，啥也没留下");

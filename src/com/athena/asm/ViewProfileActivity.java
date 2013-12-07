@@ -3,7 +3,6 @@ package com.athena.asm;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import com.athena.asm.data.Profile;
 import com.athena.asm.util.SmthSupport;
 import com.athena.asm.util.StringUtility;
 import com.athena.asm.util.task.LoadProfileTask;
+import com.athena.asm.util.vt100.Vt100TerminalModel;
 
 public class ViewProfileActivity extends SherlockActivity {
 
@@ -80,7 +80,7 @@ public class ViewProfileActivity extends SherlockActivity {
             userIpTextView.setText("来自:" + profile.getIp());
 
             TextView descTextView = (TextView) findViewById(R.id.profile_user_desc);
-            descTextView.setText(Html.fromHtml(profile.getDescription()));
+            Vt100TerminalModel.handleContent(profile.getDescription(), descTextView);
 
             TextView aliveTextView = (TextView) findViewById(R.id.profile_aliveness);
             aliveTextView.setText(profile.getAliveness() + "");

@@ -4,11 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.app.AlertDialog;
-import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.Html;
+import android.text.ClipboardManager;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import com.athena.asm.ReadMailActivity;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Mail;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.vt100.Vt100TerminalModel;
 
 @SuppressWarnings("deprecation")
 public class ReadMailAdapter extends BaseAdapter {
@@ -49,7 +49,9 @@ public class ReadMailAdapter extends BaseAdapter {
 		titleTextView.setText(mail.getTitle());
 		TextView contentTextView = (TextView) layout
 				.findViewById(R.id.PostContent);
-		contentTextView.setText(Html.fromHtml(mail.getContent()));
+		
+		Vt100TerminalModel.handleContent(mail.getContent(), contentTextView);		
+//		contentTextView.setText(Html.fromHtml(mail.getContent()));				
 		contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, aSMApplication.getCurrentApplication().getPostFontSize());
 		
 		TextView attachTextView = (TextView) layout.findViewById(R.id.PostAttach);

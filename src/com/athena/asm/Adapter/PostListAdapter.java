@@ -28,6 +28,7 @@ import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
+import com.athena.asm.util.vt100.Vt100TerminalModel;
 import com.athena.asm.view.GifWebView;
 import com.athena.asm.view.LinkTextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -36,7 +37,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 
 	private PostListFragment m_fragment;
 	private LayoutInflater m_inflater;
-	private List<Post> m_postList;
+	private List<Post> m_postList;	
 	
 	// http://developer.android.com/training/improving-layouts/smooth-scrolling.html
 	// use ViewHolder pattern
@@ -92,7 +93,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		// 自动优化且在移动网络中，返回阈值
 		float threshold = aSMApplication.getCurrentApplication().getImageSizeThreshold();
 		return (int)threshold * 1024;
-	}
+	}	
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
@@ -141,9 +142,9 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 			holder.titleTextView.setHeight(0);
 			holder.lineView.setVisibility(View.INVISIBLE);
 			holder.attachTextView.setHeight(0);
-		}
-
-		holder.contentTextView.setText(post.getContent());
+		}						
+						
+		Vt100TerminalModel.handleContent(post.getContent(), holder.contentTextView);		
         Linkify.addLinks(holder.contentTextView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());
