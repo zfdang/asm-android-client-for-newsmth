@@ -24,7 +24,7 @@
 	<View android:id="@+id/SeperatorView" android:layout_width="fill_parent"
 		android:layout_height="0dp" android:background="?android:attr/listDivider"
 		android:layout_below="@+id/PostTitle" />
-	<com.athena.asm.view.LinkTextView android:id="@+id/PostContent"
+	<com.zfdang.asm.view.LinkTextView android:id="@+id/PostContent"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:layout_below="@+id/SeperatorView"
 		android:paddingTop="8dp"

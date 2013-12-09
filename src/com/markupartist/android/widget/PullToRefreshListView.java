@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-import com.athena.asm.R;
+import com.zfdang.asm.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
 
