@@ -37,7 +37,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 
 	private PostListFragment m_fragment;
 	private LayoutInflater m_inflater;
-	private List<Post> m_postList;	
+	private List<Post> m_postList;
 	
 	// http://developer.android.com/training/improving-layouts/smooth-scrolling.html
 	// use ViewHolder pattern
@@ -93,7 +93,7 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		// 自动优化且在移动网络中，返回阈值
 		float threshold = aSMApplication.getCurrentApplication().getImageSizeThreshold();
 		return (int)threshold * 1024;
-	}	
+	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
