@@ -1,33 +1,57 @@
 package com.athena.asm.Adapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import android.content.Context;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.athena.asm.R;
 import com.athena.asm.aSMApplication;
 import com.athena.asm.data.Board;
 
-public class CategoryListAdapter extends BaseAdapter {
+public class CategoryListAdapter extends ArrayAdapter<Board> implements SectionIndexer{
 
-	private LayoutInflater m_inflater;
-	private List<Board> m_boards;
-	
+
+    private HashMap<String, Integer> alphaIndexer;
+    private String[] sections;
+    private LayoutInflater m_inflater;
+    private List<Board> m_boards;
+
+
+    public CategoryListAdapter(Context context, int textViewResourceId, List<Board> data, LayoutInflater inflater) {
+        super(context, textViewResourceId, data);
+        m_boards = data;
+        m_inflater = inflater;
+
+        alphaIndexer = new HashMap<String, Integer>();
+        for (int i = 0; i < data.size(); i++)
+        {
+            String s = data.get(i).getEngName().substring(0, 1).toUpperCase();
+            if (!alphaIndexer.containsKey(s))
+                alphaIndexer.put(s, i);
+        }
+
+        Set<String> sectionLetters = alphaIndexer.keySet();
+        ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
+        Collections.sort(sectionList);
+        sections = sectionList.toArray(new String[sectionList.size()]);
+    }
+
 	public class ViewHolder {
 		public TextView categoryNameTextView;
 		public TextView moderatorIDTextView;
 		public TextView boardNameTextView;
 		public Board board;
-	}
-
-	public CategoryListAdapter(LayoutInflater inflater, List<Board> boardList) {
-		this.m_inflater = inflater;
-		this.m_boards = boardList;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -72,7 +96,7 @@ public class CategoryListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Board getItem(int position) {
 		return m_boards.get(position);
 	}
 
@@ -80,4 +104,22 @@ public class CategoryListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
+    @Override
+    public int getPositionForSection(int section) {
+        // TODO Auto-generated method stub
+        return alphaIndexer.get(sections[section]);
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Object[] getSections() {
+        // TODO Auto-generated method stub
+        return sections;
+    }
 }

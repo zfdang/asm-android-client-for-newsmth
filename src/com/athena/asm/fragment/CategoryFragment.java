@@ -116,26 +116,27 @@ public class CategoryFragment extends SherlockFragment implements
 					android.R.layout.simple_dropdown_item_1line, m_viewModel.getBoardFullStrings());
 			textView.setAdapter(adapter);
 
-			ListView categoryList = (ListView) layout
-					.findViewById(R.id.category_list);
-			categoryList.setAdapter(new CategoryListAdapter(getActivity()
-					.getLayoutInflater(), m_viewModel.getCategoryList()));
+            ListView categoryList = (ListView) layout.findViewById(R.id.category_list);
+            categoryList.setAdapter(new CategoryListAdapter(getActivity(), android.R.id.text1, m_viewModel
+                    .getCategoryList(), getActivity().getLayoutInflater()));
 			categoryList.setFastScrollEnabled(true);
-			categoryList.setOnItemClickListener(new OnItemClickListener() {
+			categoryList.setFastScrollAlwaysVisible(true);
 
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View view,
-						int arg2, long arg3) {
-					Bundle bundle = new Bundle();
-					Board board = ((CategoryListAdapter.ViewHolder)view.getTag()).board;
-					bundle.putSerializable(StringUtility.BOARD, board);
-					aSMApplication.getCurrentApplication().addRecentBoard(board);
-					if (m_onOpenActivityFragmentListener != null) {
-						m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST, bundle);
-					}
-				}
-				
-			});
+            categoryList.setOnItemClickListener(new OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+                    Bundle bundle = new Bundle();
+                    Board board = ((CategoryListAdapter.ViewHolder) view.getTag()).board;
+                    bundle.putSerializable(StringUtility.BOARD, board);
+                    aSMApplication.getCurrentApplication().addRecentBoard(board);
+                    if (m_onOpenActivityFragmentListener != null) {
+                        m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.SUBJECT_LIST,
+                                bundle);
+                    }
+                }
+
+            });
 		}
 	}
 
