@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -48,7 +47,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     private SubjectListViewModel m_viewModel;
 
     private EditText m_pageNoEditText;
-    private ListView m_listView;
+    private PullToRefreshListView m_listView;
 
     private boolean m_isNewInstance = false;
 
@@ -72,7 +71,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         m_inflater = inflater;
         View subjectListView = inflater.inflate(R.layout.subject_list, null);
-        m_listView = (ListView) subjectListView.findViewById(R.id.subject_list);
+        m_listView = (PullToRefreshListView) subjectListView.findViewById(R.id.subject_list);
 
         aSMApplication application = (aSMApplication) getActivity().getApplication();
         m_viewModel = application.getSubjectListViewModel();
@@ -184,11 +183,10 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                 m_viewModel.setIsFirstIn(false);
             }
 
-            PullToRefreshListView listView = (PullToRefreshListView) getActivity().findViewById(R.id.subject_list);
-            listView.onRefreshComplete();
-            listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel.getSubjectList()));
+            m_listView.onRefreshComplete();
+            m_listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel.getSubjectList()));
 
-            listView.setOnItemClickListener(new OnItemClickListener() {
+            m_listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                     if (m_onOpenActivityFragmentListener != null) {
@@ -201,7 +199,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                 }
             });
 
-            listView.setOnRefreshListener(new OnRefreshListener() {
+            m_listView.setOnRefreshListener(new OnRefreshListener() {
 
                 @Override
                 public void onRefresh() {
@@ -211,7 +209,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
 
             getActivity().setTitle(m_viewModel.getTitleText());
 
-            listView.requestFocus();
+            m_listView.requestFocus();
         }
     }
 
