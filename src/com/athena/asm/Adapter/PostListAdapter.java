@@ -80,16 +80,24 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener, Sec
 
 	public void updateIndexer()
 	{
-        notifyDataSetChanged();
-
 	    // prepare indexer for posts
         ArrayList<String> _sections = new ArrayList<String>();
         for (int i = 0; i < m_postList.size(); i++)
         {
-            if (m_postList.get(i).getPostIndex() != null)
-                _sections.add(m_postList.get(i).getPostIndex());
+            String index = m_postList.get(i).getPostIndex();
+            if(index != null)
+            {
+                if(index.endsWith("楼"))
+                    index = index.substring(0, index.length()-1);
+                _sections.add(index);
+            }
         }
         sections = _sections.toArray(new String[_sections.size()]);
+
+        // force system to call getSections() again
+        m_fragment.getListView().setFastScrollEnabled(false);
+        m_fragment.getListView().setFastScrollEnabled(true);
+        m_fragment.getListView().setFastScrollAlwaysVisible(true);
 	}
 
 	// image size > threshold won't be loaded in 2G/3G

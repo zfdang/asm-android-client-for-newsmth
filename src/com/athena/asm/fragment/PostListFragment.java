@@ -864,4 +864,8 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
         }
         return false;
     }
+
+    public ListView getListView() {
+        return m_listView;
+    }
 }
