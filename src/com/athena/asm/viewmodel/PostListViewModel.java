@@ -3,6 +3,7 @@ package com.athena.asm.viewmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.athena.asm.Adapter.PostListAdapter;
 import com.athena.asm.data.Post;
 import com.athena.asm.data.Subject;
 import com.athena.asm.fragment.SubjectListFragment;
@@ -25,8 +26,10 @@ public class PostListViewModel extends BaseViewModel {
 	private Subject m_preloadSubject;
 	
 	private SmthSupport m_smthSupport;
+
+	private PostListAdapter m_postListAdapter;
 	
-	public static final String POSTLIST_PROPERTY_NAME = "PostList";
+    public static final String POSTLIST_PROPERTY_NAME = "PostList";
 	
 	public PostListViewModel() {
 		m_smthSupport = SmthSupport.getInstance();
@@ -239,5 +242,13 @@ public class PostListViewModel extends BaseViewModel {
 	public void setSubjectExpand(boolean isSubjectExpand) {
 		this.m_isSubjectExpand = isSubjectExpand;
 	}
+
+    public PostListAdapter getPostListAdapter() {
+        return m_postListAdapter;
+    }
+
+    public void setPostListAdapter(PostListAdapter m_postListAdapter) {
+        this.m_postListAdapter = m_postListAdapter;
+    }
 
 }

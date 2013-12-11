@@ -104,7 +104,9 @@ public class LoadPostTask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		if (!m_isSilent) {
 			m_viewModel.notifyPostListChanged();
+	        if(m_viewModel.getPostListAdapter() != null){
+	            m_viewModel.getPostListAdapter().updateIndexer();
+	        }
 		}
 	}
-
 }

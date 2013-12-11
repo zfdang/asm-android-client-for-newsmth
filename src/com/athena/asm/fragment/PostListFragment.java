@@ -69,6 +69,7 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
     private LayoutInflater m_inflater;
 
     private PostListViewModel m_viewModel;
+    private PostListAdapter m_postListAdapter;
 
     EditText m_pageNumberEditText;
     Button m_firstButton;
@@ -354,7 +355,9 @@ public class PostListFragment extends SherlockFragment implements OnClickListene
             m_actionProvider.setShareIntent(createShareIntent());
         }
 
-        m_listView.setAdapter(new PostListAdapter(this, m_inflater, m_viewModel.getPostList()));
+        m_postListAdapter = new PostListAdapter(this, m_inflater, m_viewModel.getPostList());
+        m_listView.setAdapter(m_postListAdapter);
+        m_viewModel.setPostListAdapter(m_postListAdapter);
 
         m_viewModel.updateCurrentPageNumberFromSubject();
         m_pageNumberEditText.setText(m_viewModel.getCurrentPageNumber() + "");

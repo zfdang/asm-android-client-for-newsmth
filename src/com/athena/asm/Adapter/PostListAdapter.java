@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.athena.asm.R;
@@ -33,11 +34,13 @@ import com.athena.asm.view.GifWebView;
 import com.athena.asm.view.LinkTextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class PostListAdapter extends BaseAdapter implements OnClickListener {
+public class PostListAdapter extends BaseAdapter implements OnClickListener, SectionIndexer{
 
 	private PostListFragment m_fragment;
 	private LayoutInflater m_inflater;
 	private List<Post> m_postList;
+
+    private String[] sections;
 	
 	// http://developer.android.com/training/improving-layouts/smooth-scrolling.html
 	// use ViewHolder pattern
@@ -59,6 +62,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		this.m_inflater = inflater;
 		this.m_postList = postList;
 
+		updateIndexer();
+
 		// set parameters for UrlImageViewHelper
 		// set threshold for max image size
 		UrlImageViewHelper.setMaxImageSize(getMaxImageSize());
@@ -71,6 +76,20 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		} else {
 			UrlImageViewHelper.setErrorResource(R.drawable.failure_day);
 		}
+	}
+
+	public void updateIndexer()
+	{
+        notifyDataSetChanged();
+
+	    // prepare indexer for posts
+        ArrayList<String> _sections = new ArrayList<String>();
+        for (int i = 0; i < m_postList.size(); i++)
+        {
+            if (m_postList.get(i).getPostIndex() != null)
+                _sections.add(m_postList.get(i).getPostIndex());
+        }
+        sections = _sections.toArray(new String[_sections.size()]);
 	}
 
 	// image size > threshold won't be loaded in 2G/3G
@@ -266,4 +285,22 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener {
 		intent.putStringArrayListExtra(StringUtility.IMAGE_NAME, fnameList);
 		m_fragment.startActivityForResult(intent, 0);
 	}
+
+    @Override
+    public int getPositionForSection(int section) {
+        // TODO Auto-generated method stub
+        return section;
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
+
+    @Override
+    public Object[] getSections() {
+        // TODO Auto-generated method stub
+        return sections;
+    }
 }
