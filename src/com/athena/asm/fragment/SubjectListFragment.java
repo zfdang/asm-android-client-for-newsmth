@@ -183,7 +183,6 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                 m_viewModel.setIsFirstIn(false);
             }
 
-            m_listView.onRefreshComplete();
             m_listView.setAdapter(new SubjectListAdapter(m_inflater, m_viewModel.getSubjectList()));
 
             m_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -204,6 +203,7 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                 @Override
                 public void onRefresh() {
                     refreshSubjectList();
+                    m_listView.onRefreshComplete();
                 }
             });
 
