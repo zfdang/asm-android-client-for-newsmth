@@ -196,7 +196,7 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
             postContent = m.group(1);
 //            postContent = postContent.replace("\n", "\n<br/>");
             if (aSMApplication.getCurrentApplication().isPromotionShow()) {
-                String promotion = "--<br/>发送自aSM";
+                String promotion = "--\n发送自aSM";
                 if (aSMApplication.getCurrentApplication().getPromotionContent().length() > 0) {
                     promotion += "@" + aSMApplication.getCurrentApplication().getPromotionContent();
                 }
