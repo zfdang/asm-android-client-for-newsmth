@@ -29,7 +29,6 @@ import com.athena.asm.data.Attachment;
 import com.athena.asm.data.Post;
 import com.athena.asm.fragment.PostListFragment;
 import com.athena.asm.util.StringUtility;
-import com.athena.asm.util.vt100.Vt100TerminalModel;
 import com.athena.asm.view.GifWebView;
 import com.athena.asm.view.LinkTextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -170,8 +169,9 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener, Sec
 			holder.lineView.setVisibility(View.INVISIBLE);
 			holder.attachTextView.setHeight(0);
 		}						
-						
-		Vt100TerminalModel.handleContent(post.getContent(), holder.contentTextView);		
+
+		holder.contentTextView.setText(post.getContent());
+		// Vt100TerminalModel.handleContent(post.getContent(), holder.contentTextView);
         Linkify.addLinks(holder.contentTextView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
 		holder.attachTextView.setMovementMethod(LinkMovementMethod.getInstance());

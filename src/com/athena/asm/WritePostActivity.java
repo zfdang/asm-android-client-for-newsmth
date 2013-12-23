@@ -6,12 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.ProgressDialog;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.ClipboardManager;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -194,17 +195,15 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
         if (m.find()) {
             String postContent;
             postContent = m.group(1);
-//            postContent = postContent.replace("\n", "\n<br/>");
+            postContent = postContent.replace("\n", "\n<br/>");
             if (aSMApplication.getCurrentApplication().isPromotionShow()) {
-                String promotion = "#发送自aSM";
+                String promotion = "<br/>#发送自aSM";
                 if (aSMApplication.getCurrentApplication().getPromotionContent().length() > 0) {
                     promotion += "@" + aSMApplication.getCurrentApplication().getPromotionContent();
                 }
-//                postContent += promotion + "\n<br/>";
-                postContent += promotion + "\n";
+                postContent += promotion + "\n<br/>";
             }
-//            m_contentEditText.setText(Html.fromHtml(postContent));
-            m_contentEditText.setText(postContent);
+            m_contentEditText.setText(Html.fromHtml(postContent));
             m_viewModel.setPostContent(postContent);
         }
 
@@ -220,9 +219,8 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
         if (matcher.find()) {
             String postContent;
             postContent = matcher.group(1);
-//            postContent = postContent.replace("\n", "\n<br/>");
-//            m_contentEditText.setText(Html.fromHtml(postContent));
-            m_contentEditText.setText(postContent);
+            postContent = postContent.replace("\n", "\n<br/>");
+            m_contentEditText.setText(Html.fromHtml(postContent));
             m_viewModel.setPostContent(postContent);
         }
     }
@@ -250,9 +248,8 @@ public class WritePostActivity extends SherlockActivity implements OnClickListen
         if (matcher.find()) {
             String postContent;
             postContent = matcher.group(1);
-//            postContent = postContent.replace("\n", "\n<br/>");
-//            m_contentEditText.setText(Html.fromHtml(postContent));
-            m_contentEditText.setText(postContent);
+            postContent = postContent.replace("\n", "\n<br/>");
+            m_contentEditText.setText(Html.fromHtml(postContent));
             m_viewModel.setPostContent(postContent);
         }
 

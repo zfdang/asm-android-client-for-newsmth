@@ -3,6 +3,8 @@ package com.athena.asm.data;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.text.Html;
+
 public class Post {
 	private String subjectID;
 	private String topicSubjectID;
@@ -12,7 +14,7 @@ public class Post {
 	private String boardID;
 	private Date date;
 	private String index;
-	private String content;
+	private CharSequence content;
 	private ArrayList<Attachment> attachFiles;
 	
 	public static int ACTION_DEFAULT = 0;
@@ -86,7 +88,7 @@ public class Post {
 	}
 
 	public void setContent(String content) {
-		this.content = content;		
+		this.content = Html.fromHtml(content);
 	}
 	
 	public String getTextContent() {
@@ -94,7 +96,7 @@ public class Post {
 		return text;
 	}
 
-	public String getContent() {
+	public CharSequence getContent() {
 		return content;
 	}
 

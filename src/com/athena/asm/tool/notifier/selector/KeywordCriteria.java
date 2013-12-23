@@ -46,7 +46,7 @@ public class KeywordCriteria extends Criteria {
 		if (field == PostField.TITLE) {
 			target = post.getTitle();
 		} else if (field == PostField.CONTENT) {
-			target = post.getContent();
+			target = post.getContent().toString();
 		} else {
 			target = null;
 		}
@@ -107,7 +107,7 @@ public class KeywordCriteria extends Criteria {
 			if (field == PostField.TITLE) {
 				target = post.getTitle();
 			} else if (field == PostField.CONTENT) {
-				target = post.getContent();
+				target = post.getContent().toString();
 			} else {
 				target = null;
 			}
