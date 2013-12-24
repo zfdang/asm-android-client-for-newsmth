@@ -20,8 +20,8 @@ public class MyDatabase extends SQLiteAssetHelper {
 		//super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
 		setForcedUpgradeVersion(DATABASE_VERSION);
 
-		Log.d("GEODatabase", String.format("IP=166.111.8.28 GEO=%s", getLocation("166.111.8.1")));
-		Log.d("GEODatabase", String.format("IP=59.66.211.1 GEO=%s", getLocation("59.66.211.1")));
+//		Log.d("GEODatabase", String.format("IP=166.111.8.28 GEO=%s", getLocation("166.111.8.1")));
+//		Log.d("GEODatabase", String.format("IP=59.66.211.1 GEO=%s", getLocation("59.66.211.1")));
 	}
 
 	private String Dot2LongIP(String dottedIP) {

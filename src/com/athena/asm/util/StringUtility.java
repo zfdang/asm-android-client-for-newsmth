@@ -181,10 +181,10 @@ public class StringUtility {
             while (myipMatcher.find()) {
                 String ipl = myipMatcher.group(1);
                 if (ipl.length() > 5) {
-                    ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
+                    ipl = "<font color=\"#c0c0c0\">@ $1\\*("
                             + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
                 } else {
-                    ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
+                    ipl = "<font color=\"#c0c0c0\">@ $1\\*<\\/font>";
                 }
                 content = myipMatcher.replaceAll(ipl);
             }
