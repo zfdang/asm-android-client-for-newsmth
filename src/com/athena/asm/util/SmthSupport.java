@@ -1528,21 +1528,4 @@ public class SmthSupport {
 		this.passwd = passwd;
 	}
 
-	public static String Dot2LongIP(String dottedIP) {
-		dottedIP = dottedIP.replace('*', '1');
-		String[] addrArray = dottedIP.split("\\.");
-		long int_max = 2147483647;
-
-		long num = 0;
-		for (int i = 0; i < addrArray.length; i++) {
-			int power = 3 - i;
-			num += ((Integer.parseInt(addrArray[i]) % 256) * Math.pow(256, power));
-		}
-		if (num < int_max) {
-			return String.valueOf(num);
-		} else {
-			return String.valueOf(num - int_max - int_max - 2);
-		}
-	}
-
 }

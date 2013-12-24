@@ -153,7 +153,7 @@ public class StringUtility {
             String ip = myipMatcher.group(1);
             if (aSMApplication.getCurrentApplication().isShowIp()) {
                 String _ip = ip.replace('*', '1');
-                ip = ip + "(" + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(_ip)) + ")";
+                ip = ip + "(" + aSMApplication.db.getLocation(_ip) + ")";
             }
             profile.setIp(ip);
         }
@@ -182,7 +182,7 @@ public class StringUtility {
                 String ipl = myipMatcher.group(1);
                 if (ipl.length() > 5) {
                     ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-                            + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+                            + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
                 } else {
                     ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
                 }
@@ -357,7 +357,7 @@ public class StringUtility {
                         String ipl = myipMatcher.group(1);
                         if (ipl.length() > 5) {
                             ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-                                    + aSMApplication.db.getLocation(SmthSupport.Dot2LongIP(ipl + "1")) + ")<\\/font>";
+                                    + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
                         } else {
                             ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
                         }
