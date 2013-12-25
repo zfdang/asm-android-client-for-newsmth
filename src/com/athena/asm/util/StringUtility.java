@@ -265,6 +265,8 @@ public class StringUtility {
         }
 
         String result = sb.toString().trim();
+        // remove last <br />
+        result = result.replaceAll("<br />$", "");
         return new Object[] {result, attachList};
     }
 

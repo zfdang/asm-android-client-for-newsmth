@@ -72,6 +72,12 @@ class IpLocationSeekerBinary {
 			
 			$country = str_replace("\t", "", $country);
 			$country = str_replace("\n", "", $country);
+			$country = str_replace("地区", "", $country);
+			$country = str_replace("省", "", $country);
+			$country = str_replace("市", "", $country);
+			$country = str_replace("县", "", $country);
+			$country = str_replace("区", "", $country);
+			$country = str_replace("清华大学", "清华", $country);
 			// if($use_china_province_name) $country = self::real_province_name($country);
 			$area = str_replace("\t", "", $area);
 			$area = str_replace("\n", "", $area);
