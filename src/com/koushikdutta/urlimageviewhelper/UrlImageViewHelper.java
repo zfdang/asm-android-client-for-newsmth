@@ -1,18 +1,5 @@
 package com.koushikdutta.urlimageviewhelper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Hashtable;
-
-import junit.framework.Assert;
-
-import org.apache.http.NameValuePair;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -31,6 +18,21 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import junit.framework.Assert;
+
+import org.apache.http.NameValuePair;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 public final class UrlImageViewHelper {
     static void clog(String format, Object... args) {
@@ -124,9 +126,9 @@ public final class UrlImageViewHelper {
     private static Drawable loadDrawableFromStream(final Context context, final String url, final String filename, final int targetWidth, final int targetHeight) {
         prepareResources(context);
 
-        // clog(String.format("Target size: (%dx%d).", targetWidth, targetHeight));
+        clog(String.format("Target size: (%dx%d).", targetWidth, targetHeight));
         FileInputStream stream = null;
-        // clog("Decoding: url=" + url + " filename=" + filename);
+        clog("Decoding: url=" + url + " filename=" + filename);
         try {
             BitmapFactory.Options o = null;
 
@@ -495,11 +497,11 @@ public final class UrlImageViewHelper {
         // purge any *.urlimage files over a week old
         cleanup(context, CACHE_DURATION_ONE_WEEK);
     }
-    
+
     private static boolean checkCacheDuration(File file, long cacheDurationMs) {
         return cacheDurationMs == CACHE_DURATION_INFINITE || System.currentTimeMillis() < file.lastModified() + cacheDurationMs;
     }
-    
+
 
     /**
      * Download and shrink an Image located at a specified URL, and display it
@@ -622,6 +624,16 @@ public final class UrlImageViewHelper {
                         copyStream(in, fout);
                         fout.close();
                         clog("DownloadComplete: stream saved to cached file " + filename);
+
+                        // yhl重新打开文件打印内容
+                        /*clog("YHL----: begin to print file content >>>>>>>>, filename = " + filename);
+                        BufferedReader reader = new BufferedReader(new FileReader(filename));
+                        String aLine = "";
+                        while((aLine = reader.readLine()) != null){
+                            clog(aLine);
+                        }
+                        reader.close();
+                        clog("YHL----: finish print file content <<<<<<<<");*/
                     }
                     else {
                         targetFilename = existingFilename;
@@ -717,7 +729,7 @@ public final class UrlImageViewHelper {
                 clog(ex.toString());
             }
         }
-        
+
         for (UrlDownloader downloader: mDownloaders) {
             if (downloader.canDownloadUrl(url)) {
 
@@ -725,14 +737,14 @@ public final class UrlImageViewHelper {
                 return;
             }
         }
-        
+
         imageView.setImageDrawable(defaultDrawable);
     }
 
     private static abstract class Loader implements UrlDownloader.UrlDownloaderCallback {
         Drawable result;
     }
-    
+
     /*
     * max image size to be downloaded, in bytes
     *
@@ -757,14 +769,14 @@ public final class UrlImageViewHelper {
     public static ArrayList<UrlDownloader> getDownloaders() {
         return mDownloaders;
     }
-    
+
     static {
         mDownloaders.add(mHttpDownloader);
         mDownloaders.add(mContactDownloader);
         mDownloaders.add(mContentDownloader);
         mDownloaders.add(mFileDownloader);
     }
-    
+
     public static interface RequestPropertiesCallback {
         public ArrayList<NameValuePair> getHeadersForRequest(Context context, String url);
     }

@@ -5,30 +5,30 @@ import android.os.AsyncTask;
 import com.athena.asm.viewmodel.HomeViewModel;
 
 public class LoginTask extends AsyncTask<String, Integer, String> {
-	private String userName;
-	private String password;
-	private int iLoginResult;
-	
-	private HomeViewModel m_viewModel;
+    private String userName;
+    private String password;
+    private int iLoginResult;
 
-	public LoginTask(HomeViewModel viewModel, String userName, String password) {
-		this.userName = userName;
-		this.password = password;
-		m_viewModel = viewModel;
-	}
+    private HomeViewModel m_viewModel;
 
-	@Override
-	protected void onPreExecute() {
-	}
+    public LoginTask(HomeViewModel viewModel, String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+        m_viewModel = viewModel;
+    }
 
-	@Override
-	protected String doInBackground(String... params) {
-		iLoginResult = m_viewModel.login(userName, password);
-		return null;
-	}
+    @Override
+    protected void onPreExecute() {
+    }
 
-	@Override
-	protected void onPostExecute(String result) {
-		m_viewModel.notifyLoginChanged(iLoginResult);
-	}
+    @Override
+    protected String doInBackground(String... params) {
+        iLoginResult = m_viewModel.login(userName, password);
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        m_viewModel.notifyLoginChanged(iLoginResult);
+    }
 }
