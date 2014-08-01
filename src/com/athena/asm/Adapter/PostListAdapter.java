@@ -110,6 +110,9 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener, Sec
 		ConnectivityManager connectionManager =
 				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
+		if (networkInfo == null)
+			// no active network connection
+			return 0;
 		int netType = networkInfo.getType();
 		// WIFI下全部下载
 		if (netType == ConnectivityManager.TYPE_WIFI) {
