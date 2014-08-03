@@ -9,12 +9,17 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2014-08-02.
+Build Date: 2014-08-03.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2014-08-03:
+------------------------------
+1. 修正了一个null pointer的bug，这样在网络不好的时候，就不会频繁crash了
+2. 调整了图片缩放的实现，优先调整宽度，不再要求高度也在一屏内
 
 2013-12-24:
 ------------------------------

@@ -184,8 +184,8 @@ public class PostListAdapter extends BaseAdapter implements OnClickListener, Sec
 			StringBuilder contentBuilder = new StringBuilder();
 			contentBuilder.append("");
 
-			if (attachments.size() >= 8){
-				// 如果照片数量多余8张，不再放大图片
+			if (attachments.size() >= 12){
+				// 如果照片数量多余12张，不再放大图片
 				UrlImageViewHelper.setUseZoomIn(false);
 			}
 			else{

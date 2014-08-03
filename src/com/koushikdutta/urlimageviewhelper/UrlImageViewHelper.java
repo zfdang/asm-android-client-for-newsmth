@@ -608,7 +608,8 @@ public final class UrlImageViewHelper {
         mPendingDownloads.put(url, downloads);
 
         final int targetWidth = tw <= 0 ? Integer.MAX_VALUE : tw;
-        final int targetHeight = th <= 0 ? Integer.MAX_VALUE : th;
+        // final int targetHeight = th <= 0 ? Integer.MAX_VALUE : th;
+        final int targetHeight = Integer.MAX_VALUE;
         final Loader loader = new Loader() {
             @Override
             public void onDownloadComplete(UrlDownloader downloader, InputStream in, String existingFilename) {
