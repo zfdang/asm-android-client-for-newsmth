@@ -934,9 +934,16 @@ public class SmthSupport {
 				if (attach.contains("<img")) {
 				    // this attachment is an image
 					Pattern urlPattern = Pattern.compile("<a target=\"_blank\" href=\"([^<>]+)\"");
+					// there are two kinds of URL here, we should add http if necessary
+					// <a target="_blank" href="/att/NewExpress/3749711/258">
+					// <a target="_blank" href="http://att.newsmth.net/nForum/att/Picture/568422/225">
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						String urlString = urlMatcher.group(1);
+						// append prefix if necessary
+						if (!urlString.startsWith("http://")){
+							urlString = "http://att.newsmth.net/nForum" + urlString;
+						}
 						// find image content type from HTTP stream
 						String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
@@ -1296,6 +1303,10 @@ public class SmthSupport {
 					Matcher urlMatcher = urlPattern.matcher(attach);
 					if (urlMatcher.find()) {
 						String urlString = urlMatcher.group(1);
+						// append prefix if necessary
+						if (!urlString.startsWith("http://")){
+							urlString = "http://att.newsmth.net/nForum" + urlString;
+						}
                         // find image content type from HTTP stream
                         String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
