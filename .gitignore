@@ -13,3 +13,4 @@ local.properties
 /libs/ViewPagerIndicator/gen
 /libs/drag-sort-listview/bin
 /libs/drag-sort-listview/gen
+.DS_STORE
