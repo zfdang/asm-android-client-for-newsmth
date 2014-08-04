@@ -944,10 +944,10 @@ public class SmthSupport {
 						if (!urlString.startsWith("http://")){
 							urlString = "http://att.newsmth.net/nForum" + urlString;
 						}
-						// find image content type from HTTP stream
-						String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
-						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + "." + content_type);
+						// find image content type from HTTP stream
+						String filename = crawler.fetchAttachmentFilename(urlString);
+						innerAtt.setName(filename);
 					}
 				} else {
 				    // other attachment, shown as downloadable link
@@ -1307,10 +1307,10 @@ public class SmthSupport {
 						if (!urlString.startsWith("http://")){
 							urlString = "http://att.newsmth.net/nForum" + urlString;
 						}
-                        // find image content type from HTTP stream
-                        String content_type = crawler.fetchContentType(urlString);
 						innerAtt.setMobileUrlString(urlString);
-						innerAtt.setName(urlString.substring(urlString.lastIndexOf("/") + 1) + "." + content_type);
+                        // find image conten·t type from HTTP stream
+                        String filename = crawler.fetchAttachmentFilename(urlString);
+						innerAtt.setName(filename);
 					}
 				} else {
 				    // other attachment, shown as downloadable link

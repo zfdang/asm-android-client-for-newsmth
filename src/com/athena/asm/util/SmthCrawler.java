@@ -309,30 +309,28 @@ public class SmthCrawler {
 		return content;
 	}
 
-    public String fetchContentType(String url) {
+    public String fetchAttachmentFilename(String url) {
         HttpHead httphead = new HttpHead(url);
         httphead.setHeader("User-Agent", userAgent);
-        String content_type = "unknown";
+        String filename = "file.unknown";
         try {
             HttpResponse response = httpClient.execute(httphead);
-            Header[] headers = response.getHeaders("Content-Type");
+            Header[] headers = response.getHeaders("Content-Disposition");
             if (headers != null && headers.length != 0) {
                 for (Header header : headers) {
                     String s = header.getValue();
-                    if (s.contains("image/")) {
-                        String[] results = s.split("/");
-                        if(results.length == 2){
-                            content_type = results[1];
-                            // Log.d("fetchContentType", url + content_type);
-                            return content_type.toLowerCase();
-                        }
+                    if (s.contains("filename")) {
+                        String rawValue = s.substring(s.lastIndexOf("=") + 1);
+                        filename = rawValue;
+                        // Log.d("fetchAttachmentFilename", url + filename);
+                        return filename;
                     }
                 }
             }
         } catch (Exception e) {
             Log.e("Crawler:fetchContent", "get url failed,", e);
         }
-        return content_type;
+        return filename;
     }
 
 	public String getUrlContentFromMobile(String url) {
