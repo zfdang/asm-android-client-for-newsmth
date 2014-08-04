@@ -199,7 +199,7 @@ public class SmthCrawler {
 			return false;
 		}
 		return true;
-	}
+	}f
 
 	public boolean sendMail(String mailUrl, String mailTitle, String userid,
 			String num, String dir, String file, String signature,
@@ -320,6 +320,8 @@ public class SmthCrawler {
                 for (Header header : headers) {
                     String s = header.getValue();
                     if (s.contains("filename")) {
+						// how to decode filename from http header:
+						// http://stackoverflow.com/questions/93551/how-to-encode-the-filename-parameter-of-content-disposition-header-in-http
                         String rawValue = s.substring(s.lastIndexOf("=") + 1);
                         filename = rawValue;
                         // Log.d("fetchAttachmentFilename", url + filename);
