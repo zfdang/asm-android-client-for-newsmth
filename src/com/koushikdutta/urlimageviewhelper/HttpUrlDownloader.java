@@ -3,23 +3,14 @@ package com.koushikdutta.urlimageviewhelper;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.athena.asm.util.HttpClientHelper;
 import com.athena.asm.util.SmthCrawler;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper.RequestPropertiesCallback;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -29,20 +20,10 @@ import java.net.URISyntaxException;
 public class HttpUrlDownloader implements UrlDownloader {
     private RequestPropertiesCallback mRequestPropertiesCallback;
     private long maxSizeThreshold = 0;
-    private static final String USER_AGENT = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 1.7; .NET CLR 1.1.4322; CIBA; .NET CLR 2.0.50727)";
     private DefaultHttpClient mHttpClient;
 
     public HttpUrlDownloader(){
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory
-                .getSocketFactory(), 80));
-        HttpParams params = new BasicHttpParams();
-        ConnManagerParams.setMaxTotalConnections(params, 10);
-        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-        ClientConnectionManager cm = new ThreadSafeClientConnManager(params,
-                schemeRegistry);
-
-        mHttpClient = new DefaultHttpClient(cm, params);
+        mHttpClient = HttpClientHelper.getInstance().getHttpClient();
         mHttpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
     }
 
@@ -66,11 +47,9 @@ public class HttpUrlDownloader implements UrlDownloader {
                         return null;
                     }
 
-                    HttpGet httpGet = new HttpGet(url);
-                    httpGet.setHeader("User-Agent", USER_AGENT);
-
                     mHttpClient.setCookieStore(SmthCrawler.smthCookie);
 
+                    HttpGet httpGet = new HttpGet(url);
                     HttpResponse response = mHttpClient.execute(httpGet);
                     int statusCode = response.getStatusLine().getStatusCode();
                     if(statusCode != HttpURLConnection.HTTP_OK){
