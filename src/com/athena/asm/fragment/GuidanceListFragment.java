@@ -93,8 +93,9 @@ public class GuidanceListFragment extends SherlockFragment implements
 			m_listView.setAdapter(new GuidanceListAdapter(m_inflater, m_viewModel
 					.getGuidanceSectionNames(), m_viewModel
 					.getGuidanceSectionDetails()));
-//			expand first group -- top 10 
-			m_listView.expandGroup(0);
+			// expand first group -- top 10
+			if(m_listView.getExpandableListAdapter().getGroupCount() > 0)
+				m_listView.expandGroup(0);
 			m_listView.setOnChildClickListener(new OnChildClickListener() {
 
 				@Override

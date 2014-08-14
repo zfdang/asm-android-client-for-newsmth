@@ -199,7 +199,7 @@ public class SmthCrawler {
 			return false;
 		}
 		return true;
-	}f
+	}
 
 	public boolean sendMail(String mailUrl, String mailTitle, String userid,
 			String num, String dir, String file, String signature,
