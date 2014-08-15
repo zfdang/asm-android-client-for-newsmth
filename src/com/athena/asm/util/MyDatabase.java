@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class MyDatabase extends SQLiteAssetHelper {
 
 	private static final String DATABASE_NAME = "qqwry";
-	private static final int DATABASE_VERSION = 3; // updated to 2013-12-20
+	private static final int DATABASE_VERSION = 5; // updated to 2014-08-10
 
 	public MyDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

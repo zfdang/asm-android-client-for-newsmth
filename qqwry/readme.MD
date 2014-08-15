@@ -14,10 +14,5 @@ the steps to update qqwry.dat:
 
 3. replace qqwry.db in /assets/databases/qqwry.zip
 
-
 4. increase version in MyDatabase.java
 	private static final int DATABASE_VERSION = 2;
-
-5. prepare migration SQLs for version change
-	/assets/databases/qqwry_upgrade_1-2.sql
-	format: <database_name>_upgrade_<from_version>-<to_version>.sql
