@@ -51,7 +51,7 @@ import com.athena.asm.data.Post;
 public class SmthCrawler {
 	public static String smthEncoding = "GBK";
 	public static String mobileSMTHEncoding = "UTF-8";
-	public static String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.4) Gecko/20091016 Firefox/3.5.4";
+	public static String userAgent = HttpClientHelper.USER_AGENT;
 	public static CookieStore smthCookie;
 
 	private int threadNum;

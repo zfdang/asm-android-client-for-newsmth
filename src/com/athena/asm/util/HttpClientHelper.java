@@ -16,7 +16,7 @@ import org.apache.http.protocol.HTTP;
 
 public class HttpClientHelper {
     private static HttpClientHelper mClientHelper;
-    private static final String USER_AGENT = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 1.7; .NET CLR 1.1.4322; CIBA; .NET CLR 2.0.50727)";
+    public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
     private static final String DEFAULT_CHARSET = HTTP.UTF_8;
     private static final int CONNECT_TIMEOUT = 10000;
     private static final int READ_TIMEOUT = 10000;
