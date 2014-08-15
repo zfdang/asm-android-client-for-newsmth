@@ -9,12 +9,17 @@ http://asm.zfdang.com/
 
 下载地址
 ==============================
-Build Date: 2014-08-14.
+Build Date: 2014-08-15.
 
 <a href="https://github.com/zfdang/asm-android-client-for-newsmth/raw/master/dist/aSM.apk">aSM.apk</a>
 
 更新历史
 ==============================
+
+2014-08-15:
+------------------------------
+1. 更新了eclipse的project相关文件
+2. copy了daoxiangcun@github的fetchContent和httpurldownloader使用同一个cookie的代码
 
 2014-08-14:
 ------------------------------
