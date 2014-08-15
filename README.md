@@ -20,6 +20,7 @@ Build Date: 2014-08-15.
 ------------------------------
 1. 更新了eclipse的project相关文件
 2. copy了daoxiangcun@github的fetchContent和httpurldownloader使用同一个cookie的代码
+3. 使用android support library中的pull to refresh控件
 
 2014-08-14:
 ------------------------------

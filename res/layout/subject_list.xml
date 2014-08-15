@@ -4,11 +4,16 @@
 	android:orientation="vertical">
 
 	<!-- Body -->
-	<com.markupartist.android.widget.PullToRefreshListView android:layout_width="wrap_content"
-		android:layout_height="0dp" android:layout_weight="1"
-		android:id="@+id/subject_list" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <ListView android:layout_width="wrap_content"
+                android:layout_height="0dp" android:layout_weight="1"
+                android:id="@+id/subject_list" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-	<!-- footer -->
+    <!-- footer -->
 	<include layout="@layout/post_list_footer" />
 
 </LinearLayout>

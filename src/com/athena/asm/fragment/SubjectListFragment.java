@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -36,8 +39,6 @@ import com.athena.asm.util.task.LoadSubjectTask;
 import com.athena.asm.viewmodel.BaseViewModel;
 import com.athena.asm.viewmodel.HomeViewModel;
 import com.athena.asm.viewmodel.SubjectListViewModel;
-import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 public class SubjectListFragment extends SherlockFragment implements OnClickListener,
         android.content.DialogInterface.OnClickListener, BaseViewModel.OnViewModelChangObserver {
@@ -47,7 +48,8 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     private SubjectListViewModel m_viewModel;
 
     private EditText m_pageNoEditText;
-    private PullToRefreshListView m_listView;
+    private ListView m_listView;
+    private SwipeRefreshLayout m_swipeView;
 
     private boolean m_isNewInstance = false;
 
@@ -71,7 +73,16 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         m_inflater = inflater;
         View subjectListView = inflater.inflate(R.layout.subject_list, null);
-        m_listView = (PullToRefreshListView) subjectListView.findViewById(R.id.subject_list);
+
+        m_listView = (ListView) subjectListView.findViewById(R.id.subject_list);
+
+        m_swipeView = (SwipeRefreshLayout) subjectListView.findViewById(R.id.swipe_container);
+        m_swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            public void onRefresh() {
+                // m_swipeView.setRefreshing(true);
+                refreshSubjectList();
+            }
+        });
 
         aSMApplication application = (aSMApplication) getActivity().getApplication();
         m_viewModel = application.getSubjectListViewModel();
@@ -195,15 +206,6 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
                         m_onOpenActivityFragmentListener.onOpenActivityOrFragment(ActivityFragmentTargets.POST_LIST,
                                 bundle);
                     }
-                }
-            });
-
-            m_listView.setOnRefreshListener(new OnRefreshListener() {
-
-                @Override
-                public void onRefresh() {
-                    refreshSubjectList();
-                    m_listView.onRefreshComplete();
                 }
             });
 
@@ -341,7 +343,13 @@ public class SubjectListFragment extends SherlockFragment implements OnClickList
         if (changedPropertyName.equals(SubjectListViewModel.SUBJECTLIST_PROPERTY_NAME)) {
             reloadSubjectList();
             if (m_progressDialogProvider != null) {
-                m_progressDialogProvider.dismissProgressDialog();
+                // delay the dismiss action by 0.5 second
+                (new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_progressDialogProvider.dismissProgressDialog();
+                    }
+                }, 500);
             }
         }
     }
