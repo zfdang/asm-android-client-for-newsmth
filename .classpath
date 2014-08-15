@@ -3,11 +3,12 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ViewPagerIndicator"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/com_actionbarsherlock"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/aFileChooser"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/apache-mime4j-0.5.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.0-beta2.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

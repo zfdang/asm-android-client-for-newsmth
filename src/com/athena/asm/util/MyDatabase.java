@@ -3,7 +3,6 @@ package com.athena.asm.util;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class MyDatabase extends SQLiteAssetHelper {
 

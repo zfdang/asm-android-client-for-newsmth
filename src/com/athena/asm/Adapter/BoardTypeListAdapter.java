@@ -1,14 +1,14 @@
 package com.athena.asm.Adapter;
 
-import com.athena.asm.R;
-import com.athena.asm.aSMApplication;
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.athena.asm.R;
+import com.athena.asm.aSMApplication;
 
 public class BoardTypeListAdapter extends BaseAdapter {
 

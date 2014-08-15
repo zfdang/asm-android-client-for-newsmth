@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.athena.asm.data.Profile;
 import com.athena.asm.aSMApplication;
+import com.athena.asm.data.Profile;
 
 public class StringUtility {
 

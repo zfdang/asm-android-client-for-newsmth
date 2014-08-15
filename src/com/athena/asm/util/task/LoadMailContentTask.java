@@ -1,10 +1,10 @@
 package com.athena.asm.util.task;
 
-import com.athena.asm.viewmodel.MailViewModel;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.athena.asm.viewmodel.MailViewModel;
 
 public class LoadMailContentTask extends AsyncTask<String, Integer, String> {
 	private ProgressDialog pdialog;

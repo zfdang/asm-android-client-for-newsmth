@@ -2,19 +2,30 @@ package com.koushikdutta.urlimageviewhelper;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import org.apache.http.NameValuePair;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.athena.asm.util.HttpClientHelper;
+import com.athena.asm.util.SmthCrawler;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper.RequestPropertiesCallback;
 
 public class HttpUrlDownloader implements UrlDownloader {
     private RequestPropertiesCallback mRequestPropertiesCallback;
     private long maxSizeThreshold = 0;
+    private DefaultHttpClient mHttpClient;
+
+    public HttpUrlDownloader(){
+        mHttpClient = HttpClientHelper.getInstance().getHttpClient();
+        mHttpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
+    }
 
     public RequestPropertiesCallback getRequestPropertiesCallback() {
         return mRequestPropertiesCallback;
@@ -24,7 +35,6 @@ public class HttpUrlDownloader implements UrlDownloader {
         mRequestPropertiesCallback = callback;
     }
 
-
     @Override
     public void download(final Context context, final String url, final String filename, final UrlDownloaderCallback callback, final Runnable completion) {
         final AsyncTask<Void, Void, Void> downloader = new AsyncTask<Void, Void, Void>() {
@@ -32,42 +42,31 @@ public class HttpUrlDownloader implements UrlDownloader {
             protected Void doInBackground(final Void... params) {
                 try {
                     UrlImageViewHelper.clog("Downloading URL " + url);
-                    InputStream is = null;
-
-                    String thisUrl = url;
-                    HttpURLConnection urlConnection;
-                    while (true) {
-                        final URL u = new URL(thisUrl);
-                        urlConnection = (HttpURLConnection)u.openConnection();
-                        urlConnection.setInstanceFollowRedirects(true);
-
-                        if (mRequestPropertiesCallback != null) {
-                            final ArrayList<NameValuePair> props = mRequestPropertiesCallback.getHeadersForRequest(context, url);
-                            if (props != null) {
-                                for (final NameValuePair pair: props) {
-                                    urlConnection.addRequestProperty(pair.getName(), pair.getValue());
-                                }
-                            }
-                        }
-
-                        if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_MOVED_TEMP && urlConnection.getResponseCode() != HttpURLConnection.HTTP_MOVED_PERM)
-                            break;
-                        thisUrl = urlConnection.getHeaderField("Location");
-                    }
-
-                    if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                        UrlImageViewHelper.clog("Response Code: " + urlConnection.getResponseCode());
+                    if(!ensureUrlValid(url)){
+                        UrlImageViewHelper.clog("url " + url +" is NOT valid! ");
                         return null;
                     }
+
+                    mHttpClient.setCookieStore(SmthCrawler.smthCookie);
+
+                    HttpGet httpGet = new HttpGet(url);
+                    HttpResponse response = mHttpClient.execute(httpGet);
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    if(statusCode != HttpURLConnection.HTTP_OK){
+                        UrlImageViewHelper.clog("Response Code: " + statusCode);
+                        return null;
+                    }
+
                     // check response size
-                    int contentSize = urlConnection.getContentLength();
+                    long contentSize = response.getEntity().getContentLength();
                     if( maxSizeThreshold != 0 &&  contentSize > maxSizeThreshold ){
                         UrlImageViewHelper.clog(String.format("Download abort, size %d > %d, %s", contentSize, maxSizeThreshold, url));
                         return null;
                     } else {
                         UrlImageViewHelper.clog(String.format("Image size %d < threshold %d, %s", contentSize, maxSizeThreshold, url));
                     }
-                    is = urlConnection.getInputStream();
+
+                    InputStream is = response.getEntity().getContent();
                     callback.onDownloadComplete(HttpUrlDownloader.this, is, null);
                     return null;
                 }
@@ -91,7 +90,7 @@ public class HttpUrlDownloader implements UrlDownloader {
     public boolean allowCache() {
         return true;
     }
-    
+
     @Override
     public boolean canDownloadUrl(String url) {
         return url.startsWith("http");
@@ -102,4 +101,13 @@ public class HttpUrlDownloader implements UrlDownloader {
         maxSizeThreshold = size;
     }
 
+    private boolean ensureUrlValid(String url){
+        try {
+            URI uri = new URI(url);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
