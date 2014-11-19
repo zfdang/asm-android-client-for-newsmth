@@ -93,6 +93,12 @@ public class HomeActivity extends SherlockFragmentActivity implements OnOpenActi
         }
     }
 
+    Boolean getBoolean(Object key){
+        if(key == null)
+            return false;
+        return (Boolean)(key);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         aSMApplication application = aSMApplication.getCurrentApplication();
@@ -138,8 +144,8 @@ public class HomeActivity extends SherlockFragmentActivity implements OnOpenActi
 
         m_viewModel.updateLoginStatus();
         if (this.getIntent().getExtras() != null) {
-            m_viewModel.setLoggedin((Boolean) this.getIntent().getExtras().get(StringUtility.LOGINED));
-            m_viewModel.setGuestLogined((Boolean) this.getIntent().getExtras().get(StringUtility.GUEST_LOGINED));
+            m_viewModel.setLoggedin(getBoolean(this.getIntent().getExtras().get(StringUtility.LOGINED)));
+            m_viewModel.setGuestLogined(getBoolean(this.getIntent().getExtras().get(StringUtility.GUEST_LOGINED)));
         }
 
         // 如果已从login页面登录过来
