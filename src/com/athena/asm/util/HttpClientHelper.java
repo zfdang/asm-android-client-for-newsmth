@@ -51,7 +51,7 @@ public class HttpClientHelper {
                     HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
                     HttpProtocolParams.setContentCharset(params, DEFAULT_CHARSET);
 
-                    ConnManagerParams.setMaxTotalConnections(params, 10);
+                    ConnManagerParams.setMaxTotalConnections(params, 2);
                     ConnManagerParams.setTimeout(params, 1000);
 
                     HttpConnectionParams.setConnectionTimeout(params, CONNECT_TIMEOUT);
