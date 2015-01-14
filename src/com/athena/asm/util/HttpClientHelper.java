@@ -18,8 +18,8 @@ public class HttpClientHelper {
     private static HttpClientHelper mClientHelper;
     public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
     private static final String DEFAULT_CHARSET = HTTP.UTF_8;
-    private static final int CONNECT_TIMEOUT = 10000;
-    private static final int READ_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 15000;
+    private static final int READ_TIMEOUT = 15000;
 
     private DefaultHttpClient mHttpClient;
 
@@ -51,8 +51,8 @@ public class HttpClientHelper {
                     HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
                     HttpProtocolParams.setContentCharset(params, DEFAULT_CHARSET);
 
-                    ConnManagerParams.setMaxTotalConnections(params, 2);
-                    ConnManagerParams.setTimeout(params, 1000);
+                    ConnManagerParams.setMaxTotalConnections(params, 50);
+                    ConnManagerParams.setTimeout(params, 15000); // 15 seconds
 
                     HttpConnectionParams.setConnectionTimeout(params, CONNECT_TIMEOUT);
                     HttpConnectionParams.setSoTimeout(params, READ_TIMEOUT);
