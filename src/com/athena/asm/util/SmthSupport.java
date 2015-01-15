@@ -131,7 +131,8 @@ public class SmthSupport {
 				}
 				subject.setBoardEngName(him.group(1));
 				subject.setSubjectID(him.group(2));
-				subject.setTitle(him.group(3));
+				String titleString = Html.fromHtml(him.group(3)).toString();
+				subject.setTitle(titleString);
 				subject.setAuthor(hIdMatcher.group(1));
 				list.add(subject);
 			}
