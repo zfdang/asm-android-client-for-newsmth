@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.athena.asm"
-    android:versionCode="150115"
-    android:versionName="2015.01.15" >
+    android:versionCode="150515"
+    android:versionName="2015.05.15" >
 
     <uses-sdk
         android:minSdkVersion="8"
