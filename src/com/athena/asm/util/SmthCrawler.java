@@ -176,7 +176,7 @@ public class SmthCrawler {
 
 	public boolean sendPost(String postUrl, String postTitle,
 			String postContent, String signature, boolean isEdit) {
-		
+
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("title", postTitle));
 		formparams.add(new BasicNameValuePair("text", postContent));
@@ -186,7 +186,7 @@ public class SmthCrawler {
 		else {
 			formparams.add(new BasicNameValuePair("signature", signature));
 		}
-		
+
 		HttpPost httpPost = new HttpPost(postUrl);
 		UrlEncodedFormEntity entity;
 		try {
@@ -333,7 +333,9 @@ public class SmthCrawler {
                     if (s.contains("filename")) {
 						// how to decode filename from http header:
 						// http://stackoverflow.com/questions/93551/how-to-encode-the-filename-parameter-of-content-disposition-header-in-http
-                        String rawValue = s.substring(s.lastIndexOf("=") + 1);
+                        // 从fiddler抓包来看,返回的filename基本都是gbk编码,所以这里直接写成gbk编码.也有一部分文件名中有EF BF BD内容的,说明服务器返回的内容有问题,这种暂不处理
+                        String unicodeHeaderValue = new String(s.getBytes("iso-8859-1"), "gbk");
+                        String rawValue = unicodeHeaderValue.substring(unicodeHeaderValue.lastIndexOf("=") + 1);
                         filename = rawValue;
                         // Log.d("fetchAttachmentFilename", url + filename);
                         return filename;
