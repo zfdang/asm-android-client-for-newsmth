@@ -7,6 +7,9 @@ aSM -- android上的水木清华客户端
 ------------------------------
 http://asm.zfdang.com/
 
+注意：这个项目不再继续维护了。
+一个类似的项目：https://github.com/zfdang/zSMTH-Android
+
 下载地址
 ==============================
 Build Date: 2014-11-20.
